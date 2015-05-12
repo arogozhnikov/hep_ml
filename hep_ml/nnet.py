@@ -10,6 +10,8 @@ In this file we have **examples** of neural networks,
  user is encouraged to write his own specific architecture,
  which can be much more complex than those used usually.
 
+This library should be preferred for different experiments with architectures.
+
 """
 from __future__ import print_function, division, absolute_import
 from copy import deepcopy
@@ -172,8 +174,7 @@ def irprop_plus_trainer(x, y, w, parameters, loss, random_stream,
         shift_if_bad_step = T.where(new_derivative * old_derivative < 0, delta * T.sgn(old_derivative), 0)
         # THIS doesn't work!
         shift = ifelse(loss_value > prev_loss_value, shift_if_bad_step, 0. * param)
-        # unfortunately we can't do it this way
-        # param += shift
+        # unfortunately we can't do it this way: param += shift
 
         new_delta = T.where(new_derivative * old_derivative > 0, delta * positive_step, delta * negative_step)
         new_delta = T.clip(new_delta, min_step, max_step)
@@ -289,13 +290,13 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
             self.prepared = True
 
         loss_function = losses.get(self.loss, self.loss)
-        loss_ = lambda x, y, w: loss_function(y, activation(x), w)
 
         x = T.matrix('X')
         y = T.vector('y')
         w = T.vector('w')
         activation_raw = self.prepare()
         self.Activation = theano.function([x], activation_raw(x).flatten())
+        loss_ = lambda x, y, w: loss_function(y, activation_raw(x).flatten(), w)
         self.Loss = theano.function([x, y, w], loss_(x, y, w))
         return loss_
 
@@ -438,7 +439,9 @@ class SoftmaxNeuralNetwork(AbstractNeuralNetworkClassifier):
 
 
 class PairwiseNeuralNetwork(AbstractNeuralNetworkClassifier):
-    """The result is computed as h = sigmoid(Ax), output = sum_{ij} B_ij h_i (1 - h_j) """
+    """The result is computed as h = sigmoid(Ax), output = sum_{ij} B_ij h_i (1 - h_j),
+     this is a brilliant example when easier to define activation
+     function rather than trying to implement this inside some framework."""
 
     def prepare(self):
         n1, n2, n3 = self.layers_

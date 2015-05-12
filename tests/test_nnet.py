@@ -39,7 +39,7 @@ def test_nnet(n_samples=200, n_features=5, distance=0.5, complete=False):
         lr = LogisticRegression().fit(X, y)
         print(lr, roc_auc_score(y, lr.predict_proba(X)[:, 1]))
 
-        assert 0 == 1
+        assert 0 == 1, "Let's see and compare results"
     else:
         # checking combinations of losses, nn_types, trainers, most of them are playing once.
         attempts = max(len(nnet.losses), len(nnet.trainers), len(nn_types))
@@ -56,13 +56,4 @@ def test_nnet(n_samples=200, n_features=5, distance=0.5, complete=False):
             nn.fit(X, y, epochs=200)
             assert roc_auc_score(y, nn.predict_proba(X)[:, 1]) > 0.8, \
                 'quality of model is too low: {}'.format(nn)
-
-
-def test_oblivious(n_samples=200, n_features=5, distance=0.5):
-    # Since oblivious NN is very slow, it is tested separately
-    nn = nnet.ObliviousNeuralNetwork(layers=[3], trainer='irprop-')
-    X, y = make_blobs(n_samples=n_samples, n_features=5,
-                      centers=[numpy.ones(n_features) * distance, - numpy.ones(n_features) * distance])
-    nn.fit(X, y)
-    print(roc_auc_score(y, nn.predict_proba(X)[:, 1]), nn)
 
