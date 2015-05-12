@@ -2,21 +2,17 @@ from __future__ import division, print_function, absolute_import
 
 import numpy
 import pandas
-from numpy.random.mtrand import RandomState
 from scipy.stats import ks_2samp
+
+from numpy.random.mtrand import RandomState
 from hep_ml.commonutils import generate_sample
-
-from hep_ml.metrics_utils import compute_sde_on_bins, \
-    compute_sde_on_groups, compute_theil_on_bins, compute_theil_on_groups, \
-    prepare_distibution, _ks_2samp_fast, ks_2samp_weighted, bin_based_ks, \
-    groups_based_ks, cvm_2samp, _cvm_2samp_fast, bin_based_cvm, group_based_cvm
-
+from hep_ml.metrics_utils import prepare_distibution, _ks_2samp_fast, ks_2samp_weighted, _cvm_2samp_fast
 from hep_ml.metrics import KnnBasedSDE, KnnBasedTheil, KnnBasedCvM, \
     BinBasedSDE, BinBasedTheil, BinBasedCvM
-
 from hep_ml.metrics_utils import bin_to_group_indices, compute_bin_indices
-from hep_ml.commonutils import compute_knn_indices_of_signal
-import hep_ml.metrics_utils as ut
+from tests._metrics_oldimplementation import compute_sde_on_bins, compute_sde_on_groups, compute_theil_on_bins, \
+    compute_theil_on_groups, bin_based_ks, groups_based_ks, cvm_2samp, bin_based_cvm, group_based_cvm, sde, \
+    cvm_flatness, theil_flatness
 
 
 __author__ = 'Alex Rogozhnikov'
@@ -216,86 +212,3 @@ def test_workability(n_samples=2000, knn=50, uniform_label=0, n_bins=10):
         flatness_val_ = metric(y, predictions, sample_weight)
 
 
-# region Uniformity metrics (old version, reference code for comparison)
-
-"""
-Comments on the old interface:
-
-Mask is needed to show the events of needed class,
-for instance, if we want to compute the uniformity on signal predictions,
-mask should be True on signal events and False on the others.
-
-y_score in usually predicted probabilities of event being a needed class.
-
-So, if I want to compute efficiency on signal, I put:
-  mask = y == 1
-  y_pred = clf.predict_proba[:, 1]
-
-If want to do it for bck:
-  mask = y == 0
-  y_pred = clf.predict_proba[:, 0]
-
-"""
-
-
-def sde(y, proba, X, uniform_variables, sample_weight=None, label=1, knn=30):
-    """ The most simple way to compute SDE, this is however very slow
-    if you need to recompute SDE many times
-    :param y: real classes of events, shape = [n_samples]
-    :param proba: predicted probabilities, shape = [n_samples, n_classes]
-    :param X: pandas.DataFrame with uniform features
-    :param uniform_variables: features, along which uniformity is desired, list of strings
-    :param sample_weight: weights of events, shape = [n_samples]
-    :param label: class, for which uniformity is measured (usually, 0 is bck, 1 is signal)
-    :param knn: number of nearest neighbours used in knn
-
-    Example of usage:
-    proba = classifier.predict_proba(testX)
-    sde(testY, proba=proba, X=testX, uniform_variables=['mass'])
-    """
-    assert len(y) == len(proba) == len(X), 'Different lengths'
-    X = pandas.DataFrame(X)
-    mask = y == label
-    groups = compute_knn_indices_of_signal(X[uniform_variables], is_signal=mask, n_neighbours=knn)
-    groups = groups[mask, :]
-
-    return ut.compute_sde_on_groups(proba[:, label], mask=mask, groups_indices=groups,
-                                    target_efficiencies=[0.5, 0.6, 0.7, 0.8, 0.9], sample_weight=sample_weight)
-
-
-def theil_flatness(y, proba, X, uniform_variables, sample_weight=None, label=1, knn=30):
-    """This is ready-to-use function, and it is quite slow to use many times"""
-
-    mask = y == label
-    groups_indices = compute_knn_indices_of_signal(X[uniform_variables], is_signal=mask, n_neighbours=knn)[mask, :]
-    return ut.compute_theil_on_groups(proba[:, label], mask=mask, groups_indices=groups_indices,
-                                      target_efficiencies=[0.5, 0.6, 0.7, 0.8, 0.9], sample_weight=sample_weight)
-
-
-def cvm_flatness(y, proba, X, uniform_variables, sample_weight=None, label=1, knn=30):
-    """ The most simple way to compute Cramer-von Mises flatness, this is however very slow
-    if you need to compute it many times
-    :param y: real classes of events, shape = [n_samples]
-    :param proba: predicted probabilities, shape = [n_samples, n_classes]
-    :param X: pandas.DataFrame with uniform features (i.e. test dataset)
-    :param uniform_variables: features, along which uniformity is desired, list of strings
-    :param sample_weight: weights of events, shape = [n_samples]
-    :param label: class, for which uniformity is measured (usually, 0 is bck, 1 is signal)
-    :param knn: number of nearest neighbours used in knn
-
-    Example of usage:
-    proba = classifier.predict_proba(testX)
-    cvm_flatness(testY, proba=proba, X=testX, uniform_variables=['mass'])
-    """
-    assert len(y) == len(proba) == len(X), 'Different lengths'
-    X = pandas.DataFrame(X)
-
-    signal_mask = y == label
-    groups_indices = compute_knn_indices_of_signal(X[uniform_variables], is_signal=signal_mask, n_neighbours=knn)
-    groups_indices = groups_indices[signal_mask, :]
-
-    return ut.group_based_cvm(proba[:, label], mask=signal_mask, groups_indices=groups_indices,
-                              sample_weight=sample_weight)
-
-
-# endregion
