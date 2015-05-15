@@ -41,7 +41,7 @@ def test_nnet(n_samples=200, n_features=5, distance=0.5, complete=False):
 
         assert 0 == 1, "Let's see and compare results"
     else:
-        # checking combinations of losses, nn_types, trainers, most of them are playing once.
+        # checking combinations of losses, nn_types, trainers, most of them are used once during tests.
         attempts = max(len(nnet.losses), len(nnet.trainers), len(nn_types))
         losses_shift = numpy.random.randint(10)
         trainers_shift = numpy.random.randint(10)
