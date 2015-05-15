@@ -1,10 +1,12 @@
 from __future__ import division, print_function, absolute_import
+
 import numpy
 import pandas
 from sklearn.utils import column_or_1d
+
 from hep_ml.commonutils import check_sample_weight, compute_cut_for_efficiency, compute_knn_indices_of_signal
 from hep_ml.metrics_utils import compute_bin_weights, compute_bin_efficiencies, weighted_deviation, \
-    compute_group_weights, compute_group_efficiencies, theil, prepare_distibution, _ks_2samp_fast, compute_cdf, \
+    compute_group_efficiencies_by_indices, theil, prepare_distribution, _ks_2samp_fast, compute_cdf, \
     _cvm_2samp_fast
 
 
@@ -31,19 +33,6 @@ def compute_sde_on_bins(y_pred, mask, bin_indices, target_efficiencies, power=2.
     return (result / len(cuts)) ** (1. / power)
 
 
-def compute_sde_on_groups(y_pred, mask, groups_indices, target_efficiencies, sample_weight=None, power=2.):
-    y_pred = column_or_1d(y_pred)
-    sample_weight = check_sample_weight(y_pred, sample_weight=sample_weight)
-    group_weights = compute_group_weights(groups_indices, sample_weight=sample_weight)
-    cuts = compute_cut_for_efficiency(target_efficiencies, mask=mask, y_pred=y_pred, sample_weight=sample_weight)
-    sde = 0.
-    for cut in cuts:
-        group_efficiencies = compute_group_efficiencies(y_pred, groups_indices=groups_indices,
-                                                        cut=cut, sample_weight=sample_weight)
-        sde += weighted_deviation(group_efficiencies, weights=group_weights, power=power)
-    return (sde / len(cuts)) ** (1. / power)
-
-
 def compute_theil_on_bins(y_pred, mask, bin_indices, target_efficiencies, sample_weight):
     y_pred = column_or_1d(y_pred)
     sample_weight = check_sample_weight(y_pred, sample_weight=sample_weight)
@@ -64,15 +53,35 @@ def compute_theil_on_bins(y_pred, mask, bin_indices, target_efficiencies, sample
     return result / len(cuts)
 
 
+def compute_sde_on_groups(y_pred, mask, groups_indices, target_efficiencies, sample_weight=None, power=2.):
+    y_pred = column_or_1d(y_pred)
+    sample_weight = check_sample_weight(y_pred, sample_weight=sample_weight)
+    group_weights = compute_group_weights_by_indices(groups_indices, sample_weight=sample_weight)
+    divided_weight = compute_divided_weight_by_indices(groups_indices, sample_weight=sample_weight * mask)
+
+    cuts = compute_cut_for_efficiency(target_efficiencies, mask=mask, y_pred=y_pred, sample_weight=sample_weight)
+
+    sde = 0.
+    for cut in cuts:
+        group_efficiencies = compute_group_efficiencies_by_indices(y_pred, groups_indices=groups_indices,
+                                                        cut=cut, divided_weight=divided_weight)
+        # print('FROM SDE function', cut, group_efficiencies)
+        sde += weighted_deviation(group_efficiencies, weights=group_weights, power=power)
+    return (sde / len(cuts)) ** (1. / power)
+
+
 def compute_theil_on_groups(y_pred, mask, groups_indices, target_efficiencies, sample_weight):
     y_pred = column_or_1d(y_pred)
     sample_weight = check_sample_weight(y_pred, sample_weight=sample_weight)
-    groups_weights = compute_group_weights(groups_indices, sample_weight=sample_weight)
+    groups_weights = compute_group_weights_by_indices(groups_indices, sample_weight=sample_weight)
+    divided_weight = compute_divided_weight_by_indices(groups_indices, sample_weight=sample_weight * mask)
     cuts = compute_cut_for_efficiency(target_efficiencies, mask=mask,
                                       y_pred=y_pred, sample_weight=sample_weight)
+
     result = 0.
     for cut in cuts:
-        groups_efficiencies = compute_group_efficiencies(y_pred, groups_indices, cut, sample_weight=sample_weight)
+        groups_efficiencies = compute_group_efficiencies_by_indices(y_pred, groups_indices=groups_indices,
+                                                         cut=cut, divided_weight=divided_weight)
         result += theil(groups_efficiencies, groups_weights)
     return result / len(cuts)
 
@@ -85,7 +94,7 @@ def bin_based_ks(y_pred, mask, sample_weight, bin_indices):
     bin_indices = bin_indices[mask]
 
     bin_weights = compute_bin_weights(bin_indices=bin_indices, sample_weight=sample_weight)
-    prepared_data, prepared_weight, prep_F = prepare_distibution(y_pred, weights=sample_weight)
+    prepared_data, prepared_weight, prep_F = prepare_distribution(y_pred, weights=sample_weight)
 
     result = 0.
     for bin, bin_weight in enumerate(bin_weights):
@@ -101,8 +110,8 @@ def bin_based_ks(y_pred, mask, sample_weight, bin_indices):
 def groups_based_ks(y_pred, mask, sample_weight, groups_indices):
     """Kolmogorov-Smirnov flatness on groups """
     assert len(y_pred) == len(sample_weight) == len(mask)
-    group_weights = compute_group_weights(groups_indices, sample_weight=sample_weight)
-    prepared_data, prepared_weight, prep_F = prepare_distibution(y_pred[mask], weights=sample_weight[mask])
+    group_weights = compute_group_weights_by_indices(groups_indices, sample_weight=sample_weight)
+    prepared_data, prepared_weight, prep_F = prepare_distribution(y_pred[mask], weights=sample_weight[mask])
 
     result = 0.
     for group_weight, group_indices in zip(group_weights, groups_indices):
@@ -137,7 +146,7 @@ def bin_based_cvm(y_pred, sample_weight, bin_indices):
     bin_weights = compute_bin_weights(bin_indices=bin_indices, sample_weight=sample_weight)
 
     result = 0.
-    global_data, global_weight, global_F = prepare_distibution(y_pred, weights=sample_weight)
+    global_data, global_weight, global_F = prepare_distribution(y_pred, weights=sample_weight)
 
     for bin, bin_weight in enumerate(bin_weights):
         if bin_weight <= 0:
@@ -154,10 +163,10 @@ def bin_based_cvm(y_pred, sample_weight, bin_indices):
 def group_based_cvm(y_pred, mask, sample_weight, groups_indices):
     y_pred = column_or_1d(y_pred)
     sample_weight = check_sample_weight(y_pred, sample_weight=sample_weight)
-    group_weights = compute_group_weights(groups_indices, sample_weight=sample_weight)
+    group_weights = compute_group_weights_by_indices(groups_indices, sample_weight=sample_weight)
 
     result = 0.
-    global_data, global_weight, global_F = prepare_distibution(y_pred[mask], weights=sample_weight[mask])
+    global_data, global_weight, global_F = prepare_distribution(y_pred[mask], weights=sample_weight[mask])
     for group, group_weight in zip(groups_indices, group_weights):
         local_distribution = y_pred[group]
         local_weights = sample_weight[group]
@@ -252,3 +261,20 @@ def cvm_flatness(y, proba, X, uniform_variables, sample_weight=None, label=1, kn
 
 # endregion
 
+def compute_group_weights_by_indices(group_indices, sample_weight):
+    """
+    Group weight = sum of divided weights of indices inside that group.
+    """
+    divided_weight = compute_divided_weight_by_indices(group_indices, sample_weight=sample_weight)
+    result = numpy.zeros(len(group_indices))
+    for i, group in enumerate(group_indices):
+        result[i] = numpy.sum(divided_weight[group])
+    return result / numpy.sum(result)
+
+
+def compute_divided_weight_by_indices(group_indices, sample_weight):
+    """Divided weight takes into account that different events
+    are met different number of times """
+    indices = numpy.concatenate(group_indices)
+    occurences = numpy.bincount(indices, minlength=len(sample_weight))
+    return sample_weight / numpy.maximum(occurences, 1)

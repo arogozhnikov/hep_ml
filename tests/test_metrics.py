@@ -6,7 +6,8 @@ from scipy.stats import ks_2samp
 
 from numpy.random.mtrand import RandomState
 from hep_ml.commonutils import generate_sample
-from hep_ml.metrics_utils import prepare_distibution, _ks_2samp_fast, ks_2samp_weighted, _cvm_2samp_fast
+from hep_ml.metrics_utils import prepare_distribution, _ks_2samp_fast, ks_2samp_weighted, _cvm_2samp_fast, \
+    group_indices_to_groups_matrix
 from hep_ml.metrics import KnnBasedSDE, KnnBasedTheil, KnnBasedCvM, \
     BinBasedSDE, BinBasedTheil, BinBasedCvM
 from hep_ml.metrics_utils import bin_to_group_indices, compute_bin_indices
@@ -42,6 +43,18 @@ def test_bin_to_group_indices(size=100, bins=10):
     assert numpy.all(a == b), 'group indices are computed wrongly'
 
 
+def test_groups_matrix(size=1000, bins=4):
+    bin_indices = RandomState().randint(0, bins, size=size)
+    mask = RandomState().randint(0, 2, size=size) > 0.5
+    n_signal_events = numpy.sum(mask)
+    group_indices = bin_to_group_indices(bin_indices, mask=mask)
+    assert numpy.sum([len(group) for group in group_indices]) == n_signal_events
+    group_matrix = group_indices_to_groups_matrix(group_indices, n_events=size)
+    assert group_matrix.sum() == n_signal_events
+    for event_id, (is_signal, bin) in enumerate(zip(mask, bin_indices)):
+        assert group_matrix[bin, event_id] == is_signal
+
+
 def test_bins(size=500, n_bins=10):
     columns = ['var1', 'var2']
     df = pandas.DataFrame(random.uniform(size=(size, 2)), columns=columns)
@@ -71,9 +84,9 @@ def test_ks2samp_fast(size=1000):
     y1 = RandomState().uniform(size=size)
     y2 = y1[RandomState().uniform(size=size) > 0.5]
     a = ks_2samp(y1, y2)[0]
-    prep_data, prep_weights, prep_F = prepare_distibution(y1, numpy.ones(len(y1)))
-    b = _ks_2samp_fast(prep_data, y2, prep_weights, numpy.ones(len(y2)), F1=prep_F)
-    c = _ks_2samp_fast(prep_data, y2, prep_weights, numpy.ones(len(y2)), F1=prep_F)
+    prep_data, prep_weights, prep_F = prepare_distribution(y1, numpy.ones(len(y1)))
+    b = _ks_2samp_fast(prep_data, y2, prep_weights, numpy.ones(len(y2)), cdf1=prep_F)
+    c = _ks_2samp_fast(prep_data, y2, prep_weights, numpy.ones(len(y2)), cdf1=prep_F)
     d = ks_2samp_weighted(y1, y2, numpy.ones(len(y1)) / 3, numpy.ones(len(y2)) / 4)
     assert numpy.allclose(a, b, rtol=1e-2, atol=1e-3)
     assert numpy.allclose(b, c)
@@ -97,8 +110,8 @@ def test_fast_cvm(n_samples=1000):
     data2 = data1[mask]
     weights2 = weights1[mask]
     a = cvm_2samp(data1, data2, weights1, weights2)
-    prepared_data1, prepared_weights1, F1 = prepare_distibution(data1, weights1)
-    b = _cvm_2samp_fast(prepared_data1, data2, prepared_weights1, weights2, F1=F1)
+    prepared_data1, prepared_weights1, F1 = prepare_distribution(data1, weights1)
+    b = _cvm_2samp_fast(prepared_data1, data2, prepared_weights1, weights2, cdf1=F1)
     assert numpy.allclose(a, b)
 
 
@@ -134,28 +147,40 @@ def test_cvm_sde_limit(size=2000):
 def test_new_metrics(n_samples=2000, knn=50):
     X, y = generate_sample(n_samples=n_samples, n_features=10)
     sample_weight = numpy.random.exponential(size=n_samples) ** 0.
-    predictions = numpy.random.random(size=[n_samples, 2])
-    predictions /= predictions.sum(axis=1, keepdims=True)
-    predictions *= 1000.
+    predictions_orig = numpy.random.random(size=[n_samples, 2])
 
-    # Checking SDE
-    features = X.columns[:1]
-    sde_val1 = sde(y, predictions, X, uniform_variables=features, sample_weight=sample_weight, label=0, knn=knn)
-    sde2 = KnnBasedSDE(n_neighbours=knn, uniform_features=features, uniform_label=0, )
-    sde2.fit(X, y, sample_weight=sample_weight)
-    sde_val2 = sde2(y, predictions, sample_weight=sample_weight)
+    for shift in [0.1, 0.2]:
+        predictions = predictions_orig.copy()
+        predictions[:, 1] += shift * y
+        predictions /= predictions.sum(axis=1, keepdims=True)
 
-    assert sde_val1 == sde_val2, 'SDE values are different'
+        # Checking SDE
+        features = X.columns[:1]
+        sde_val1 = sde(y, predictions, X, uniform_variables=features, sample_weight=sample_weight, label=0, knn=knn)
+        sde_metric = KnnBasedSDE(n_neighbours=knn, uniform_features=features, uniform_label=0, )
+        sde_metric.fit(X, y, sample_weight=sample_weight)
+        sde_val2 = sde_metric(y, predictions, sample_weight=sample_weight)
 
-    # Checking CVM
-    features = X.columns[:1]
-    cvm_val1 = cvm_flatness(y, predictions, X, uniform_variables=features, sample_weight=sample_weight, label=0,
-                            knn=knn)
-    cvm2 = KnnBasedCvM(n_neighbours=knn, uniform_features=features, uniform_label=0, )
-    cvm2.fit(X, y, sample_weight=sample_weight)
-    cvm_val2 = cvm2(y, predictions, sample_weight=sample_weight)
+        assert numpy.allclose(sde_val1, sde_val2), 'SDE values are different'
 
-    assert cvm_val1 == cvm_val2, 'CvM values are different'
+        # Checking theil
+        theil_val1 = theil_flatness(y, predictions, X, uniform_variables=features, sample_weight=sample_weight,
+                                    label=0, knn=knn)
+        theil_metric = KnnBasedTheil(n_neighbours=knn, uniform_features=features, uniform_label=0, )
+        theil_metric.fit(X, y, sample_weight=sample_weight)
+        theil_val2 = theil_metric(y, predictions, sample_weight=sample_weight)
+        print(theil_val1, theil_val2)
+        assert numpy.allclose(theil_val1, theil_val2), 'Theil values are different'
+
+        # Checking CVM
+        features = X.columns[:1]
+        cvm_val1 = cvm_flatness(y, predictions, X, uniform_variables=features, sample_weight=sample_weight, label=0,
+                                knn=knn)
+        cvm_metric = KnnBasedCvM(n_neighbours=knn, uniform_features=features, uniform_label=0, )
+        cvm_metric.fit(X, y, sample_weight=sample_weight)
+        cvm_val2 = cvm_metric(y, predictions, sample_weight=sample_weight)
+
+        assert cvm_val1 == cvm_val2, 'CvM values are different'
 
 
 def test_metrics_clear(n_samples=2000, knn=50, uniform_class=0):

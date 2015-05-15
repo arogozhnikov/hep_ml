@@ -18,8 +18,6 @@ from . import metrics_utils as ut
 
 __author__ = 'Alex Rogozhnikov'
 
-__all__ = ['sde', 'cvm_flatness', 'theil_flatness']
-
 """
 README on flatness
 
@@ -44,8 +42,6 @@ which is quite long and better to do this once.
 """
 
 
-# region Uniform metrics (current version)
-
 class AbstractMetric(BaseEstimator):
     def fit(self, X, y, sample_weight=None):
         """
@@ -65,7 +61,7 @@ class AbstractMetric(BaseEstimator):
         raise NotImplementedError('To be derived by descendant')
 
 
-class AbstractBinMetrics(AbstractMetric):
+class AbstractBinMetric(AbstractMetric):
     def __init__(self, n_bins, uniform_features, uniform_label=0):
         """
         Abstract class for bin-based metrics of uniformity.
@@ -93,11 +89,11 @@ class AbstractBinMetrics(AbstractMetric):
         return self
 
 
-class BinBasedSDE(AbstractBinMetrics):
+class BinBasedSDE(AbstractBinMetric):
     def __init__(self, uniform_features, n_bins=10, uniform_label=0, target_rcp=None, power=2.):
-        AbstractBinMetrics.__init__(self, n_bins=n_bins,
-                                    uniform_features=uniform_features,
-                                    uniform_label=uniform_label)
+        AbstractBinMetric.__init__(self, n_bins=n_bins,
+                                   uniform_features=uniform_features,
+                                   uniform_label=uniform_label)
         self.power = power
         self.target_rcp = target_rcp
 
@@ -116,11 +112,11 @@ class BinBasedSDE(AbstractBinMetrics):
         return (result / len(cuts)) ** (1. / self.power)
 
 
-class BinBasedTheil(AbstractBinMetrics):
+class BinBasedTheil(AbstractBinMetric):
     def __init__(self, uniform_features, n_bins=10, uniform_label=0, target_rcp=None, power=2.):
-        AbstractBinMetrics.__init__(self, n_bins=n_bins,
-                                    uniform_features=uniform_features,
-                                    uniform_label=uniform_label)
+        AbstractBinMetric.__init__(self, n_bins=n_bins,
+                                   uniform_features=uniform_features,
+                                   uniform_label=uniform_label)
         self.power = power
         self.target_rcp = target_rcp
 
@@ -138,16 +134,16 @@ class BinBasedTheil(AbstractBinMetrics):
         return result / len(cuts)
 
 
-class BinBasedCvM(AbstractBinMetrics):
+class BinBasedCvM(AbstractBinMetric):
     def __init__(self, uniform_features, n_bins=10, uniform_label=0, power=2.):
-        AbstractBinMetrics.__init__(self, n_bins=n_bins,
-                                    uniform_features=uniform_features,
-                                    uniform_label=uniform_label)
+        AbstractBinMetric.__init__(self, n_bins=n_bins,
+                                   uniform_features=uniform_features,
+                                   uniform_label=uniform_label)
         self.power = power
 
     def __call__(self, y, proba, sample_weight):
         y_pred = proba[self._mask, self.uniform_label]
-        global_data, global_weight, global_cdf = ut.prepare_distibution(y_pred, weights=self._masked_weight)
+        global_data, global_weight, global_cdf = ut.prepare_distribution(y_pred, weights=self._masked_weight)
 
         result = 0.
         for bin, bin_weight in enumerate(self._bin_weights):
@@ -161,7 +157,7 @@ class BinBasedCvM(AbstractBinMetrics):
         return result
 
 
-class AbstractKnnMetrics(AbstractMetric):
+class AbstractKnnMetric(AbstractMetric):
     def __init__(self, uniform_features, n_neighbours=50, uniform_label=0):
         """
         Abstract class for knn-based metrics of uniformity.
@@ -175,31 +171,39 @@ class AbstractKnnMetrics(AbstractMetric):
         self.uniform_features = uniform_features
         self.n_neighbours = n_neighbours
 
+    # noinspection PyAttributeOutsideInit
     def fit(self, X, y, sample_weight=None):
         """ Prepare different things for fast computation of metrics """
         X, y, sample_weight = check_xyw(X, y, sample_weight=sample_weight)
-        self._mask = numpy.array(y == self.uniform_label)
-        assert sum(self._mask) > 0, 'No events of uniform class!'
-        self._masked_weight = sample_weight[self._mask]
+        self._label_mask = numpy.array(y == self.uniform_label)
+        assert sum(self._label_mask) > 0, 'No events of uniform class!'
+        # weights of events
+        self._masked_weight = sample_weight[self._label_mask]
 
-        X_part = numpy.array(take_features(X, self.uniform_features))[self._mask, :]
+        X_part = numpy.array(take_features(X, self.uniform_features))[self._label_mask, :]
         # computing knn indices
         neighbours = NearestNeighbors(n_neighbors=self.n_neighbours, algorithm='kd_tree').fit(X_part)
         _, self._groups_indices = neighbours.kneighbors(X_part)
-        self._group_weights = ut.compute_group_weights(self._groups_indices, sample_weight=self._masked_weight)
+        self._group_matrix = ut.group_indices_to_groups_matrix(self._groups_indices, n_events=len(X_part))
+        # self._group_weights = ut.compute_group_weights_by_indices(self._groups_indices,
+        #                                                           sample_weight=self._masked_weight)
+        self._group_weights = ut.compute_group_weights(self._group_matrix, sample_weight=self._masked_weight)
+        # self._divided_weights = ut.compute_divided_weight_by_indices(self._groups_indices,
+        #                                                              sample_weight=self._masked_weight)
+        self._divided_weights = ut.compute_divided_weight(self._group_matrix, sample_weight=self._masked_weight)
         return self
 
 
-class KnnBasedSDE(AbstractKnnMetrics):
+class KnnBasedSDE(AbstractKnnMetric):
     def __init__(self, uniform_features, n_neighbours=50, uniform_label=0, target_rcp=None, power=2.):
-        AbstractKnnMetrics.__init__(self, n_neighbours=n_neighbours,
-                                    uniform_features=uniform_features,
-                                    uniform_label=uniform_label)
+        AbstractKnnMetric.__init__(self, n_neighbours=n_neighbours,
+                                   uniform_features=uniform_features,
+                                   uniform_label=uniform_label)
         self.power = power
         self.target_rcp = target_rcp
 
     def __call__(self, y, proba, sample_weight):
-        y_pred = proba[self._mask, self.uniform_label]
+        y_pred = proba[self._label_mask, self.uniform_label]
         if self.target_rcp is None:
             self.target_rcp = [0.5, 0.6, 0.7, 0.8, 0.9]
         self.target_rcp = numpy.array(self.target_rcp)
@@ -207,22 +211,21 @@ class KnnBasedSDE(AbstractKnnMetrics):
         result = 0.
         cuts = weighted_quantile(y_pred, quantiles=1 - self.target_rcp, sample_weight=self._masked_weight)
         for cut in cuts:
-            groups_efficiencies = ut.compute_group_efficiencies(y_pred, groups_indices=self._groups_indices, cut=cut,
-                                                                sample_weight=self._masked_weight)
+            groups_efficiencies = ut.compute_group_efficiencies(y_pred, groups_matrix=self._group_matrix, cut=cut,
+                                                                divided_weight=self._divided_weights)
             result += ut.weighted_deviation(groups_efficiencies, weights=self._group_weights, power=self.power)
         return (result / len(cuts)) ** (1. / self.power)
 
 
-class KnnBasedTheil(AbstractKnnMetrics):
+class KnnBasedTheil(AbstractKnnMetric):
     def __init__(self, uniform_features, n_neighbours=50, uniform_label=0, target_rcp=None, power=2.):
-        AbstractKnnMetrics.__init__(self, n_neighbours=n_neighbours,
-                                    uniform_features=uniform_features,
-                                    uniform_label=uniform_label)
-        self.power = power
+        AbstractKnnMetric.__init__(self, n_neighbours=n_neighbours,
+                                   uniform_features=uniform_features,
+                                   uniform_label=uniform_label)
         self.target_rcp = target_rcp
 
     def __call__(self, y, proba, sample_weight):
-        y_pred = proba[self._mask, self.uniform_label]
+        y_pred = proba[self._label_mask, self.uniform_label]
         if self.target_rcp is None:
             self.target_rcp = [0.5, 0.6, 0.7, 0.8, 0.9]
         self.target_rcp = numpy.array(self.target_rcp)
@@ -230,24 +233,24 @@ class KnnBasedTheil(AbstractKnnMetrics):
         result = 0.
         cuts = weighted_quantile(y_pred, quantiles=1 - self.target_rcp, sample_weight=self._masked_weight)
         for cut in cuts:
-            groups_efficiencies = ut.compute_group_efficiencies(y_pred, groups_indices=self._groups_indices, cut=cut,
-                                                                sample_weight=self._masked_weight)
-            result += ut.weighted_deviation(groups_efficiencies, weights=self._group_weights, power=self.power)
-        return (result / len(cuts)) ** (1. / self.power)
+            groups_efficiencies = ut.compute_group_efficiencies(y_pred, groups_matrix=self._group_matrix, cut=cut,
+                                                                divided_weight=self._divided_weights)
+            result += ut.theil(groups_efficiencies, weights=self._group_weights)
+        return result / len(cuts)
 
 
-class KnnBasedCvM(AbstractKnnMetrics):
+class KnnBasedCvM(AbstractKnnMetric):
     def __init__(self, uniform_features, n_neighbours=50, uniform_label=0, power=2.):
-        AbstractKnnMetrics.__init__(self, n_neighbours=n_neighbours,
-                                    uniform_features=uniform_features,
-                                    uniform_label=uniform_label)
+        AbstractKnnMetric.__init__(self, n_neighbours=n_neighbours,
+                                   uniform_features=uniform_features,
+                                   uniform_label=uniform_label)
         self.power = power
 
     def __call__(self, y, proba, sample_weight):
-        y_pred = proba[self._mask, self.uniform_label]
+        y_pred = proba[self._label_mask, self.uniform_label]
 
         result = 0.
-        global_data, global_sample_weight, global_cdf = ut.prepare_distibution(y_pred, weights=self._masked_weight)
+        global_data, global_sample_weight, global_cdf = ut.prepare_distribution(y_pred, weights=self._masked_weight)
         for group, group_weight in zip(self._groups_indices, self._group_weights):
             local_distribution = y_pred[group]
             local_sample_weights = self._masked_weight[group]
@@ -256,5 +259,4 @@ class KnnBasedCvM(AbstractKnnMetrics):
         return result
 
 
-# endregion
 

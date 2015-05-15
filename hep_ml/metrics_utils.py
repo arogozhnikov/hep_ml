@@ -17,7 +17,7 @@ def check_metrics_arguments(y_true, y_pred, sample_weight, two_class=True, binar
     :param sample_weight: weights of samples
     :param two_class: if True, will check that y_true contains only zeros and ones
     :param binary_pred: if True, will check that y_pred contains only zeros and ones
-    :return:
+    :return: the same arguments as tuple
     """
     sample_weight = check_sample_weight(y_true, sample_weight=sample_weight)
     y_true = column_or_1d(y_true)
@@ -33,7 +33,7 @@ def check_metrics_arguments(y_true, y_pred, sample_weight, two_class=True, binar
     return y_true, y_pred, sample_weight
 
 
-def prepare_distibution(data, weights):
+def prepare_distribution(data, weights):
     """Prepares the distribution to be used later in KS and CvM,
     merges equal data, computes (summed) weights and cumulative distribution.
     All output arrays are of same length and correspond to each other."""
@@ -59,6 +59,11 @@ bin_indices = [0, 0, 1, 2, 2, 4]
 
 Group_indices is list, each item is indices of events in some group
 group_indices = [[0,1], [2], [3,4], [5]]
+
+Group matrix is another way to write group_indices,
+this is sparse matrix of shape [n_groups, n_samples],
+group_matrix[group_id, sample_id] = 1, if event belong to cell, 0 otherwise
+
 
 While bin indices are computed for all the events together, group indices
 are typically computed only for events of some particular class.
@@ -98,6 +103,20 @@ def bin_to_group_indices(bin_indices, mask):
     return result
 
 
+def group_indices_to_groups_matrix(group_indices, n_events):
+    """
+    :param group_indices:
+    :return: sparse matrix of shape [n_groups, n_samples],
+        one if particular event belongs to particular category.
+    """
+    from scipy import sparse
+
+    groups_matrix = sparse.lil_matrix((len(group_indices), n_events))
+    for group_id, events_in_group in enumerate(group_indices):
+        groups_matrix[group_id, events_in_group] = 1
+    return sparse.csr_matrix(groups_matrix)
+
+
 # endregion
 
 
@@ -116,22 +135,19 @@ def compute_bin_weights(bin_indices, sample_weight):
     return result / numpy.sum(result)
 
 
-def compute_divided_weight(group_indices, sample_weight):
+def compute_divided_weight(group_matrix, sample_weight):
     """Divided weight takes into account that different events
     are met different number of times """
-    indices = numpy.concatenate(group_indices)
-    occurences = numpy.bincount(indices, minlength=len(sample_weight))
+    occurences = numpy.array(group_matrix.sum(axis=0)).flatten()
     return sample_weight / numpy.maximum(occurences, 1)
 
 
-def compute_group_weights(group_indices, sample_weight):
+def compute_group_weights(group_matrix, sample_weight):
     """
     Group weight = sum of divided weights of indices inside that group.
     """
-    divided_weight = compute_divided_weight(group_indices, sample_weight=sample_weight)
-    result = numpy.zeros(len(group_indices))
-    for i, group in enumerate(group_indices):
-        result[i] = numpy.sum(divided_weight[group])
+    divided_weight = compute_divided_weight(group_matrix=group_matrix, sample_weight=sample_weight)
+    result = group_matrix.dot(divided_weight)
     return result / numpy.sum(result)
 
 
@@ -151,23 +167,36 @@ def compute_bin_efficiencies(y_score, bin_indices, cut, sample_weight, minlength
     return bin_passed_cut / numpy.maximum(bin_total, 1)
 
 
-def compute_group_efficiencies(y_score, groups_indices, cut, sample_weight=None, smoothing=0.0):
-    """ Provided cut, computes efficiencies inside each bin. """
+def compute_group_efficiencies_by_indices(y_score, groups_indices, cut, divided_weight=None, smoothing=0.0):
+    """ Provided cut, computes efficiencies inside each bin.
+    :param divided_weight: weight for each event, divided by the number of it's occurences """
     y_score = column_or_1d(y_score)
-    sample_weight = check_sample_weight(y_score, sample_weight=sample_weight)
+    divided_weight = check_sample_weight(y_score, sample_weight=divided_weight)
     # with smoothing=0, this is 0 or 1, latter for passed events.
     passed_cut = sigmoid_function(y_score - cut, width=smoothing)
 
     if isinstance(groups_indices, numpy.ndarray) and numpy.ndim(groups_indices) == 2:
         # this speedup is specially for knn
         result = numpy.average(numpy.take(passed_cut, groups_indices),
-                               weights=numpy.take(sample_weight, groups_indices),
+                               weights=numpy.take(divided_weight, groups_indices),
                                axis=1)
     else:
         result = numpy.zeros(len(groups_indices))
         for i, group in enumerate(groups_indices):
-            result[i] = numpy.average(passed_cut[group], weights=sample_weight[group])
+            result[i] = numpy.average(passed_cut[group], weights=divided_weight[group])
     return result
+
+
+def compute_group_efficiencies(y_score, groups_matrix, cut, divided_weight=None, smoothing=0.0):
+    """ Provided cut, computes efficiencies inside each bin.
+    :param divided_weight: weight for each event, divided by the number of it's occurences """
+    y_score = column_or_1d(y_score)
+    divided_weight = check_sample_weight(y_score, sample_weight=divided_weight)
+    # with smoothing=0, this is 0 or 1, latter for passed events.
+    passed_cut = sigmoid_function(y_score - cut, width=smoothing)
+    passed_weight = groups_matrix.dot(divided_weight * passed_cut)
+    total_weight = groups_matrix.dot(divided_weight)
+    return passed_weight / numpy.maximum(total_weight, 1e-10)
 
 
 def weighted_deviation(a, weights, power=2.):
@@ -192,15 +221,15 @@ def theil(x, weights):
     return numpy.average(normed * numpy.log(normed), weights=weights)
 
 
-def _ks_2samp_fast(prepared_data1, data2, prepared_weights1, weights2, F1):
+def _ks_2samp_fast(prepared_data1, data2, prepared_weights1, weights2, cdf1):
     """Pay attention - prepared data should not only be sorted,
     but equal items should be merged (by summing weights),
     data2 should not have elements larger then max(prepared_data1) """
     indices = numpy.searchsorted(prepared_data1, data2)
     weights2 /= numpy.sum(weights2)
     prepared_weights2 = numpy.bincount(indices, weights=weights2, minlength=len(prepared_data1))
-    F2 = compute_cdf(prepared_weights2)
-    return numpy.max(numpy.abs(F1 - F2))
+    cdf2 = compute_cdf(prepared_weights2)
+    return numpy.max(numpy.abs(cdf1 - cdf2))
 
 
 def ks_2samp_weighted(data1, data2, weights1, weights2):
@@ -217,14 +246,14 @@ def ks_2samp_weighted(data1, data2, weights1, weights2):
     return numpy.max(numpy.abs(F1 - F2))
 
 
-def _cvm_2samp_fast(prepared_data1, data2, prepared_weights1, weights2, F1, power=2.):
+def _cvm_2samp_fast(prepared_data1, data2, prepared_weights1, weights2, cdf1, power=2.):
     """Pay attention - prepared data should not only be sorted,
     but equal items should be merged (by summing weights) """
     indices = numpy.searchsorted(prepared_data1, data2)
     weights2 /= numpy.sum(weights2)
     prepared_weights2 = numpy.bincount(indices, weights=weights2, minlength=len(prepared_data1))
-    F2 = compute_cdf(prepared_weights2)
-    return numpy.average(numpy.abs(F1 - F2) ** power, weights=prepared_weights1)
+    cdf2 = compute_cdf(prepared_weights2)
+    return numpy.average(numpy.abs(cdf1 - cdf2) ** power, weights=prepared_weights1)
 
 
 # endregion
