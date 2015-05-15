@@ -135,7 +135,7 @@ def irprop_star_trainer(x, y, w, parameters, loss, random_stream,
 
     for name, param in parameters.items():
         param_shape = param.get_value().shape
-        n = numpy.prod(param_shape)
+        n = numpy.prod(param_shape).astype(int)
         new_derivative_ = T.grad(loss_value, param).flatten()
         lnewder, rnewder = new_derivative_.reshape([n, 1]), new_derivative_.reshape([1, n])
         new_derivative_plus = lnewder + rnewder

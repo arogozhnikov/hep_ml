@@ -43,6 +43,7 @@ def test_nnet(n_samples=200, n_features=5, distance=0.5, complete=False):
     else:
         # checking combinations of losses, nn_types, trainers, most of them are used once during tests.
         attempts = max(len(nnet.losses), len(nnet.trainers), len(nn_types))
+        attempts = 4
         losses_shift = numpy.random.randint(10)
         trainers_shift = numpy.random.randint(10)
         for attempt in range(attempts):
