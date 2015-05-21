@@ -6,29 +6,48 @@ which are often used (by other modules)
 from __future__ import print_function, division, absolute_import
 
 import math
+from multiprocessing.pool import ThreadPool
 import numbers
 import numpy
 import pandas
 from numpy.random.mtrand import RandomState
 from scipy.special import expit
 import sklearn.cross_validation
+import itertools
 from sklearn.neighbors.unsupervised import NearestNeighbors
 
 __author__ = "Alex Rogozhnikov"
 
 
-def map_on_cluster(ipc_profile, *args, **kw_args):
-    """The same as map, but the first argument is ipc_profile. Distributes the task over IPython cluster.
-    Important: this function is not lazy!
-    :param str|None ipc_profile: the IPython cluster profile to use.
+def _threads_wrapper(func_and_args):
+    func = func_and_args[0]
+    args = func_and_args[1:]
+    return func(*args)
+
+
+def map_on_cluster(parallel_profile, *args, **kw_args):
+    """
+    The same as map, but the first argument is ipc_profile. Distributes the task over IPython cluster.
+
+    :param parallel_profile: the IPython cluster profile to use.
+    :type parallel_profile: None or str
+    :param list args: function, arguments
+    :param dict kw_args: kwargs for LoadBalacedView.map_sync
+
+    (function copied from REP)
+
     :return: the result of mapping
     """
-    if ipc_profile is None:
-        return list(map(*args, **kw_args))
+    if parallel_profile is None:
+        return map(*args)
+    elif str.startswith(parallel_profile, 'threads-'):
+        n_threads = int(parallel_profile[len('threads-'):])
+        pool = ThreadPool(processes=n_threads)
+        func, params = args[0], args[1:]
+        return pool.map(_threads_wrapper, zip(itertools.cycle([func]), *params))
     else:
         from IPython.parallel import Client
-
-        return Client(profile=ipc_profile).load_balanced_view().map_sync(*args, **kw_args)
+        return Client(profile=parallel_profile).load_balanced_view().map_sync(*args, **kw_args)
 
 
 def sigmoid_function(x, width):
@@ -309,3 +328,27 @@ def check_xyw(X, y, sample_weight=None, classification=False):
     return X, y, sample_weight
 
 
+def score_to_proba(score):
+    """
+    Compute class probability estimates from decision scores.
+    Uses sigmoid function
+    :param score: numpy.array of shape [n_samples]
+    :return: probabilities, numpy.array of shape [n_samples, 2]
+    """
+    proba = numpy.zeros((score.shape[0], 2), dtype=numpy.float)
+    proba[:, 1] = expit(score)
+    proba[:, 0] = 1.0 - proba[:, 1]
+    return proba
+
+
+def take_last(sequence):
+    """
+    Returns the last element in sequence or raises an error
+    """
+    empty = True
+    for element in sequence:
+        empty = False
+    if empty:
+        raise IndexError('The sequence is empty.')
+    else:
+        return element
