@@ -1,4 +1,6 @@
 """
+hep_ml.nnet
+
 Minimalistic version of feed-forward neural networks on theano.
 The neural networks from this library provide sklearn classifier's interface.
 
@@ -11,6 +13,7 @@ In this file we have **examples** of neural networks,
  which can be much more complex than those used usually.
 
 This library should be preferred for different experiments with architectures.
+Also nnet allows optimization of parameters in any differentiable decision function.
 
 """
 from __future__ import print_function, division, absolute_import
@@ -67,7 +70,7 @@ def mse_loss(y, pred, w):
 
 def smooth_huber_loss(y, pred, w):
     """Regression loss function, smooth version of Huber loss function. """
-    return T.mean(w * T.log(T.cosh((y - pred) ** 2)))
+    return T.mean(w * T.log(T.cosh(y - pred)))
 
 
 losses = {'mse_loss': mse_loss,
@@ -360,7 +363,7 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
 
         make_one_step = theano.function([], [], updates=updates)
 
-        # TODO epochs are computed wrongly at the moment if not passed
+        # TODO epochs are computed wrongly at the moment if not passed batch_size
         n_batches = 1
         if parameters_.has_key('batch'):
             batch = parameters_['batch']
