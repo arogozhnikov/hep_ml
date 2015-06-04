@@ -235,8 +235,8 @@ def _ks_2samp_fast(prepared_data1, data2, prepared_weights1, weights2, cdf1):
 def ks_2samp_weighted(data1, data2, weights1, weights2):
     """ almost the same as ks2samp from scipy.stats, but this also supports weights """
     x = numpy.unique(numpy.concatenate([data1, data2]))
-    weights1 /= numpy.sum(weights1)
-    weights2 /= numpy.sum(weights2)
+    weights1 /= numpy.sum(weights1) * 1.
+    weights2 /= numpy.sum(weights2) * 1.
     inds1 = numpy.searchsorted(x, data1)
     inds2 = numpy.searchsorted(x, data2)
     w1 = numpy.bincount(inds1, weights=weights1, minlength=len(x))
