@@ -180,7 +180,7 @@ def test_new_metrics(n_samples=2000, knn=50):
         cvm_metric.fit(X, y, sample_weight=sample_weight)
         cvm_val2 = cvm_metric(y, predictions, sample_weight=sample_weight)
 
-        assert cvm_val1 == cvm_val2, 'CvM values are different'
+        assert numpy.allclose(cvm_val1, cvm_val2), 'CvM values are different'
 
 
 def test_metrics_clear(n_samples=2000, knn=50, uniform_class=0):
