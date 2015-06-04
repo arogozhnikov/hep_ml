@@ -282,12 +282,14 @@ def take_features(X, features):
         raise NotImplementedError("Can't take features {} from object of type {}".format(features, type(X)))
 
 
-def check_sample_weight(y_true, sample_weight, normalize=False):
+def check_sample_weight(y_true, sample_weight, normalize=False, normalize_by_class=False):
     """
     Checks the weights, returns normalized version
     :param y_true: numpy.array of shape [n_samples]
     :param sample_weight: array-like of shape [n_samples] or None
-    :param normalize: bool, if True, will scale to means.
+    :param normalize: bool, if True, will scale everything to mean = 1.
+    :param normalize_by_class: bool, if set, will set equal weight = 1 for each value of y_true.
+        Better to use normalize if normalize_by_class is used.
     :returns: numpy.array with weights of shape [n_samples]"""
     if sample_weight is None:
         sample_weight = numpy.ones(len(y_true), dtype=numpy.float)
@@ -297,8 +299,13 @@ def check_sample_weight(y_true, sample_weight, normalize=False):
         assert len(y_true) == len(sample_weight), \
             "The length of weights is different: not {0}, but {1}".format(len(y_true), len(sample_weight))
 
+    if normalize_by_class:
+        sample_weight = numpy.copy(sample_weight)
+        for value in numpy.unique(y_true):
+            sample_weight[y_true == value] /= numpy.sum(sample_weight[y_true == value])
+
     if normalize:
-        sample_weight /= numpy.mean(sample_weight)
+        sample_weight = sample_weight / numpy.mean(sample_weight)
 
     return sample_weight
 

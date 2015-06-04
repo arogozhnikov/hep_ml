@@ -146,8 +146,7 @@ class GBReweighter(BaseEstimator, ReweighterMixin):
             self.other_args = {}
         original, original_weight = self.normalize_input(original, original_weight)
         target, target_weight = self.normalize_input(target, target_weight)
-        original_weight /= numpy.sum(original_weight)
-        target_weight /= numpy.sum(target_weight)
+
         self.gb = gb.GradientBoostingClassifier(loss=losses.ReweightLossFunction(),
                                                 n_estimators=self.n_estimators,
                                                 max_depth=self.max_depth,
@@ -195,13 +194,10 @@ class GBReweighterNew(BaseEstimator, ReweighterMixin):
         self.n_features_ = None
         original, original_weight = self.normalize_input(original, original_weight)
         target, target_weight = self.normalize_input(target, target_weight)
-        original_weight /= numpy.sum(original_weight)
-        target_weight /= numpy.sum(target_weight)
 
         data = numpy.vstack([original, target])
         target = numpy.array([0] * len(original) + [1] * len(target))
         weights = numpy.hstack([original_weight, target_weight])
-        weights /= numpy.mean(weights)
 
         _reg = self._reg
         # list: feature, cut, [value0, value1]
@@ -213,6 +209,7 @@ class GBReweighterNew(BaseEstimator, ReweighterMixin):
             _p = numpy.argsort(data[:, feature_id])
             _y = target[_p]
             _w = weights[_p] * numpy.exp((1 - _y) * pred[_p])
+            _w = check_sample_weight(_y, _w, normalize=True, normalize_by_class=True)
             left_w_plus = numpy.cumsum(_w * _y)
             left_w_minus = numpy.cumsum(_w * (1 - _y))
             right_w_plus = left_w_plus[-1] - left_w_plus

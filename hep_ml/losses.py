@@ -591,7 +591,8 @@ class ReweightLossFunction(AbstractLossFunction):
         return self
 
     def _compute_weights(self, y_pred):
-        return self.w * numpy.exp(self.y * y_pred)
+        weights = self.w * numpy.exp(self.y * y_pred)
+        return check_sample_weight(self.y, weights, normalize=True, normalize_by_class=True)
 
     def __call__(self, *args, **kwargs):
         """ Loss function doesn't have precise expression """
@@ -606,7 +607,6 @@ class ReweightLossFunction(AbstractLossFunction):
         w_target = numpy.bincount(terminal_regions, weights=weights * (1 - self.y))
         w_original = numpy.bincount(terminal_regions, weights=weights * self.y)
         return numpy.log(w_target + self.regularization) - numpy.log(w_original + self.regularization)
-
 
 
 # endregion
