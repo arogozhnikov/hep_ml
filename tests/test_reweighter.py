@@ -2,7 +2,7 @@ from __future__ import division, print_function, absolute_import
 
 import numpy
 
-from hep_ml.experiments.reweight import BinsReweighter, GBReweighter
+from hep_ml.experiments.reweight import BinsReweighter, GBReweighter, GBReweighterNew
 from hep_ml.metrics_utils import ks_2samp_weighted
 
 __author__ = 'Alex Rogozhnikov'
@@ -16,12 +16,12 @@ def weighted_covar(data, weights):
     return numpy.einsum('ij, ik, i -> jk', data, data, weights)
 
 
-def check_reweighter(dimension, n_samples, reweighter):
-    mean_original = numpy.random.normal(size=dimension)
-    cov_original = numpy.diag([1.] * dimension)
+def check_reweighter(n_dimensions, n_samples, reweighter):
+    mean_original = numpy.random.normal(size=n_dimensions)
+    cov_original = numpy.diag([1.] * n_dimensions)
 
     mean_target = numpy.random.mtrand.multivariate_normal(mean=mean_original, cov=cov_original)
-    cov_target = cov_original * 0.4 + numpy.ones([dimension, dimension]) * 0.2
+    cov_target = cov_original * 0.4 + numpy.ones([n_dimensions, n_dimensions]) * 0.2
 
     original = numpy.random.mtrand.multivariate_normal(mean=mean_original, cov=cov_original, size=n_samples + 1)
     original_weight = numpy.ones(n_samples + 1)
@@ -45,27 +45,40 @@ def check_reweighter(dimension, n_samples, reweighter):
     print('IDEAL', weighted_covar(target, target_weight))
 
     assert numpy.all(abs(av_now - av_ideal) < abs(av_orig - av_ideal)), 'deviation is wrong'
-    if dimension == 1:
-        diff1 = ks_2samp_weighted(original.flatten(), target.flatten(), original_weight, target_weight)
-        diff2 = ks_2samp_weighted(original.flatten(), target.flatten(), new_weights, target_weight)
+    for dim in range(n_dimensions):
+        diff1 = ks_2samp_weighted(original[:, dim], target[:, dim], original_weight, target_weight)
+        diff2 = ks_2samp_weighted(original[:, dim], target[:, dim], new_weights, target_weight)
+        print('KS', diff1, diff2)
         assert diff2 < diff1, 'Differences {} {}'.format(diff1, diff2)
 
 
 def test_reweighter_1d():
     reweighter = BinsReweighter(n_bins=200, n_neighs=2)
-    check_reweighter(dimension=1, n_samples=100000, reweighter=reweighter)
+    check_reweighter(n_dimensions=1, n_samples=100000, reweighter=reweighter)
 
 
 def test_gb_reweighter_1d():
     reweighter = GBReweighter(n_estimators=100, max_depth=2)
-    check_reweighter(dimension=1, n_samples=100000, reweighter=reweighter)
+    check_reweighter(n_dimensions=1, n_samples=100000, reweighter=reweighter)
+
+
+def test_gb_reweighter_new_1d():
+    reweighter = GBReweighterNew(n_estimators=100, learning_rate=0.3)
+    check_reweighter(n_dimensions=1, n_samples=100000, reweighter=reweighter)
+    assert 0 == 1
 
 
 def test_reweighter_2d():
     reweighter = BinsReweighter(n_bins=20, n_neighs=2)
-    check_reweighter(dimension=2, n_samples=1000000, reweighter=reweighter)
+    check_reweighter(n_dimensions=2, n_samples=1000000, reweighter=reweighter)
 
 
 def test_gb_reweighter_2d():
     reweighter = GBReweighter(max_depth=3, n_estimators=30, learning_rate=0.3, other_args=dict(subsample=0.3))
-    check_reweighter(dimension=2, n_samples=1000000, reweighter=reweighter)
+    check_reweighter(n_dimensions=2, n_samples=200000, reweighter=reweighter)
+
+
+def test_gb_reweighter_new_2d():
+    reweighter = GBReweighterNew(n_estimators=100)
+    check_reweighter(n_dimensions=2, n_samples=500000, reweighter=reweighter)
+    assert 0 == 1
