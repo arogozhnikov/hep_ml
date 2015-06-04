@@ -1,17 +1,11 @@
 from __future__ import division, print_function, absolute_import
 import numpy
 from hep_ml.commonutils import generate_sample
-from hep_ml.losses import compute_positions, BinomialDevianceLossFunction, SimpleKnnLossFunction, \
+from hep_ml.losses import BinomialDevianceLossFunction, SimpleKnnLossFunction, \
     BinFlatnessLossFunction, KnnFlatnessLossFunction, AdaLossFunction, RankBoostLossFunction, CompositeLossFunction
 from hep_ml.gradientboosting import GradientBoostingClassifier as uGradientBoostingClassifier
 
 
-def check_orders(size=40):
-    effs1 = compute_positions(numpy.arange(size), numpy.ones(size))
-    p = numpy.random.permutation(size)
-    effs2 = compute_positions(numpy.arange(size)[p], numpy.ones(size))
-    assert numpy.all(effs1[p] == effs2), 'Efficiencies are wrong'
-    assert numpy.all(effs1 == numpy.sort(effs1))
 
 
 def test_gb_with_ada(n_samples=1000, n_features=10, distance=0.6):
@@ -58,5 +52,5 @@ def test_gradient_boosting(n_samples=1000):
         result = uGradientBoostingClassifier(loss=loss, min_samples_split=20, max_depth=5, learning_rate=.2,
                                              subsample=0.7, n_estimators=n_estimators, train_variables=None) \
             .fit(trainX[:n_samples], trainY[:n_samples]).score(testX, testY)
-        assert result >= 0.7, "The quality is too poor: {} with loss {}".format(result, loss)
+        assert result >= 0.7, "The quality is too poor: {} with loss: {}".format(result, loss)
 

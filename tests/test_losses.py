@@ -7,6 +7,14 @@ from hep_ml.commonutils import generate_sample
 __author__ = 'Alex Rogozhnikov'
 
 
+def test_orders(size=40):
+    effs1 = losses.compute_positions(numpy.arange(size), numpy.ones(size))
+    p = numpy.random.permutation(size)
+    effs2 = losses.compute_positions(numpy.arange(size)[p], numpy.ones(size))
+    assert numpy.all(effs1[p] == effs2), 'Efficiencies are wrong'
+    assert numpy.all(effs1 == numpy.sort(effs1)), 'sortings are wrong'
+
+
 def test_loss_functions(size=50, epsilon=1e-3):
     """
     Testing that Hessians and gradients of loss functions
