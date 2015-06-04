@@ -12,6 +12,7 @@ from sklearn.base import BaseEstimator
 from scipy.ndimage import gaussian_filter
 from ..commonutils import check_sample_weight, weighted_quantile
 from .. import gradientboosting as gb
+from .. import losses
 import numpy
 
 __author__ = 'Alex Rogozhnikov'
@@ -147,14 +148,14 @@ class GBReweighter(BaseEstimator, ReweighterMixin):
         target, target_weight = self.normalize_input(target, target_weight)
         original_weight /= numpy.sum(original_weight)
         target_weight /= numpy.sum(target_weight)
-        self.gb = gb.GradientBoostingClassifier(loss=gb.AdaLossFunction(),
+        self.gb = gb.GradientBoostingClassifier(loss=losses.ReweightLossFunction(),
                                                 n_estimators=self.n_estimators,
                                                 max_depth=self.max_depth,
                                                 min_samples_leaf=self.min_samples_leaf,
                                                 learning_rate=self.learning_rate,
                                                 ** self.other_args)
         data = numpy.vstack([original, target])
-        target = numpy.array([0] * len(original) + [1] * len(target))
+        target = numpy.array([1] * len(original) + [0] * len(target))
         weights = numpy.hstack([original_weight, target_weight])
         self.gb.fit(data, target, sample_weight=weights)
         return self
@@ -168,7 +169,7 @@ class GBReweighter(BaseEstimator, ReweighterMixin):
         :return: numpy.array of shape [n_samples] with new weights.
         """
         original, original_weight = self.normalize_input(original, original_weight)
-        multipliers = numpy.exp(2. * self.gb.decision_function(original))
+        multipliers = numpy.exp(self.gb.decision_function(original))
         return multipliers * original_weight
 
 
@@ -251,3 +252,4 @@ class GBReweighterNew(BaseEstimator, ReweighterMixin):
 
         multipliers = numpy.exp(pred)
         return multipliers * original_weight
+

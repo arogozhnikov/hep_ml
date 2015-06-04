@@ -98,6 +98,8 @@ class HessianLossFunction(AbstractLossFunction):
         minlength = len(leaf_values)
         nominators = numpy.bincount(terminal_regions, weights=residual, minlength=minlength)
         denominators = numpy.bincount(terminal_regions, weights=self.hessian(y_pred), minlength=minlength)
+        nom_squared = nominators ** 2
+        normalization = nom_squared / (nom_squared + self.regularization_ ** 2)
         return nominators / (denominators + self.regularization_)
 
 
@@ -558,5 +560,53 @@ class KnnFlatnessLossFunction(AbstractFlatnessLossFunction):
             return knn_indices[selected_group, :]
         else:
             return knn_indices
+
+# endregion
+
+
+# region ReweightLossFunction
+
+class ReweightLossFunction(AbstractLossFunction):
+    def __init__(self, regularization=5.):
+        """
+        Loss function used to reweight events. Conventions:
+         y=0 - target distribution, y=1 - original distribution.
+        Weights after look like:
+         w = w_0 for target distribution
+         w = w_0 * exp(pred) for events from original distribution
+         (so pred for target distribution is ignored)
+
+        :param regularization: roughly, it's number of events added in each leaf to prevent overfitting.
+        """
+        self.regularization = regularization
+
+    def fit(self, X, y, sample_weight):
+        w = check_sample_weight(y, sample_weight=sample_weight)
+        for label in [0, 1]:
+            w[y == label] /= numpy.sum(w[y == label])
+        w /= w.mean()
+        self.y = y
+        self.y_signed = 2 * y - 1
+        self.w = w
+        return self
+
+    def _compute_weights(self, y_pred):
+        return self.w * numpy.exp(self.y * y_pred)
+
+    def __call__(self, *args, **kwargs):
+        """ Loss function doesn't have precise expression """
+        return 0
+
+    def negative_gradient(self, y_pred):
+        return self.y_signed * self._compute_weights(y_pred)
+
+    def prepare_new_leaves_values(self, terminal_regions, leaf_values,
+                                  X, y, y_pred, sample_weight, update_mask, residual):
+        weights = self._compute_weights(y_pred)
+        w_target = numpy.bincount(terminal_regions, weights=weights * (1 - self.y))
+        w_original = numpy.bincount(terminal_regions, weights=weights * self.y)
+        return numpy.log(w_target + self.regularization) - numpy.log(w_original + self.regularization)
+
+
 
 # endregion
