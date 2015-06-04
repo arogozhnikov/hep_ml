@@ -27,7 +27,7 @@ class GradientBoostingClassifier(BaseEstimator, ClassifierMixin):
     :param subsample: float, fraction of data to use on each stage
     :param n_estimators: int, number of trained trees.
     :param train_variables: variables used by tree.
-        Note that also there may be variables used by classifier itself.
+        Note that also there may be variables used by loss function, but not used in tree.
     """
     def __init__(self, loss=None,
                  n_estimators=10,
@@ -89,6 +89,7 @@ class GradientBoostingClassifier(BaseEstimator, ClassifierMixin):
 
         # preparing for loss function
         X, y, sample_weight = check_xyw(X, y, sample_weight=sample_weight, classification=True)
+        sample_weight = sample_weight * 1. / numpy.mean(sample_weight)
 
         self.loss = copy.deepcopy(self.loss)
         self.loss.fit(X, y, sample_weight=sample_weight)
