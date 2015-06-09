@@ -60,6 +60,14 @@ class AbstractLossFunction(BaseEstimator):
         moreover, the order should be the same"""
         raise NotImplementedError()
 
+    def prepare_tree_params(self, y_pred):
+        """Prepares patameters for regression tree that minimizes MSE
+        :param y_pred: contains predictions for all the events passed to `fit` method,
+        moreover, the order should be the same
+        :return: tuple (residual, sample_weight) with target and weight to be used in decision tree
+        """
+        return self.negative_gradient(y_pred), None
+
     def prepare_new_leaves_values(self, terminal_regions, leaf_values,
                                   X, y, y_pred, sample_weight, update_mask, residual):
         """
@@ -92,6 +100,11 @@ class HessianLossFunction(AbstractLossFunction):
 
     def hessian(self, y_pred):
         raise NotImplementedError('Override this method in loss function.')
+
+    def prepare_tree_params(self, y_pred):
+        grad = self.negative_gradient(y_pred)
+        hess = self.hessian(y_pred) + 0.01
+        return grad / hess, hess
 
     def prepare_new_leaves_values(self, terminal_regions, leaf_values,
                                   X, y, y_pred, sample_weight, update_mask, residual):
@@ -197,18 +210,23 @@ class RankBoostLossFunction(HessianLossFunction):
         self.query_matrices = []
 
         matrix = self._create_query_matrix(y, numpy.ones_like(y, dtype=bool), self.possible_ranks)
-        self.query_matrices.append(matrix / numpy.sqrt(len(y)))
+        self.query_matrices.append(matrix / numpy.sqrt(matrix.shape[1]))
 
-        # for query in self.possible_queries:
-        #     matrix = self._create_query_matrix(y, self.queries == query, self.possible_ranks)
-        #     self.query_matrices.append(matrix)
+        for query in self.possible_queries:
+            matrix = self._create_query_matrix(y, self.queries == query, self.possible_ranks)
+            self.query_matrices.append(matrix / numpy.sqrt(matrix.shape[1]))
 
         self.rank_penalties = numpy.zeros([len(self.possible_ranks), len(self.possible_ranks)], dtype=float)
 
         for r1 in self.possible_ranks:
             for r2 in self.possible_ranks:
                 if r1 < r2:
-                    self.rank_penalties[r1, r2] = (r1 - r2) ** 2
+                    if self.messup_penalty == 'square':
+                        self.rank_penalties[r1, r2] = (r2 - r1) ** 2
+                    elif self.messup_penalty == 'linear':
+                        self.rank_penalties[r1, r2] = r2 - r1
+                    else:
+                        raise NotImplementedError()
 
     def __call__(self, y_pred):
         """
@@ -229,6 +247,7 @@ class RankBoostLossFunction(HessianLossFunction):
             pos_stats = matrix.dot(pos_exponent)
             neg_stats = matrix.dot(neg_exponent)
             result += pos_stats.T.dot(self.rank_penalties).dot(neg_stats)
+        assert numpy.shape(result) == tuple()
         return result
 
     def negative_gradient(self, y_pred):
@@ -272,8 +291,8 @@ class RankBoostLossFunction(HessianLossFunction):
             w_plus += (matrix.T.dot(self.rank_penalties.dot(neg_stats)))
             w_minus += (matrix.T.dot(self.rank_penalties.T.dot(pos_stats)))
 
-        w_plus_leaf = numpy.bincount(terminal_regions, w_plus) + self.regularization
-        w_minus_leaf = numpy.bincount(terminal_regions, w_minus) + self.regularization
+        w_plus_leaf = numpy.bincount(terminal_regions, weights=w_plus) + self.regularization
+        w_minus_leaf = numpy.bincount(terminal_regions, weights=w_minus) + self.regularization
         return 0.5 * numpy.log(w_minus_leaf / w_plus_leaf)
 
 
@@ -582,9 +601,6 @@ class ReweightLossFunction(AbstractLossFunction):
 
     def fit(self, X, y, sample_weight):
         w = check_sample_weight(y, sample_weight=sample_weight)
-        for label in [0, 1]:
-            w[y == label] /= numpy.sum(w[y == label])
-        w /= w.mean()
         self.y = y
         self.y_signed = 2 * y - 1
         self.w = w
@@ -600,6 +616,9 @@ class ReweightLossFunction(AbstractLossFunction):
 
     def negative_gradient(self, y_pred):
         return self.y_signed * self._compute_weights(y_pred)
+
+    def prepare_tree_params(self, y_pred):
+        return self.y_signed, self._compute_weights(y_pred=y_pred)
 
     def prepare_new_leaves_values(self, terminal_regions, leaf_values,
                                   X, y, y_pred, sample_weight, update_mask, residual):
