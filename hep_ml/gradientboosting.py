@@ -114,11 +114,11 @@ class GradientBoostingClassifier(BaseEstimator, ClassifierMixin):
                 max_leaf_nodes=self.max_leaf_nodes)
 
             # tree learning
-            residual = self.loss.negative_gradient(y_pred)
+            residual, weights = self.loss.prepare_tree_params(y_pred)
             train_indices = self.random_state.choice(n_samples, size=n_inbag, replace=False)
 
             tree.fit(X[train_indices], residual[train_indices],
-                     sample_weight=sample_weight[train_indices], check_input=False)
+                     sample_weight=weights[train_indices], check_input=False)
             # update tree leaves
             leaf_values = tree.get_leaf_values()
             if self.update_tree:
@@ -142,7 +142,7 @@ class GradientBoostingClassifier(BaseEstimator, ClassifierMixin):
         X = numpy.array(self.get_train_vars(X), dtype=DTYPE)
         y_pred = numpy.zeros(len(X))
         for tree, leaf_values in self.estimators:
-            y_pred += self.learning_rate * self._estimate_tree(tree, leaf_values, X)
+            y_pred += self.learning_rate * self._estimate_tree(tree, leaf_values=leaf_values, X=X)
             yield y_pred
 
     def decision_function(self, X):
