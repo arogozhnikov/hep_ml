@@ -286,8 +286,8 @@ class RankBoostLossFunction(HessianLossFunction):
             w_plus += penalty_matrix.dot(neg_stats)[lookup]
             w_minus += penalty_matrix.T.dot(pos_stats)[lookup]
 
-        w_plus_leaf = numpy.bincount(terminal_regions, weights=w_plus) + self.regularization
-        w_minus_leaf = numpy.bincount(terminal_regions, weights=w_minus) + self.regularization
+        w_plus_leaf = numpy.bincount(terminal_regions, weights=w_plus * pos_exponent) + self.regularization
+        w_minus_leaf = numpy.bincount(terminal_regions, weights=w_minus * neg_exponent) + self.regularization
         return 0.5 * numpy.log(w_minus_leaf / w_plus_leaf)
 
 
