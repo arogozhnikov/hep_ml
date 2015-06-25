@@ -66,7 +66,7 @@ class AbstractLossFunction(BaseEstimator):
         moreover, the order should be the same
         :return: tuple (residual, sample_weight) with target and weight to be used in decision tree
         """
-        return self.negative_gradient(y_pred), None
+        return self.negative_gradient(y_pred), numpy.ones(len(y_pred))
 
     def prepare_new_leaves_values(self, terminal_regions, leaf_values,
                                   X, y, y_pred, sample_weight, update_mask, residual):
@@ -200,7 +200,6 @@ class RankBoostLossFunction(HessianLossFunction):
         self.y = y
         self.possible_queries, normed_queries = numpy.unique(self.queries, return_inverse=True)
         self.possible_ranks, normed_ranks = numpy.unique(self.y, return_inverse=True)
-        self.query_matrices = []
 
         self.lookups = [normed_ranks, normed_queries * len(self.possible_ranks) + normed_ranks]
         self.minlengths = [len(self.possible_ranks), len(self.possible_ranks) * len(self.possible_queries)]
@@ -216,8 +215,9 @@ class RankBoostLossFunction(HessianLossFunction):
                         raise NotImplementedError()
 
         self.penalty_matrices = []
-        self.penalty_matrices.append(self.rank_penalties)
+        self.penalty_matrices.append(self.rank_penalties / 10.)
         self.penalty_matrices.append(sparse.block_diag([self.rank_penalties] * len(self.possible_queries)))
+        HessianLossFunction.fit(self, X, y, sample_weight=sample_weight)
 
     def __call__(self, y_pred):
         """
@@ -279,16 +279,16 @@ class RankBoostLossFunction(HessianLossFunction):
         neg_exponent = numpy.exp(-y_pred)
         w_plus = numpy.zeros(len(y_pred), dtype=float)
         w_minus = numpy.zeros(len(y_pred), dtype=float)
-        for matrix in self.query_matrices:
-            pos_stats = matrix.dot(pos_exponent)
-            neg_stats = matrix.dot(neg_exponent)
-            w_plus += (matrix.T.dot(self.rank_penalties.dot(neg_stats)))
-            w_minus += (matrix.T.dot(self.rank_penalties.T.dot(pos_stats)))
+
+        for lookup, length, penalty_matrix in zip(self.lookups, self.minlengths, self.penalty_matrices):
+            pos_stats = numpy.bincount(lookup, weights=pos_exponent)
+            neg_stats = numpy.bincount(lookup, weights=neg_exponent)
+            w_plus += penalty_matrix.dot(neg_stats)[lookup]
+            w_minus += penalty_matrix.T.dot(pos_stats)[lookup]
 
         w_plus_leaf = numpy.bincount(terminal_regions, weights=w_plus) + self.regularization
         w_minus_leaf = numpy.bincount(terminal_regions, weights=w_minus) + self.regularization
         return 0.5 * numpy.log(w_minus_leaf / w_plus_leaf)
-
 
 
 # region MatrixLossFunction
@@ -351,7 +351,8 @@ class AbstractMatrixLossFunction(HessianLossFunction):
         # current approach uses Newton-Raphson step
         # TODO compare with suboptimal choice of value, based on exp(a x) ~ a exp(x)
         regions_matrix = sparse.csc_matrix((self.y_signed, [numpy.arange(len(y)), terminal_regions]))
-
+        # Z is matrix of shape [n_exponents, n_terminal_regions]
+        # with contributions of each terminal region to each exponent
         Z = self.A.dot(regions_matrix)
         Z = Z.T
         nominator = Z.dot(self.w * exponents)
