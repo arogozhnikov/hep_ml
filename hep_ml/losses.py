@@ -108,11 +108,10 @@ class HessianLossFunction(AbstractLossFunction):
 
     def prepare_new_leaves_values(self, terminal_regions, leaf_values,
                                   X, y, y_pred, sample_weight, update_mask, residual):
+        """ This expression comes from optimization of second-order approximation of loss function."""
         minlength = len(leaf_values)
         nominators = numpy.bincount(terminal_regions, weights=residual, minlength=minlength)
         denominators = numpy.bincount(terminal_regions, weights=self.hessian(y_pred), minlength=minlength)
-        nom_squared = nominators ** 2
-        normalization = nom_squared / (nom_squared + self.regularization_ ** 2)
         return nominators / (denominators + self.regularization_)
 
 
@@ -196,28 +195,16 @@ class RankBoostLossFunction(HessianLossFunction):
         self.request_column = request_column
         HessianLossFunction.__init__(self, regularization=regularization)
 
-    def _create_query_matrix(self, y, mask, possible_ranks):
-        result = sparse.lil_matrix((len(possible_ranks), len(y)))
-        for rank in possible_ranks:
-            result[rank, (y == rank) & mask] = 1
-        return sparse.csr_matrix(result)
-
     def fit(self, X, y, sample_weight):
         self.queries = X[self.request_column]
         self.y = y
-        self.possible_queries = numpy.unique(self.queries)
-        self.possible_ranks = numpy.unique(self.y)
+        self.possible_queries, normed_queries = numpy.unique(self.queries, return_inverse=True)
+        self.possible_ranks, normed_ranks = numpy.unique(self.y, return_inverse=True)
         self.query_matrices = []
 
-        matrix = self._create_query_matrix(y, numpy.ones_like(y, dtype=bool), self.possible_ranks)
-        self.query_matrices.append(matrix / numpy.sqrt(matrix.shape[1]))
-
-        for query in self.possible_queries:
-            matrix = self._create_query_matrix(y, self.queries == query, self.possible_ranks)
-            self.query_matrices.append(matrix / numpy.sqrt(matrix.shape[1]))
-
+        self.lookups = [normed_ranks, normed_queries * len(self.possible_ranks) + normed_ranks]
+        self.minlengths = [len(self.possible_ranks), len(self.possible_ranks) * len(self.possible_queries)]
         self.rank_penalties = numpy.zeros([len(self.possible_ranks), len(self.possible_ranks)], dtype=float)
-
         for r1 in self.possible_ranks:
             for r2 in self.possible_ranks:
                 if r1 < r2:
@@ -227,6 +214,10 @@ class RankBoostLossFunction(HessianLossFunction):
                         self.rank_penalties[r1, r2] = r2 - r1
                     else:
                         raise NotImplementedError()
+
+        self.penalty_matrices = []
+        self.penalty_matrices.append(self.rank_penalties)
+        self.penalty_matrices.append(sparse.block_diag([self.rank_penalties] * len(self.possible_queries)))
 
     def __call__(self, y_pred):
         """
@@ -240,36 +231,39 @@ class RankBoostLossFunction(HessianLossFunction):
         :param y_pred: predictions of shape [n_samples]
         :return: value of loss, float
         """
+        y_pred -= y_pred.mean()
         pos_exponent = numpy.exp(y_pred)
         neg_exponent = numpy.exp(-y_pred)
         result = 0.
-        for matrix in self.query_matrices:
-            pos_stats = matrix.dot(pos_exponent)
-            neg_stats = matrix.dot(neg_exponent)
-            result += pos_stats.T.dot(self.rank_penalties).dot(neg_stats)
-        assert numpy.shape(result) == tuple()
+        for lookup, length, penalty_matrix in zip(self.lookups, self.minlengths, self.penalty_matrices):
+            pos_stats = numpy.bincount(lookup, weights=pos_exponent)
+            neg_stats = numpy.bincount(lookup, weights=neg_exponent)
+            result += pos_stats.T.dot(penalty_matrix.dot(neg_stats))
+        # assert numpy.shape(result) == tuple()
         return result
 
     def negative_gradient(self, y_pred):
+        y_pred -= y_pred.mean()
         pos_exponent = numpy.exp(y_pred)
         neg_exponent = numpy.exp(-y_pred)
         gradient = numpy.zeros(len(y_pred), dtype=float)
-        for matrix in self.query_matrices:
-            pos_stats = matrix.dot(pos_exponent)
-            neg_stats = matrix.dot(neg_exponent)
-            gradient += pos_exponent * (matrix.T.dot(self.rank_penalties.dot(neg_stats)))
-            gradient -= neg_exponent * (matrix.T.dot(self.rank_penalties.T.dot(pos_stats)))
+        for lookup, length, penalty_matrix in zip(self.lookups, self.minlengths, self.penalty_matrices):
+            pos_stats = numpy.bincount(lookup, weights=pos_exponent)
+            neg_stats = numpy.bincount(lookup, weights=neg_exponent)
+            gradient += pos_exponent * penalty_matrix.dot(neg_stats)[lookup]
+            gradient -= neg_exponent * penalty_matrix.T.dot(pos_stats)[lookup]
         return - gradient
 
     def hessian(self, y_pred):
+        y_pred -= y_pred.mean()
         pos_exponent = numpy.exp(y_pred)
         neg_exponent = numpy.exp(-y_pred)
         result = numpy.zeros(len(y_pred), dtype=float)
-        for matrix in self.query_matrices:
-            pos_stats = matrix.dot(pos_exponent)
-            neg_stats = matrix.dot(neg_exponent)
-            result += pos_exponent * (matrix.T.dot(self.rank_penalties.dot(neg_stats)))
-            result += neg_exponent * (matrix.T.dot(self.rank_penalties.T.dot(pos_stats)))
+        for lookup, length, penalty_matrix in zip(self.lookups, self.minlengths, self.penalty_matrices):
+            pos_stats = numpy.bincount(lookup, weights=pos_exponent)
+            neg_stats = numpy.bincount(lookup, weights=neg_exponent)
+            result += pos_exponent * penalty_matrix.dot(neg_stats)[lookup]
+            result += neg_exponent * penalty_matrix.T.dot(pos_stats)[lookup]
         return result
 
     def prepare_new_leaves_values(self, terminal_regions, leaf_values,
@@ -317,7 +311,7 @@ class AbstractMatrixLossFunction(HessianLossFunction):
     def fit(self, X, y, sample_weight):
         """This method is used to compute A matrix and w based on train dataset"""
         assert len(X) == len(y), "different size of arrays"
-        A, w = self.compute_parameters(X, y)
+        A, w = self.compute_parameters(X, y, sample_weight)
         self.A = sparse.csr_matrix(A)
         self.A_t = sparse.csr_matrix(self.A.transpose())
         self.A_t_sq = self.A_t.multiply(self.A_t)
@@ -347,14 +341,23 @@ class AbstractMatrixLossFunction(HessianLossFunction):
         result = self.A_t_sq.dot(self.w * exponents)
         return result
 
-    def compute_parameters(self, trainX, trainY):
+    def compute_parameters(self, trainX, trainY, trainW):
         """This method should be overloaded in descendant, and should return A, w (matrix and vector)"""
         raise NotImplementedError()
 
-    # def update_tree(self, tree, X, y, y_pred, sample_weight, update_mask, residual):
-    #     self.update_exponents = self.w * numpy.exp(- self.A.dot(self.y_signed * y_pred))
-    #     AbstractLossFunction.update_tree(self, tree, X, y, y_pred, sample_weight, update_mask, residual)
-    #
+    def prepare_new_leaves_values(self, terminal_regions, leaf_values,
+                                  X, y, y_pred, sample_weight, update_mask, residual):
+        exponents = numpy.exp(- self.A.dot(self.y_signed * y_pred))
+        # current approach uses Newton-Raphson step
+        # TODO compare with suboptimal choice of value, based on exp(a x) ~ a exp(x)
+        regions_matrix = sparse.csc_matrix((self.y_signed, [numpy.arange(len(y)), terminal_regions]))
+
+        Z = self.A.dot(regions_matrix)
+        Z = Z.T
+        nominator = Z.dot(self.w * exponents)
+        denominator = Z.multiply(Z).dot(self.w * exponents)
+        return nominator / (denominator + 1e-5)
+
     # def update_tree_leaf(self, leaf, indices_in_leaf, X, y, y_pred, sample_weight, update_mask, residual):
     #     terminal_region = numpy.zeros(len(X), dtype=float)
     #     terminal_region[indices_in_leaf] += 1
@@ -379,8 +382,7 @@ class SimpleKnnLossFunction(AbstractMatrixLossFunction):
         self.uniform_label = check_uniform_label(uniform_label)
         AbstractMatrixLossFunction.__init__(self, uniform_variables)
 
-    def compute_parameters(self, trainX, trainY):
-        sample_weight = numpy.ones(len(trainX))
+    def compute_parameters(self, trainX, trainY, trainW):
         A_parts = []
         w_parts = []
         for label in self.uniform_label:
@@ -396,7 +398,7 @@ class SimpleKnnLossFunction(AbstractMatrixLossFunction):
             column_indices = knn_indices.flatten()
             data = numpy.ones(n_label * self.knn, dtype=float) * self.row_norm / self.knn
             A_part = sparse.csr_matrix((data, column_indices, ind_ptr), shape=[n_label, len(trainX)])
-            w_part = numpy.mean(numpy.take(sample_weight, knn_indices), axis=1)
+            w_part = numpy.mean(numpy.take(trainW, knn_indices), axis=1)
             assert A_part.shape[0] == len(w_part)
             A_parts.append(A_part)
             w_parts.append(w_part)
@@ -408,7 +410,7 @@ class SimpleKnnLossFunction(AbstractMatrixLossFunction):
             column_indices = numpy.where(label_mask)[0].flatten()
             data = numpy.ones(n_label, dtype=float) * self.row_norm
             A_part = sparse.csr_matrix((data, column_indices, ind_ptr), shape=[n_label, len(trainX)])
-            w_part = sample_weight[label_mask]
+            w_part = trainW[label_mask]
             A_parts.append(A_part)
             w_parts.append(w_part)
 
