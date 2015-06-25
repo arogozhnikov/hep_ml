@@ -54,10 +54,8 @@ def test_loss_functions(size=50, epsilon=1e-3):
             numer_gradient[i] = - (val_plus - val_minus) / 2. / epsilon
             numer_hessian[i] = (val_plus + val_minus - 2 * val) / epsilon ** 2
 
-        print(loss)
+        print(loss, numer_gradient, numer_hessian)
         assert numpy.allclose(gradient, numer_gradient), 'wrong computation of gradient'
         assert (gradient * (2 * y - 1) >= 0).all(), 'wrong signs of gradients'
-        if isinstance(loss, losses.RankBoostLossFunction):
-            assert numpy.allclose(hessian, numer_hessian, rtol=1e-1, atol=1e-2), 'wrong computation of hessian'
-        else:
-            assert numpy.allclose(hessian, numer_hessian, atol=1e-7), 'wrong computation of hessian'
+        assert numpy.allclose(hessian, numer_hessian, atol=1e-7), 'wrong computation of hessian'
+
