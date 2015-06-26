@@ -6,8 +6,6 @@ from hep_ml.losses import BinomialDevianceLossFunction, SimpleKnnLossFunction, \
 from hep_ml.gradientboosting import GradientBoostingClassifier as uGradientBoostingClassifier
 
 
-
-
 def test_gb_with_ada(n_samples=1000, n_features=10, distance=0.6):
     testX, testY = generate_sample(n_samples, n_features, distance=distance)
     trainX, trainY = generate_sample(n_samples, n_features, distance=distance)
@@ -36,21 +34,23 @@ def test_gradient_boosting(n_samples=1000):
     rank_variable = 'column1'
     trainX[rank_variable] = numpy.random.randint(0, 3, size=len(trainX))
     testX[rank_variable] = numpy.random.randint(0, 3, size=len(testX))
-    n_estimators = 20
 
     loss1 = BinomialDevianceLossFunction()
     loss2 = AdaLossFunction()
     loss3 = CompositeLossFunction()
     loss4 = SimpleKnnLossFunction(uniform_variables=uniform_variables)
     loss5 = RankBoostLossFunction(request_column=rank_variable)
+    loss51 = RankBoostLossFunction(request_column=rank_variable, update_terations=2)
+    loss52 = RankBoostLossFunction(request_column=rank_variable, update_terations=10)
     loss6bin = BinFlatnessLossFunction(uniform_variables, ada_coefficient=0.5)
     loss7bin = BinFlatnessLossFunction(uniform_variables, ada_coefficient=0.5, uniform_label=[0, 1])
     loss6knn = KnnFlatnessLossFunction(uniform_variables, ada_coefficient=0.5)
     loss7knn = KnnFlatnessLossFunction(uniform_variables, ada_coefficient=0.5, uniform_label=[0, 1])
 
-    for loss in [loss1, loss2, loss3, loss4,  loss5, loss6bin, loss7bin, loss6knn, loss7knn]:
-        result = uGradientBoostingClassifier(loss=loss, min_samples_split=20, max_depth=5, learning_rate=.2,
-                                             subsample=0.7, n_estimators=n_estimators, train_variables=None) \
-            .fit(trainX[:n_samples], trainY[:n_samples]).score(testX, testY)
+    for loss in [loss5, loss51, loss52, loss1, loss2, loss3, loss4, loss5, loss6bin, loss7bin, loss6knn, loss7knn]:
+        clf = uGradientBoostingClassifier(loss=loss, min_samples_split=20, max_depth=5, learning_rate=0.2,
+                                          subsample=0.7, n_estimators=25, train_variables=None) \
+            .fit(trainX[:n_samples], trainY[:n_samples])
+        result = clf.score(testX, testY)
         assert result >= 0.7, "The quality is too poor: {} with loss: {}".format(result, loss)
 

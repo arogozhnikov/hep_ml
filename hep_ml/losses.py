@@ -190,7 +190,8 @@ class CompositeLossFunction(HessianLossFunction):
 
 
 class RankBoostLossFunction(HessianLossFunction):
-    def __init__(self, request_column, messup_penalty='square', regularization=0.1):
+    def __init__(self, request_column, messup_penalty='square', regularization=0.1, update_terations=1):
+        self.update_terations = update_terations
         self.messup_penalty = messup_penalty
         self.request_column = request_column
         HessianLossFunction.__init__(self, regularization=regularization)
@@ -267,6 +268,16 @@ class RankBoostLossFunction(HessianLossFunction):
         return result
 
     def prepare_new_leaves_values(self, terminal_regions, leaf_values,
+                                  X, y, y_pred, sample_weight, update_mask, residual):
+        leaves_values = numpy.zeros(len(leaf_values))
+        for _ in range(self.update_terations):
+            y_test = y_pred + leaves_values[terminal_regions]
+            new_leaves_values = self._prepare_new_leaves_values(terminal_regions, leaves_values,
+                                  X, y, y_test, sample_weight, update_mask, residual)
+            leaves_values = 0.5 * new_leaves_values + leaves_values
+        return leaves_values
+
+    def _prepare_new_leaves_values(self, terminal_regions, leaf_values,
                                   X, y, y_pred, sample_weight, update_mask, residual):
         """
         For each event we shall represent loss as
