@@ -359,3 +359,10 @@ def take_last(sequence):
         raise IndexError('The sequence is empty.')
     else:
         return element
+
+
+def to_pandas_dataframe(X):
+    if isinstance(X, pandas.DataFrame):
+        return X
+    else:
+        return pandas.DataFrame(X, columns=['Feature{}'.format(i) for i in range(X.shape[1])])
