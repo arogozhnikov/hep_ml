@@ -216,8 +216,10 @@ class RankBoostLossFunction(HessianLossFunction):
                         raise NotImplementedError()
 
         self.penalty_matrices = []
-        self.penalty_matrices.append(self.rank_penalties / 10.)
-        self.penalty_matrices.append(sparse.block_diag([self.rank_penalties] * len(self.possible_queries)))
+        self.penalty_matrices.append(self.rank_penalties / numpy.sqrt(1 + len(y)))
+        n_queries = numpy.bincount(normed_queries)
+        assert len(n_queries) == len(self.possible_queries)
+        self.penalty_matrices.append(sparse.block_diag([self.rank_penalties * 1. / numpy.sqrt(1 + nq) for nq in n_queries]))
         HessianLossFunction.fit(self, X, y, sample_weight=sample_weight)
 
     def __call__(self, y_pred):
@@ -240,7 +242,6 @@ class RankBoostLossFunction(HessianLossFunction):
             pos_stats = numpy.bincount(lookup, weights=pos_exponent)
             neg_stats = numpy.bincount(lookup, weights=neg_exponent)
             result += pos_stats.T.dot(penalty_matrix.dot(neg_stats))
-        # assert numpy.shape(result) == tuple()
         return result
 
     def negative_gradient(self, y_pred):
