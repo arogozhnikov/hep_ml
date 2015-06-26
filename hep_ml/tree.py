@@ -6,8 +6,8 @@ from sklearn.tree import DecisionTreeRegressor
 A wrapper over regression trees is presented here.
 This one isn't actually needed by itself, but is an important part of gradient boosting.
 
-GBDT uses only (attention!) **transform** method, which returns not
-predictions, but indices of values.
+GBDT uses (attention!) **transform** method, which returns not
+predictions, but indices of leaves for all samples.
 """
 
 __author__ = 'Alex Rogozhnikov'
@@ -15,8 +15,7 @@ __author__ = 'Alex Rogozhnikov'
 
 class ClusteringTree(TransformerMixin):
     """
-    Wrapper over different decision trees, which is quite simple
-
+    Trivial wrapper over different decision trees
     """
 
     def transform(self, X):
