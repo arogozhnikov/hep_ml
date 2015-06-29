@@ -59,3 +59,45 @@ def test_loss_functions(size=50, epsilon=1e-3):
         assert (gradient * (2 * y - 1) >= 0).all(), 'wrong signs of gradients'
         assert numpy.allclose(hessian, numer_hessian, atol=1e-7), 'wrong computation of hessian'
 
+
+def test_step_optimality(size=50):
+    """
+    testing that for single leaf function returns the optimal value
+    :param size:
+    :return:
+    """
+    X, y = generate_sample(size, n_features=10)
+    rank_column = X.columns[2]
+    X[rank_column] = numpy.random.randint(0, 3, size=size)
+    sample_weight = numpy.random.exponential(size=size)
+
+    tested_losses = [
+        losses.BinomialDevianceLossFunction(),
+        losses.AdaLossFunction(),
+        losses.SimpleKnnLossFunction(X.columns[:1], knn=5),
+        losses.CompositeLossFunction(),
+        losses.RankBoostLossFunction(rank_column)
+    ]
+
+    pred = numpy.random.normal(size=size)
+
+    for loss in tested_losses:
+        loss.fit(X, y, sample_weight=sample_weight)
+        leaf_value = numpy.random.normal()
+        # Some basic optimization goes here:
+        new_value = 0.
+        for _ in range(4):
+            ministep, = loss.prepare_new_leaves_values(
+                terminal_regions=numpy.zeros(size, dtype=int),
+                leaf_values=[leaf_value], X=X, y=y, y_pred=pred + new_value, sample_weight=sample_weight,
+                update_mask=None, residual=loss.negative_gradient(pred + new_value))
+            new_value += ministep
+
+        print(new_value)
+        loss_values = []
+        coeffs = [0.9, 1.0, 1.1]
+        for coeff in coeffs:
+            loss_values.append(loss(pred + coeff * new_value))
+        print(loss, new_value, 'losses: ', loss_values)
+        assert loss_values[1] <= loss_values[0] + 1e-7
+        assert loss_values[1] <= loss_values[2] + 1e-7
