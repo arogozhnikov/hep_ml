@@ -239,8 +239,8 @@ class RankBoostLossFunction(HessianLossFunction):
         neg_exponent = numpy.exp(-y_pred)
         result = 0.
         for lookup, length, penalty_matrix in zip(self.lookups, self.minlengths, self.penalty_matrices):
-            pos_stats = numpy.bincount(lookup, weights=pos_exponent)
-            neg_stats = numpy.bincount(lookup, weights=neg_exponent)
+            pos_stats = numpy.bincount(lookup, weights=pos_exponent, minlength=length)
+            neg_stats = numpy.bincount(lookup, weights=neg_exponent, minlength=length)
             result += pos_stats.T.dot(penalty_matrix.dot(neg_stats))
         return result
 
@@ -250,8 +250,8 @@ class RankBoostLossFunction(HessianLossFunction):
         neg_exponent = numpy.exp(-y_pred)
         gradient = numpy.zeros(len(y_pred), dtype=float)
         for lookup, length, penalty_matrix in zip(self.lookups, self.minlengths, self.penalty_matrices):
-            pos_stats = numpy.bincount(lookup, weights=pos_exponent)
-            neg_stats = numpy.bincount(lookup, weights=neg_exponent)
+            pos_stats = numpy.bincount(lookup, weights=pos_exponent, minlength=length)
+            neg_stats = numpy.bincount(lookup, weights=neg_exponent, minlength=length)
             gradient += pos_exponent * penalty_matrix.dot(neg_stats)[lookup]
             gradient -= neg_exponent * penalty_matrix.T.dot(pos_stats)[lookup]
         return - gradient
@@ -262,8 +262,8 @@ class RankBoostLossFunction(HessianLossFunction):
         neg_exponent = numpy.exp(-y_pred)
         result = numpy.zeros(len(y_pred), dtype=float)
         for lookup, length, penalty_matrix in zip(self.lookups, self.minlengths, self.penalty_matrices):
-            pos_stats = numpy.bincount(lookup, weights=pos_exponent)
-            neg_stats = numpy.bincount(lookup, weights=neg_exponent)
+            pos_stats = numpy.bincount(lookup, weights=pos_exponent, minlength=length)
+            neg_stats = numpy.bincount(lookup, weights=neg_exponent, minlength=length)
             result += pos_exponent * penalty_matrix.dot(neg_stats)[lookup]
             result += neg_exponent * penalty_matrix.T.dot(pos_stats)[lookup]
         return result
@@ -293,8 +293,8 @@ class RankBoostLossFunction(HessianLossFunction):
         w_minus = numpy.zeros(len(y_pred), dtype=float)
 
         for lookup, length, penalty_matrix in zip(self.lookups, self.minlengths, self.penalty_matrices):
-            pos_stats = numpy.bincount(lookup, weights=pos_exponent)
-            neg_stats = numpy.bincount(lookup, weights=neg_exponent)
+            pos_stats = numpy.bincount(lookup, weights=pos_exponent, minlength=length)
+            neg_stats = numpy.bincount(lookup, weights=neg_exponent, minlength=length)
             w_plus += penalty_matrix.dot(neg_stats)[lookup]
             w_minus += penalty_matrix.T.dot(pos_stats)[lookup]
 
