@@ -354,9 +354,9 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
         parameters_ = {} if self.trainer_parameters is None else self.trainer_parameters.copy()
         parameters_.update(trainer_parameters)
 
-        x = theano.shared(X)
-        y = theano.shared(y)
-        w = theano.shared(sample_weight)
+        x = theano.shared(numpy.array(X, dtype=floatX))
+        y = theano.shared(numpy.array(y, dtype=floatX))
+        w = theano.shared(numpy.array(sample_weight, dtype=floatX))
 
         shareds, updates = trainer(x, y, w, self.parameters, loss_lambda,
                                    RandomStreams(seed=self.random_state.randint(0, 1000)), **parameters_)
