@@ -285,12 +285,10 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
         """This function is called once, it creates the activation function, it's gradient
         and initializes the weights
         :return: loss function as lambda (x, y, w) -> loss"""
-        if not self.prepared:
-            self.random_state = check_random_state(self.random_state)
-            self.layers_ = [n_input_features] + self.layers + [1]
-            self.parameters = {}
-            self.scaler_ = _prepare_scaler(self.scaler)
-            self.prepared = True
+        self.random_state = check_random_state(self.random_state)
+        self.layers_ = [n_input_features] + self.layers + [1]
+        self.parameters = {}
+        self.prepared = True
 
         loss_function = losses.get(self.loss, self.loss)
 
@@ -303,10 +301,65 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
         self.Loss = theano.function([x, y, w], loss_(x, y, w))
         return loss_
 
+    def transform(self, X, y=None, fit=True):
+        if fit:
+            self.scaler_ = _prepare_scaler(self.scaler)
+            self.scaler_.fit(X, y)
+
+        # Fighting copy-bug of sklearn's transformers
+        X = numpy.array(X, dtype=float)
+
+        result = self.scaler_.transform(X)
+        result = numpy.hstack([result, numpy.ones([len(X), 1])])
+
+        return result
+
+    def fit(self, X, y, sample_weight=None, trainer=None, epochs=None, **trainer_parameters):
+        """ Prepare the model by optimizing selected loss function with some trainer.
+        This method doesn't support additional fitting, use `partial_fit`
+        :param X: numpy.array of shape [n_samples, n_features]
+        :param y: numpy.array of shape [n_samples]
+        :param sample_weight: numpy.array of shape [n_samples], leave None for array of 1's
+        :param trainer: str, method used to minimize loss, overrides one in the ctor
+        :param trainer_parameters: parameters for this method, override ones in ctor
+        :return: self """
+        X, y, sample_weight = check_xyw(X, y, sample_weight)
+        sample_weight = check_sample_weight(y, sample_weight, normalize=True)
+        X = self.transform(X, y, fit=True)
+        self.classes_ = numpy.array([0, 1])
+        assert (numpy.unique(y) == self.classes_).all(), 'only two-class classification supported, labels are 0 and 1'
+        loss_lambda = self._prepare(X.shape[1])
+
+        trainer = trainers[self.trainer if trainer is None else trainer]
+        parameters_ = {} if self.trainer_parameters is None else self.trainer_parameters.copy()
+        parameters_.update(trainer_parameters)
+
+        x = theano.shared(numpy.array(X, dtype=floatX))
+        y = theano.shared(numpy.array(y, dtype=floatX))
+        w = theano.shared(numpy.array(sample_weight, dtype=floatX))
+
+        shareds, updates = trainer(x, y, w, self.parameters, loss_lambda,
+                                   RandomStreams(seed=self.random_state.randint(0, 1000)), **parameters_)
+
+        make_one_step = theano.function([], [], updates=updates)
+
+        # TODO epochs are computed wrongly at the moment if 'batch' parameter not passed.
+        n_batches = 1
+        if parameters_.has_key('batch'):
+            batch = parameters_['batch']
+            n_batches = len(X) // batch + 1
+
+        for i in range(epochs or self.epochs):
+            for _ in range(n_batches):
+                make_one_step()
+
+        return self
+
     def activate(self, X):
         """ Activates NN on particular dataset
         :param numpy.array X: of shape [n_samples, n_features]
         :return: numpy.array with results of shape [n_samples] """
+        X = self.transform(X, fit=False)
         return self.Activation(X)
 
     def predict_proba(self, X):
@@ -333,50 +386,11 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
         :param sample_weight: optional, numpy.array of shape [n_samples].
         :return float, the loss vales computed"""
         sample_weight = check_sample_weight(y, sample_weight, normalize=False)
+        X = self.transform(X, fit=False)
         return self.Loss(X, y, sample_weight)
 
-    def fit(self, X, y, sample_weight=None, trainer=None, epochs=None, **trainer_parameters):
-        """ Prepare the model by optimizing selected loss function with some trainer.
-        This method can (and should) be called several times, each time with new parameters
-        :param X: numpy.array of shape [n_samples, n_features]
-        :param y: numpy.array of shape [n_samples]
-        :param sample_weight: numpy.array of shape [n_samples], leave None for array of 1's
-        :param trainer: str, method used to minimize loss, overrides one in the ctor
-        :param trainer_parameters: parameters for this method, override ones in ctor
-        :return: self """
-        X, y, sample_weight = check_xyw(X, y, sample_weight)
-        sample_weight = check_sample_weight(y, sample_weight, normalize=True)
-        self.classes_ = numpy.array([0, 1])
-        assert (numpy.unique(y) == self.classes_).all(), 'only two-class classification supported, labels are 0 and 1'
-        loss_lambda = self._prepare(X.shape[1])
-
-        trainer = trainers[self.trainer if trainer is None else trainer]
-        parameters_ = {} if self.trainer_parameters is None else self.trainer_parameters.copy()
-        parameters_.update(trainer_parameters)
-
-        x = theano.shared(numpy.array(X, dtype=floatX))
-        y = theano.shared(numpy.array(y, dtype=floatX))
-        w = theano.shared(numpy.array(sample_weight, dtype=floatX))
-
-        shareds, updates = trainer(x, y, w, self.parameters, loss_lambda,
-                                   RandomStreams(seed=self.random_state.randint(0, 1000)), **parameters_)
-
-        make_one_step = theano.function([], [], updates=updates)
-
-        # TODO epochs are computed wrongly at the moment if not passed batch_size
-        n_batches = 1
-        if parameters_.has_key('batch'):
-            batch = parameters_['batch']
-            n_batches = len(X) // batch + 1
-
-        for i in range(epochs or self.epochs):
-            for _ in range(n_batches):
-                make_one_step()
-
-        return self
-
-
 # region Neural networks
+
 
 class SimpleNeuralNetwork(AbstractNeuralNetworkClassifier):
     """The most simple NN with one hidden layer (sigmoid activation), for example purposes """
@@ -411,7 +425,7 @@ class RBFNeuralNetwork(AbstractNeuralNetworkClassifier):
 
     def prepare(self):
         n1, n2, n3 = self.layers_
-        W1 = self._create_shared_matrix('W1', n1, n2)
+        W1 = self._create_shared_matrix('W1', n2, n1)
         W2 = self._create_shared_matrix('W2', n2, n3)
         # this parameter is responsible for scaling, it is optimised too
         G = theano.shared(value=0.1, name='G')
