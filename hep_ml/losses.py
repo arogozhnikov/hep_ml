@@ -643,4 +643,52 @@ class ReweightLossFunction(AbstractLossFunction):
         return numpy.log(w_target + self.regularization) - numpy.log(w_original + self.regularization)
 
 
+class ReweightNegativeLossFunction(AbstractLossFunction):
+    def __init__(self, regularization=5.):
+        """
+        Attempt to support negative weights.
+        """
+        self.regularization = regularization
+
+    def fit(self, X, y, sample_weight):
+        if sample_weight is None:
+            sample_weight = numpy.ones(len(X), dtype=float)
+        else:
+            sample_weight = numpy.array(sample_weight, dtype=float)
+        self.y = y
+        # signs encounter transfer to opposite distribution
+        self.signs = (2 * y - 1) * numpy.sign(sample_weight)
+        self.w = numpy.abs(sample_weight)
+        self.mask_original = self.y * numpy.sign(sample_weight)
+        self.mask_target = (1 - self.y) * numpy.sign(sample_weight)
+        return self
+
+    def _compute_weights(self, y_pred):
+        weights = self.w * numpy.exp(self.y * y_pred)
+        return check_sample_weight(self.signs, weights, normalize=True, normalize_by_class=True)
+
+    def __call__(self, *args, **kwargs):
+        """ Loss function doesn't have precise expression """
+        return 0
+
+    def negative_gradient(self, y_pred):
+        return self.signs * self._compute_weights(y_pred)
+
+    def prepare_tree_params(self, y_pred):
+        return self.signs, self._compute_weights(y_pred=y_pred)
+
+    def prepare_new_leaves_values(self, terminal_regions, leaf_values,
+                                  X, y, y_pred, sample_weight, update_mask, residual):
+        weights = self._compute_weights(y_pred)
+        w_target = numpy.bincount(terminal_regions, weights=weights * self.mask_target)
+        w_original = numpy.bincount(terminal_regions, weights=weights * self.mask_original)
+
+        # suppressing possibly negative samples
+        w_target = w_target.clip(0)
+        w_original = w_original.clip(0)
+
+        return numpy.log(w_target + self.regularization) - numpy.log(w_original + self.regularization)
+
+
+
 # endregion

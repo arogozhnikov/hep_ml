@@ -172,14 +172,7 @@ class GBReweighter(BaseEstimator, ReweighterMixin):
         return multipliers * original_weight
 
 
-class GBReweighterNew(BaseEstimator, ReweighterMixin):
-    _reg = 10.
-
-    def __init__(self,
-                 n_estimators=100,
-                 learning_rate=0.2):
-        self.learning_rate = learning_rate
-        self.n_estimators = n_estimators
+class GBReweighterNew(GBReweighter):
 
     def fit(self, original, target, original_weight=None, target_weight=None):
         """
@@ -192,61 +185,19 @@ class GBReweighterNew(BaseEstimator, ReweighterMixin):
         :return: self
         """
         self.n_features_ = None
+        if self.other_args is None:
+            self.other_args = {}
         original, original_weight = self.normalize_input(original, original_weight)
         target, target_weight = self.normalize_input(target, target_weight)
 
+        self.gb = gb.GradientBoostingClassifier(loss=losses.ReweightNegativeLossFunction(),
+                                                n_estimators=self.n_estimators,
+                                                max_depth=self.max_depth,
+                                                min_samples_leaf=self.min_samples_leaf,
+                                                learning_rate=self.learning_rate,
+                                                ** self.other_args)
         data = numpy.vstack([original, target])
-        target = numpy.array([0] * len(original) + [1] * len(target))
+        target = numpy.array([1] * len(original) + [0] * len(target))
         weights = numpy.hstack([original_weight, target_weight])
-
-        _reg = self._reg
-        # list: feature, cut, [value0, value1]
-        self.estimators = []
-        pred = numpy.zeros(len(data))
-        for _ in range(self.n_estimators):
-
-            feature_id = numpy.random.choice(range(self.n_features_))
-            _p = numpy.argsort(data[:, feature_id])
-            _y = target[_p]
-            _w = weights[_p] * numpy.exp((1 - _y) * pred[_p])
-            _w = check_sample_weight(_y, _w, normalize=True, normalize_by_class=True)
-            left_w_plus = numpy.cumsum(_w * _y)
-            left_w_minus = numpy.cumsum(_w * (1 - _y))
-            right_w_plus = left_w_plus[-1] - left_w_plus
-            right_w_minus = left_w_minus[-1] - left_w_minus
-            binned_chi2 = (left_w_minus - left_w_plus) ** 2 / (left_w_minus + left_w_plus + _reg)
-            binned_chi2 += (right_w_minus - right_w_plus) ** 2 / (right_w_minus + right_w_plus + _reg)
-            _index = numpy.argmax(binned_chi2)
-            index = _p[_index]
-            optimal_binned_chi2 = numpy.max(binned_chi2)
-            thresh = data[index, feature_id]
-
-            left_value = - numpy.log((left_w_minus[_index] + _reg) / (left_w_plus[_index] + _reg))
-            right_value = - numpy.log((right_w_minus[_index] + _reg) / (right_w_plus[_index] + _reg))
-
-            estimator = [feature_id, thresh, [left_value, right_value]]
-            self.estimators.append(estimator)
-            pred += self.learning_rate * self.predict_estimator(data, estimator)
-
+        self.gb.fit(data, target, sample_weight=weights)
         return self
-
-    def predict_estimator(self, data, estimator):
-        feature_id, threshold, values = estimator
-        return numpy.take(values, data[:, feature_id] > threshold)
-
-    def predict_weights(self, original, original_weight=None):
-        """
-        Returns corrected weights
-
-        :param original: values from original distribution of shape [n_samples, n_features]
-        :param original_weight: weights of samples before reweighting.
-        :return: numpy.array of shape [n_samples] with new weights.
-        """
-        original, original_weight = self.normalize_input(original, original_weight)
-        pred = numpy.zeros(len(original))
-        for estimator in self.estimators:
-            pred += self.learning_rate * self.predict_estimator(original, estimator)
-
-        multipliers = numpy.exp(pred)
-        return multipliers * original_weight
-
