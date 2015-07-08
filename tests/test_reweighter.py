@@ -2,7 +2,7 @@ from __future__ import division, print_function, absolute_import
 
 import numpy
 
-from hep_ml.experiments.reweight import BinsReweighter, GBReweighter, GBReweighterNew
+from hep_ml.experiments.reweight import BinsReweighter, GBReweighter
 from hep_ml.metrics_utils import ks_2samp_weighted
 
 __author__ = 'Alex Rogozhnikov'
@@ -62,11 +62,6 @@ def test_gb_reweighter_1d():
     check_reweighter(n_dimensions=1, n_samples=100000, reweighter=reweighter)
 
 
-def test_gb_reweighter_new_1d():
-    reweighter = GBReweighterNew(n_estimators=100, learning_rate=0.3)
-    check_reweighter(n_dimensions=1, n_samples=100000, reweighter=reweighter)
-
-
 def test_reweighter_2d():
     reweighter = BinsReweighter(n_bins=20, n_neighs=2)
     check_reweighter(n_dimensions=2, n_samples=1000000, reweighter=reweighter)
@@ -76,7 +71,6 @@ def test_gb_reweighter_2d():
     reweighter = GBReweighter(max_depth=3, n_estimators=30, learning_rate=0.3, other_args=dict(subsample=0.3))
     check_reweighter(n_dimensions=2, n_samples=200000, reweighter=reweighter)
 
-
-def test_gb_reweighter_new_2d():
-    reweighter = GBReweighterNew(n_estimators=100)
-    check_reweighter(n_dimensions=2, n_samples=500000, reweighter=reweighter)
+def test_gb_reweighter_2d_new():
+    reweighter = GBReweighter(max_depth=3, n_estimators=30, learning_rate=0.3, other_args=dict(subsample=0.3))
+    check_reweighter(n_dimensions=2, n_samples=200000, reweighter=reweighter)
