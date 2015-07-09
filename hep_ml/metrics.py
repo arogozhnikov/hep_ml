@@ -47,7 +47,7 @@ class AbstractMetric(BaseEstimator):
         """
         If metrics needs some initial heavy computations,
         this can be done here.
-        interface is the same as for
+        interface is the same as for all REP estimators
         """
         return self
 

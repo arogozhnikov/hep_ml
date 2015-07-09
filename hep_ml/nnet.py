@@ -334,8 +334,8 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
         parameters_ = {} if self.trainer_parameters is None else self.trainer_parameters.copy()
         parameters_.update(trainer_parameters)
 
-        x = theano.shared(numpy.array(X, dtype=floatX))
-        y = theano.shared(numpy.array(y, dtype=floatX))
+        x = theano.shared(X)
+        y = theano.shared(y)
         w = theano.shared(numpy.array(sample_weight, dtype=floatX))
 
         shareds, updates = trainer(x, y, w, self.parameters, loss_lambda,
@@ -416,7 +416,11 @@ class MultiLayerNetwork(AbstractNeuralNetworkClassifier):
         for i, layer in list(enumerate(self.layers_))[1:]:
             W = self._create_shared_matrix('W' + str(i), self.layers_[i - 1], self.layers_[i])
             # act=activation and W_=W are tricks to avoid lambda-capturing
-            activation = lambda x, act=activation, W_=W: T.tanh(T.dot(act(x), W_))
+            if i == 0:
+                activation = lambda x, act=activation, W_=W: T.dot(act(x), W_)
+            else:
+                activation = lambda x, act=activation, W_=W: T.dot(T.tanh(act(x)), W_)
+
         return activation
 
 
