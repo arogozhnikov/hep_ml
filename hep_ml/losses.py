@@ -666,9 +666,13 @@ class ReweightNegativeLossFunction(AbstractLossFunction):
         # signs encounter transfer to opposite distribution
         self.signs = (2 * y - 1) * numpy.sign(sample_weight)
 
-        self.mask_original = self.y * sample_weight
-        self.mask_target = (1 - self.y) * sample_weight
+        self.mask_original = self.y
+        self.mask_target = (1 - self.y)
         return self
+
+    def _compute_weights(self, y_pred):
+        weights = self.sample_weight * numpy.exp(self.y * y_pred)
+        return check_sample_weight(self.y, weights, normalize=True, normalize_by_class=True)
 
     def __call__(self, *args, **kwargs):
         """ Loss function doesn't have precise expression """
@@ -678,16 +682,13 @@ class ReweightNegativeLossFunction(AbstractLossFunction):
         return 0.
 
     def prepare_tree_params(self, y_pred):
-        weights = self.sample_weight * numpy.exp(self.y * y_pred)
-        w = check_sample_weight(self.signs, weights, normalize=True, normalize_by_class=True)
-
-        return self.signs, numpy.abs(w)
+        return self.signs, numpy.abs(self._compute_weights(y_pred))
 
     def prepare_new_leaves_values(self, terminal_regions, leaf_values,
                                   X, y, y_pred, sample_weight, update_mask, residual):
-
-        w_target = numpy.bincount(terminal_regions, weights=self.mask_target)
-        w_original = numpy.bincount(terminal_regions, weights=self.mask_original)
+        weights = self._compute_weights(y_pred)
+        w_target = numpy.bincount(terminal_regions, weights=self.mask_target * weights)
+        w_original = numpy.bincount(terminal_regions, weights=self.mask_original * weights)
 
         # suppressing possibly negative samples
         w_target = w_target.clip(0)
