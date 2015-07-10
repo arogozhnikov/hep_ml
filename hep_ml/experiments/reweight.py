@@ -30,12 +30,10 @@ def bincount_nd(x, weights, shape):
     assert x.shape[1] == len(shape), 'wrong length of shape: {} {}'.format(x.shape[1], len(shape))
     maximals = numpy.max(x, axis=0)
     assert numpy.all(maximals < shape), 'smaller shape: {} {}'.format(maximals, shape)
-    bin_indices = numpy.zeros(len(x), dtype=int)
-    for i, axis_length in enumerate(shape):
-        bin_indices *= axis_length
-        bin_indices += x[:, i]
-    result = numpy.bincount(bin_indices, weights=weights, minlength=numpy.prod(shape))
-    return result.reshape(shape)
+
+    result = numpy.zeros(shape, dtype=float)
+    numpy.add.at(result, tuple(x.T), weights)
+    return result
 
 
 class ReweighterMixin(object):
