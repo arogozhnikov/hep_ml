@@ -643,6 +643,12 @@ class ReweightLossFunction(AbstractLossFunction):
         return numpy.log(w_target + self.regularization) - numpy.log(w_original + self.regularization)
 
 
+# Mathematically at each stage we
+# 0. recompute weights
+# 1. normalize ratio between distributions (negatives are in opposite distribution)
+# 2. chi2 - changing only sign, weights are the same
+# 3. optimal value: simply log as usual (negatives are in the same distribution with sign -)
+
 class ReweightNegativeLossFunction(AbstractLossFunction):
     def __init__(self, regularization=5.):
         """
@@ -651,37 +657,37 @@ class ReweightNegativeLossFunction(AbstractLossFunction):
         self.regularization = regularization
 
     def fit(self, X, y, sample_weight):
+        assert numpy.all(numpy.in1d(y, [0, 1]))
         if sample_weight is None:
-            sample_weight = numpy.ones(len(X), dtype=float)
+            self.sample_weight = numpy.ones(len(X), dtype=float)
         else:
-            sample_weight = numpy.array(sample_weight, dtype=float)
+            self.sample_weight = numpy.array(sample_weight, dtype=float)
         self.y = y
         # signs encounter transfer to opposite distribution
         self.signs = (2 * y - 1) * numpy.sign(sample_weight)
-        self.w = numpy.abs(sample_weight)
-        self.mask_original = self.y * numpy.sign(sample_weight)
-        self.mask_target = (1 - self.y) * numpy.sign(sample_weight)
-        return self
 
-    def _compute_weights(self, y_pred):
-        weights = self.w * numpy.exp(self.y * y_pred)
-        return check_sample_weight(self.signs, weights, normalize=True, normalize_by_class=True)
+        self.mask_original = self.y * sample_weight
+        self.mask_target = (1 - self.y) * sample_weight
+        return self
 
     def __call__(self, *args, **kwargs):
         """ Loss function doesn't have precise expression """
         return 0
 
     def negative_gradient(self, y_pred):
-        return self.signs * self._compute_weights(y_pred)
+        return 0.
 
     def prepare_tree_params(self, y_pred):
-        return self.signs, self._compute_weights(y_pred=y_pred)
+        weights = self.sample_weight * numpy.exp(self.y * y_pred)
+        w = check_sample_weight(self.signs, weights, normalize=True, normalize_by_class=True)
+
+        return self.signs, numpy.abs(w)
 
     def prepare_new_leaves_values(self, terminal_regions, leaf_values,
                                   X, y, y_pred, sample_weight, update_mask, residual):
-        weights = self._compute_weights(y_pred)
-        w_target = numpy.bincount(terminal_regions, weights=weights * self.mask_target)
-        w_original = numpy.bincount(terminal_regions, weights=weights * self.mask_original)
+
+        w_target = numpy.bincount(terminal_regions, weights=self.mask_target)
+        w_original = numpy.bincount(terminal_regions, weights=self.mask_original)
 
         # suppressing possibly negative samples
         w_target = w_target.clip(0)
