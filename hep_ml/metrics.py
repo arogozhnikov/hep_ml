@@ -78,7 +78,7 @@ class AbstractBinMetric(AbstractMetric):
     def fit(self, X, y, sample_weight=None):
         """ Prepare different things for fast computation of metrics """
         X, y, sample_weight = check_xyw(X, y, sample_weight=sample_weight)
-        self._mask = numpy.array(y == self.uniform_label)
+        self._mask = numpy.array(y == self.uniform_label, dtype=bool)
         assert sum(self._mask) > 0, 'No event of class, along which uniformity is desired'
         self._masked_weight = sample_weight[self._mask]
 

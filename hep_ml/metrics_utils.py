@@ -75,10 +75,13 @@ def compute_bin_indices(X_part, bin_limits=None, n_bins=20):
     the indices are unique numbers of bin from zero to \prod_j (len(bin_limits[j])+1)
 
     If bin_limits is not provided, they are computed using data.
+    :param X_part: columns along which binning is done
+    :type X_part: numpy.ndarray
     """
     if bin_limits is None:
         bin_limits = []
-        for variable_data in range(X_part.shape[1]):
+        for variable_index in range(X_part.shape[1]):
+            variable_data = X_part[:, variable_index]
             bin_limits.append(numpy.linspace(numpy.min(variable_data), numpy.max(variable_data), n_bins + 1)[1: -1])
 
     bin_indices = numpy.zeros(len(X_part), dtype=numpy.int)
