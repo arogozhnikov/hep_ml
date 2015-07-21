@@ -60,16 +60,14 @@ def test_loss_functions(size=50, epsilon=1e-3):
         assert numpy.allclose(hessian, numer_hessian, atol=1e-7), 'wrong computation of hessian'
 
 
-def test_step_optimality(size=50):
+def test_step_optimality(n_samples=50):
     """
     testing that for single leaf function returns the optimal value
-    :param size:
-    :return:
     """
-    X, y = generate_sample(size, n_features=10)
+    X, y = generate_sample(n_samples, n_features=10)
     rank_column = X.columns[2]
-    X[rank_column] = numpy.random.randint(0, 3, size=size)
-    sample_weight = numpy.random.exponential(size=size)
+    X[rank_column] = numpy.random.randint(0, 3, size=n_samples)
+    sample_weight = numpy.random.exponential(size=n_samples)
 
     tested_losses = [
         losses.BinomialDevianceLossFunction(),
@@ -79,7 +77,7 @@ def test_step_optimality(size=50):
         losses.RankBoostLossFunction(rank_column)
     ]
 
-    pred = numpy.random.normal(size=size)
+    pred = numpy.random.normal(size=n_samples)
 
     for loss in tested_losses:
         loss.fit(X, y, sample_weight=sample_weight)
@@ -88,7 +86,7 @@ def test_step_optimality(size=50):
         new_value = 0.
         for _ in range(4):
             ministep, = loss.prepare_new_leaves_values(
-                terminal_regions=numpy.zeros(size, dtype=int),
+                terminal_regions=numpy.zeros(n_samples, dtype=int),
                 leaf_values=[leaf_value], X=X, y=y, y_pred=pred + new_value, sample_weight=sample_weight,
                 update_mask=None, residual=loss.negative_gradient(pred + new_value))
             new_value += ministep

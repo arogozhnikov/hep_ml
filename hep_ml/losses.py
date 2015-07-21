@@ -308,12 +308,12 @@ class RankBoostLossFunction(HessianLossFunction):
 
 class AbstractMatrixLossFunction(HessianLossFunction):
     # TODO write better update
-    def __init__(self, uniform_variables, regularization=5.):
+    def __init__(self, uniform_features, regularization=5.):
         """KnnLossFunction is a base class to be inherited by other loss functions,
         which choose the particular A matrix and w vector. The formula of loss is:
         loss = \sum_i w_i * exp(- \sum_j a_ij y_j score_j)
         """
-        self.uniform_variables = uniform_variables
+        self.uniform_features = uniform_features
         # real matrix and vector will be computed during fitting
         self.A = None
         self.A_t = None
@@ -381,10 +381,10 @@ class AbstractMatrixLossFunction(HessianLossFunction):
 
 
 class SimpleKnnLossFunction(AbstractMatrixLossFunction):
-    def __init__(self, uniform_variables, knn=10, uniform_label=1, distinguish_classes=True, row_norm=1.):
+    def __init__(self, uniform_features, knn=10, uniform_label=1, distinguish_classes=True, row_norm=1.):
         """A matrix is square, each row corresponds to a single event in train dataset, in each row we put ones
         to the closest neighbours of that event if this event from class along which we want to have uniform prediction.
-        :param list[str] uniform_variables: the features, along which uniformity is desired
+        :param list[str] uniform_features: the features, along which uniformity is desired
         :param int knn: the number of nonzero elements in the row, corresponding to event in 'uniform class'
         :param int|list[int] uniform_label: the label (labels) of 'uniform classes'
         :param bool distinguish_classes: if True, 1's will be placed only for events of same class.
@@ -393,7 +393,7 @@ class SimpleKnnLossFunction(AbstractMatrixLossFunction):
         self.distinguish_classes = distinguish_classes
         self.row_norm = row_norm
         self.uniform_label = check_uniform_label(uniform_label)
-        AbstractMatrixLossFunction.__init__(self, uniform_variables)
+        AbstractMatrixLossFunction.__init__(self, uniform_features)
 
     def compute_parameters(self, trainX, trainY, trainW):
         A_parts = []
@@ -405,7 +405,7 @@ class SimpleKnnLossFunction(AbstractMatrixLossFunction):
                 mask = label_mask
             else:
                 mask = numpy.ones(len(trainY), dtype=numpy.bool)
-            knn_indices = compute_knn_indices_of_signal(trainX[self.uniform_variables], mask, self.knn)
+            knn_indices = compute_knn_indices_of_signal(trainX[self.uniform_features], mask, self.knn)
             knn_indices = knn_indices[label_mask, :]
             ind_ptr = numpy.arange(0, n_label * self.knn + 1, self.knn)
             column_indices = knn_indices.flatten()
@@ -444,14 +444,14 @@ def exp_margin(margin):
 
 
 class AbstractFlatnessLossFunction(AbstractLossFunction):
-    def __init__(self, uniform_variables, uniform_label=1, power=2., ada_coefficient=1.,
+    def __init__(self, uniform_features, uniform_label=1, power=2., ada_coefficient=1.,
                  allow_wrong_signs=True, use_median=False,
                  keep_debug_info=False):
         """
         This loss function contains separately penalty for non-flatness and ada_coefficient.
         The penalty for non-flatness is using bins.
 
-        :type uniform_variables: the vars, along which we want to obtain uniformity
+        :type uniform_features: the vars, along which we want to obtain uniformity
         :type uniform_label: int | list(int), the labels for which we want to obtain uniformity
         :type power: the loss contains the difference | F - F_bin |^p, where p is power
         :type ada_coefficient: coefficient of ada_loss added to this one. The greater the coefficient,
@@ -459,7 +459,7 @@ class AbstractFlatnessLossFunction(AbstractLossFunction):
         :type allow_wrong_signs: defines whether gradient may different sign from the "sign of class"
             (i.e. may have negative gradient on signal). If False, values will be clipped to zero.
         """
-        self.uniform_variables = uniform_variables
+        self.uniform_features = uniform_features
         if isinstance(uniform_label, numbers.Number):
             self.uniform_label = numpy.array([uniform_label])
         else:
@@ -547,10 +547,10 @@ class AbstractFlatnessLossFunction(AbstractLossFunction):
 
 
 class BinFlatnessLossFunction(AbstractFlatnessLossFunction):
-    def __init__(self, uniform_variables, n_bins=10, uniform_label=1, power=2., ada_coefficient=1.,
+    def __init__(self, uniform_features, n_bins=10, uniform_label=1, power=2., ada_coefficient=1.,
                  allow_wrong_signs=True, use_median=False, keep_debug_info=False):
         self.n_bins = n_bins
-        AbstractFlatnessLossFunction.__init__(self, uniform_variables,
+        AbstractFlatnessLossFunction.__init__(self, uniform_features,
                                               uniform_label=uniform_label, power=power, ada_coefficient=ada_coefficient,
                                               allow_wrong_signs=allow_wrong_signs, use_median=use_median,
                                               keep_debug_info=keep_debug_info)
@@ -559,7 +559,7 @@ class BinFlatnessLossFunction(AbstractFlatnessLossFunction):
         """Returns a list, each element is events' indices in some group."""
         label_mask = y == label
         extended_bin_limits = []
-        for var in self.uniform_variables:
+        for var in self.uniform_features:
             f_min, f_max = numpy.min(X[var][label_mask]), numpy.max(X[var][label_mask])
             extended_bin_limits.append(numpy.linspace(f_min, f_max, 2 * self.n_bins + 1))
         groups_indices = list()
@@ -567,19 +567,19 @@ class BinFlatnessLossFunction(AbstractFlatnessLossFunction):
             bin_limits = []
             for axis_limits in extended_bin_limits:
                 bin_limits.append(axis_limits[1 + shift:-1:2])
-            bin_indices = compute_bin_indices(X.ix[:, self.uniform_variables].values, bin_limits=bin_limits)
+            bin_indices = compute_bin_indices(X.ix[:, self.uniform_features].values, bin_limits=bin_limits)
             groups_indices += list(bin_to_group_indices(bin_indices, mask=label_mask))
         return groups_indices
 
 
 class KnnFlatnessLossFunction(AbstractFlatnessLossFunction):
-    def __init__(self, uniform_variables, n_neighbours=100, uniform_label=1, power=2., ada_coefficient=1.,
+    def __init__(self, uniform_features, n_neighbours=100, uniform_label=1, power=2., ada_coefficient=1.,
                  max_groups_on_iteration=3000, allow_wrong_signs=True, use_median=False, keep_debug_info=False,
                  random_state=None):
         self.n_neighbours = n_neighbours
         self.max_group_on_iteration = max_groups_on_iteration
         self.random_state = random_state
-        AbstractFlatnessLossFunction.__init__(self, uniform_variables,
+        AbstractFlatnessLossFunction.__init__(self, uniform_features,
                                               uniform_label=uniform_label, power=power, ada_coefficient=ada_coefficient,
                                               allow_wrong_signs=allow_wrong_signs, use_median=use_median,
                                               keep_debug_info=keep_debug_info)
@@ -587,7 +587,7 @@ class KnnFlatnessLossFunction(AbstractFlatnessLossFunction):
     def compute_groups_indices(self, X, y, label):
         mask = y == label
         self.random_state = check_random_state(self.random_state)
-        knn_indices = compute_knn_indices_of_signal(X[self.uniform_variables], mask,
+        knn_indices = compute_knn_indices_of_signal(X[self.uniform_features], mask,
                                                     n_neighbours=self.n_neighbours)[mask, :]
         if len(knn_indices) > self.max_group_on_iteration:
             selected_group = self.random_state.choice(len(knn_indices), size=self.max_group_on_iteration)

@@ -156,7 +156,7 @@ def test_new_metrics(n_samples=2000, knn=50):
 
         # Checking SDE
         features = X.columns[:1]
-        sde_val1 = sde(y, predictions, X, uniform_variables=features, sample_weight=sample_weight, label=0, knn=knn)
+        sde_val1 = sde(y, predictions, X, uniform_features=features, sample_weight=sample_weight, label=0, knn=knn)
         sde_metric = KnnBasedSDE(n_neighbours=knn, uniform_features=features, uniform_label=0, )
         sde_metric.fit(X, y, sample_weight=sample_weight)
         sde_val2 = sde_metric(y, predictions, sample_weight=sample_weight)
@@ -164,7 +164,7 @@ def test_new_metrics(n_samples=2000, knn=50):
         assert numpy.allclose(sde_val1, sde_val2), 'SDE values are different'
 
         # Checking theil
-        theil_val1 = theil_flatness(y, predictions, X, uniform_variables=features, sample_weight=sample_weight,
+        theil_val1 = theil_flatness(y, predictions, X, uniform_features=features, sample_weight=sample_weight,
                                     label=0, knn=knn)
         theil_metric = KnnBasedTheil(n_neighbours=knn, uniform_features=features, uniform_label=0, )
         theil_metric.fit(X, y, sample_weight=sample_weight)
@@ -174,7 +174,7 @@ def test_new_metrics(n_samples=2000, knn=50):
 
         # Checking CVM
         features = X.columns[:1]
-        cvm_val1 = cvm_flatness(y, predictions, X, uniform_variables=features, sample_weight=sample_weight, label=0,
+        cvm_val1 = cvm_flatness(y, predictions, X, uniform_features=features, sample_weight=sample_weight, label=0,
                                 knn=knn)
         cvm_metric = KnnBasedCvM(n_neighbours=knn, uniform_features=features, uniform_label=0, )
         cvm_metric.fit(X, y, sample_weight=sample_weight)
@@ -201,9 +201,9 @@ def test_metrics_clear(n_samples=2000, knn=50, uniform_class=0):
     predictions_clear = predictions[mask]
 
     for function in [sde, theil_flatness, cvm_flatness]:
-        flatness_val = function(y, predictions, X, uniform_variables=features, sample_weight=sample_weight, label=0,
+        flatness_val = function(y, predictions, X, uniform_features=features, sample_weight=sample_weight, label=0,
                                 knn=knn)
-        flatness_val_clear = function(y_clear, predictions_clear, X_clear, uniform_variables=features,
+        flatness_val_clear = function(y_clear, predictions_clear, X_clear, uniform_features=features,
                                       sample_weight=sample_weight_clear, label=0, knn=knn)
         assert flatness_val == flatness_val_clear, 'after deleting other class, the metrics changed'
 

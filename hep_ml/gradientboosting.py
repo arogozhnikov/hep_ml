@@ -41,7 +41,7 @@ class GradientBoostingClassifier(BaseEstimator, ClassifierMixin):
                  criterion='mse',
                  splitter='best',
                  update_tree=True,
-                 train_variables=None,
+                 train_features=None,
                  random_state=None):
 
         self.loss = loss
@@ -54,7 +54,7 @@ class GradientBoostingClassifier(BaseEstimator, ClassifierMixin):
         self.max_leaf_nodes = max_leaf_nodes
         self.max_depth = max_depth
         self.update_tree = update_tree
-        self.train_variables = train_variables
+        self.train_features = train_features
         self.random_state = random_state
         self.criterion = criterion
         self.splitter = splitter
@@ -133,10 +133,10 @@ class GradientBoostingClassifier(BaseEstimator, ClassifierMixin):
         return self
 
     def get_train_vars(self, X):
-        if self.train_variables is None:
+        if self.train_features is None:
             return X
         else:
-            return X.loc[:, self.train_variables]
+            return X.loc[:, self.train_features]
 
     def staged_decision_function(self, X):
         X = numpy.array(self.get_train_vars(X), dtype=DTYPE)

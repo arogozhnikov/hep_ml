@@ -33,7 +33,7 @@ __all__ = ["uBoostBDT", "uBoostClassifier"]
 
 class uBoostBDT(object):
     def __init__(self,
-                 uniform_variables,
+                 uniform_features,
                  target_efficiency=0.5,
                  n_neighbors=50,
                  bagging=True,
@@ -41,7 +41,7 @@ class uBoostBDT(object):
                  n_estimators=50,
                  learning_rate=1.,
                  uniforming_rate=1.,
-                 train_variables=None,
+                 train_features=None,
                  smoothing=0.0,
                  keep_debug_info=False,
                  random_state=None,
@@ -57,7 +57,7 @@ class uBoostBDT(object):
 
         Parameters
         ----------
-        :param uniform_variables: list of strings, names of variables, along which
+        :param uniform_features: list of strings, names of variables, along which
          flatness is desired
 
         :param target_efficiency: float, the flatness is obtained at global BDT cut,
@@ -97,7 +97,7 @@ class uBoostBDT(object):
         :param uniform_label: int, (default=1)
             label of class on which uniformity is desired
 
-        :param train_variables: list of strings, names of variables used in
+        :param train_features: list of strings, names of variables used in
            fit/predict. If None, all the variables are used
            (including uniform_variables)
 
@@ -129,11 +129,11 @@ class uBoostBDT(object):
         self.n_estimators = n_estimators
         self.learning_rate = learning_rate
         self.uniforming_rate = uniforming_rate
-        self.uniform_variables = uniform_variables
+        self.uniform_features = uniform_features
         self.target_efficiency = target_efficiency
         self.n_neighbors = n_neighbors
         self.bagging = bagging
-        self.train_variables = train_variables
+        self.train_features = train_features
         self.smoothing = smoothing
         self.uniform_label = uniform_label
         self.keep_debug_info = keep_debug_info
@@ -194,10 +194,10 @@ class uBoostBDT(object):
                 "Wrong shape of neighbours_matrix"
             self.knn_indices = neighbours_matrix
         else:
-            assert self.uniform_variables is not None, \
+            assert self.uniform_features is not None, \
                 "uniform_variables should be set"
             self.knn_indices = compute_knn_indices_of_same_class(
-                X.ix[:, self.uniform_variables], y, self.n_neighbors)
+                X.ix[:, self.uniform_features], y, self.n_neighbors)
 
         sample_weight = commonutils.check_sample_weight(y, sample_weight=sample_weight, normalize=True)
         assert np.all(sample_weight >= 0.), 'the weights should be non-negative'
@@ -209,8 +209,8 @@ class uBoostBDT(object):
         # global efficiency == target_efficiency on each iteration.
         self.score_cuts_ = []
 
-        X_train_variables = self.get_train_vars(X)
-        X_train_variables, y, sample_weight = check_xyw(X_train_variables, y, sample_weight)
+        X_train_features = self.get_train_features(X)
+        X_train_features, y, sample_weight = check_xyw(X_train_features, y, sample_weight)
 
         # A dictionary to keep all intermediate weights, efficiencies and so on
         if self.keep_debug_info:
@@ -218,7 +218,7 @@ class uBoostBDT(object):
 
         self.random_generator = check_random_state(self.random_state)
 
-        self._boost(X_train_variables, y, sample_weight)
+        self._boost(X_train_features, y, sample_weight)
 
         self.score_cut = self.signed_uniform_label * compute_cut_for_efficiency(
             self.target_efficiency, y == self.uniform_label, self.predict_score(X) * self.signed_uniform_label)
@@ -325,16 +325,16 @@ class uBoostBDT(object):
         if not self.keep_debug_info:
             self.knn_indices = None
 
-    def get_train_vars(self, X):
+    def get_train_features(self, X):
         """Gets the DataFrame and returns only columns
            that should be used in fitting / predictions"""
-        if self.train_variables is None:
+        if self.train_features is None:
             return X
         else:
-            return X[self.train_variables]
+            return X[self.train_features]
 
     def staged_predict_score(self, X):
-        X = self.get_train_vars(X)
+        X = self.get_train_features(X)
         score = np.zeros(len(X))
         for classifier, weight in zip(self.estimators_, self.estimator_weights_):
             score += self._estimator_score(classifier, X) * weight
@@ -390,9 +390,9 @@ def _train_classifier(classifier, X_train_vars, y, sample_weight, neighbours_mat
 
 
 class uBoostClassifier(BaseEstimator, ClassifierMixin):
-    def __init__(self, uniform_variables=None,
+    def __init__(self, uniform_features=None,
                  uniform_label=1,
-                 train_variables=None,
+                 train_features=None,
                  n_neighbors=50,
                  efficiency_steps=20,
                  n_estimators=40,
@@ -409,13 +409,13 @@ class uBoostClassifier(BaseEstimator, ClassifierMixin):
 
         Parameters
         ----------
-        :param uniform_variables: list of strings, names of variables,
+        :param uniform_features: list of strings, names of variables,
             along which flatness is desired
 
         :param uniform_label: int, (default=1)
             tha label of class for which uniformity is desired (default is signal)
 
-        :param train_variables: list of strings,
+        :param train_features: list of strings,
             names of variables used in fit/predict.
             if None, all the variables are used (including uniform_variables)
 
@@ -457,7 +457,7 @@ class uBoostClassifier(BaseEstimator, ClassifierMixin):
             for producing uniform
             selection efficiencies from multivariate classifiers'
         """
-        self.uniform_variables = uniform_variables
+        self.uniform_features = uniform_features
         self.uniform_label = uniform_label
         self.knn = n_neighbors
         self.efficiency_steps = efficiency_steps
@@ -465,21 +465,21 @@ class uBoostClassifier(BaseEstimator, ClassifierMixin):
         self.n_estimators = n_estimators
         self.base_estimator = base_estimator
         self.bagging = bagging
-        self.train_variables = train_variables
+        self.train_uniform_features = train_features
         self.smoothing = smoothing
         self.n_threads = n_threads
         self.algorithm = algorithm
 
     def get_train_vars(self, X):
-        if self.train_variables is not None:
-            return X[self.train_variables]
+        if self.train_uniform_features is not None:
+            return X[self.train_uniform_features]
         else:
             return X
 
     def fit(self, X, y, sample_weight=None):
-        if self.uniform_variables is None:
+        if self.uniform_features is None:
             raise ValueError("Please set uniform variables")
-        if len(self.uniform_variables) == 0:
+        if len(self.uniform_features) == 0:
             raise ValueError("The set of uniform variables cannot be empty")
         assert np.in1d(y, [0, 1]).all(), \
             "only two-class classification is implemented"
@@ -490,15 +490,15 @@ class uBoostClassifier(BaseEstimator, ClassifierMixin):
             self.smoothing = 10. / self.efficiency_steps
 
         neighbours_matrix = compute_knn_indices_of_same_class(
-            X[self.uniform_variables], y, n_neighbours=self.knn)
+            X[self.uniform_features], y, n_neighbours=self.knn)
         self.target_efficiencies = np.linspace(0, 1, self.efficiency_steps + 2)[1:-1]
         self.classifiers = []
 
         for efficiency in self.target_efficiencies:
             classifier = uBoostBDT(
-                uniform_variables=self.uniform_variables,
+                uniform_features=self.uniform_features,
                 uniform_label=self.uniform_label,
-                train_variables=None,
+                train_features=None,
                 target_efficiency=efficiency, n_neighbors=self.knn,
                 n_estimators=self.n_estimators,
                 base_estimator=self.base_estimator,

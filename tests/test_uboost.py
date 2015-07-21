@@ -17,12 +17,12 @@ from hep_ml.uboost import uBoostBDT, uBoostClassifier
 def test_cuts(n_samples=1000):
     base_classifier = DecisionTreeClassifier(min_samples_leaf=10, max_depth=6)
     trainX, trainY = generate_sample(n_samples, 10, 0.6)
-    uniform_variables = ['column0']
+    uniform_features = ['column0']
 
     for algorithm in ['SAMME', 'SAMME.R']:
         for target_efficiency in [0.1, 0.3, 0.5, 0.7, 0.9]:
             uBDT = uBoostBDT(
-                uniform_variables=uniform_variables,
+                uniform_features=uniform_features,
                 target_efficiency=target_efficiency,
                 n_neighbors=20, n_estimators=20,
                 algorithm=algorithm,
@@ -48,7 +48,7 @@ def test_probas(n_samples=1000):
     params = {
         'n_neighbors': 10,
         'n_estimators': 10,
-        'uniform_variables': ['column0'],
+        'uniform_features': ['column0'],
         'base_estimator': DecisionTreeClassifier(max_depth=5)
     }
 
@@ -81,7 +81,7 @@ def test_quality(n_samples=3000):
     params = {
         'n_neighbors': 10,
         'n_estimators': 10,
-        'uniform_variables': ['column0'],
+        'uniform_features': ['column0'],
         'base_estimator': DecisionTreeClassifier(min_samples_leaf=20, max_depth=5)
     }
 
@@ -106,28 +106,28 @@ def check_classifiers(n_samples=10000):
     """
     testX, testY = generate_sample(n_samples, 10, 0.6)
     trainX, trainY = generate_sample(n_samples, 10, 0.6)
-    uniform_variables = ['column0']
+    uniform_features = ['column0']
 
     ada = AdaBoostClassifier(n_estimators=50)
-    ideal_bayes = HidingClassifier(train_variables=trainX.columns[1:],
+    ideal_bayes = HidingClassifier(train_features=trainX.columns[1:],
                                    base_estimator=GaussianNB())
 
     uBoost_SAMME = uBoostClassifier(
-        uniform_variables=uniform_variables,
+        uniform_features=uniform_features,
         n_neighbors=50,
         efficiency_steps=5,
         n_estimators=50,
         algorithm="SAMME")
 
     uBoost_SAMME_R = uBoostClassifier(
-        uniform_variables=uniform_variables,
+        uniform_features=uniform_features,
         n_neighbors=50,
         efficiency_steps=5,
         n_estimators=50,
         algorithm="SAMME.R")
 
     uBoost_SAMME_R_threaded = uBoostClassifier(
-        uniform_variables=uniform_variables,
+        uniform_features=uniform_features,
         n_neighbors=50,
         efficiency_steps=5,
         n_estimators=50,
@@ -146,7 +146,7 @@ def check_classifiers(n_samples=10000):
     for clf_name, clf in clf_dict.items():
         clf.fit(trainX, trainY)
         p = clf.predict_proba(testX)
-        metric = KnnBasedCvM(uniform_features=uniform_variables)
+        metric = KnnBasedCvM(uniform_features=uniform_features)
         metric.fit(testX, testY)
         cvms[clf_name] = metric(testY, p, sample_weight=np.ones(len(testY)))
 

@@ -199,60 +199,60 @@ If want to do it for bck:
 """
 
 
-def sde(y, proba, X, uniform_variables, sample_weight=None, label=1, knn=30):
+def sde(y, proba, X, uniform_features, sample_weight=None, label=1, knn=30):
     """ The most simple way to compute SDE, this is however very slow
     if you need to recompute SDE many times
     :param y: real classes of events, shape = [n_samples]
     :param proba: predicted probabilities, shape = [n_samples, n_classes]
     :param X: pandas.DataFrame with uniform features
-    :param uniform_variables: features, along which uniformity is desired, list of strings
+    :param uniform_features: features, along which uniformity is desired, list of strings
     :param sample_weight: weights of events, shape = [n_samples]
     :param label: class, for which uniformity is measured (usually, 0 is bck, 1 is signal)
     :param knn: number of nearest neighbours used in knn
 
     Example of usage:
     proba = classifier.predict_proba(testX)
-    sde(testY, proba=proba, X=testX, uniform_variables=['mass'])
+    sde(testY, proba=proba, X=testX, uniform_features=['mass'])
     """
     assert len(y) == len(proba) == len(X), 'Different lengths'
     X = pandas.DataFrame(X)
     mask = y == label
-    groups = compute_knn_indices_of_signal(X[uniform_variables], is_signal=mask, n_neighbours=knn)
+    groups = compute_knn_indices_of_signal(X[uniform_features], is_signal=mask, n_neighbours=knn)
     groups = groups[mask, :]
 
     return compute_sde_on_groups(proba[:, label], mask=mask, groups_indices=groups,
                                  target_efficiencies=[0.5, 0.6, 0.7, 0.8, 0.9], sample_weight=sample_weight)
 
 
-def theil_flatness(y, proba, X, uniform_variables, sample_weight=None, label=1, knn=30):
+def theil_flatness(y, proba, X, uniform_features, sample_weight=None, label=1, knn=30):
     """This is ready-to-use function, and it is quite slow to use many times"""
 
     mask = y == label
-    groups_indices = compute_knn_indices_of_signal(X[uniform_variables], is_signal=mask, n_neighbours=knn)[mask, :]
+    groups_indices = compute_knn_indices_of_signal(X[uniform_features], is_signal=mask, n_neighbours=knn)[mask, :]
     return compute_theil_on_groups(proba[:, label], mask=mask, groups_indices=groups_indices,
                                    target_efficiencies=[0.5, 0.6, 0.7, 0.8, 0.9], sample_weight=sample_weight)
 
 
-def cvm_flatness(y, proba, X, uniform_variables, sample_weight=None, label=1, knn=30):
+def cvm_flatness(y, proba, X, uniform_features, sample_weight=None, label=1, knn=30):
     """ The most simple way to compute Cramer-von Mises flatness, this is however very slow
     if you need to compute it many times
     :param y: real classes of events, shape = [n_samples]
     :param proba: predicted probabilities, shape = [n_samples, n_classes]
     :param X: pandas.DataFrame with uniform features (i.e. test dataset)
-    :param uniform_variables: features, along which uniformity is desired, list of strings
+    :param uniform_features: features, along which uniformity is desired, list of strings
     :param sample_weight: weights of events, shape = [n_samples]
     :param label: class, for which uniformity is measured (usually, 0 is bck, 1 is signal)
     :param knn: number of nearest neighbours used in knn
 
     Example of usage:
     proba = classifier.predict_proba(testX)
-    cvm_flatness(testY, proba=proba, X=testX, uniform_variables=['mass'])
+    cvm_flatness(testY, proba=proba, X=testX, uniform_features=['mass'])
     """
     assert len(y) == len(proba) == len(X), 'Different lengths'
     X = pandas.DataFrame(X)
 
     signal_mask = y == label
-    groups_indices = compute_knn_indices_of_signal(X[uniform_variables], is_signal=signal_mask, n_neighbours=knn)
+    groups_indices = compute_knn_indices_of_signal(X[uniform_features], is_signal=signal_mask, n_neighbours=knn)
     groups_indices = groups_indices[signal_mask, :]
 
     return group_based_cvm(proba[:, label], mask=signal_mask, groups_indices=groups_indices,
