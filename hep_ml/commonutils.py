@@ -221,18 +221,18 @@ def compute_knn_indices_of_same_class(X, y, n_neighbours=50):
 # endregion
 
 
-def smear_dataset(X, smeared_variables=None, smearing_factor=0.1):
+def smear_dataset(X, smeared_features=None, smearing_factor=0.1):
     """For the selected features 'smears' them in dataset,
     pay attention, that only float features can be smeared.
     If passed smeared_variables=None, all the features are smeared"""
     assert isinstance(X, pandas.DataFrame), "the passed object is not of type pandas.DataFrame"
     X = pandas.DataFrame.copy(X)
-    if smeared_variables is None:
-        smeared_variables = X.columns
-    for var in smeared_variables:
+    if smeared_features is None:
+        smeared_features = X.columns
+    for var in smeared_features:
         assert var in X.columns, "The variable %s was not found in dataframe"
     result = pandas.DataFrame.copy(X)
-    for var in smeared_variables:
+    for var in smeared_features:
         sigma = math.sqrt(numpy.var(result[var]))
         result[var] += RandomState().normal(0, smearing_factor * sigma, size=len(result))
     return result
