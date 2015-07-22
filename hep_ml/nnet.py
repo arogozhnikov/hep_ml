@@ -1,7 +1,5 @@
 """
-hep_ml.nnet
-
-Minimalistic version of feed-forward neural networks on theano.
+hep_ml.nnet is minimalistic version of feed-forward neural networks on theano.
 The neural networks from this library provide sklearn classifier's interface.
 
 Definitions for loss functions, trainers of neural networks are defined in this file too.
@@ -9,8 +7,8 @@ Main point of this library: black-box stochastic optimization of any given loss 
 This gives ability to define any activation expression at the cost of unavailability of pretraining.
 
 In this file we have **examples** of neural networks,
- user is encouraged to write his own specific architecture,
- which can be much more complex than those used usually.
+user is encouraged to write his own specific architecture,
+which can be much more complex than those used usually.
 
 This library should be preferred for different experiments with architectures.
 Also nnet allows optimization of parameters in any differentiable decision function.
@@ -223,7 +221,7 @@ trainers = {'sgd': sgd_trainer,
 # endregion
 
 
-# TODO think of dropper and noises
+# TODO think of dropout and noises
 
 def _prepare_scaler(transform):
     """Returns new transformer used in neural network
@@ -248,6 +246,7 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
 
         Works in sklearn fit-predict way: X is [n_samples, n_features], y is [n_samples], sample_weight is [n_samples].
         Works as usual sklearn classifier, can be used in boosting, for instance, pickled, etc.
+
         :param layers: list of int, e.g [9, 7] - the number of units in each *hidden* layer
         :param scaler: 'standard' or 'minmax' or Transformer used to transform features
         :param loss: loss function used (log_loss by default), str ot function(y, pred, w) -> float
@@ -274,10 +273,11 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
 
     def prepare(self):
         """This method should provide activation function and set parameters
+
         :return Activation function, f: X -> p,
-        X of shape [n_events, n_outputs], p of shape [n_events].
-        For classification, p is arbitrary real, the greater p, the more event
-        looks like signal event (label 1).
+         X of shape [n_events, n_outputs], p of shape [n_events].
+         For classification, p is arbitrary real, the greater p, the more event
+         looks like signal event (label 1).
         """
         raise NotImplementedError()
 
