@@ -1,9 +1,9 @@
 """
-The module contains an implementation of uBoost algorithm in sklearn-way
+The module contains an implementation of uBoost algorithm.
+The main goal of this algorithm is to fight correlation between predictions and some variables (i.e. mass of particle).
 
-- ``uBoostBDT`` is a modified version of AdaBoost, that targets to
-obtain efficiency uniformity at the specified level (global efficiency)
-- ``uBoostClassifier`` - a combination of uBoostBDTs for different efficiencies
+* `uBoostBDT` is a modified version of AdaBoost, that targets to obtain efficiency uniformity at the specified level (global efficiency)
+* `uBoostClassifier` is a combination of uBoostBDTs for different efficiencies
 """
 
 # Authors:
@@ -31,9 +31,10 @@ __author__ = "Alex Rogozhnikov, Nikita Kazeev"
 __all__ = ["uBoostBDT", "uBoostClassifier"]
 
 
-class uBoostBDT(object):
+class uBoostBDT(BaseEstimator, ClassifierMixin):
     def __init__(self,
                  uniform_features,
+                 uniform_label=1,
                  target_efficiency=0.5,
                  n_neighbors=50,
                  bagging=True,
@@ -43,9 +44,7 @@ class uBoostBDT(object):
                  uniforming_rate=1.,
                  train_features=None,
                  smoothing=0.0,
-                 keep_debug_info=False,
                  random_state=None,
-                 uniform_label=1,
                  algorithm="SAMME"):
         """
         uBoostBDT is AdaBoostClassifier, which is modified to have flat
@@ -53,12 +52,13 @@ class uBoostBDT(object):
         Efficiency is only guaranteed at the cut,
         corresponding to global efficiency == target_efficiency.
 
-        Can be used alone, without uBoost.
+        Can be used alone, without uBoostClassifier.
 
-        Parameters
-        ----------
         :param uniform_features: list of strings, names of variables, along which
          flatness is desired
+
+        :param uniform_label: int, (default=1)
+            label of class on which uniformity is desired
 
         :param target_efficiency: float, the flatness is obtained at global BDT cut,
             corresponding to global efficiency
@@ -72,30 +72,27 @@ class uBoostBDT(object):
             if True, usual bootstrap aggregating is used
             (sampling with replacement at each iteration, size=len(X))
             if float, used sampling with replacement, the size of generated set
-             is bagging * len(X)
+            is bagging * len(X)
             if False, usual boosting is used
 
-        :param base_estimator : classifier, optional (default=DecisionTreeClassifier)
+        :param base_estimator: classifier, optional (default=DecisionTreeClassifier)
             The base estimator from which the boosted ensemble is built.
             Support for sample weighting is required, as well as proper
             `classes_` and `n_classes_` attributes.
 
-        :param n_estimators : integer, optional (default=50)
+        :param n_estimators: integer, optional (default=50)
             The maximum number of estimators at which boosting is terminated.
             In case of perfect fit, the learning procedure is stopped early.
 
-        :param learning_rate : float, optional (default=1.)
+        :param learning_rate: float, optional (default=1.)
             Learning rate shrinks the contribution of each classifier by
             ``learning_rate``. There is a trade-off between ``learning_rate``
             and ``n_estimators``.
 
         :param uniforming_rate: float, optional (default=1.)
             how much do we take into account the uniformity of signal,
-             there is a trade-off between uniforming_rate and the speed of
-             uniforming, zero value corresponds to plain AdaBoost
-
-        :param uniform_label: int, (default=1)
-            label of class on which uniformity is desired
+            there is a trade-off between uniforming_rate and the speed of
+            uniforming, zero value corresponds to plain AdaBoost
 
         :param train_features: list of strings, names of variables used in
            fit/predict. If None, all the variables are used
@@ -106,6 +103,7 @@ class uBoostBDT(object):
 
         :param random_state: int, RandomState instance or None, (default=None),
            used to fix randomization.
+
 
         Attributes
         ----------
@@ -136,7 +134,6 @@ class uBoostBDT(object):
         self.train_features = train_features
         self.smoothing = smoothing
         self.uniform_label = uniform_label
-        self.keep_debug_info = keep_debug_info
         self.random_state = random_state
         self.algorithm = algorithm
 
@@ -209,7 +206,7 @@ class uBoostBDT(object):
         # global efficiency == target_efficiency on each iteration.
         self.score_cuts_ = []
 
-        X_train_features = self.get_train_features(X)
+        X_train_features = self._get_train_features(X)
         X_train_features, y, sample_weight = check_xyw(X_train_features, y, sample_weight)
 
         # A dictionary to keep all intermediate weights, efficiencies and so on
@@ -274,9 +271,6 @@ class uBoostBDT(object):
         boost_weights = np.exp((self.target_efficiency - local_efficiencies) * is_uniform_class *
                                (beta * self.uniforming_rate))
 
-        if self.keep_debug_info:
-            self.debug_dict['local_effs'].append(local_efficiencies.copy())
-
         return boost_weights, global_score_cut
 
     def _boost(self, X, y, sample_weight):
@@ -286,7 +280,7 @@ class uBoostBDT(object):
         y_signed = 2 * y - 1
         for iteration in range(self.n_estimators):
             estimator = self._make_estimator()
-            mask = generate_mask(len(X), self.bagging, self.random_generator)
+            mask = _generate_mask(len(X), self.bagging, self.random_generator)
             estimator.fit(X, y, sample_weight=sample_weight * mask)
 
             # computing estimator weight
@@ -319,13 +313,10 @@ class uBoostBDT(object):
             self.estimators_.append(estimator)
             self.estimator_weights_.append(estimator_weight)
 
-            if self.keep_debug_info:
-                self.debug_dict['weights'].append(sample_weight.copy())
+        # erasing from memory
+        self.knn_indices = None
 
-        if not self.keep_debug_info:
-            self.knn_indices = None
-
-    def get_train_features(self, X):
+    def _get_train_features(self, X):
         """Gets the DataFrame and returns only columns
            that should be used in fitting / predictions"""
         if self.train_features is None:
@@ -334,7 +325,7 @@ class uBoostBDT(object):
             return X[self.train_features]
 
     def staged_predict_score(self, X):
-        X = self.get_train_features(X)
+        X = self._get_train_features(X)
         score = np.zeros(len(X))
         for classifier, weight in zip(self.estimators_, self.estimator_weights_):
             score += self._estimator_score(classifier, X) * weight
@@ -422,7 +413,7 @@ class uBoostClassifier(BaseEstimator, ClassifierMixin):
         :param n_neighbors: int, (default=50) the number of neighbours,
             which are used to compute local efficiency
 
-        :param n_estimators : integer, optional (default=50)
+        :param n_estimators: integer, optional (default=50)
             The maximum number of estimators at which boosting is terminated.
             In case of perfect fit, the learning procedure is stopped early.
 
@@ -430,7 +421,7 @@ class uBoostClassifier(BaseEstimator, ClassifierMixin):
             How many uBoostBDTs should be trained
             (each with its own target_efficiency)
 
-        :param base_estimator : object, optional (default=DecisionTreeClassifier)
+        :param base_estimator: object, optional (default=DecisionTreeClassifier)
             The base estimator from which the boosted ensemble is built.
             Support for sample weighting is required,
             as well as proper `classes_` and `n_classes_` attributes.
@@ -454,8 +445,7 @@ class uBoostClassifier(BaseEstimator, ClassifierMixin):
         Reference
         ----------
         .. [1] Justin Stevens, Mike Williams 'uBoost: A boosting method
-            for producing uniform
-            selection efficiencies from multivariate classifiers'
+            for producing uniform selection efficiencies from multivariate classifiers'
         """
         self.uniform_features = uniform_features
         self.uniform_label = uniform_label
@@ -465,14 +455,14 @@ class uBoostClassifier(BaseEstimator, ClassifierMixin):
         self.n_estimators = n_estimators
         self.base_estimator = base_estimator
         self.bagging = bagging
-        self.train_uniform_features = train_features
+        self.train_features = train_features
         self.smoothing = smoothing
         self.n_threads = n_threads
         self.algorithm = algorithm
 
-    def get_train_vars(self, X):
-        if self.train_uniform_features is not None:
-            return X[self.train_uniform_features]
+    def _get_train_features(self, X):
+        if self.train_features is not None:
+            return X[self.train_features]
         else:
             return X
 
@@ -484,7 +474,7 @@ class uBoostClassifier(BaseEstimator, ClassifierMixin):
         assert np.in1d(y, [0, 1]).all(), \
             "only two-class classification is implemented"
         X, y, sample_weight = check_xyw(X, y, sample_weight=sample_weight, classification=True)
-        X_train_vars = self.get_train_vars(X)
+        X_train_vars = self._get_train_features(X)
 
         if self.smoothing is None:
             self.smoothing = 10. / self.efficiency_steps
@@ -520,17 +510,17 @@ class uBoostClassifier(BaseEstimator, ClassifierMixin):
         return self.predict_proba(X).argmax(axis=1)
 
     def predict_proba(self, X):
-        X = self.get_train_vars(X)
+        X = self._get_train_features(X)
         score = sum(clf._uboost_predict_score(X) for clf in self.classifiers)
         return commonutils.score_to_proba(score / self.efficiency_steps)
 
     def staged_predict_proba(self, X):
-        X = self.get_train_vars(X)
+        X = self._get_train_features(X)
         for scores in zip(*[clf._uboost_staged_predict_score(X) for clf in self.classifiers]):
             yield commonutils.score_to_proba(sum(scores) / self.efficiency_steps)
 
 
-def generate_mask(n_samples, bagging=True, random_generator=np.random):
+def _generate_mask(n_samples, bagging=True, random_generator=np.random):
     """bagging: float or bool (default=True), bagging usually
         speeds up the convergence and prevents overfitting
         (see http://en.wikipedia.org/wiki/Bootstrap_aggregating)
