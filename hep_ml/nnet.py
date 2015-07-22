@@ -1,5 +1,5 @@
 """
-hep_ml.nnet is minimalistic version of feed-forward neural networks on theano.
+**hep_ml.nnet** is minimalistic version of feed-forward neural networks on theano.
 The neural networks from this library provide sklearn classifier's interface.
 
 Definitions for loss functions, trainers of neural networks are defined in this file too.
@@ -11,7 +11,9 @@ user is encouraged to write his own specific architecture,
 which can be much more complex than those used usually.
 
 This library should be preferred for different experiments with architectures.
-Also nnet allows optimization of parameters in any differentiable decision function.
+Also hep_ml.nnet allows optimization of parameters in any differentiable decision function.
+
+Being written in theano, these neural networks are able to make use of your GPU.
 
 """
 from __future__ import print_function, division, absolute_import
@@ -238,15 +240,16 @@ def _prepare_scaler(transform):
 
 
 class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
-    def __init__(self, layers=None, scaler='standard', loss='log_loss', trainer='irprop-', epochs=100,
+    """
+    Base class for classification neural networks.
+    Supports only binary classification, supports weights, which makes it usable in boosting.
+
+    Works in sklearn fit-predict way: X is [n_samples, n_features], y is [n_samples], sample_weight is [n_samples].
+    Works as usual sklearn classifier, can be used in boosting, for instance, pickled, etc.
+    """
+    def __init__(self, layers=(10,), scaler='standard', loss='log_loss', trainer='irprop-', epochs=100,
                  trainer_parameters=None, random_state=None):
         """
-        Constructs the neural network based on Theano (for classification purposes).
-        Supports only binary classification, supports weights, which makes it usable in boosting.
-
-        Works in sklearn fit-predict way: X is [n_samples, n_features], y is [n_samples], sample_weight is [n_samples].
-        Works as usual sklearn classifier, can be used in boosting, for instance, pickled, etc.
-
         :param layers: list of int, e.g [9, 7] - the number of units in each *hidden* layer
         :param scaler: 'standard' or 'minmax' or Transformer used to transform features
         :param loss: loss function used (log_loss by default), str ot function(y, pred, w) -> float
@@ -272,12 +275,13 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
         return matrix
 
     def prepare(self):
-        """This method should provide activation function and set parameters
+        """This method should provide activation function and set parameters.
+        Each network overrides this function.
 
-        :return Activation function, f: X -> p,
-         X of shape [n_events, n_outputs], p of shape [n_events].
-         For classification, p is arbitrary real, the greater p, the more event
-         looks like signal event (label 1).
+        :return: Activation function, f: X -> p,
+            X of shape [n_events, n_outputs], p of shape [n_events].
+            For classification, p is arbitrary real, the greater p, the more event
+            looks like signal event (label 1).
         """
         raise NotImplementedError()
 
@@ -302,6 +306,14 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
         return loss_
 
     def transform(self, X, y=None, fit=True):
+        """Apply selected scaler or transformer to dataset
+        (also this method adds a column filled with ones).
+
+        :param numpy.array X: of shape [n_samples, n_features], data
+        :param numpy.array y: of shape [n_samples], labels
+        :param bool fit: if True, will
+        :return: transformed data, numpy.array of shape [n_samples, n_output_features]
+        """
         if fit:
             self.scaler_ = _prepare_scaler(self.scaler)
             self.scaler_.fit(X, y)
@@ -316,7 +328,8 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
 
     def fit(self, X, y, sample_weight=None, trainer=None, epochs=None, **trainer_parameters):
         """ Prepare the model by optimizing selected loss function with some trainer.
-        This method doesn't support additional fitting, use `partial_fit`
+        This method doesn't support additional fitting, use `partial_fit`.
+
         :param X: numpy.array of shape [n_samples, n_features]
         :param y: numpy.array of shape [n_samples]
         :param sample_weight: numpy.array of shape [n_samples], leave None for array of 1's
@@ -356,14 +369,18 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
         return self
 
     def activate(self, X):
-        """ Activates NN on particular dataset
+        """
+        Activates NN on particular dataset
+
         :param numpy.array X: of shape [n_samples, n_features]
-        :return: numpy.array with results of shape [n_samples] """
+        :return: numpy.array with results of shape [n_samples]
+        """
         X = self.transform(X, fit=False)
         return self.Activation(X)
 
     def predict_proba(self, X):
-        """Computes probability of each event to belong to a particular class
+        """Computes probability of each event to belong to each class
+
         :param numpy.array X: of shape [n_samples, n_features]
         :return: numpy.array of shape [n_samples, n_classes]
         """
@@ -374,6 +391,7 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
 
     def predict(self, X):
         """ Predict the classes for new events.
+
         :param numpy.array X: of shape [n_samples, n_features]
         :return: numpy.array of shape [n_samples] with labels of predicted classes """
         return self.predict_proba(X).argmax(axis=1)
@@ -393,8 +411,10 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
 
 
 class SimpleNeuralNetwork(AbstractNeuralNetworkClassifier):
-    """The most simple NN with one hidden layer (sigmoid activation), for example purposes """
+    """The most simple NN with one hidden layer (sigmoid activation), for example purposes.
+    Supports only one hidden layer.
 
+    See source code as example."""
     def prepare(self):
         n1, n2, n3 = self.layers_
         W1 = self._create_shared_matrix('W1', n1, n2)
@@ -407,7 +427,7 @@ class SimpleNeuralNetwork(AbstractNeuralNetworkClassifier):
         return activation
 
 
-class MultiLayerNetwork(AbstractNeuralNetworkClassifier):
+class MLPClassifier(AbstractNeuralNetworkClassifier):
     """Supports arbitrary number of layers (sigmoid activation each).
     aka MLP (MultiLayerPerceptron)"""
 
@@ -425,7 +445,9 @@ class MultiLayerNetwork(AbstractNeuralNetworkClassifier):
 
 
 class RBFNeuralNetwork(AbstractNeuralNetworkClassifier):
-    """One hidden layer with normalized RBF activation (Radial Basis Function)"""
+    """
+    Neural network with one hidden layer with normalized RBF activation (Radial Basis Function).
+    """
 
     def prepare(self):
         n1, n2, n3 = self.layers_
@@ -445,7 +467,7 @@ class RBFNeuralNetwork(AbstractNeuralNetworkClassifier):
 
 
 class SoftmaxNeuralNetwork(AbstractNeuralNetworkClassifier):
-    """One hidden layer, softmax activation function """
+    """Neural network with one hidden layer, softmax activation function """
 
     def prepare(self):
         n1, n2, n3 = self.layers_
