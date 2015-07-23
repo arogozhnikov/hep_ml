@@ -19,13 +19,29 @@ Metrics are following `REP` conventions (first fit, then compute metrics on same
 For these metrics 'fit' stage is crucial, since it precomputes information from dataset X,
 which is quite long and better to do this once.
 
-Example
-_______
+Examples
+________
 we want to check if our predictions are uniform in mass for background events
 
 >>> metric = BinBasedCvM(uniform_features=['mass'], uniform_label=0)
 >>> metric.fit(X, y, sample_weight=sample_weight)
 >>> result = metric(y, classifier.predict_proba(X), sample_weight=sample_weight)
+
+to check predictions over two variables in signal (for dimensions > 2 always use kNN, not bins):
+
+>>> metric = KnnBasedCvM(uniform_features=['mass12', 'mass23'], uniform_label=1)
+>>> metric.fit(X, y, sample_weight=sample_weight)
+>>> result = metric(y, classifier.predict_proba(X), sample_weight=sample_weight)
+
+to check uniformity of signal predictions at global signal efficiency of 0.7:
+
+>>> metric = KnnBasedSDE(uniform_features=['mass12', 'mass23'], uniform_label=1, target_rcp=[0.7])
+>>> metric.fit(X, y, sample_weight=sample_weight)
+>>> result = metric(y, classifier.predict_proba(X), sample_weight=sample_weight)
+
+Generally kNN versions are slower, but more stable in higher dimensions.
+Don't forget to scale features is those are of different nature.
+
 """
 
 from __future__ import division, print_function
