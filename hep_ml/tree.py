@@ -1,7 +1,8 @@
 from __future__ import division, print_function, absolute_import
 from sklearn.base import BaseEstimator, TransformerMixin, RegressorMixin
 from sklearn.tree import DecisionTreeRegressor
-
+from sklearn.tree.tree import DTYPE
+import numpy
 """
 A wrapper over regression trees is presented here.
 This one isn't actually needed by itself, but is an important part of gradient boosting.
@@ -17,7 +18,6 @@ class ClusteringTree(TransformerMixin):
     """
     Trivial wrapper over different decision trees
     """
-
     def transform(self, X):
         """
         Return indices of leaves, to which each event belongs.
@@ -39,6 +39,13 @@ class ClusteringTree(TransformerMixin):
         """
         raise NotImplementedError('should be overriden in descendant')
 
+    @staticmethod
+    def prepare_data(X):
+        """Convert dataset to the way when no additional work is needed inside fitting or predicting.
+        This method is called once to transform dataset.
+        """
+        raise NotImplementedError('should be overriden in descendant')
+
 
 class SklearnClusteringTree(DecisionTreeRegressor, ClusteringTree):
     """
@@ -50,5 +57,10 @@ class SklearnClusteringTree(DecisionTreeRegressor, ClusteringTree):
 
     def get_leaf_values(self):
         return self.tree_.value.flatten()
+
+    @staticmethod
+    def prepare_data(X):
+        """Converting to the type needed during fitting sklearn trees."""
+        return numpy.array(X, dtype=DTYPE)
 
 
