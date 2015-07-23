@@ -1,9 +1,31 @@
 """
-About
+Currently hep_ml.metrics module contains metric functions, which measure nonuniformity in predictions.
 
-this module contains different metrics of uniformity
-and the metrics of quality as well (which support weights, actually)
+These metrics are unfortunately more complicated than usual ones
+and require more information: not only predictions and classes,
+but also mass (or other variables along which we want to have uniformity)
 
+Available metrics of uniformity of predictions (for each of them bin version and knn version are available):
+
+* SDE  - the standard deviation of efficiency
+* Theil - Theil index of Efficiency (Theil index is used in economics)
+* CVM  - based on Cramer-von Mises similarity between distributions
+
+uniform_label:
+    * 1, if you want to measure non-uniformity in signal predictions
+    * 0, if background.
+
+Metrics are following `REP` conventions (first fit, then compute metrics on same dataset).
+For these metrics 'fit' stage is crucial, since it precomputes information from dataset X,
+which is quite long and better to do this once.
+
+Example
+_______
+we want to check if our predictions are uniform in mass for background events
+
+>>> metric = BinBasedCvM(uniform_features=['mass'], uniform_label=0)
+>>> metric.fit(X, y, sample_weight=sample_weight)
+>>> result = metric(y, classifier.predict_proba(X), sample_weight=sample_weight)
 """
 
 from __future__ import division, print_function
@@ -18,28 +40,8 @@ from . import metrics_utils as ut
 
 __author__ = 'Alex Rogozhnikov'
 
-"""
-README on flatness
-
-this metrics are unfortunately more complicated than usual ones
-and require more information: not only predictions and classes,
-but also mass (or other variables along which we want to hav uniformity)
-
-Here we compute the different metrics of uniformity of predictions:
-
-SDE  - the standard deviation of efficiency
-Theil- Theil index of Efficiency (Theil index is used in economics)
-KS   - based on Kolmogorov-Smirnov distance between distributions
-CVM  - based on Cramer-von Mises similarity between distributions
-
-uniform_label:
-  1, if you want to measure non-uniformity in signal predictions
-  0, if background.
-
-Metrics are following `REP` conventions (first fit, then compute metrics on same dataset).
-For these metrics 'fit' stage is crucial, since it precomputes information from dataset X,
-which is quite long and better to do this once.
-"""
+__all__ = ['BinBasedSDE', 'BinBasedCvM', 'BinBasedTheil',
+           'KnnBasedSDE', 'KnnBasedCvM', 'KnnBasedTheil']
 
 
 class AbstractMetric(BaseEstimator):
@@ -90,7 +92,18 @@ class AbstractBinMetric(AbstractMetric):
 
 
 class BinBasedSDE(AbstractBinMetric):
-    def __init__(self, uniform_features, n_bins=10, uniform_label=0, target_rcp=None, power=2.):
+    def __init__(self, uniform_features, uniform_label=0, n_bins=10, target_rcp=None, power=2.):
+        """
+        Standard Deviation of Efficiency, computed using bins.
+
+        :param list[str] uniform_features: features, in which we compute non-uniformity.
+        :param uniform_label: label of class, in which uniformity is measured (0 for bck, 1 for signal)
+        :param int n_bins: number of bins used along each axis.
+        :param list[float] target_rcp: global right-classified-parts.
+         Thresholds are selected so this part of class was correctly classified.
+         Default values are [0.5, 0.6, 0.7, 0.8, 0.9]
+        :param float power: power used in SDE formula (default is 2.)
+        """
         AbstractBinMetric.__init__(self, n_bins=n_bins,
                                    uniform_features=uniform_features,
                                    uniform_label=uniform_label)
@@ -113,11 +126,20 @@ class BinBasedSDE(AbstractBinMetric):
 
 
 class BinBasedTheil(AbstractBinMetric):
-    def __init__(self, uniform_features, n_bins=10, uniform_label=0, target_rcp=None, power=2.):
+    def __init__(self, uniform_features, uniform_label=0, n_bins=10, target_rcp=None):
+        """
+        Theil index of Efficiency, computed using bins.
+
+        :param list[str] uniform_features: features, in which we compute non-uniformity.
+        :param uniform_label: label of class, in which uniformity is measured (0 for bck, 1 for signal)
+        :param int n_bins: number of bins used along each axis.
+        :param list[float] target_rcp: global right-classified-parts.
+         Thresholds are selected so this part of class was correctly classified.
+         Default values are [0.5, 0.6, 0.7, 0.8, 0.9]
+        """
         AbstractBinMetric.__init__(self, n_bins=n_bins,
                                    uniform_features=uniform_features,
                                    uniform_label=uniform_label)
-        self.power = power
         self.target_rcp = target_rcp
 
     def __call__(self, y, proba, sample_weight):
@@ -136,6 +158,15 @@ class BinBasedTheil(AbstractBinMetric):
 
 class BinBasedCvM(AbstractBinMetric):
     def __init__(self, uniform_features, n_bins=10, uniform_label=0, power=2.):
+        """
+        Nonuniformity metric based on Cramer-von Mises distance between distributions, computed on bins.
+
+        :param list[str] uniform_features: features, in which we compute non-uniformity.
+        :param uniform_label: label of class, in which uniformity is measured (0 for bck, 1 for signal)
+        :param int n_bins: number of bins used along each axis.
+        :param float power: power used in CvM formula (default is 2.)
+        """
+
         AbstractBinMetric.__init__(self, n_bins=n_bins,
                                    uniform_features=uniform_features,
                                    uniform_label=uniform_label)
@@ -186,7 +217,7 @@ class AbstractKnnMetric(AbstractMetric):
         _, self._groups_indices = neighbours.kneighbors(X_part)
         self._group_matrix = ut.group_indices_to_groups_matrix(self._groups_indices, n_events=len(X_part))
         # self._group_weights = ut.compute_group_weights_by_indices(self._groups_indices,
-        #                                                           sample_weight=self._masked_weight)
+        # sample_weight=self._masked_weight)
         self._group_weights = ut.compute_group_weights(self._group_matrix, sample_weight=self._masked_weight)
         # self._divided_weights = ut.compute_divided_weight_by_indices(self._groups_indices,
         #                                                              sample_weight=self._masked_weight)
@@ -195,7 +226,18 @@ class AbstractKnnMetric(AbstractMetric):
 
 
 class KnnBasedSDE(AbstractKnnMetric):
-    def __init__(self, uniform_features, n_neighbours=50, uniform_label=0, target_rcp=None, power=2.):
+    def __init__(self, uniform_features, uniform_label=0, n_neighbours=50, target_rcp=None, power=2.):
+        """
+        Standard Deviation of Efficiency, computed using k nearest neighbours.
+
+        :param list[str] uniform_features: features, in which we compute non-uniformity.
+        :param uniform_label: label of class, in which uniformity is measured (0 for bck, 1 for signal)
+        :param int n_neighbours: number of neighs
+        :param list[float] target_rcp: global right-classified-parts.
+         Thresholds are selected so this part of class was correctly classified.
+         Default values are [0.5, 0.6, 0.7, 0.8, 0.9]
+        :param float power: power used in SDE formula (default is 2.)
+        """
         AbstractKnnMetric.__init__(self, n_neighbours=n_neighbours,
                                    uniform_features=uniform_features,
                                    uniform_label=uniform_label)
@@ -218,7 +260,17 @@ class KnnBasedSDE(AbstractKnnMetric):
 
 
 class KnnBasedTheil(AbstractKnnMetric):
-    def __init__(self, uniform_features, n_neighbours=50, uniform_label=0, target_rcp=None, power=2.):
+    def __init__(self, uniform_features, n_neighbours=50, uniform_label=0, target_rcp=None):
+        """
+        Theil index of Efficiency, computed using k nearest neighbours.
+
+        :param list[str] uniform_features: features, in which we compute non-uniformity.
+        :param uniform_label: label of class, in which uniformity is measured (0 for bck, 1 for signal)
+        :param int n_neighbours: number of neighs
+        :param list[float] target_rcp: global right-classified-parts.
+         Thresholds are selected so this part of class was correctly classified.
+         Default values are [0.5, 0.6, 0.7, 0.8, 0.9]
+        """
         AbstractKnnMetric.__init__(self, n_neighbours=n_neighbours,
                                    uniform_features=uniform_features,
                                    uniform_label=uniform_label)
@@ -241,6 +293,14 @@ class KnnBasedTheil(AbstractKnnMetric):
 
 class KnnBasedCvM(AbstractKnnMetric):
     def __init__(self, uniform_features, n_neighbours=50, uniform_label=0, power=2.):
+        """
+        Nonuniformity metric based on Cramer-von Mises distance between distributions, computed on nearest neighbours.
+
+        :param list[str] uniform_features: features, in which we compute non-uniformity.
+        :param uniform_label: label of class, in which uniformity is measured (0 for bck, 1 for signal)
+        :param int n_neighbours: number of neighs
+        :param float power: power used in CvM formula (default is 2.)
+        """
         AbstractKnnMetric.__init__(self, n_neighbours=n_neighbours,
                                    uniform_features=uniform_features,
                                    uniform_label=uniform_label)
