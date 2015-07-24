@@ -26,7 +26,7 @@ from .commonutils import score_to_proba, check_xyw
 from .tree import SklearnClusteringTree
 from .losses import AbstractLossFunction, AdaLossFunction, \
     KnnFlatnessLossFunction, BinFlatnessLossFunction, \
-    SimpleKnnLossFunction, BinomialDevianceLossFunction, RankBoostLossFunction
+    KnnAdaLossFunction, LogLossFunction, RankBoostLossFunction
 
 
 __author__ = 'Alex Rogozhnikov'
@@ -164,6 +164,7 @@ class GradientBoostingClassifier(BaseEstimator, ClassifierMixin):
 
     def staged_decision_function(self, X):
         """Raw output, sum of trees' predictions after each iteration.
+
         :param X: data
         :return: sequence of numpy.array of shape [n_samples]
         """
@@ -175,6 +176,7 @@ class GradientBoostingClassifier(BaseEstimator, ClassifierMixin):
 
     def decision_function(self, X):
         """Raw output, sum of trees' predictions
+
         :param X: data
         :return: numpy.array of shape [n_samples]
         """
@@ -185,6 +187,7 @@ class GradientBoostingClassifier(BaseEstimator, ClassifierMixin):
 
     def staged_predict_proba(self, X):
         """Predicted probabilities for each event
+
         :param X: data
         :return: sequence of numpy.array of shape [n_samples, n_classes]
         """
@@ -193,6 +196,7 @@ class GradientBoostingClassifier(BaseEstimator, ClassifierMixin):
 
     def predict_proba(self, X):
         """Predicted probabilities for each event
+
         :param X: pandas.DataFrame with all train_features
         :return: numpy.array of shape [n_samples, n_classes]
         """
@@ -200,6 +204,7 @@ class GradientBoostingClassifier(BaseEstimator, ClassifierMixin):
 
     def predict(self, X):
         """Predicted classes for each event
+
         :param X: pandas.DataFrame with all train_features
         :return: numpy.array of shape [n_samples] with predicted classes.
         """
@@ -208,6 +213,7 @@ class GradientBoostingClassifier(BaseEstimator, ClassifierMixin):
     @property
     def feature_importances_(self):
         """Returns feature importances for all features used in training.
+
         The order corresponds to the order in `self.train_features`
         :return: numpy.array of shape [n_train_features]
         """
