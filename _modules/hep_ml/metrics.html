@@ -72,9 +72,12 @@
           
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../gb.html">Gradient boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../losses.html">Losses for Gradient Boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../losses.html">Losses for Gradient Boosting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../losses.html#examples">Examples</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../uboost.html">uBoost</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../uboost.html#examples">Examples:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../uboost.html#examples">Examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../metrics.html">Metric functions</a><ul>
@@ -82,7 +85,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../nnet.html">Neural networks</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../nnet.html#examples">Examples:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nnet.html#examples">Examples</a></li>
 </ul>
 </li>
 </ul>
@@ -124,7 +127,7 @@
             
   <h1>Source code for hep_ml.metrics</h1><div class="highlight"><pre>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Currently hep_ml.metrics module contains metric functions, which measure nonuniformity in predictions.</span>
+<span class="sd">Currently **hep_ml.metrics** module contains metric functions, which measure nonuniformity in predictions.</span>
 
 <span class="sd">These metrics are unfortunately more complicated than usual ones</span>
 <span class="sd">and require more information: not only predictions and classes,</span>
@@ -140,9 +143,10 @@
 <span class="sd">    * 1, if you want to measure non-uniformity in signal predictions</span>
 <span class="sd">    * 0, if background.</span>
 
-<span class="sd">Metrics are following `REP` conventions (first fit, then compute metrics on same dataset).</span>
-<span class="sd">For these metrics &#39;fit&#39; stage is crucial, since it precomputes information from dataset X,</span>
-<span class="sd">which is quite long and better to do this once.</span>
+<span class="sd">Metrics are following **REP** conventions (first fit, then compute metrics on same dataset).</span>
+<span class="sd">For these metrics `fit` stage is crucial, since it precomputes information using dataset X,</span>
+<span class="sd">which is quite long and better to do this once. Different quality metrics with same interface</span>
+<span class="sd">can be found in **REP** package.</span>
 
 <span class="sd">Examples</span>
 <span class="sd">________</span>

@@ -72,9 +72,12 @@
           
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../gb.html">Gradient boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../losses.html">Losses for Gradient Boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../losses.html">Losses for Gradient Boosting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../losses.html#examples">Examples</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../uboost.html">uBoost</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../uboost.html#examples">Examples:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../uboost.html#examples">Examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../metrics.html">Metric functions</a><ul>
@@ -82,7 +85,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../nnet.html">Neural networks</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../nnet.html#examples">Examples:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nnet.html#examples">Examples</a></li>
 </ul>
 </li>
 </ul>
@@ -136,8 +139,8 @@
 <span class="sd">Only binary classification is implemented.</span>
 
 
-<span class="sd">Examples:</span>
-<span class="sd">_________</span>
+<span class="sd">Examples</span>
+<span class="sd">________</span>
 
 <span class="sd">To get uniform prediction in mass for background:</span>
 
@@ -154,10 +157,6 @@
 <span class="sd">&gt;&gt;&gt; clf.fit(train_data, train_labels, sample_weight=train_weights)</span>
 <span class="sd">&gt;&gt;&gt; proba = clf.predict_proba(test_data)</span>
 
-<span class="sd">.. note:</span>
-<span class="sd">    TO</span>
-<span class="sd">    LAL</span>
-
 
 <span class="sd">&quot;&quot;&quot;</span>
 
@@ -165,11 +164,9 @@
 <span class="c"># Alex Rogozhnikov &lt;axelr@yandex-team.ru&gt;</span>
 <span class="c"># Nikita Kazeev &lt;kazeevn@yandex-team.ru&gt;</span>
 
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
 <span class="kn">from</span> <span class="nn">six.moves</span> <span class="kn">import</span> <span class="nb">zip</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">expit</span>
 <span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">clone</span>
 <span class="kn">from</span> <span class="nn">sklearn.ensemble.weight_boosting</span> <span class="kn">import</span> <span class="n">ClassifierMixin</span>
 <span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span>
@@ -177,7 +174,7 @@
 
 <span class="kn">from</span> <span class="nn">.commonutils</span> <span class="kn">import</span> <span class="n">sigmoid_function</span><span class="p">,</span> <span class="n">map_on_cluster</span><span class="p">,</span> \
     <span class="n">compute_knn_indices_of_same_class</span><span class="p">,</span> <span class="n">compute_cut_for_efficiency</span><span class="p">,</span> <span class="n">check_xyw</span>
-<span class="kn">from</span> <span class="nn">hep_ml</span> <span class="kn">import</span> <span class="n">commonutils</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">commonutils</span>
 <span class="kn">from</span> <span class="nn">.metrics_utils</span> <span class="kn">import</span> <span class="n">compute_group_efficiencies_by_indices</span>
 
 

@@ -73,9 +73,12 @@
           
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="gb.html">Gradient boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="losses.html">Losses for Gradient Boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="losses.html">Losses for Gradient Boosting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="losses.html#examples">Examples</a></li>
+</ul>
+</li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">uBoost</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#examples">Examples:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="metrics.html">Metric functions</a><ul>
@@ -83,7 +86,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="nnet.html">Neural networks</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="nnet.html#examples">Examples:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nnet.html#examples">Examples</a></li>
 </ul>
 </li>
 </ul>
@@ -135,7 +138,7 @@ The main goal of <strong>uBoost</strong> is to fight correlation between predict
 contains smoothing and trains classifiers in threads, also has <cite>learning_rate</cite> and <cite>uniforming_rate</cite> parameters.</p>
 <p>Only binary classification is implemented.</p>
 <div class="section" id="examples">
-<h2>Examples:<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <p>To get uniform prediction in mass for background:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">base_tree</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span> <span class="o">=</span> <span class="n">uBoostClassifier</span><span class="p">(</span><span class="n">uniform_features</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;mass&#39;</span><span class="p">],</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="n">base_tree</span><span class="p">,</span>
