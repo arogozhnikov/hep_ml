@@ -37,6 +37,8 @@ def bincount_nd(x, weights, shape):
 
 
 class ReweighterMixin(object):
+    """Supplementary class which shows the interface of reweighter.
+     Reweighters should be derived from this class."""
     n_features_ = None
 
     def normalize_input(self, data, weights):
@@ -168,34 +170,3 @@ class GBReweighter(BaseEstimator, ReweighterMixin):
         original, original_weight = self.normalize_input(original, original_weight)
         multipliers = numpy.exp(self.gb.decision_function(original))
         return multipliers * original_weight
-
-
-class GBReweighterNew(GBReweighter):
-
-    def fit(self, original, target, original_weight=None, target_weight=None):
-        """
-        Prepare reweighting formula by finding coefficients.
-
-        :param original: values from original distribution, array-like of shape [n_samples, n_features]
-        :param target: values from target distribution, array-like of shape [n_samples, n_features]
-        :param original_weight: weights for samples of original distributions
-        :param target_weight: weights for samples of original distributions
-        :return: self
-        """
-        self.n_features_ = None
-        if self.other_args is None:
-            self.other_args = {}
-        original, original_weight = self.normalize_input(original, original_weight)
-        target, target_weight = self.normalize_input(target, target_weight)
-
-        self.gb = gb.GradientBoostingClassifier(loss=losses.ReweightNegativeLossFunction(),
-                                                n_estimators=self.n_estimators,
-                                                max_depth=self.max_depth,
-                                                min_samples_leaf=self.min_samples_leaf,
-                                                learning_rate=self.learning_rate,
-                                                ** self.other_args)
-        data = numpy.vstack([original, target])
-        target = numpy.array([1] * len(original) + [0] * len(target))
-        weights = numpy.hstack([original_weight, target_weight])
-        self.gb.fit(data, target, sample_weight=weights)
-        return self

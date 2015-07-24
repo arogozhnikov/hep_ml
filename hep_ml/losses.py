@@ -653,7 +653,7 @@ class KnnFlatnessLossFunction(AbstractFlatnessLossFunction):
 # 2. chi2 - changing only sign, weights are the same
 # 3. optimal value: simply log as usual (negatives are in the same distribution with sign -)
 
-class ReweightNegativeLossFunction(AbstractLossFunction):
+class ReweightLossFunction(AbstractLossFunction):
     def __init__(self, regularization=5.):
         """
         Loss function used to reweight events. Conventions:
