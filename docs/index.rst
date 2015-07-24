@@ -13,10 +13,12 @@ Classifiers from **hep_ml** are **sklearn**-compatible.
 Modules:
 ________
 
-* :doc:`gb` and loss functions
+* :doc:`gb`
+* :doc:`losses`
 * :doc:`uboost`
 * :doc:`metrics`
 * :doc:`nnet`
+
 
 
 Contents:
@@ -26,6 +28,7 @@ _________
    :maxdepth: 2
    
    gb
+   losses
    uboost
    metrics
    nnet
