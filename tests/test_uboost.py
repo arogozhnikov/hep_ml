@@ -23,6 +23,7 @@ def test_cuts(n_samples=1000):
         for target_efficiency in [0.1, 0.3, 0.5, 0.7, 0.9]:
             uBDT = uBoostBDT(
                 uniform_features=uniform_features,
+                uniform_label=1,
                 target_efficiency=target_efficiency,
                 n_neighbors=20, n_estimators=20,
                 algorithm=algorithm,
@@ -34,7 +35,7 @@ def test_cuts(n_samples=1000):
             assert uBDT.score_cut == uBDT.score_cuts_[-1], \
                 'something wrong with computed cuts'
 
-            for score, cut in zip(uBDT.staged_predict_score(trainX[trainY > 0.5]),
+            for score, cut in zip(uBDT.staged_decision_function(trainX[trainY > 0.5]),
                                   uBDT.score_cuts_):
                 passed_upper = np.sum(score > cut - 1e-7)
                 passed_lower = np.sum(score > cut + 1e-7)
@@ -49,6 +50,7 @@ def test_probas(n_samples=1000):
         'n_neighbors': 10,
         'n_estimators': 10,
         'uniform_features': ['column0'],
+        'uniform_label': 1,
         'base_estimator': DecisionTreeClassifier(max_depth=5)
     }
 
@@ -66,8 +68,8 @@ def test_probas(n_samples=1000):
             assert np.allclose(proba1, proba2, atol=0.001), \
                 "staged_predict doesn't coincide with the predict for proba."
 
-        score1 = bdt_classifier.predict_score(testX)
-        score2 = list(bdt_classifier.staged_predict_score(testX))[-1]
+        score1 = bdt_classifier.decision_function(testX)
+        score2 = list(bdt_classifier.staged_decision_function(testX))[-1]
         assert np.allclose(score1, score2), \
             "staged_score doesn't coincide with the score."
 
@@ -82,6 +84,7 @@ def test_quality(n_samples=3000):
         'n_neighbors': 10,
         'n_estimators': 10,
         'uniform_features': ['column0'],
+        'uniform_label': 1,
         'base_estimator': DecisionTreeClassifier(min_samples_leaf=20, max_depth=5)
     }
 
@@ -114,6 +117,7 @@ def check_classifiers(n_samples=10000):
 
     uBoost_SAMME = uBoostClassifier(
         uniform_features=uniform_features,
+        uniform_label=1,
         n_neighbors=50,
         efficiency_steps=5,
         n_estimators=50,
@@ -121,6 +125,7 @@ def check_classifiers(n_samples=10000):
 
     uBoost_SAMME_R = uBoostClassifier(
         uniform_features=uniform_features,
+        uniform_label=1,
         n_neighbors=50,
         efficiency_steps=5,
         n_estimators=50,
@@ -128,6 +133,7 @@ def check_classifiers(n_samples=10000):
 
     uBoost_SAMME_R_threaded = uBoostClassifier(
         uniform_features=uniform_features,
+        uniform_label=1,
         n_neighbors=50,
         efficiency_steps=5,
         n_estimators=50,
