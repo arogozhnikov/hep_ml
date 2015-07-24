@@ -1,5 +1,6 @@
 numpy >= 1.9
 scipy >= 0.15.0
+matplotlib >= 1.4
 pandas >= 0.16.0
 ipython[all] >= 3.0
 root_numpy >= 3.3.0
