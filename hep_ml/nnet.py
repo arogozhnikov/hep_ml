@@ -15,6 +15,31 @@ Also hep_ml.nnet allows optimization of parameters in any differentiable decisio
 
 Being written in theano, these neural networks are able to make use of your GPU.
 
+See also libraries: theanets, Keras.
+
+Examples
+________
+
+Training a neural network with two hidden layers using IRPROP- algorithm
+
+>>> network = MLPClassifier(layers=[7, 7], loss='log_loss', trainer='irprop-', epochs=1000)
+>>> network.fit(X, y)
+>>> probability = network.predict_proba(X)
+
+Training an AdaBoost over neural network, adadelta trainer was used,
+
+>>> from sklearn.ensemble import AdaBoostClassifier
+>>> base_network = MLPClassifier(layers=[10], trainer='adadelta', batch=600)
+>>> classifier = AdaBoostClassifier(base_estimator=base_network, n_estimators=20)
+>>> classifier.fit(X, y)
+
+Using custom pretransformer and ExponentialLoss:
+
+>>> from sklearn.preprocessing import PolynomialFeatures
+>>> network = MLPClassifier(layers=[10], scaler=PolynomialFeatures(), loss='exp_loss')
+
+To create custom neural network, see code of SimpleNeuralNetwork.
+
 """
 from __future__ import print_function, division, absolute_import
 from copy import deepcopy
@@ -34,7 +59,14 @@ from scipy.special import expit
 
 floatX = theano.config.floatX
 __author__ = 'Alex Rogozhnikov'
-
+__all__ = ['AbstractNeuralNetworkClassifier',
+           'MLPClassifier',
+           'SimpleNeuralNetwork',
+           'SoftmaxNeuralNetwork',
+           'RBFNeuralNetwork',
+           'PairwiseNeuralNetwork',
+           'PairwiseSoftplusNeuralNetwork',
+           ]
 
 # region Loss functions
 
@@ -76,8 +108,8 @@ def smooth_huber_loss(y, pred, w):
 losses = {'mse_loss': mse_loss,
           'exp_loss': exp_loss,
           'log_loss': log_loss,
-          'squared_loss': squared_loss,
           'exp_log_loss': exp_log_loss,
+          'squared_loss': squared_loss,
           'smooth_huber_loss': smooth_huber_loss,
 }
 
@@ -251,8 +283,9 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
                  trainer_parameters=None, random_state=None):
         """
         :param layers: list of int, e.g [9, 7] - the number of units in each *hidden* layer
-        :param scaler: 'standard' or 'minmax' or Transformer used to transform features
-        :param loss: loss function used (log_loss by default), str ot function(y, pred, w) -> float
+        :param scaler: 'standard' or 'minmax' or some other Transformer used to pretransform features.
+            Default is 'standard', which will apply StandardScaler from sklearn.
+        :param loss: loss function used (log_loss by default), str or function(y, pred, w) -> float
         :param trainer: string, name of optimization method used
         :param epochs: number of times each takes part in training
         :param dict trainer_parameters: parameters passed to trainer function (learning_rate, etc., trainer-specific).
@@ -270,7 +303,7 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
 
     def _create_shared_matrix(self, name, n1, n2):
         """Creates a parameter of neural network, which is typically a matrix """
-        matrix = theano.shared(value=self.random_state.normal(size=[n1, n2]).astype(floatX) * 0.01, name=name)
+        matrix = theano.shared(value=self.random_state_.normal(size=[n1, n2]).astype(floatX) * 0.01, name=name)
         self.parameters[name] = matrix
         return matrix
 
@@ -289,7 +322,7 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
         """This function is called once, it creates the activation function, it's gradient
         and initializes the weights
         :return: loss function as lambda (x, y, w) -> loss"""
-        self.random_state = check_random_state(self.random_state)
+        self.random_state_ = check_random_state(self.random_state)
         self.layers_ = [n_input_features] + self.layers + [1]
         self.parameters = {}
         self.prepared = True
@@ -352,7 +385,7 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
         w = theano.shared(numpy.array(sample_weight, dtype=floatX))
 
         shareds, updates = trainer(x, y, w, self.parameters, loss_lambda,
-                                   RandomStreams(seed=self.random_state.randint(0, 1000)), **parameters_)
+                                   RandomStreams(seed=self.random_state_.randint(0, 1000)), **parameters_)
 
         make_one_step = theano.function([], [], updates=updates)
 
@@ -428,8 +461,7 @@ class SimpleNeuralNetwork(AbstractNeuralNetworkClassifier):
 
 
 class MLPClassifier(AbstractNeuralNetworkClassifier):
-    """Supports arbitrary number of layers (sigmoid activation each).
-    aka MLP (MultiLayerPerceptron)"""
+    """MLP (MultiLayerPerceptron) supports arbitrary number of layers (sigmoid activation each)."""
 
     def prepare(self):
         activation = lambda x: x
