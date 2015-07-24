@@ -29,10 +29,6 @@ To get uniform prediction in Dalitz variables for signal
 >>> clf.fit(train_data, train_labels, sample_weight=train_weights)
 >>> proba = clf.predict_proba(test_data)
 
-.. note:
-    TO
-    LAL
-
 
 """
 
