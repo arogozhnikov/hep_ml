@@ -20,7 +20,7 @@ def test_nnet(n_samples=200, n_features=5, distance=0.5, complete=False):
 
     nn_types = [
         nnet.SimpleNeuralNetwork,
-        nnet.MultiLayerNetwork,
+        nnet.MLPClassifier,
         nnet.SoftmaxNeuralNetwork,
         nnet.RBFNeuralNetwork,
         nnet.PairwiseNeuralNetwork,
