@@ -1,0 +1,520 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>hep_ml.metrics &mdash; hep_ml 0.2 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="hep_ml 0.2 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+
+        
+          <a href="../../index.html" class="icon icon-home"> hep_ml
+        
+
+        
+        </a>
+
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../gb.html">Gradient boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gb.html#module-hep_ml.losses">Losses (loss functions for gradient boosting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../uboost.html">uBoost</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../uboost.html#examples">Examples:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../metrics.html">Metric functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../metrics.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../nnet.html">Neural networks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../nnet.html#examples">Examples:</a></li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">hep_ml</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>hep_ml.metrics</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <h1>Source code for hep_ml.metrics</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Currently hep_ml.metrics module contains metric functions, which measure nonuniformity in predictions.</span>
+
+<span class="sd">These metrics are unfortunately more complicated than usual ones</span>
+<span class="sd">and require more information: not only predictions and classes,</span>
+<span class="sd">but also mass (or other variables along which we want to have uniformity)</span>
+
+<span class="sd">Available metrics of uniformity of predictions (for each of them bin version and knn version are available):</span>
+
+<span class="sd">* SDE  - the standard deviation of efficiency</span>
+<span class="sd">* Theil - Theil index of Efficiency (Theil index is used in economics)</span>
+<span class="sd">* CVM  - based on Cramer-von Mises similarity between distributions</span>
+
+<span class="sd">uniform_label:</span>
+<span class="sd">    * 1, if you want to measure non-uniformity in signal predictions</span>
+<span class="sd">    * 0, if background.</span>
+
+<span class="sd">Metrics are following `REP` conventions (first fit, then compute metrics on same dataset).</span>
+<span class="sd">For these metrics &#39;fit&#39; stage is crucial, since it precomputes information from dataset X,</span>
+<span class="sd">which is quite long and better to do this once.</span>
+
+<span class="sd">Examples</span>
+<span class="sd">________</span>
+<span class="sd">we want to check if our predictions are uniform in mass for background events</span>
+
+<span class="sd">&gt;&gt;&gt; metric = BinBasedCvM(uniform_features=[&#39;mass&#39;], uniform_label=0)</span>
+<span class="sd">&gt;&gt;&gt; metric.fit(X, y, sample_weight=sample_weight)</span>
+<span class="sd">&gt;&gt;&gt; result = metric(y, classifier.predict_proba(X), sample_weight=sample_weight)</span>
+
+<span class="sd">to check predictions over two variables in signal (for dimensions &gt; 2 always use kNN, not bins):</span>
+
+<span class="sd">&gt;&gt;&gt; metric = KnnBasedCvM(uniform_features=[&#39;mass12&#39;, &#39;mass23&#39;], uniform_label=1)</span>
+<span class="sd">&gt;&gt;&gt; metric.fit(X, y, sample_weight=sample_weight)</span>
+<span class="sd">&gt;&gt;&gt; result = metric(y, classifier.predict_proba(X), sample_weight=sample_weight)</span>
+
+<span class="sd">to check uniformity of signal predictions at global signal efficiency of 0.7:</span>
+
+<span class="sd">&gt;&gt;&gt; metric = KnnBasedSDE(uniform_features=[&#39;mass12&#39;, &#39;mass23&#39;], uniform_label=1, target_rcp=[0.7])</span>
+<span class="sd">&gt;&gt;&gt; metric.fit(X, y, sample_weight=sample_weight)</span>
+<span class="sd">&gt;&gt;&gt; result = metric(y, classifier.predict_proba(X), sample_weight=sample_weight)</span>
+
+<span class="sd">Generally kNN versions are slower, but more stable in higher dimensions.</span>
+<span class="sd">Don&#39;t forget to scale features is those are of different nature.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span>
+<span class="kn">from</span> <span class="nn">sklearn.neighbors.unsupervised</span> <span class="kn">import</span> <span class="n">NearestNeighbors</span>
+
+<span class="kn">from</span> <span class="nn">.commonutils</span> <span class="kn">import</span> <span class="n">take_features</span><span class="p">,</span> <span class="n">check_xyw</span><span class="p">,</span> <span class="n">weighted_quantile</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">metrics_utils</span> <span class="k">as</span> <span class="n">ut</span>
+
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s">&#39;Alex Rogozhnikov&#39;</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;BinBasedSDE&#39;</span><span class="p">,</span> <span class="s">&#39;BinBasedCvM&#39;</span><span class="p">,</span> <span class="s">&#39;BinBasedTheil&#39;</span><span class="p">,</span>
+           <span class="s">&#39;KnnBasedSDE&#39;</span><span class="p">,</span> <span class="s">&#39;KnnBasedCvM&#39;</span><span class="p">,</span> <span class="s">&#39;KnnBasedTheil&#39;</span><span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">AbstractMetric</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If metrics needs some initial heavy computations,</span>
+<span class="sd">        this can be done here.</span>
+<span class="sd">        interface is the same as for all REP estimators</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">proba</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute value of metrics</span>
+<span class="sd">        :param proba: numpy.array of shape [n_samples, n_classes]</span>
+<span class="sd">            with predicted probabilities (typically returned by predict_proba)</span>
+<span class="sd">        Events should be passed in the same order, as to method fit</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&#39;To be derived by descendant&#39;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">AbstractBinMetric</span><span class="p">(</span><span class="n">AbstractMetric</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_bins</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Abstract class for bin-based metrics of uniformity.</span>
+
+<span class="sd">        :param n_bins: int, number of bins along each axis</span>
+<span class="sd">        :param uniform_features: list of strings, features along which uniformity is desired ()</span>
+<span class="sd">        :param uniform_label: int, label of class in which uniformity is desired</span>
+<span class="sd">            (typically, 0 is bck, 1 is signal)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span> <span class="o">=</span> <span class="n">uniform_label</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uniform_features</span> <span class="o">=</span> <span class="n">uniform_features</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span> <span class="o">=</span> <span class="n">n_bins</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Prepare different things for fast computation of metrics &quot;&quot;&quot;</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span> <span class="o">=</span> <span class="n">check_xyw</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mask</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&#39;No event of class, along which uniformity is desired&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_masked_weight</span> <span class="o">=</span> <span class="n">sample_weight</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_mask</span><span class="p">]</span>
+
+        <span class="n">X_part</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">take_features</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_features</span><span class="p">))[</span><span class="bp">self</span><span class="o">.</span><span class="n">_mask</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bin_indices</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">compute_bin_indices</span><span class="p">(</span><span class="n">X_part</span><span class="o">=</span><span class="n">X_part</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bin_weights</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">compute_bin_weights</span><span class="p">(</span><span class="n">bin_indices</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_bin_indices</span><span class="p">,</span>
+                                                   <span class="n">sample_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_masked_weight</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+
+<div class="viewcode-block" id="BinBasedSDE"><a class="viewcode-back" href="../../metrics.html#hep_ml.metrics.BinBasedSDE">[docs]</a><span class="k">class</span> <span class="nc">BinBasedSDE</span><span class="p">(</span><span class="n">AbstractBinMetric</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">target_rcp</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">2.</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Standard Deviation of Efficiency, computed using bins.</span>
+
+<span class="sd">        :param list[str] uniform_features: features, in which we compute non-uniformity.</span>
+<span class="sd">        :param uniform_label: label of class, in which uniformity is measured (0 for bck, 1 for signal)</span>
+<span class="sd">        :param int n_bins: number of bins used along each axis.</span>
+<span class="sd">        :param list[float] target_rcp: global right-classified-parts.</span>
+<span class="sd">         Thresholds are selected so this part of class was correctly classified.</span>
+<span class="sd">         Default values are [0.5, 0.6, 0.7, 0.8, 0.9]</span>
+<span class="sd">        :param float power: power used in SDE formula (default is 2.)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">AbstractBinMetric</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="n">n_bins</span><span class="p">,</span>
+                                   <span class="n">uniform_features</span><span class="o">=</span><span class="n">uniform_features</span><span class="p">,</span>
+                                   <span class="n">uniform_label</span><span class="o">=</span><span class="n">uniform_label</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">=</span> <span class="n">power</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_rcp</span> <span class="o">=</span> <span class="n">target_rcp</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">proba</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">proba</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_mask</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_rcp</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">target_rcp</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">]</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="n">cuts</span> <span class="o">=</span> <span class="n">weighted_quantile</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_rcp</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_masked_weight</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">cut</span> <span class="ow">in</span> <span class="n">cuts</span><span class="p">:</span>
+            <span class="n">bin_efficiencies</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">compute_bin_efficiencies</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">bin_indices</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_bin_indices</span><span class="p">,</span>
+                                                           <span class="n">cut</span><span class="o">=</span><span class="n">cut</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_masked_weight</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">+=</span> <span class="n">ut</span><span class="o">.</span><span class="n">weighted_deviation</span><span class="p">(</span><span class="n">bin_efficiencies</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_bin_weights</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">power</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">result</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">cuts</span><span class="p">))</span> <span class="o">**</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">power</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="BinBasedTheil"><a class="viewcode-back" href="../../metrics.html#hep_ml.metrics.BinBasedTheil">[docs]</a><span class="k">class</span> <span class="nc">BinBasedTheil</span><span class="p">(</span><span class="n">AbstractBinMetric</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">target_rcp</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Theil index of Efficiency, computed using bins.</span>
+
+<span class="sd">        :param list[str] uniform_features: features, in which we compute non-uniformity.</span>
+<span class="sd">        :param uniform_label: label of class, in which uniformity is measured (0 for bck, 1 for signal)</span>
+<span class="sd">        :param int n_bins: number of bins used along each axis.</span>
+<span class="sd">        :param list[float] target_rcp: global right-classified-parts.</span>
+<span class="sd">         Thresholds are selected so this part of class was correctly classified.</span>
+<span class="sd">         Default values are [0.5, 0.6, 0.7, 0.8, 0.9]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">AbstractBinMetric</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="n">n_bins</span><span class="p">,</span>
+                                   <span class="n">uniform_features</span><span class="o">=</span><span class="n">uniform_features</span><span class="p">,</span>
+                                   <span class="n">uniform_label</span><span class="o">=</span><span class="n">uniform_label</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_rcp</span> <span class="o">=</span> <span class="n">target_rcp</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">proba</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">proba</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_mask</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_rcp</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">target_rcp</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">]</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="n">cuts</span> <span class="o">=</span> <span class="n">weighted_quantile</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_rcp</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_masked_weight</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">cut</span> <span class="ow">in</span> <span class="n">cuts</span><span class="p">:</span>
+            <span class="n">bin_efficiencies</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">compute_bin_efficiencies</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">bin_indices</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_bin_indices</span><span class="p">,</span>
+                                                           <span class="n">cut</span><span class="o">=</span><span class="n">cut</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_masked_weight</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">+=</span> <span class="n">ut</span><span class="o">.</span><span class="n">theil</span><span class="p">(</span><span class="n">bin_efficiencies</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_bin_weights</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">cuts</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="BinBasedCvM"><a class="viewcode-back" href="../../metrics.html#hep_ml.metrics.BinBasedCvM">[docs]</a><span class="k">class</span> <span class="nc">BinBasedCvM</span><span class="p">(</span><span class="n">AbstractBinMetric</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">2.</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Nonuniformity metric based on Cramer-von Mises distance between distributions, computed on bins.</span>
+
+<span class="sd">        :param list[str] uniform_features: features, in which we compute non-uniformity.</span>
+<span class="sd">        :param uniform_label: label of class, in which uniformity is measured (0 for bck, 1 for signal)</span>
+<span class="sd">        :param int n_bins: number of bins used along each axis.</span>
+<span class="sd">        :param float power: power used in CvM formula (default is 2.)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">AbstractBinMetric</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="n">n_bins</span><span class="p">,</span>
+                                   <span class="n">uniform_features</span><span class="o">=</span><span class="n">uniform_features</span><span class="p">,</span>
+                                   <span class="n">uniform_label</span><span class="o">=</span><span class="n">uniform_label</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">=</span> <span class="n">power</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">proba</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">proba</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_mask</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span><span class="p">]</span>
+        <span class="n">global_data</span><span class="p">,</span> <span class="n">global_weight</span><span class="p">,</span> <span class="n">global_cdf</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">prepare_distribution</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_masked_weight</span><span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="k">for</span> <span class="nb">bin</span><span class="p">,</span> <span class="n">bin_weight</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bin_weights</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">bin_weight</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">bin_mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bin_indices</span> <span class="o">==</span> <span class="nb">bin</span>
+            <span class="n">local_distribution</span> <span class="o">=</span> <span class="n">y_pred</span><span class="p">[</span><span class="n">bin_mask</span><span class="p">]</span>
+            <span class="n">local_weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_masked_weight</span><span class="p">[</span><span class="n">bin_mask</span><span class="p">]</span>
+            <span class="n">result</span> <span class="o">+=</span> <span class="n">bin_weight</span> <span class="o">*</span> <span class="n">ut</span><span class="o">.</span><span class="n">_cvm_2samp_fast</span><span class="p">(</span><span class="n">global_data</span><span class="p">,</span> <span class="n">local_distribution</span><span class="p">,</span>
+                                                      <span class="n">global_weight</span><span class="p">,</span> <span class="n">local_weights</span><span class="p">,</span> <span class="n">global_cdf</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+</div>
+<span class="k">class</span> <span class="nc">AbstractKnnMetric</span><span class="p">(</span><span class="n">AbstractMetric</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">n_neighbours</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Abstract class for knn-based metrics of uniformity.</span>
+
+<span class="sd">        :param n_neighbours: int, number of neighbours</span>
+<span class="sd">        :param uniform_features: list of strings, features along which uniformity is desired ()</span>
+<span class="sd">        :param uniform_label: int, label of class in which uniformity is desired</span>
+<span class="sd">            (typically, 0 is bck, 1 is signal)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span> <span class="o">=</span> <span class="n">uniform_label</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uniform_features</span> <span class="o">=</span> <span class="n">uniform_features</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_neighbours</span> <span class="o">=</span> <span class="n">n_neighbours</span>
+
+    <span class="c"># noinspection PyAttributeOutsideInit</span>
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Prepare different things for fast computation of metrics &quot;&quot;&quot;</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span> <span class="o">=</span> <span class="n">check_xyw</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_label_mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_label_mask</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&#39;No events of uniform class!&#39;</span>
+        <span class="c"># weights of events</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_masked_weight</span> <span class="o">=</span> <span class="n">sample_weight</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_label_mask</span><span class="p">]</span>
+
+        <span class="n">X_part</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">take_features</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_features</span><span class="p">))[</span><span class="bp">self</span><span class="o">.</span><span class="n">_label_mask</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="c"># computing knn indices</span>
+        <span class="n">neighbours</span> <span class="o">=</span> <span class="n">NearestNeighbors</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_neighbours</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="s">&#39;kd_tree&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_part</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_groups_indices</span> <span class="o">=</span> <span class="n">neighbours</span><span class="o">.</span><span class="n">kneighbors</span><span class="p">(</span><span class="n">X_part</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_group_matrix</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">group_indices_to_groups_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_groups_indices</span><span class="p">,</span> <span class="n">n_events</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">X_part</span><span class="p">))</span>
+        <span class="c"># self._group_weights = ut.compute_group_weights_by_indices(self._groups_indices,</span>
+        <span class="c"># sample_weight=self._masked_weight)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_group_weights</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">compute_group_weights</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_group_matrix</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_masked_weight</span><span class="p">)</span>
+        <span class="c"># self._divided_weights = ut.compute_divided_weight_by_indices(self._groups_indices,</span>
+        <span class="c">#                                                              sample_weight=self._masked_weight)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_divided_weights</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">compute_divided_weight</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_group_matrix</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_masked_weight</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+
+<div class="viewcode-block" id="KnnBasedSDE"><a class="viewcode-back" href="../../metrics.html#hep_ml.metrics.KnnBasedSDE">[docs]</a><span class="k">class</span> <span class="nc">KnnBasedSDE</span><span class="p">(</span><span class="n">AbstractKnnMetric</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_neighbours</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">target_rcp</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">2.</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Standard Deviation of Efficiency, computed using k nearest neighbours.</span>
+
+<span class="sd">        :param list[str] uniform_features: features, in which we compute non-uniformity.</span>
+<span class="sd">        :param uniform_label: label of class, in which uniformity is measured (0 for bck, 1 for signal)</span>
+<span class="sd">        :param int n_neighbours: number of neighs</span>
+<span class="sd">        :param list[float] target_rcp: global right-classified-parts.</span>
+<span class="sd">         Thresholds are selected so this part of class was correctly classified.</span>
+<span class="sd">         Default values are [0.5, 0.6, 0.7, 0.8, 0.9]</span>
+<span class="sd">        :param float power: power used in SDE formula (default is 2.)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">AbstractKnnMetric</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_neighbours</span><span class="o">=</span><span class="n">n_neighbours</span><span class="p">,</span>
+                                   <span class="n">uniform_features</span><span class="o">=</span><span class="n">uniform_features</span><span class="p">,</span>
+                                   <span class="n">uniform_label</span><span class="o">=</span><span class="n">uniform_label</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">=</span> <span class="n">power</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_rcp</span> <span class="o">=</span> <span class="n">target_rcp</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">proba</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">proba</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_label_mask</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_rcp</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">target_rcp</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_rcp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_rcp</span><span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="n">cuts</span> <span class="o">=</span> <span class="n">weighted_quantile</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">quantiles</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_rcp</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_masked_weight</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">cut</span> <span class="ow">in</span> <span class="n">cuts</span><span class="p">:</span>
+            <span class="n">groups_efficiencies</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">compute_group_efficiencies</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">groups_matrix</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_group_matrix</span><span class="p">,</span> <span class="n">cut</span><span class="o">=</span><span class="n">cut</span><span class="p">,</span>
+                                                                <span class="n">divided_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_divided_weights</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">+=</span> <span class="n">ut</span><span class="o">.</span><span class="n">weighted_deviation</span><span class="p">(</span><span class="n">groups_efficiencies</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_group_weights</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">power</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">result</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">cuts</span><span class="p">))</span> <span class="o">**</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">power</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="KnnBasedTheil"><a class="viewcode-back" href="../../metrics.html#hep_ml.metrics.KnnBasedTheil">[docs]</a><span class="k">class</span> <span class="nc">KnnBasedTheil</span><span class="p">(</span><span class="n">AbstractKnnMetric</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">n_neighbours</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">target_rcp</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Theil index of Efficiency, computed using k nearest neighbours.</span>
+
+<span class="sd">        :param list[str] uniform_features: features, in which we compute non-uniformity.</span>
+<span class="sd">        :param uniform_label: label of class, in which uniformity is measured (0 for bck, 1 for signal)</span>
+<span class="sd">        :param int n_neighbours: number of neighs</span>
+<span class="sd">        :param list[float] target_rcp: global right-classified-parts.</span>
+<span class="sd">         Thresholds are selected so this part of class was correctly classified.</span>
+<span class="sd">         Default values are [0.5, 0.6, 0.7, 0.8, 0.9]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">AbstractKnnMetric</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_neighbours</span><span class="o">=</span><span class="n">n_neighbours</span><span class="p">,</span>
+                                   <span class="n">uniform_features</span><span class="o">=</span><span class="n">uniform_features</span><span class="p">,</span>
+                                   <span class="n">uniform_label</span><span class="o">=</span><span class="n">uniform_label</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_rcp</span> <span class="o">=</span> <span class="n">target_rcp</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">proba</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">proba</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_label_mask</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_rcp</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">target_rcp</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_rcp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_rcp</span><span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="n">cuts</span> <span class="o">=</span> <span class="n">weighted_quantile</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">quantiles</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_rcp</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_masked_weight</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">cut</span> <span class="ow">in</span> <span class="n">cuts</span><span class="p">:</span>
+            <span class="n">groups_efficiencies</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">compute_group_efficiencies</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">groups_matrix</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_group_matrix</span><span class="p">,</span> <span class="n">cut</span><span class="o">=</span><span class="n">cut</span><span class="p">,</span>
+                                                                <span class="n">divided_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_divided_weights</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">+=</span> <span class="n">ut</span><span class="o">.</span><span class="n">theil</span><span class="p">(</span><span class="n">groups_efficiencies</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_group_weights</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">cuts</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="KnnBasedCvM"><a class="viewcode-back" href="../../metrics.html#hep_ml.metrics.KnnBasedCvM">[docs]</a><span class="k">class</span> <span class="nc">KnnBasedCvM</span><span class="p">(</span><span class="n">AbstractKnnMetric</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">n_neighbours</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">2.</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Nonuniformity metric based on Cramer-von Mises distance between distributions, computed on nearest neighbours.</span>
+
+<span class="sd">        :param list[str] uniform_features: features, in which we compute non-uniformity.</span>
+<span class="sd">        :param uniform_label: label of class, in which uniformity is measured (0 for bck, 1 for signal)</span>
+<span class="sd">        :param int n_neighbours: number of neighs</span>
+<span class="sd">        :param float power: power used in CvM formula (default is 2.)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">AbstractKnnMetric</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_neighbours</span><span class="o">=</span><span class="n">n_neighbours</span><span class="p">,</span>
+                                   <span class="n">uniform_features</span><span class="o">=</span><span class="n">uniform_features</span><span class="p">,</span>
+                                   <span class="n">uniform_label</span><span class="o">=</span><span class="n">uniform_label</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">=</span> <span class="n">power</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">proba</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">proba</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_label_mask</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span><span class="p">]</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="n">global_data</span><span class="p">,</span> <span class="n">global_sample_weight</span><span class="p">,</span> <span class="n">global_cdf</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">prepare_distribution</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_masked_weight</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">group</span><span class="p">,</span> <span class="n">group_weight</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_groups_indices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_group_weights</span><span class="p">):</span>
+            <span class="n">local_distribution</span> <span class="o">=</span> <span class="n">y_pred</span><span class="p">[</span><span class="n">group</span><span class="p">]</span>
+            <span class="n">local_sample_weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_masked_weight</span><span class="p">[</span><span class="n">group</span><span class="p">]</span>
+            <span class="n">result</span> <span class="o">+=</span> <span class="n">group_weight</span> <span class="o">*</span> <span class="n">ut</span><span class="o">.</span><span class="n">_cvm_2samp_fast</span><span class="p">(</span><span class="n">global_data</span><span class="p">,</span> <span class="n">local_distribution</span><span class="p">,</span>
+                                                        <span class="n">global_sample_weight</span><span class="p">,</span> <span class="n">local_sample_weights</span><span class="p">,</span> <span class="n">global_cdf</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+</pre></div></div>
+
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Yandex; Alex Rogozhnikov and contributors.
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

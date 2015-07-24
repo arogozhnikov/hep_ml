@@ -1,0 +1,539 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>uBoost &mdash; hep_ml 0.2 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="hep_ml 0.2 documentation" href="index.html"/>
+        <link rel="next" title="Metric functions" href="metrics.html"/>
+        <link rel="prev" title="Gradient boosting" href="gb.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+
+        
+          <a href="index.html" class="icon icon-home"> hep_ml
+        
+
+        
+        </a>
+
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="gb.html">Gradient boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gb.html#module-hep_ml.losses">Losses (loss functions for gradient boosting)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">uBoost</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metric functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nnet.html">Neural networks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nnet.html#examples">Examples:</a></li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">hep_ml</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>uBoost</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/uboost.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="module-hep_ml.uboost">
+<span id="uboost"></span><h1>uBoost<a class="headerlink" href="#module-hep_ml.uboost" title="Permalink to this headline">¶</a></h1>
+<p>The module contains an implementation of uBoost algorithm.
+The main goal of <strong>uBoost</strong> is to fight correlation between predictions and some variables (i.e. mass of particle).</p>
+<ul class="simple">
+<li><cite>uBoostBDT</cite> is a modified version of AdaBoost, that targets to obtain efficiency uniformity at the specified level (global efficiency)</li>
+<li><cite>uBoostClassifier</cite> is a combination of uBoostBDTs for different efficiencies</li>
+</ul>
+<p>This implementation is more advanced than one described in original paper,
+contains smoothing and trains classifiers in threads, also has <cite>learning_rate</cite> and <cite>uniforming_rate</cite> parameters.</p>
+<p>Only binary classification is implemented.</p>
+<div class="section" id="examples">
+<h2>Examples:<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>To get uniform prediction in mass for background:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">base_tree</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span> <span class="o">=</span> <span class="n">uBoostClassifier</span><span class="p">(</span><span class="n">uniform_features</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;mass&#39;</span><span class="p">],</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="n">base_tree</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>                       <span class="n">train_features</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;pt&#39;</span><span class="p">,</span> <span class="s">&#39;flight_time&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="n">train_labels</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">train_weights</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">proba</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">test_data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To get uniform prediction in Dalitz variables for signal</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span> <span class="o">=</span> <span class="n">uBoostClassifier</span><span class="p">(</span><span class="n">uniform_features</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;mass_12&#39;</span><span class="p">,</span> <span class="s">&#39;mass_23&#39;</span><span class="p">],</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="n">base_tree</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>                       <span class="n">train_features</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;pt&#39;</span><span class="p">,</span> <span class="s">&#39;flight_time&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="n">train_labels</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">train_weights</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">proba</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">test_data</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="class">
+<dt id="hep_ml.uboost.uBoostBDT">
+<em class="property">class </em><code class="descclassname">hep_ml.uboost.</code><code class="descname">uBoostBDT</code><span class="sig-paren">(</span><em>uniform_features</em>, <em>uniform_label</em>, <em>target_efficiency=0.5</em>, <em>n_neighbors=50</em>, <em>bagging=True</em>, <em>base_estimator=None</em>, <em>n_estimators=50</em>, <em>learning_rate=1.0</em>, <em>uniforming_rate=1.0</em>, <em>train_features=None</em>, <em>smoothing=0.0</em>, <em>random_state=None</em>, <em>algorithm='SAMME'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostBDT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.uboost.uBoostBDT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.BaseEstimator</span></code>, <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.ClassifierMixin</span></code></p>
+<p>uBoostBDT is AdaBoostClassifier, which is modified to have flat
+efficiency of signal (class=1) along some variables.
+Efficiency is only guaranteed at the cut,
+corresponding to global efficiency == target_efficiency.</p>
+<p>Can be used alone, without uBoostClassifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>uniform_features</strong> &#8211; list of strings, names of variables, along which
+flatness is desired</li>
+<li><strong>uniform_label</strong> &#8211; int, label of class on which uniformity is desired
+(typically 0 for background, 1 for signal).</li>
+<li><strong>target_efficiency</strong> &#8211; float, the flatness is obtained at global BDT cut,
+corresponding to global efficiency</li>
+<li><strong>n_neighbors</strong> &#8211; int, (default=50) the number of neighbours,
+which are used to compute local efficiency</li>
+<li><strong>bagging</strong> &#8211; float or bool (default=True), bagging usually speeds up the
+convergence and prevents overfitting
+(see <a class="reference external" href="http://en.wikipedia.org/wiki/Bootstrap_aggregating">http://en.wikipedia.org/wiki/Bootstrap_aggregating</a>)
+if True, usual bootstrap aggregating is used
+(sampling with replacement at each iteration, size=len(X))
+if float, used sampling with replacement, the size of generated set
+is bagging * len(X)
+if False, usual boosting is used</li>
+<li><strong>base_estimator</strong> &#8211; classifier, optional (default=DecisionTreeClassifier(max_depth=2))
+The base estimator from which the boosted ensemble is built.
+Support for sample weighting is required, as well as proper
+<cite>classes_</cite> and <cite>n_classes_</cite> attributes.</li>
+<li><strong>n_estimators</strong> &#8211; integer, optional (default=50)
+The maximum number of estimators at which boosting is terminated.
+In case of perfect fit, the learning procedure is stopped early.</li>
+<li><strong>learning_rate</strong> &#8211; float, optional (default=1.)
+Learning rate shrinks the contribution of each classifier by
+<code class="docutils literal"><span class="pre">learning_rate</span></code>. There is a trade-off between <code class="docutils literal"><span class="pre">learning_rate</span></code>
+and <code class="docutils literal"><span class="pre">n_estimators</span></code>.</li>
+<li><strong>uniforming_rate</strong> &#8211; float, optional (default=1.)
+how much do we take into account the uniformity of signal,
+there is a trade-off between uniforming_rate and the speed of
+uniforming, zero value corresponds to plain AdaBoost</li>
+<li><strong>train_features</strong> &#8211; list of strings, names of variables used in
+fit/predict. If None, all the variables are used
+(including uniform_variables)</li>
+<li><strong>smoothing</strong> &#8211; float, default=(0.), used to smooth computing of local
+efficiencies, 0.0 corresponds to usual uBoost</li>
+<li><strong>random_state</strong> &#8211; int, RandomState instance or None, (default=None),
+used to fix randomization.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td>J. Stevens, M. Williams &#8216;uBoost: A boosting method for
+producing uniform selection efficiencies from multivariate classifiers&#8217;</td></tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="hep_ml.uboost.uBoostBDT.decision_function">
+<code class="descname">decision_function</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostBDT.decision_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.uboost.uBoostBDT.decision_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decision function. Float for each sample, the greater - the more signal like event is.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> &#8211; data, pandas.DataFrame of shape [n_samples, n_features]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">array of shape [n_samples] with floats</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="hep_ml.uboost.uBoostBDT.feature_importances_">
+<code class="descname">feature_importances_</code><a class="headerlink" href="#hep_ml.uboost.uBoostBDT.feature_importances_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the feature importances for <cite>train_features</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">array of shape [n_features], the order is the same as in <cite>train_features</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hep_ml.uboost.uBoostBDT.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y</em>, <em>sample_weight=None</em>, <em>neighbours_matrix=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostBDT.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.uboost.uBoostBDT.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build a boosted classifier from the training set (X, y).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> &#8211; array-like of shape [n_samples, n_features]</li>
+<li><strong>y</strong> &#8211; labels, array of shape [n_samples] with 0 and 1.</li>
+<li><strong>sample_weight</strong> &#8211; array-like of shape [n_samples] or None</li>
+<li><strong>neighbours_matrix</strong> &#8211; array-like of shape [n_samples, n_neighbours],
+each row contains indices of signal neighbours
+(neighbours should be computed for background too),
+if None, this matrix is computed.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">self</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hep_ml.uboost.uBoostBDT.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostBDT.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.uboost.uBoostBDT.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict classes for each sample</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> &#8211; data, pandas.DataFrame of shape [n_samples, n_features]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">array of shape [n_samples] with predicted classes.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hep_ml.uboost.uBoostBDT.predict_proba">
+<code class="descname">predict_proba</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostBDT.predict_proba"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.uboost.uBoostBDT.predict_proba" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict probabilities</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> &#8211; data, pandas.DataFrame of shape [n_samples, n_features]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">array of shape [n_samples, n_classes] with probabilities.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hep_ml.uboost.uBoostBDT.staged_decision_function">
+<code class="descname">staged_decision_function</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostBDT.staged_decision_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.uboost.uBoostBDT.staged_decision_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decision function after each stage of boosting.
+Float for each sample, the greater - the more signal like event is.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> &#8211; data, pandas.DataFrame of shape [n_samples, n_features]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">array of shape [n_samples] with floats.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hep_ml.uboost.uBoostBDT.staged_predict_proba">
+<code class="descname">staged_predict_proba</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostBDT.staged_predict_proba"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.uboost.uBoostBDT.staged_predict_proba" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predicted probabilities for each sample after each stage of boosting.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> &#8211; data, pandas.DataFrame of shape [n_samples, n_features]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">sequence of numpy.arrays of shape [n_samples, n_classes]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="hep_ml.uboost.uBoostClassifier">
+<em class="property">class </em><code class="descclassname">hep_ml.uboost.</code><code class="descname">uBoostClassifier</code><span class="sig-paren">(</span><em>uniform_features=None</em>, <em>uniform_label=1</em>, <em>train_features=None</em>, <em>n_neighbors=50</em>, <em>efficiency_steps=20</em>, <em>n_estimators=40</em>, <em>base_estimator=None</em>, <em>bagging=True</em>, <em>algorithm='SAMME'</em>, <em>smoothing=None</em>, <em>n_threads=1</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostClassifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.uboost.uBoostClassifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.BaseEstimator</span></code>, <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.ClassifierMixin</span></code></p>
+<p>uBoost classifier, an algorithm of boosting targeted to obtain
+flat efficiency in signal along some variables (e.g. mass).</p>
+<p>In principle, uBoost is ensemble of uBoostBDTs. See [1] for details.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>uniform_features</strong> &#8211; list of strings, names of variables,
+along which flatness is desired</li>
+<li><strong>uniform_label</strong> &#8211; int, (default=1)
+tha label of class for which uniformity is desired (default is signal)</li>
+<li><strong>train_features</strong> &#8211; list of strings,
+names of variables used in fit/predict.
+if None, all the variables are used (including uniform_variables)</li>
+<li><strong>n_neighbors</strong> &#8211; int, (default=50) the number of neighbours,
+which are used to compute local efficiency</li>
+<li><strong>n_estimators</strong> &#8211; integer, optional (default=50)
+The maximum number of estimators at which boosting is terminated.
+In case of perfect fit, the learning procedure is stopped early.</li>
+<li><strong>efficiency_steps</strong> &#8211; integer, optional (default=20),
+How many uBoostBDTs should be trained
+(each with its own target_efficiency)</li>
+<li><strong>base_estimator</strong> &#8211; object, optional (default=DecisionTreeClassifier(max_depth=2))
+The base estimator from which the boosted ensemble is built.
+Support for sample weighting is required,
+as well as proper <cite>classes_</cite> and <cite>n_classes_</cite> attributes.</li>
+<li><strong>bagging</strong> &#8211; float or bool (default=True), bagging usually
+speeds up the convergence and prevents overfitting
+(see <a class="reference external" href="http://en.wikipedia.org/wiki/Bootstrap_aggregating">http://en.wikipedia.org/wiki/Bootstrap_aggregating</a>)
+if True, usual bootstrap aggregating is used
+(sampling with replacement at each iteration, size=len(X))
+if float, used sampling with replacement, the size of generated
+set is bagging * len(X)
+if False, usual boosting is used</li>
+<li><strong>smoothing</strong> &#8211; float, default=None, used to smooth computing of
+local efficiencies, 0.0 corresponds to usual uBoost,</li>
+<li><strong>random_state</strong> &#8211; int, RandomState instance or None, (default=None)</li>
+<li><strong>n_threads</strong> &#8211; int, number of threads used.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td>J. Stevens, M. Williams &#8216;uBoost: A boosting method
+for producing uniform selection efficiencies from multivariate classifiers&#8217;</td></tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="hep_ml.uboost.uBoostClassifier.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y</em>, <em>sample_weight=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostClassifier.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.uboost.uBoostClassifier.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build a boosted classifier from the training set.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> &#8211; data, pandas.DatFrame of shape [n_samples, n_features]</li>
+<li><strong>y</strong> &#8211; labels, array of shape [n_samples] with 0 and 1.
+The target values (integers that correspond to classes).</li>
+<li><strong>sample_weight</strong> &#8211; array-like of shape [n_samples] with weights or None</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">self</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hep_ml.uboost.uBoostClassifier.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostClassifier.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.uboost.uBoostClassifier.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict labels</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> &#8211; data, pandas.DataFrame of shape [n_samples, n_features]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">numpy.array of shape [n_samples]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hep_ml.uboost.uBoostClassifier.predict_proba">
+<code class="descname">predict_proba</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostClassifier.predict_proba"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.uboost.uBoostClassifier.predict_proba" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict probabilities</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> &#8211; data, pandas.DataFrame of shape [n_samples, n_features]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">array of shape [n_samples, n_classes] with probabilities.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hep_ml.uboost.uBoostClassifier.staged_predict_proba">
+<code class="descname">staged_predict_proba</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostClassifier.staged_predict_proba"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.uboost.uBoostClassifier.staged_predict_proba" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predicted probabilities for each sample after each stage of boosting.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> &#8211; data, pandas.DataFrame of shape [n_samples, n_features]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">sequence of numpy.arrays of shape [n_samples, n_classes]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="metrics.html" class="btn btn-neutral float-right" title="Metric functions" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gb.html" class="btn btn-neutral" title="Gradient boosting" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Yandex; Alex Rogozhnikov and contributors.
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

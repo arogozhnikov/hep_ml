@@ -1,0 +1,566 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Neural networks &mdash; hep_ml 0.2 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="hep_ml 0.2 documentation" href="index.html"/>
+        <link rel="prev" title="Metric functions" href="metrics.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+
+        
+          <a href="index.html" class="icon icon-home"> hep_ml
+        
+
+        
+        </a>
+
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="gb.html">Gradient boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gb.html#module-hep_ml.losses">Losses (loss functions for gradient boosting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uboost.html">uBoost</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="uboost.html#examples">Examples:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metric functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Neural networks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples:</a></li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">hep_ml</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Neural networks</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/nnet.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="module-hep_ml.nnet">
+<span id="neural-networks"></span><h1>Neural networks<a class="headerlink" href="#module-hep_ml.nnet" title="Permalink to this headline">¶</a></h1>
+<p><strong>hep_ml.nnet</strong> is minimalistic version of feed-forward neural networks on theano.
+The neural networks from this library provide sklearn classifier&#8217;s interface.</p>
+<p>Definitions for loss functions, trainers of neural networks are defined in this file too.
+Main point of this library: black-box stochastic optimization of any given loss function.
+This gives ability to define any activation expression at the cost of unavailability of pretraining.</p>
+<p>In this file we have <strong>examples</strong> of neural networks,
+user is encouraged to write his own specific architecture,
+which can be much more complex than those used usually.</p>
+<p>This library should be preferred for different experiments with architectures.
+Also hep_ml.nnet allows optimization of parameters in any differentiable decision function.</p>
+<p>Being written in theano, these neural networks are able to make use of your GPU.</p>
+<p>See also libraries: theanets, Keras.</p>
+<div class="section" id="examples">
+<h2>Examples:<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>Training a neural network with two hidden layers using IRPROP- algorithm</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span><span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span> <span class="n">loss</span><span class="o">=</span><span class="s">&#39;log_loss&#39;</span><span class="p">,</span> <span class="n">trainer</span><span class="o">=</span><span class="s">&#39;irprop-&#39;</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">probability</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Training an AdaBoost over neural network, adadelta trainer was used,</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">AdaBoostClassifier</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">base_network</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span><span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">trainer</span><span class="o">=</span><span class="s">&#39;adadelta&#39;</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span> <span class="o">=</span> <span class="n">AdaBoostClassifier</span><span class="p">(</span><span class="n">base_estimator</span><span class="o">=</span><span class="n">base_network</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Using custom pretransformer and ExponentialLoss:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">PolynomialFeatures</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span><span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">scaler</span><span class="o">=</span><span class="n">PolynomialFeatures</span><span class="p">(),</span> <span class="n">loss</span><span class="o">=</span><span class="s">&#39;exp_loss&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To create custom neural network, see code of SimpleNeuralNetwork.</p>
+<dl class="class">
+<dt id="hep_ml.nnet.AbstractNeuralNetworkClassifier">
+<em class="property">class </em><code class="descclassname">hep_ml.nnet.</code><code class="descname">AbstractNeuralNetworkClassifier</code><span class="sig-paren">(</span><em>layers=(10</em>, <em>)</em>, <em>scaler='standard'</em>, <em>loss='log_loss'</em>, <em>trainer='irprop-'</em>, <em>epochs=100</em>, <em>trainer_parameters=None</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#AbstractNeuralNetworkClassifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.AbstractNeuralNetworkClassifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.BaseEstimator</span></code>, <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.ClassifierMixin</span></code></p>
+<p>Base class for classification neural networks.
+Supports only binary classification, supports weights, which makes it usable in boosting.</p>
+<p>Works in sklearn fit-predict way: X is [n_samples, n_features], y is [n_samples], sample_weight is [n_samples].
+Works as usual sklearn classifier, can be used in boosting, for instance, pickled, etc.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>layers</strong> &#8211; list of int, e.g [9, 7] - the number of units in each <em>hidden</em> layer</li>
+<li><strong>scaler</strong> &#8211; &#8216;standard&#8217; or &#8216;minmax&#8217; or some other Transformer used to pretransform features.
+Default is &#8216;standard&#8217;, which will apply StandardScaler from sklearn.</li>
+<li><strong>loss</strong> &#8211; loss function used (log_loss by default), str or function(y, pred, w) -&gt; float</li>
+<li><strong>trainer</strong> &#8211; string, name of optimization method used</li>
+<li><strong>epochs</strong> &#8211; number of times each takes part in training</li>
+<li><strong>trainer_parameters</strong> (<em>dict</em>) &#8211; parameters passed to trainer function (learning_rate, etc., trainer-specific).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="hep_ml.nnet.AbstractNeuralNetworkClassifier.activate">
+<code class="descname">activate</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#AbstractNeuralNetworkClassifier.activate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.AbstractNeuralNetworkClassifier.activate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Activates NN on particular dataset</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> (<em>numpy.array</em>) &#8211; of shape [n_samples, n_features]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">numpy.array with results of shape [n_samples]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hep_ml.nnet.AbstractNeuralNetworkClassifier.compute_loss">
+<code class="descname">compute_loss</code><span class="sig-paren">(</span><em>X</em>, <em>y</em>, <em>sample_weight=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#AbstractNeuralNetworkClassifier.compute_loss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.AbstractNeuralNetworkClassifier.compute_loss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes loss (that was used in training) on labeled dataset
+:param X: numpy.array of shape [n_samples, n_features]
+:param y: numpy.array with integer labels of shape [n_samples],</p>
+<blockquote>
+<div>in two-class classification 0 and 1 labels should be used</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sample_weight</strong> &#8211; optional, numpy.array of shape [n_samples].</td>
+</tr>
+</tbody>
+</table>
+<p>:return float, the loss vales computed</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="hep_ml.nnet.AbstractNeuralNetworkClassifier.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y</em>, <em>sample_weight=None</em>, <em>trainer=None</em>, <em>epochs=None</em>, <em>**trainer_parameters</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#AbstractNeuralNetworkClassifier.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.AbstractNeuralNetworkClassifier.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepare the model by optimizing selected loss function with some trainer.
+This method doesn&#8217;t support additional fitting, use <cite>partial_fit</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> &#8211; numpy.array of shape [n_samples, n_features]</li>
+<li><strong>y</strong> &#8211; numpy.array of shape [n_samples]</li>
+<li><strong>sample_weight</strong> &#8211; numpy.array of shape [n_samples], leave None for array of 1&#8217;s</li>
+<li><strong>trainer</strong> &#8211; str, method used to minimize loss, overrides one in the ctor</li>
+<li><strong>trainer_parameters</strong> &#8211; parameters for this method, override ones in ctor</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">self</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hep_ml.nnet.AbstractNeuralNetworkClassifier.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#AbstractNeuralNetworkClassifier.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.AbstractNeuralNetworkClassifier.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict the classes for new events.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> (<em>numpy.array</em>) &#8211; of shape [n_samples, n_features]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">numpy.array of shape [n_samples] with labels of predicted classes</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hep_ml.nnet.AbstractNeuralNetworkClassifier.predict_proba">
+<code class="descname">predict_proba</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#AbstractNeuralNetworkClassifier.predict_proba"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.AbstractNeuralNetworkClassifier.predict_proba" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes probability of each event to belong to each class</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> (<em>numpy.array</em>) &#8211; of shape [n_samples, n_features]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">numpy.array of shape [n_samples, n_classes]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hep_ml.nnet.AbstractNeuralNetworkClassifier.prepare">
+<code class="descname">prepare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#AbstractNeuralNetworkClassifier.prepare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.AbstractNeuralNetworkClassifier.prepare" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method should provide activation function and set parameters.
+Each network overrides this function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Activation function, f: X -&gt; p,
+X of shape [n_events, n_outputs], p of shape [n_events].
+For classification, p is arbitrary real, the greater p, the more event
+looks like signal event (label 1).</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hep_ml.nnet.AbstractNeuralNetworkClassifier.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em>, <em>fit=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#AbstractNeuralNetworkClassifier.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.AbstractNeuralNetworkClassifier.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply selected scaler or transformer to dataset
+(also this method adds a column filled with ones).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<em>numpy.array</em>) &#8211; of shape [n_samples, n_features], data</li>
+<li><strong>y</strong> (<em>numpy.array</em>) &#8211; of shape [n_samples], labels</li>
+<li><strong>fit</strong> (<em>bool</em>) &#8211; if True, will</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">transformed data, numpy.array of shape [n_samples, n_output_features]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="hep_ml.nnet.MLPClassifier">
+<em class="property">class </em><code class="descclassname">hep_ml.nnet.</code><code class="descname">MLPClassifier</code><span class="sig-paren">(</span><em>layers=(10</em>, <em>)</em>, <em>scaler='standard'</em>, <em>loss='log_loss'</em>, <em>trainer='irprop-'</em>, <em>epochs=100</em>, <em>trainer_parameters=None</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#MLPClassifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.MLPClassifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hep_ml.nnet.AbstractNeuralNetworkClassifier" title="hep_ml.nnet.AbstractNeuralNetworkClassifier"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.nnet.AbstractNeuralNetworkClassifier</span></code></a></p>
+<p>MLP (MultiLayerPerceptron) supports arbitrary number of layers (sigmoid activation each).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>layers</strong> &#8211; list of int, e.g [9, 7] - the number of units in each <em>hidden</em> layer</li>
+<li><strong>scaler</strong> &#8211; &#8216;standard&#8217; or &#8216;minmax&#8217; or some other Transformer used to pretransform features.
+Default is &#8216;standard&#8217;, which will apply StandardScaler from sklearn.</li>
+<li><strong>loss</strong> &#8211; loss function used (log_loss by default), str or function(y, pred, w) -&gt; float</li>
+<li><strong>trainer</strong> &#8211; string, name of optimization method used</li>
+<li><strong>epochs</strong> &#8211; number of times each takes part in training</li>
+<li><strong>trainer_parameters</strong> (<em>dict</em>) &#8211; parameters passed to trainer function (learning_rate, etc., trainer-specific).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="hep_ml.nnet.MLPClassifier.prepare">
+<code class="descname">prepare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#MLPClassifier.prepare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.MLPClassifier.prepare" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="hep_ml.nnet.SimpleNeuralNetwork">
+<em class="property">class </em><code class="descclassname">hep_ml.nnet.</code><code class="descname">SimpleNeuralNetwork</code><span class="sig-paren">(</span><em>layers=(10</em>, <em>)</em>, <em>scaler='standard'</em>, <em>loss='log_loss'</em>, <em>trainer='irprop-'</em>, <em>epochs=100</em>, <em>trainer_parameters=None</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#SimpleNeuralNetwork"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.SimpleNeuralNetwork" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hep_ml.nnet.AbstractNeuralNetworkClassifier" title="hep_ml.nnet.AbstractNeuralNetworkClassifier"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.nnet.AbstractNeuralNetworkClassifier</span></code></a></p>
+<p>The most simple NN with one hidden layer (sigmoid activation), for example purposes.
+Supports only one hidden layer.</p>
+<p>See source code as example.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>layers</strong> &#8211; list of int, e.g [9, 7] - the number of units in each <em>hidden</em> layer</li>
+<li><strong>scaler</strong> &#8211; &#8216;standard&#8217; or &#8216;minmax&#8217; or some other Transformer used to pretransform features.
+Default is &#8216;standard&#8217;, which will apply StandardScaler from sklearn.</li>
+<li><strong>loss</strong> &#8211; loss function used (log_loss by default), str or function(y, pred, w) -&gt; float</li>
+<li><strong>trainer</strong> &#8211; string, name of optimization method used</li>
+<li><strong>epochs</strong> &#8211; number of times each takes part in training</li>
+<li><strong>trainer_parameters</strong> (<em>dict</em>) &#8211; parameters passed to trainer function (learning_rate, etc., trainer-specific).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="hep_ml.nnet.SimpleNeuralNetwork.prepare">
+<code class="descname">prepare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#SimpleNeuralNetwork.prepare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.SimpleNeuralNetwork.prepare" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="hep_ml.nnet.SoftmaxNeuralNetwork">
+<em class="property">class </em><code class="descclassname">hep_ml.nnet.</code><code class="descname">SoftmaxNeuralNetwork</code><span class="sig-paren">(</span><em>layers=(10</em>, <em>)</em>, <em>scaler='standard'</em>, <em>loss='log_loss'</em>, <em>trainer='irprop-'</em>, <em>epochs=100</em>, <em>trainer_parameters=None</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#SoftmaxNeuralNetwork"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.SoftmaxNeuralNetwork" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hep_ml.nnet.AbstractNeuralNetworkClassifier" title="hep_ml.nnet.AbstractNeuralNetworkClassifier"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.nnet.AbstractNeuralNetworkClassifier</span></code></a></p>
+<p>Neural network with one hidden layer, softmax activation function</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>layers</strong> &#8211; list of int, e.g [9, 7] - the number of units in each <em>hidden</em> layer</li>
+<li><strong>scaler</strong> &#8211; &#8216;standard&#8217; or &#8216;minmax&#8217; or some other Transformer used to pretransform features.
+Default is &#8216;standard&#8217;, which will apply StandardScaler from sklearn.</li>
+<li><strong>loss</strong> &#8211; loss function used (log_loss by default), str or function(y, pred, w) -&gt; float</li>
+<li><strong>trainer</strong> &#8211; string, name of optimization method used</li>
+<li><strong>epochs</strong> &#8211; number of times each takes part in training</li>
+<li><strong>trainer_parameters</strong> (<em>dict</em>) &#8211; parameters passed to trainer function (learning_rate, etc., trainer-specific).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="hep_ml.nnet.SoftmaxNeuralNetwork.prepare">
+<code class="descname">prepare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#SoftmaxNeuralNetwork.prepare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.SoftmaxNeuralNetwork.prepare" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="hep_ml.nnet.RBFNeuralNetwork">
+<em class="property">class </em><code class="descclassname">hep_ml.nnet.</code><code class="descname">RBFNeuralNetwork</code><span class="sig-paren">(</span><em>layers=(10</em>, <em>)</em>, <em>scaler='standard'</em>, <em>loss='log_loss'</em>, <em>trainer='irprop-'</em>, <em>epochs=100</em>, <em>trainer_parameters=None</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#RBFNeuralNetwork"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.RBFNeuralNetwork" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hep_ml.nnet.AbstractNeuralNetworkClassifier" title="hep_ml.nnet.AbstractNeuralNetworkClassifier"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.nnet.AbstractNeuralNetworkClassifier</span></code></a></p>
+<p>Neural network with one hidden layer with normalized RBF activation (Radial Basis Function).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>layers</strong> &#8211; list of int, e.g [9, 7] - the number of units in each <em>hidden</em> layer</li>
+<li><strong>scaler</strong> &#8211; &#8216;standard&#8217; or &#8216;minmax&#8217; or some other Transformer used to pretransform features.
+Default is &#8216;standard&#8217;, which will apply StandardScaler from sklearn.</li>
+<li><strong>loss</strong> &#8211; loss function used (log_loss by default), str or function(y, pred, w) -&gt; float</li>
+<li><strong>trainer</strong> &#8211; string, name of optimization method used</li>
+<li><strong>epochs</strong> &#8211; number of times each takes part in training</li>
+<li><strong>trainer_parameters</strong> (<em>dict</em>) &#8211; parameters passed to trainer function (learning_rate, etc., trainer-specific).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="hep_ml.nnet.RBFNeuralNetwork.prepare">
+<code class="descname">prepare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#RBFNeuralNetwork.prepare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.RBFNeuralNetwork.prepare" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="hep_ml.nnet.PairwiseNeuralNetwork">
+<em class="property">class </em><code class="descclassname">hep_ml.nnet.</code><code class="descname">PairwiseNeuralNetwork</code><span class="sig-paren">(</span><em>layers=(10</em>, <em>)</em>, <em>scaler='standard'</em>, <em>loss='log_loss'</em>, <em>trainer='irprop-'</em>, <em>epochs=100</em>, <em>trainer_parameters=None</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#PairwiseNeuralNetwork"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.PairwiseNeuralNetwork" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hep_ml.nnet.AbstractNeuralNetworkClassifier" title="hep_ml.nnet.AbstractNeuralNetworkClassifier"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.nnet.AbstractNeuralNetworkClassifier</span></code></a></p>
+<p>The result is computed as h = sigmoid(Ax), output = sum_{ij} B_ij h_i (1 - h_j),
+this is a brilliant example when easier to define activation
+function rather than trying to implement this inside some framework.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>layers</strong> &#8211; list of int, e.g [9, 7] - the number of units in each <em>hidden</em> layer</li>
+<li><strong>scaler</strong> &#8211; &#8216;standard&#8217; or &#8216;minmax&#8217; or some other Transformer used to pretransform features.
+Default is &#8216;standard&#8217;, which will apply StandardScaler from sklearn.</li>
+<li><strong>loss</strong> &#8211; loss function used (log_loss by default), str or function(y, pred, w) -&gt; float</li>
+<li><strong>trainer</strong> &#8211; string, name of optimization method used</li>
+<li><strong>epochs</strong> &#8211; number of times each takes part in training</li>
+<li><strong>trainer_parameters</strong> (<em>dict</em>) &#8211; parameters passed to trainer function (learning_rate, etc., trainer-specific).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="hep_ml.nnet.PairwiseNeuralNetwork.prepare">
+<code class="descname">prepare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#PairwiseNeuralNetwork.prepare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.PairwiseNeuralNetwork.prepare" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="hep_ml.nnet.PairwiseSoftplusNeuralNetwork">
+<em class="property">class </em><code class="descclassname">hep_ml.nnet.</code><code class="descname">PairwiseSoftplusNeuralNetwork</code><span class="sig-paren">(</span><em>layers=(10</em>, <em>)</em>, <em>scaler='standard'</em>, <em>loss='log_loss'</em>, <em>trainer='irprop-'</em>, <em>epochs=100</em>, <em>trainer_parameters=None</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#PairwiseSoftplusNeuralNetwork"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.PairwiseSoftplusNeuralNetwork" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hep_ml.nnet.AbstractNeuralNetworkClassifier" title="hep_ml.nnet.AbstractNeuralNetworkClassifier"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.nnet.AbstractNeuralNetworkClassifier</span></code></a></p>
+<p>The result is computed as h = softplus(Ax), output = sum_{ij} B_ij h_i (1 - h_j)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>layers</strong> &#8211; list of int, e.g [9, 7] - the number of units in each <em>hidden</em> layer</li>
+<li><strong>scaler</strong> &#8211; &#8216;standard&#8217; or &#8216;minmax&#8217; or some other Transformer used to pretransform features.
+Default is &#8216;standard&#8217;, which will apply StandardScaler from sklearn.</li>
+<li><strong>loss</strong> &#8211; loss function used (log_loss by default), str or function(y, pred, w) -&gt; float</li>
+<li><strong>trainer</strong> &#8211; string, name of optimization method used</li>
+<li><strong>epochs</strong> &#8211; number of times each takes part in training</li>
+<li><strong>trainer_parameters</strong> (<em>dict</em>) &#8211; parameters passed to trainer function (learning_rate, etc., trainer-specific).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="hep_ml.nnet.PairwiseSoftplusNeuralNetwork.prepare">
+<code class="descname">prepare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#PairwiseSoftplusNeuralNetwork.prepare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.PairwiseSoftplusNeuralNetwork.prepare" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="metrics.html" class="btn btn-neutral" title="Metric functions" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Yandex; Alex Rogozhnikov and contributors.
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
