@@ -5,11 +5,11 @@ It is one of the most efficient machine learning algorithms used for classificat
 The key idea of algorithm is iterative minimization of target **loss** function
 by training each time one more estimator to the sequence. In this implementation decision trees are taken as such estimators.
 
-Important difference in loss functions available in **hep_ml**.
+**hep_ml** provides non-standard loss functions for gradient boosting.
 There are for instance, loss functions to fight with correlation or loss functions for ranking.
-See `hep_ml.losses` for details.
+See  :class:`hep_ml.losses` for details.
 
-see also: XGBoost library, sklearn.ensemble.GradientBoostingClassifier
+See also libraries: XGBoost, sklearn.ensemble.GradientBoostingClassifier
 
 .. [1] J.H. Friedman 'Greedy function approximation: A gradient boosting machine.', 2001.
 """
@@ -34,7 +34,7 @@ __author__ = 'Alex Rogozhnikov'
 
 class GradientBoostingClassifier(BaseEstimator, ClassifierMixin):
     def __init__(self, loss=None,
-                 n_estimators=10,
+                 n_estimators=100,
                  learning_rate=0.1,
                  subsample=1.,
                  min_samples_split=2,
@@ -57,13 +57,12 @@ class GradientBoostingClassifier(BaseEstimator, ClassifierMixin):
         :param loss: any descendant of AbstractLossFunction, those are very various:
             LogLossFunction, AdaLossFunction, KnnLossFunction, FlatnessLossFunction, RankBoostLossFunction.
             See hep_ml.losses for details.
-        :param n_estimators: int, number of trained trees.
-        :param subsample: float, fraction of data to use on each stage
-        :param learning_rate: size of step.
-        :param update_tree: bool, True by default. If False, 'improvement' step after fitting tree will be skipped.
+        :param int n_estimators: number of trained trees.
+        :param float subsample: fraction of data to use on each stage
+        :param float learning_rate: size of step.
+        :param bool update_tree: True by default. If False, 'improvement' step after fitting tree will be skipped.
         :param train_features: features used by tree.
-            Note that also there may be variables used by loss function, but not used in tree.
-
+            Note that algorithm may require also variables used by loss function, but not listed here.
         """
         self.loss = loss
         self.n_estimators = n_estimators
@@ -213,8 +212,8 @@ class GradientBoostingClassifier(BaseEstimator, ClassifierMixin):
     @property
     def feature_importances_(self):
         """Returns feature importances for all features used in training.
-
         The order corresponds to the order in `self.train_features`
+
         :return: numpy.array of shape [n_train_features]
         """
         import warnings
