@@ -38,15 +38,16 @@ setup(
              'uncorrelated methods of machine learning, high energy physics, particle physics',
 
     # List run-time dependencies here. These will be installed by pip when your project is installed.
-    install_requires=[
-        'numpy >= 1.9',
-        'scipy >= 0.15.0',
-        'matplotlib >= 1.4',
-        'pandas >= 0.16.0',
-        'ipython[all] >= 3.0',
-        'root_numpy >= 3.3.0',
-        'scikit-learn >= 0.15.2',
-        'theano == 0.7',
-        'six',
-    ],
+    # install_requires=[
+    #     'numpy >= 1.9',
+    #     'scipy >= 0.15.0',
+    #     'matplotlib >= 1.4',
+    #     'pandas >= 0.16.0',
+    #     'ipython[all] >= 3.0',
+    #     'root_numpy >= 3.3.0',
+    #     'scikit-learn >= 0.15.2',
+    #     'theano >= 0.7',
+    #     'six',
+    #     'sphinx_rtd_theme',
+    # ],
 )
