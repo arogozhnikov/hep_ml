@@ -1,5 +1,17 @@
 """
-Different loss functions for gradient boosting are defined here.
+**hep_ml.losses** contains different loss functions to use in gradient boosting.
+
+Apart from standard classification losses, **hep_ml** contains losses for uniform classification
+(see BinFlatnessLoss, KnnFlatnessLoss, KnnAdaLossFunction) and for ranking (see RankBoostLossFunction)
+
+**Interface**
+
+Loss functions inside `hep_ml` are stateful estimators and require initial fitting,
+which is done automatically inside gradient boosting.
+
+All loss function should be derived from AbstractLossFunction and implement this interface.
+
+
 """
 from __future__ import division, print_function, absolute_import
 import numbers
@@ -17,11 +29,22 @@ from .commonutils import compute_knn_indices_of_signal, check_sample_weight, che
 from .metrics_utils import bin_to_group_indices, compute_bin_indices, compute_group_weights, \
     group_indices_to_groups_matrix
 
+__all__ = [
+    'AbstractLossFunction',
+    'LogLossFunction',
+    'AdaLossFunction',
+    'CompositeLossFunction',
+    'BinFlatnessLossFunction',
+    'KnnFlatnessLossFunction',
+    'KnnAdaLossFunction',
+    'RankBoostLossFunction'
+
+]
 
 __author__ = 'Alex Rogozhnikov'
 
 
-def compute_positions(y_pred, sample_weight):
+def _compute_positions(y_pred, sample_weight):
     """
     For each event computes it position among other events by prediction.
     position = (weighted) part of elements with lower predictions => position belongs to [0, 1]
@@ -39,11 +62,11 @@ class AbstractLossFunction(BaseEstimator):
     """
     This is base class for loss functions used in `hep_ml`.
     Main differences compared to `scikit-learn` loss functions:
+
     1. losses are stateful, and may require fitting of training data before usage.
-    2. thus, when computing gradients, hessians, one shall provide predictions of all events.
+    2. thus, when computing gradient, hessian, one shall provide predictions of all events.
     3. losses are object that shall be passed as estimators to gradient boosting (see examples).
     4. only two-class case is supported, and different classes may have different role and meaning.
-       (so no class-switching like possible as this was done in sklearn).
     """
 
     def fit(self, X, y, sample_weight):
@@ -61,9 +84,10 @@ class AbstractLossFunction(BaseEstimator):
         raise NotImplementedError()
 
     def prepare_tree_params(self, y_pred):
-        """Prepares patameters for regression tree that minimizes MSE
+        """Prepares parameters for regression tree that minimizes MSE
+
         :param y_pred: contains predictions for all the events passed to `fit` method,
-        moreover, the order should be the same
+         moreover, the order should be the same
         :return: tuple (residual, sample_weight) with target and weight to be used in decision tree
         """
         return self.negative_gradient(y_pred), numpy.ones(len(y_pred))
@@ -87,11 +111,13 @@ class AbstractLossFunction(BaseEstimator):
 
 
 class HessianLossFunction(AbstractLossFunction):
+    """Loss function with diagonal hessian, provides uses Newton-Raphson step to update trees.
+
+    :param regularization: float, penalty for leaves with few events,
+        corresponds roughly to the number of added events of both classes to each leaf.
+    """
+
     def __init__(self, regularization=5.):
-        """Loss function with diagonal hessian, provides uses Newton-Raphson step to update trees.
-        :param regularization: float, penalty for leaves with few events,
-            corresponds roughly to the number of added events of both classes to each leaf.
-        """
         self.regularization = regularization
 
     def fit(self, X, y, sample_weight):
@@ -99,6 +125,10 @@ class HessianLossFunction(AbstractLossFunction):
         return self
 
     def hessian(self, y_pred):
+        """ Returns diagonal of hessian matrix.
+        :param y_pred: numpy.array of shape [n_samples] with events passed in the same order as in `fit`.
+        :return: numpy.array of shape [n_sampels] with second derivatives with respect to each prediction.
+        """
         raise NotImplementedError('Override this method in loss function.')
 
     def prepare_tree_params(self, y_pred):
@@ -116,8 +146,8 @@ class HessianLossFunction(AbstractLossFunction):
 
 
 class AdaLossFunction(HessianLossFunction):
-    """ AdaLossFunction is the same as Exponential Loss Function (exploss)"""
-    # TODO write better update
+    """ AdaLossFunction is the same as Exponential Loss Function (aka exploss)"""
+
     def fit(self, X, y, sample_weight):
         self.y = y
         self.sample_weight = sample_weight
@@ -135,10 +165,8 @@ class AdaLossFunction(HessianLossFunction):
         return self.sample_weight * numpy.exp(- self.y_signed * y_pred)
 
 
-class BinomialDevianceLossFunction(HessianLossFunction):
-    """
-    Binomial deviance, aka Logistic loss function (logloss).
-    """
+class LogLossFunction(HessianLossFunction):
+    """Logistic loss function (logloss) aka binomial deviance loss function, aka cross-entropy."""
 
     def fit(self, X, y, sample_weight):
         self.y = y
@@ -161,8 +189,9 @@ class BinomialDevianceLossFunction(HessianLossFunction):
 
 class CompositeLossFunction(HessianLossFunction):
     """
-    This is exploss for bck and logloss for signal with proper constants.
-    Such kind of loss functions is very useful to optimize AMS.
+    Composite loss function is defined as exploss for backgorund events and logloss for signal with proper constants.
+
+    Such kind of loss functions is very useful to optimize AMS or in situations where very clean signal is expected.
     """
 
     def fit(self, X, y, sample_weight):
@@ -190,11 +219,21 @@ class CompositeLossFunction(HessianLossFunction):
 
 
 class RankBoostLossFunction(HessianLossFunction):
-    def __init__(self, request_column, messup_penalty='square', regularization=0.1, update_terations=1):
-        self.update_terations = update_terations
+    def __init__(self, request_column, messup_penalty='square', update_iterations=1):
+        """RankBoostLossFunction is target of optimization in RankBoost algorithm,
+        which was developed for ranking and introduces penalties for wrong order of predictions.
+
+        However, this implementation goes further and there is selection of optimal leaf values based
+        on iterative procedure.
+
+        :param str request_column: name of column with search query ids.
+        :param str messup_penalty: 'linear' or 'square', dependency of penalty on difference in target values.
+        :param int update_iterations: number of minimization steps to provide optimal values.
+        """
+        self.update_terations = update_iterations
         self.messup_penalty = messup_penalty
         self.request_column = request_column
-        HessianLossFunction.__init__(self, regularization=regularization)
+        HessianLossFunction.__init__(self, regularization=0.1)
 
     def fit(self, X, y, sample_weight):
         self.queries = X[self.request_column]
@@ -219,7 +258,8 @@ class RankBoostLossFunction(HessianLossFunction):
         self.penalty_matrices.append(self.rank_penalties / numpy.sqrt(1 + len(y)))
         n_queries = numpy.bincount(normed_queries)
         assert len(n_queries) == len(self.possible_queries)
-        self.penalty_matrices.append(sparse.block_diag([self.rank_penalties * 1. / numpy.sqrt(1 + nq) for nq in n_queries]))
+        self.penalty_matrices.append(
+            sparse.block_diag([self.rank_penalties * 1. / numpy.sqrt(1 + nq) for nq in n_queries]))
         HessianLossFunction.fit(self, X, y, sample_weight=sample_weight)
 
     def __call__(self, y_pred):
@@ -274,12 +314,12 @@ class RankBoostLossFunction(HessianLossFunction):
         for _ in range(self.update_terations):
             y_test = y_pred + leaves_values[terminal_regions]
             new_leaves_values = self._prepare_new_leaves_values(terminal_regions, leaves_values,
-                                  X, y, y_test, sample_weight, update_mask, residual)
+                                                                X, y, y_test, sample_weight, update_mask, residual)
             leaves_values = 0.5 * new_leaves_values + leaves_values
         return leaves_values
 
     def _prepare_new_leaves_values(self, terminal_regions, leaf_values,
-                                  X, y, y_pred, sample_weight, update_mask, residual):
+                                   X, y, y_pred, sample_weight, update_mask, residual):
         """
         For each event we shall represent loss as
         w_plus * e^{pred} + w_minus * e^{-pred},
@@ -309,7 +349,7 @@ class RankBoostLossFunction(HessianLossFunction):
 class AbstractMatrixLossFunction(HessianLossFunction):
     # TODO write better update
     def __init__(self, uniform_features, regularization=5.):
-        """KnnLossFunction is a base class to be inherited by other loss functions,
+        """AbstractMatrixLossFunction is a base class to be inherited by other loss functions,
         which choose the particular A matrix and w vector. The formula of loss is:
         loss = \sum_i w_i * exp(- \sum_j a_ij y_j score_j)
         """
@@ -371,19 +411,24 @@ class AbstractMatrixLossFunction(HessianLossFunction):
         denominator = Z.multiply(Z).dot(self.w * exponents)
         return nominator / (denominator + 1e-5)
 
-    # def update_tree_leaf(self, leaf, indices_in_leaf, X, y, y_pred, sample_weight, update_mask, residual):
-    #     terminal_region = numpy.zeros(len(X), dtype=float)
-    #     terminal_region[indices_in_leaf] += 1
-    #     z = self.A.dot(terminal_region * self.y_signed)
-    #     # optimal value here by several steps?
-    #     alpha = numpy.sum(self.update_exponents * z) / (numpy.sum(self.update_exponents * z * z) + 1e-10)
-    #     return alpha
+        # def update_tree_leaf(self, leaf, indices_in_leaf, X, y, y_pred, sample_weight, update_mask, residual):
+        # terminal_region = numpy.zeros(len(X), dtype=float)
+        #     terminal_region[indices_in_leaf] += 1
+        #     z = self.A.dot(terminal_region * self.y_signed)
+        #     # optimal value here by several steps?
+        #     alpha = numpy.sum(self.update_exponents * z) / (numpy.sum(self.update_exponents * z * z) + 1e-10)
+        #     return alpha
 
 
-class SimpleKnnLossFunction(AbstractMatrixLossFunction):
+class KnnAdaLossFunction(AbstractMatrixLossFunction):
     def __init__(self, uniform_features, knn=10, uniform_label=1, distinguish_classes=True, row_norm=1.):
-        """A matrix is square, each row corresponds to a single event in train dataset, in each row we put ones
+        """
+        The formula of loss is:
+        :math:`loss = \sum_i w_i * exp(- \sum_j a_{ij} y_j score_j)`
+
+        `A` matrix is square, each row corresponds to a single event in train dataset, in each row we put ones
         to the closest neighbours of that event if this event from class along which we want to have uniform prediction.
+
         :param list[str] uniform_features: the features, along which uniformity is desired
         :param int knn: the number of nonzero elements in the row, corresponding to event in 'uniform class'
         :param int|list[int] uniform_label: the label (labels) of 'uniform classes'
@@ -504,8 +549,8 @@ class AbstractFlatnessLossFunction(AbstractLossFunction):
         raise NotImplementedError()
 
     def __call__(self, pred):
-        # TODO implement,
-        # the actual value does not play any role in boosting, but is interesting
+        # the actual value does not play any role in boosting
+        # optimizing here
         return 0
 
     def negative_gradient(self, y_pred):
@@ -516,11 +561,11 @@ class AbstractFlatnessLossFunction(AbstractLossFunction):
             label_mask = self.y == label
             global_positions = numpy.zeros(len(y_pred), dtype=float)
             global_positions[label_mask] = \
-                compute_positions(y_pred[label_mask], sample_weight=self.sample_weight[label_mask])
+                _compute_positions(y_pred[label_mask], sample_weight=self.sample_weight[label_mask])
 
             for indices_in_bin in self.group_indices[label]:
-                local_pos = compute_positions(y_pred[indices_in_bin],
-                                              sample_weight=self.sample_weight[indices_in_bin])
+                local_pos = _compute_positions(y_pred[indices_in_bin],
+                                               sample_weight=self.sample_weight[indices_in_bin])
                 global_pos = global_positions[indices_in_bin]
                 bin_gradient = self.power * numpy.sign(local_pos - global_pos) * \
                                numpy.abs(local_pos - global_pos) ** (self.power - 1)
@@ -595,52 +640,11 @@ class KnnFlatnessLossFunction(AbstractFlatnessLossFunction):
         else:
             return knn_indices
 
+
 # endregion
 
 
 # region ReweightLossFunction
-
-class ReweightLossFunction(AbstractLossFunction):
-    def __init__(self, regularization=5.):
-        """
-        Loss function used to reweight events. Conventions:
-         y=0 - target distribution, y=1 - original distribution.
-        Weights after look like:
-         w = w_0 for target distribution
-         w = w_0 * exp(pred) for events from original distribution
-         (so pred for target distribution is ignored)
-
-        :param regularization: roughly, it's number of events added in each leaf to prevent overfitting.
-        """
-        self.regularization = regularization
-
-    def fit(self, X, y, sample_weight):
-        w = check_sample_weight(y, sample_weight=sample_weight)
-        self.y = y
-        self.y_signed = 2 * y - 1
-        self.w = w
-        return self
-
-    def _compute_weights(self, y_pred):
-        weights = self.w * numpy.exp(self.y * y_pred)
-        return check_sample_weight(self.y, weights, normalize=True, normalize_by_class=True)
-
-    def __call__(self, *args, **kwargs):
-        """ Loss function doesn't have precise expression """
-        return 0
-
-    def negative_gradient(self, y_pred):
-        return self.y_signed * self._compute_weights(y_pred)
-
-    def prepare_tree_params(self, y_pred):
-        return self.y_signed, self._compute_weights(y_pred=y_pred)
-
-    def prepare_new_leaves_values(self, terminal_regions, leaf_values,
-                                  X, y, y_pred, sample_weight, update_mask, residual):
-        weights = self._compute_weights(y_pred)
-        w_target = numpy.bincount(terminal_regions, weights=weights * (1 - self.y))
-        w_original = numpy.bincount(terminal_regions, weights=weights * self.y)
-        return numpy.log(w_target + self.regularization) - numpy.log(w_original + self.regularization)
 
 
 # Mathematically at each stage we
@@ -652,7 +656,14 @@ class ReweightLossFunction(AbstractLossFunction):
 class ReweightNegativeLossFunction(AbstractLossFunction):
     def __init__(self, regularization=5.):
         """
-        Attempt to support negative weights.
+        Loss function used to reweight events. Conventions:
+         y=0 - target distribution, y=1 - original distribution.
+        Weights after look like:
+         w = w_0 for target distribution
+         w = w_0 * exp(pred) for events from original distribution
+         (so pred for target distribution is ignored)
+
+        :param regularization: roughly, it's number of events added in each leaf to prevent overfitting.
         """
         self.regularization = regularization
 
@@ -699,3 +710,4 @@ class ReweightNegativeLossFunction(AbstractLossFunction):
 
 
 # endregion
+

@@ -8,9 +8,9 @@ __author__ = 'Alex Rogozhnikov'
 
 
 def test_orders(size=40):
-    effs1 = losses.compute_positions(numpy.arange(size), numpy.ones(size))
+    effs1 = losses._compute_positions(numpy.arange(size), numpy.ones(size))
     p = numpy.random.permutation(size)
-    effs2 = losses.compute_positions(numpy.arange(size)[p], numpy.ones(size))
+    effs2 = losses._compute_positions(numpy.arange(size)[p], numpy.ones(size))
     assert numpy.all(effs1[p] == effs2), 'Efficiencies are wrong'
     assert numpy.all(effs1 == numpy.sort(effs1)), 'sortings are wrong'
 
@@ -25,9 +25,9 @@ def test_loss_functions(size=50, epsilon=1e-3):
     X[rank_column] = numpy.random.randint(0, 3, size=size)
     sample_weight = numpy.random.exponential(size=size)
     tested_losses = [
-        losses.BinomialDevianceLossFunction(),
+        losses.LogLossFunction(),
         losses.AdaLossFunction(),
-        losses.SimpleKnnLossFunction(X.columns[:1], knn=5),
+        losses.KnnAdaLossFunction(X.columns[:1], knn=5),
         losses.CompositeLossFunction(),
         losses.RankBoostLossFunction(rank_column)
     ]
@@ -70,9 +70,9 @@ def test_step_optimality(n_samples=50):
     sample_weight = numpy.random.exponential(size=n_samples)
 
     tested_losses = [
-        losses.BinomialDevianceLossFunction(),
+        losses.LogLossFunction(),
         losses.AdaLossFunction(),
-        losses.SimpleKnnLossFunction(X.columns[:1], knn=5),
+        losses.KnnAdaLossFunction(X.columns[:1], knn=5),
         losses.CompositeLossFunction(),
         losses.RankBoostLossFunction(rank_column)
     ]
