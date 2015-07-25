@@ -5,11 +5,14 @@ The main goal of **uBoost** is to fight correlation between predictions and some
 * `uBoostBDT` is a modified version of AdaBoost, that targets to obtain efficiency uniformity at the specified level (global efficiency)
 * `uBoostClassifier` is a combination of uBoostBDTs for different efficiencies
 
-This implementation is more advanced than one described in original paper,
+This implementation is more advanced than one described in the original paper,
 contains smoothing and trains classifiers in threads, also has `learning_rate` and `uniforming_rate` parameters.
 
 Only binary classification is implemented.
 
+See also: :class:`hep_ml.losses.BinFlatnessLossFunction`, :class:`hep_ml.losses.KnnFlatnessLossFunction`,
+:class:`hep_ml.losses.KnnAdaLossFunction`
+to fight correlation.
 
 Examples
 ________
@@ -39,8 +42,7 @@ To get uniform prediction in Dalitz variables for signal
 from six.moves import zip
 
 import numpy as np
-from sklearn.base import BaseEstimator, clone
-from sklearn.ensemble.weight_boosting import ClassifierMixin
+from sklearn.base import BaseEstimator, ClassifierMixin, clone
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.utils.random import check_random_state
 
@@ -61,7 +63,7 @@ class uBoostBDT(BaseEstimator, ClassifierMixin):
                  uniform_label,
                  target_efficiency=0.5,
                  n_neighbors=50,
-                 bagging=True,
+                 subsample=1.0,
                  base_estimator=None,
                  n_estimators=50,
                  learning_rate=1.,
@@ -90,14 +92,8 @@ class uBoostBDT(BaseEstimator, ClassifierMixin):
         :param n_neighbors: int, (default=50) the number of neighbours,
             which are used to compute local efficiency
 
-        :param bagging: float or bool (default=True), bagging usually speeds up the
-            convergence and prevents overfitting
-            (see http://en.wikipedia.org/wiki/Bootstrap_aggregating)
-            if True, usual bootstrap aggregating is used
-            (sampling with replacement at each iteration, size=len(X))
-            if float, used sampling with replacement, the size of generated set
-            is bagging * len(X)
-            if False, usual boosting is used
+        :param subsample: float (default=1.0), part of training dataset used
+            to build each base estimator.
 
         :param base_estimator: classifier, optional (default=DecisionTreeClassifier(max_depth=2))
             The base estimator from which the boosted ensemble is built.
@@ -105,8 +101,7 @@ class uBoostBDT(BaseEstimator, ClassifierMixin):
             `classes_` and `n_classes_` attributes.
 
         :param n_estimators: integer, optional (default=50)
-            The maximum number of estimators at which boosting is terminated.
-            In case of perfect fit, the learning procedure is stopped early.
+            number of estimators used.
 
         :param learning_rate: float, optional (default=1.)
             Learning rate shrinks the contribution of each classifier by
@@ -122,11 +117,10 @@ class uBoostBDT(BaseEstimator, ClassifierMixin):
            fit/predict. If None, all the variables are used
            (including uniform_variables)
 
-        :param smoothing: float, default=(0.), used to smooth computing of local
+        :param smoothing: float, (default=0.), used to smooth computing of local
            efficiencies, 0.0 corresponds to usual uBoost
 
-        :param random_state: int, RandomState instance or None, (default=None),
-           used to fix randomization.
+        :param random_state: int, RandomState instance or None (default None)
 
         Reference
         ----------
@@ -141,7 +135,7 @@ class uBoostBDT(BaseEstimator, ClassifierMixin):
         self.uniform_features = uniform_features
         self.target_efficiency = target_efficiency
         self.n_neighbors = n_neighbors
-        self.bagging = bagging
+        self.subsample = subsample
         self.train_features = train_features
         self.smoothing = smoothing
         self.uniform_label = uniform_label
@@ -275,8 +269,8 @@ class uBoostBDT(BaseEstimator, ClassifierMixin):
         y_signed = 2 * y - 1
         for iteration in range(self.n_estimators):
             estimator = self._make_estimator()
-            mask = _generate_mask(len(X), self.bagging, self.random_generator)
-            estimator.fit(X, y, sample_weight=sample_weight * mask)
+            mask = _generate_subsample_mask(len(X), self.subsample, self.random_generator)
+            estimator.fit(X[mask], y[mask], sample_weight=sample_weight[mask])
 
             # computing estimator weight
             if self.algorithm == 'SAMME':
@@ -321,7 +315,7 @@ class uBoostBDT(BaseEstimator, ClassifierMixin):
 
     def staged_decision_function(self, X):
         """Decision function after each stage of boosting.
-        Float for each sample, the greater - the more signal like event is.
+        Float for each sample, the greater --- the more signal like event is.
 
         :param X: data, pandas.DataFrame of shape [n_samples, n_features]
         :return: array of shape [n_samples] with floats.
@@ -333,7 +327,7 @@ class uBoostBDT(BaseEstimator, ClassifierMixin):
             yield score
 
     def decision_function(self, X):
-        """Decision function. Float for each sample, the greater - the more signal like event is.
+        """Decision function. Float for each sample, the greater --- the more signal like event is.
 
         :param X: data, pandas.DataFrame of shape [n_samples, n_features]
         :return: array of shape [n_samples] with floats
@@ -397,14 +391,14 @@ def _train_classifier(classifier, X_train_vars, y, sample_weight, neighbours_mat
 
 
 class uBoostClassifier(BaseEstimator, ClassifierMixin):
-    def __init__(self, uniform_features=None,
-                 uniform_label=1,
+    def __init__(self, uniform_features,
+                 uniform_label,
                  train_features=None,
                  n_neighbors=50,
                  efficiency_steps=20,
                  n_estimators=40,
                  base_estimator=None,
-                 bagging=True,
+                 subsample=1.0,
                  algorithm="SAMME",
                  smoothing=None,
                  n_threads=1,
@@ -419,8 +413,8 @@ class uBoostClassifier(BaseEstimator, ClassifierMixin):
         :param uniform_features: list of strings, names of variables,
             along which flatness is desired
 
-        :param uniform_label: int, (default=1)
-            tha label of class for which uniformity is desired (default is signal)
+        :param uniform_label: int,
+            tha label of class for which uniformity is desired
 
         :param train_features: list of strings,
             names of variables used in fit/predict.
@@ -442,14 +436,8 @@ class uBoostClassifier(BaseEstimator, ClassifierMixin):
             Support for sample weighting is required,
             as well as proper `classes_` and `n_classes_` attributes.
 
-        :param bagging: float or bool (default=True), bagging usually
-            speeds up the convergence and prevents overfitting
-            (see http://en.wikipedia.org/wiki/Bootstrap_aggregating)
-            if True, usual bootstrap aggregating is used
-            (sampling with replacement at each iteration, size=len(X))
-            if float, used sampling with replacement, the size of generated
-            set is bagging * len(X)
-            if False, usual boosting is used
+        :param subsample: float (default =1.) part of training dataset used
+            to train each base classifier.
 
         :param smoothing: float, default=None, used to smooth computing of
             local efficiencies, 0.0 corresponds to usual uBoost,
@@ -470,7 +458,7 @@ class uBoostClassifier(BaseEstimator, ClassifierMixin):
         self.random_state = random_state
         self.n_estimators = n_estimators
         self.base_estimator = base_estimator
-        self.bagging = bagging
+        self.subsample = subsample
         self.train_features = train_features
         self.smoothing = smoothing
         self.n_threads = n_threads
@@ -500,7 +488,7 @@ class uBoostClassifier(BaseEstimator, ClassifierMixin):
         if self.base_estimator is None:
             self.base_estimator = DecisionTreeClassifier(max_depth=2)
         X, y, sample_weight = check_xyw(X, y, sample_weight=sample_weight, classification=True)
-        X_train_vars = self._get_train_features(X)
+        data_train_features = self._get_train_features(X)
 
         if self.smoothing is None:
             self.smoothing = 10. / self.efficiency_steps
@@ -518,14 +506,14 @@ class uBoostClassifier(BaseEstimator, ClassifierMixin):
                 target_efficiency=efficiency, n_neighbors=self.knn,
                 n_estimators=self.n_estimators,
                 base_estimator=self.base_estimator,
-                random_state=self.random_state, bagging=self.bagging,
+                random_state=self.random_state, subsample=self.subsample,
                 smoothing=self.smoothing, algorithm=self.algorithm)
             self.classifiers.append(classifier)
 
         self.classifiers = map_on_cluster('threads-{}'.format(self.n_threads),
                                           _train_classifier,
                                           self.classifiers,
-                                          self.efficiency_steps * [X_train_vars],
+                                          self.efficiency_steps * [data_train_features],
                                           self.efficiency_steps * [y],
                                           self.efficiency_steps * [sample_weight],
                                           self.efficiency_steps * [neighbours_matrix])
@@ -561,22 +549,14 @@ class uBoostClassifier(BaseEstimator, ClassifierMixin):
             yield commonutils.score_to_proba(sum(scores) / self.efficiency_steps)
 
 
-def _generate_mask(n_samples, bagging=True, random_generator=np.random):
-    """bagging: float or bool (default=True), bagging usually
-        speeds up the convergence and prevents overfitting
-        (see http://en.wikipedia.org/wiki/Bootstrap_aggregating)
-        if True, usual bootstrap aggregating is used
-           (sampling with replacement at each iteration, size=len(X))
-        if float, used sampling without replacement, the size of generated
-           set is bagging * len(X)
-        if False, returns ones for all events."""
-    if bagging is True:
-        indices = random_generator.randint(0, n_samples, size=n_samples)
-        mask = np.bincount(indices, minlength=n_samples)
-    elif isinstance(bagging, float):
-        mask = random_generator.uniform(size=n_samples) > 1. - bagging
-    elif bagging is False:
+def _generate_subsample_mask(n_samples, subsample, random_generator):
+    """
+    :param float subsample: part of samples to be left
+    :param random_generator: numpy.random.RandomState instance
+    """
+    assert 0 < subsample <= 1., 'subsample should be in range (0, 1]'
+    if subsample == 1.0:
         mask = slice(None, None, None)
     else:
-        raise ValueError("something wrong was passed as bagging")
+        mask = random_generator.uniform(size=n_samples) < subsample
     return mask
