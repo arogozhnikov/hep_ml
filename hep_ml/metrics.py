@@ -1,5 +1,5 @@
 """
-Currently hep_ml.metrics module contains metric functions, which measure nonuniformity in predictions.
+Currently **hep_ml.metrics** module contains metric functions, which measure nonuniformity in predictions.
 
 These metrics are unfortunately more complicated than usual ones
 and require more information: not only predictions and classes,
@@ -15,9 +15,10 @@ uniform_label:
     * 1, if you want to measure non-uniformity in signal predictions
     * 0, if background.
 
-Metrics are following `REP` conventions (first fit, then compute metrics on same dataset).
-For these metrics 'fit' stage is crucial, since it precomputes information from dataset X,
-which is quite long and better to do this once.
+Metrics are following **REP** conventions (first fit, then compute metrics on same dataset).
+For these metrics `fit` stage is crucial, since it precomputes information using dataset X,
+which is quite long and better to do this once. Different quality metrics with same interface
+can be found in **REP** package.
 
 Examples
 ________
@@ -80,7 +81,7 @@ class AbstractMetric(BaseEstimator):
 
 
 class AbstractBinMetric(AbstractMetric):
-    def __init__(self, n_bins, uniform_features, uniform_label=0):
+    def __init__(self, n_bins, uniform_features, uniform_label):
         """
         Abstract class for bin-based metrics of uniformity.
 
@@ -108,7 +109,7 @@ class AbstractBinMetric(AbstractMetric):
 
 
 class BinBasedSDE(AbstractBinMetric):
-    def __init__(self, uniform_features, uniform_label=0, n_bins=10, target_rcp=None, power=2.):
+    def __init__(self, uniform_features, uniform_label, n_bins=10, target_rcp=None, power=2.):
         """
         Standard Deviation of Efficiency, computed using bins.
 
@@ -142,7 +143,7 @@ class BinBasedSDE(AbstractBinMetric):
 
 
 class BinBasedTheil(AbstractBinMetric):
-    def __init__(self, uniform_features, uniform_label=0, n_bins=10, target_rcp=None):
+    def __init__(self, uniform_features, uniform_label, n_bins=10, target_rcp=None):
         """
         Theil index of Efficiency, computed using bins.
 
@@ -173,7 +174,7 @@ class BinBasedTheil(AbstractBinMetric):
 
 
 class BinBasedCvM(AbstractBinMetric):
-    def __init__(self, uniform_features, n_bins=10, uniform_label=0, power=2.):
+    def __init__(self, uniform_features, uniform_label, n_bins=10, power=2.):
         """
         Nonuniformity metric based on Cramer-von Mises distance between distributions, computed on bins.
 
@@ -205,7 +206,7 @@ class BinBasedCvM(AbstractBinMetric):
 
 
 class AbstractKnnMetric(AbstractMetric):
-    def __init__(self, uniform_features, n_neighbours=50, uniform_label=0):
+    def __init__(self, uniform_features, uniform_label, n_neighbours=50):
         """
         Abstract class for knn-based metrics of uniformity.
 
@@ -242,7 +243,7 @@ class AbstractKnnMetric(AbstractMetric):
 
 
 class KnnBasedSDE(AbstractKnnMetric):
-    def __init__(self, uniform_features, uniform_label=0, n_neighbours=50, target_rcp=None, power=2.):
+    def __init__(self, uniform_features, uniform_label, n_neighbours=50, target_rcp=None, power=2.):
         """
         Standard Deviation of Efficiency, computed using k nearest neighbours.
 
@@ -276,7 +277,7 @@ class KnnBasedSDE(AbstractKnnMetric):
 
 
 class KnnBasedTheil(AbstractKnnMetric):
-    def __init__(self, uniform_features, n_neighbours=50, uniform_label=0, target_rcp=None):
+    def __init__(self, uniform_features, uniform_label, n_neighbours=50, target_rcp=None):
         """
         Theil index of Efficiency, computed using k nearest neighbours.
 
@@ -308,7 +309,7 @@ class KnnBasedTheil(AbstractKnnMetric):
 
 
 class KnnBasedCvM(AbstractKnnMetric):
-    def __init__(self, uniform_features, n_neighbours=50, uniform_label=0, power=2.):
+    def __init__(self, uniform_features, uniform_label, n_neighbours=50, power=2.):
         """
         Nonuniformity metric based on Cramer-von Mises distance between distributions, computed on nearest neighbours.
 
