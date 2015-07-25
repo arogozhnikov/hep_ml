@@ -11,7 +11,7 @@ user is encouraged to write his own specific architecture,
 which can be much more complex than those used usually.
 
 This library should be preferred for different experiments with architectures.
-Also hep_ml.nnet allows optimization of parameters in any differentiable decision function.
+Also **hep_ml.nnet** allows optimization of parameters in any differentiable decision function.
 
 Being written in theano, these neural networks are able to make use of your GPU.
 
@@ -26,10 +26,11 @@ Training a neural network with two hidden layers using IRPROP- algorithm
 >>> network.fit(X, y)
 >>> probability = network.predict_proba(X)
 
-Training an AdaBoost over neural network, adadelta trainer was used,
+Training an AdaBoost over neural network, adadelta trainer was used and trainer specific parameter was used
+(size of minibatch)
 
 >>> from sklearn.ensemble import AdaBoostClassifier
->>> base_network = MLPClassifier(layers=[10], trainer='adadelta', batch=600)
+>>> base_network = MLPClassifier(layers=[10], trainer='adadelta', trainer_parameters={'batch': 600})
 >>> classifier = AdaBoostClassifier(base_estimator=base_network, n_estimators=20)
 >>> classifier.fit(X, y)
 
@@ -125,7 +126,13 @@ def get_batch(x, y, w, random_stream, batch_size=10):
 
 def sgd_trainer(x, y, w, parameters, loss, random_stream, batch=10, learning_rate=0.1,
                 l2_penalty=0.001, momentum=0.9, ):
-    """Stochastic gradient descent with momentum"""
+    """Stochastic gradient descent with momentum,
+
+    :param int batch: size of minibatch, each time averaging gradient over minibatch.
+    :param float learning_rate: size of step
+    :param float l2_penalty: speed of weights' decay, l2 regularization prevents overfitting
+    :param float momentum: momentum to stabilize learning process.
+    """
     updates = []
     shareds = []
     xp, yp, wp = get_batch(x, y, w, batch_size=batch, random_stream=random_stream)
@@ -140,7 +147,14 @@ def sgd_trainer(x, y, w, parameters, loss, random_stream, batch=10, learning_rat
 
 def irprop_minus_trainer(x, y, w, parameters, loss, random_stream,
                          positive_step=1.2, negative_step=0.5, max_step=1., min_step=1e-6):
-    """ IRPROP- trainer, see http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.21.3428 """
+    """IRPROP- is batch trainer, for details see http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.21.3428
+    This is default trainer, very stable for classification.
+
+    :param positive_step: factor, by which the step is increased when continuing going in the direction
+    :param negative_step: factor, by which the step is increased when changing direction to opposite
+    :param min_step: minimal change of weight during iteration
+    :param max_step: maximal change of weight during iteration
+    """
     shareds = []
     updates = []
     loss_value = loss(x, y, w)
@@ -163,7 +177,7 @@ def irprop_minus_trainer(x, y, w, parameters, loss, random_stream,
 
 def irprop_star_trainer(x, y, w, parameters, loss, random_stream,
                         positive_step=1.2, negative_step=0.5, max_step=1., min_step=1e-6):
-    """ IRPROP* trainer (own experimental modification, not recommended for usage) """
+    """ IRPROP* trainer (own experimental modification of IRPROP-, not recommended for usage) """
     shareds = []
     updates = []
     loss_value = loss(x, y, w)
@@ -196,7 +210,13 @@ def irprop_star_trainer(x, y, w, parameters, loss, random_stream,
 
 def irprop_plus_trainer(x, y, w, parameters, loss, random_stream,
                         positive_step=1.2, negative_step=0.5, max_step=1., min_step=1e-6):
-    """IRPROP+ trainer, see http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.17.1332"""
+    """IRPROP+ is batch trainer, for details see http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.21.3428
+
+    :param positive_step: factor, by which the step is increased when continuing going in the direction
+    :param negative_step: factor, by which the step is increased when changing direction to opposite
+    :param min_step: minimal change of weight during iteration
+    :param max_step: maximal change of weight during iteration
+    """
     loss_value = loss(x, y, w)
     prev_loss_value = theano.shared(1e10)
     shareds = []
@@ -227,6 +247,13 @@ def irprop_plus_trainer(x, y, w, parameters, loss, random_stream,
 
 def adadelta_trainer(x, y, w, parameters, loss, random_stream,
                      decay_rate=0.95, epsilon=1e-5, learning_rate=1., batch=1000):
+    """AdaDelta is trainer with adaptive learning rate.
+
+    :param decay_rate: momentum-like parameter
+    :param learning_rate: size of step
+    :param batch: size of minibatch
+    :param epsilon: regularization
+    """
     shareds = []
     updates = []
 
@@ -254,8 +281,6 @@ trainers = {'sgd': sgd_trainer,
 }
 # endregion
 
-
-# TODO think of dropout and noises
 
 def _prepare_scaler(transform):
     """Returns new transformer used in neural network
@@ -431,6 +456,7 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
 
     def compute_loss(self, X, y, sample_weight=None):
         """Computes loss (that was used in training) on labeled dataset
+
         :param X: numpy.array of shape [n_samples, n_features]
         :param y: numpy.array with integer labels of shape [n_samples],
             in two-class classification 0 and 1 labels should be used
@@ -514,7 +540,7 @@ class SoftmaxNeuralNetwork(AbstractNeuralNetworkClassifier):
 
 
 class PairwiseNeuralNetwork(AbstractNeuralNetworkClassifier):
-    """The result is computed as h = sigmoid(Ax), output = sum_{ij} B_ij h_i (1 - h_j),
+    """The result is computed as :math:`h = sigmoid(Ax)`, :math:`output = \sum_{ij} B_{ij} h_i (1 - h_j)`,
      this is a brilliant example when easier to define activation
      function rather than trying to implement this inside some framework."""
 
@@ -531,7 +557,7 @@ class PairwiseNeuralNetwork(AbstractNeuralNetworkClassifier):
 
 
 class PairwiseSoftplusNeuralNetwork(AbstractNeuralNetworkClassifier):
-    """The result is computed as h = softplus(Ax), output = sum_{ij} B_ij h_i (1 - h_j) """
+    """The result is computed as :math:`h = softplus(Ax)`, :math:`output = \sum_{ij} B_{ij} h_i (1 - h_j)` """
 
     def prepare(self):
         n1, n2, n3 = self.layers_
