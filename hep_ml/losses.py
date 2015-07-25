@@ -2,15 +2,42 @@
 **hep_ml.losses** contains different loss functions to use in gradient boosting.
 
 Apart from standard classification losses, **hep_ml** contains losses for uniform classification
-(see BinFlatnessLoss, KnnFlatnessLoss, KnnAdaLossFunction) and for ranking (see RankBoostLossFunction)
+(see :class:`BinFlatnessLossFunction`, :class:`KnnFlatnessLossFunction`, :class:`KnnAdaLossFunction`)
+and for ranking (see :class:`RankBoostLossFunction`)
 
 **Interface**
 
-Loss functions inside `hep_ml` are stateful estimators and require initial fitting,
+Loss functions inside **hep_ml** are stateful estimators and require initial fitting,
 which is done automatically inside gradient boosting.
 
 All loss function should be derived from AbstractLossFunction and implement this interface.
 
+
+Examples
+________
+
+Training gradient boosting, optimizing LogLoss and using all features
+
+>>> from hep_ml.gradientboosting import GradientBoostingClassifier, LogLossFunction
+>>> classifier = GradientBoostingClassifier(loss=LogLossFunction(), n_estimators=100)
+>>> classifier.fit(X, y, sample_weight=sample_weight)
+
+Using composite loss function and subsampling:
+
+>>> loss = CompositeLossFunction()
+>>> classifier = GradientBoostingClassifier(loss=loss, subsample=0.5)
+
+To get uniform predictions in mass in background (note that mass should not present in features):
+
+>>> loss = BinFlatnessLossFunction(uniform_features=['mass'], uniform_label=0,
+>>>                                ada_coefficient=0.1, train_features=['pt', 'flight_time'])
+>>> classifier = GradientBoostingClassifier(loss=loss)
+
+To get uniform predictions in both signal and background:
+
+>>> loss = BinFlatnessLossFunction(uniform_features=['mass'], uniform_label=[0, 1],
+>>>                                ada_coefficient=0.1, train_features=['pt', 'flight_time'])
+>>> classifier = GradientBoostingClassifier(loss=loss)
 
 """
 from __future__ import division, print_function, absolute_import
@@ -29,6 +56,8 @@ from .commonutils import compute_knn_indices_of_signal, check_sample_weight, che
 from .metrics_utils import bin_to_group_indices, compute_bin_indices, compute_group_weights, \
     group_indices_to_groups_matrix
 
+__author__ = 'Alex Rogozhnikov'
+
 __all__ = [
     'AbstractLossFunction',
     'LogLossFunction',
@@ -38,10 +67,7 @@ __all__ = [
     'KnnFlatnessLossFunction',
     'KnnAdaLossFunction',
     'RankBoostLossFunction'
-
 ]
-
-__author__ = 'Alex Rogozhnikov'
 
 
 def _compute_positions(y_pred, sample_weight):
@@ -146,7 +172,7 @@ class HessianLossFunction(AbstractLossFunction):
 
 
 class AdaLossFunction(HessianLossFunction):
-    """ AdaLossFunction is the same as Exponential Loss Function (aka exploss)"""
+    """ AdaLossFunction is the same as Exponential Loss Function (aka exploss) """
 
     def fit(self, X, y, sample_weight):
         self.y = y
@@ -165,8 +191,27 @@ class AdaLossFunction(HessianLossFunction):
         return self.sample_weight * numpy.exp(- self.y_signed * y_pred)
 
 
+class MSELossFunction(HessianLossFunction):
+    """ Mean squared error loss function, used for regression """
+
+    def fit(self, X, y, sample_weight):
+        self.y = y
+        self.sample_weight = sample_weight
+
+    def __call__(self, y_pred):
+        return 0.5 * numpy.sum(self.sample_weight * (self.y - y_pred) ** 2)
+
+    def negative_gradient(self, y_pred):
+        return self.sample_weight * (self.y - y_pred)
+
+    def hessian(self, y_pred):
+        return self.sample_weight
+
+
 class LogLossFunction(HessianLossFunction):
-    """Logistic loss function (logloss) aka binomial deviance loss function, aka cross-entropy."""
+    """Logistic loss function (logloss), aka binomial deviance, aka cross-entropy,
+    aka log-likelihood loss.
+    """
 
     def fit(self, X, y, sample_weight):
         self.y = y
@@ -411,17 +456,9 @@ class AbstractMatrixLossFunction(HessianLossFunction):
         denominator = Z.multiply(Z).dot(self.w * exponents)
         return nominator / (denominator + 1e-5)
 
-        # def update_tree_leaf(self, leaf, indices_in_leaf, X, y, y_pred, sample_weight, update_mask, residual):
-        # terminal_region = numpy.zeros(len(X), dtype=float)
-        #     terminal_region[indices_in_leaf] += 1
-        #     z = self.A.dot(terminal_region * self.y_signed)
-        #     # optimal value here by several steps?
-        #     alpha = numpy.sum(self.update_exponents * z) / (numpy.sum(self.update_exponents * z * z) + 1e-10)
-        #     return alpha
-
 
 class KnnAdaLossFunction(AbstractMatrixLossFunction):
-    def __init__(self, uniform_features, knn=10, uniform_label=1, distinguish_classes=True, row_norm=1.):
+    def __init__(self, uniform_features, uniform_label, knn=10,  distinguish_classes=True, row_norm=1.):
         """
         The formula of loss is:
         :math:`loss = \sum_i w_i * exp(- \sum_j a_{ij} y_j score_j)`
@@ -430,8 +467,8 @@ class KnnAdaLossFunction(AbstractMatrixLossFunction):
         to the closest neighbours of that event if this event from class along which we want to have uniform prediction.
 
         :param list[str] uniform_features: the features, along which uniformity is desired
-        :param int knn: the number of nonzero elements in the row, corresponding to event in 'uniform class'
         :param int|list[int] uniform_label: the label (labels) of 'uniform classes'
+        :param int knn: the number of nonzero elements in the row, corresponding to event in 'uniform class'
         :param bool distinguish_classes: if True, 1's will be placed only for events of same class.
         """
         self.knn = knn
@@ -489,7 +526,7 @@ def exp_margin(margin):
 
 
 class AbstractFlatnessLossFunction(AbstractLossFunction):
-    def __init__(self, uniform_features, uniform_label=1, power=2., ada_coefficient=1.,
+    def __init__(self, uniform_features, uniform_label, power=2., ada_coefficient=1.,
                  allow_wrong_signs=True, use_median=False,
                  keep_debug_info=False):
         """
@@ -592,7 +629,7 @@ class AbstractFlatnessLossFunction(AbstractLossFunction):
 
 
 class BinFlatnessLossFunction(AbstractFlatnessLossFunction):
-    def __init__(self, uniform_features, n_bins=10, uniform_label=1, power=2., ada_coefficient=1.,
+    def __init__(self, uniform_features, uniform_label, n_bins=10, power=2., ada_coefficient=1.,
                  allow_wrong_signs=True, use_median=False, keep_debug_info=False):
         self.n_bins = n_bins
         AbstractFlatnessLossFunction.__init__(self, uniform_features,
@@ -618,7 +655,7 @@ class BinFlatnessLossFunction(AbstractFlatnessLossFunction):
 
 
 class KnnFlatnessLossFunction(AbstractFlatnessLossFunction):
-    def __init__(self, uniform_features, n_neighbours=100, uniform_label=1, power=2., ada_coefficient=1.,
+    def __init__(self, uniform_features, uniform_label, n_neighbours=100, power=2., ada_coefficient=1.,
                  max_groups_on_iteration=3000, allow_wrong_signs=True, use_median=False, keep_debug_info=False,
                  random_state=None):
         self.n_neighbours = n_neighbours
