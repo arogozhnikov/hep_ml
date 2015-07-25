@@ -6,7 +6,8 @@ The main goal of **uBoost** is to fight correlation between predictions and some
 * `uBoostClassifier` is a combination of uBoostBDTs for different efficiencies
 
 This implementation is more advanced than one described in the original paper,
-contains smoothing and trains classifiers in threads, also has `learning_rate` and `uniforming_rate` parameters.
+contains smoothing and trains classifiers in threads, has `learning_rate` and `uniforming_rate` parameters
+and supports SAMME.R modification to use predicted probabilities.
 
 Only binary classification is implemented.
 
@@ -200,12 +201,12 @@ class uBoostBDT(BaseEstimator, ClassifierMixin):
         # global efficiency == target_efficiency on each iteration.
         self.score_cuts_ = []
 
-        X_train_features = self._get_train_features(X)
-        X_train_features, y, sample_weight = check_xyw(X_train_features, y, sample_weight)
+        x_train_features = self._get_train_features(X)
+        x_train_features, y, sample_weight = check_xyw(x_train_features, y, sample_weight)
 
-        self.random_generator = check_random_state(self.random_state)
+        self.random_state_ = check_random_state(self.random_state)
 
-        self._boost(X_train_features, y, sample_weight)
+        self._boost(x_train_features, y, sample_weight)
 
         self.score_cut = self.signed_uniform_label * compute_cut_for_efficiency(
             self.target_efficiency, y == self.uniform_label, self.decision_function(X) * self.signed_uniform_label)
@@ -269,7 +270,7 @@ class uBoostBDT(BaseEstimator, ClassifierMixin):
         y_signed = 2 * y - 1
         for iteration in range(self.n_estimators):
             estimator = self._make_estimator()
-            mask = _generate_subsample_mask(len(X), self.subsample, self.random_generator)
+            mask = _generate_subsample_mask(len(X), self.subsample, self.random_state_)
             estimator.fit(X[mask], y[mask], sample_weight=sample_weight[mask])
 
             # computing estimator weight
