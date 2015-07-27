@@ -18,26 +18,27 @@ ________
 
 Training gradient boosting, optimizing LogLoss and using all features
 
->>> from hep_ml.gradientboosting import GradientBoostingClassifier, LogLossFunction
->>> classifier = GradientBoostingClassifier(loss=LogLossFunction(), n_estimators=100)
+>>> from hep_ml.gradientboosting import UGradientBoostingClassifier, LogLossFunction
+>>> classifier = UGradientBoostingClassifier(loss=LogLossFunction(), n_estimators=100)
 >>> classifier.fit(X, y, sample_weight=sample_weight)
 
 Using composite loss function and subsampling:
 
 >>> loss = CompositeLossFunction()
->>> classifier = GradientBoostingClassifier(loss=loss, subsample=0.5)
+>>> classifier = UGradientBoostingClassifier(loss=loss, subsample=0.5)
 
 To get uniform predictions in mass in background (note that mass should not present in features):
 
 >>> loss = BinFlatnessLossFunction(uniform_features=['mass'], uniform_label=0,
 >>>                                ada_coefficient=0.1, train_features=['pt', 'flight_time'])
->>> classifier = GradientBoostingClassifier(loss=loss)
+>>> classifier = UGradientBoostingClassifier(loss=loss)
 
 To get uniform predictions in both signal and background:
 
 >>> loss = BinFlatnessLossFunction(uniform_features=['mass'], uniform_label=[0, 1],
 >>>                                ada_coefficient=0.1, train_features=['pt', 'flight_time'])
->>> classifier = GradientBoostingClassifier(loss=loss)
+>>> classifier = UGradientBoostingClassifier(loss=loss)
+
 
 """
 from __future__ import division, print_function, absolute_import
@@ -197,6 +198,8 @@ class MSELossFunction(HessianLossFunction):
     def fit(self, X, y, sample_weight):
         self.y = y
         self.sample_weight = sample_weight
+        HessianLossFunction.fit(self, X, y, sample_weight=sample_weight)
+        return self
 
     def __call__(self, y_pred):
         return 0.5 * numpy.sum(self.sample_weight * (self.y - y_pred) ** 2)
@@ -264,19 +267,28 @@ class CompositeLossFunction(HessianLossFunction):
 
 
 class RankBoostLossFunction(HessianLossFunction):
-    def __init__(self, request_column, messup_penalty='square', update_iterations=1):
+    def __init__(self, request_column, penalty_power=1., update_iterations=1):
         """RankBoostLossFunction is target of optimization in RankBoost algorithm,
         which was developed for ranking and introduces penalties for wrong order of predictions.
 
         However, this implementation goes further and there is selection of optimal leaf values based
-        on iterative procedure.
+        on iterative procedure. This implementation also uses matrix decomposition of loss function,
+        which is very effective, when labels are from some very limited set (usually it is 0, 1, 2, 3, 4)
+
+        Loss penalty is :math:`\\sum_{ij} w_{ij} exp(pred_i - pred_j)`,
+
+        :math:`w_ij = ( \\alpha + \\beta * [query_i = query_j]) rank_penalty_{label_i, label_j}`
+        :math:`rank_penalty_{ij}` is zero if i <= j
+
+        :param y_pred: predictions of shape [n_samples]
+        :return: value of loss, float
 
         :param str request_column: name of column with search query ids.
-        :param str messup_penalty: 'linear' or 'square', dependency of penalty on difference in target values.
+        :param float penalty_power: describes dependence of penalty on the difference between target labels.
         :param int update_iterations: number of minimization steps to provide optimal values.
         """
         self.update_terations = update_iterations
-        self.messup_penalty = messup_penalty
+        self.penalty_power = penalty_power
         self.request_column = request_column
         HessianLossFunction.__init__(self, regularization=0.1)
 
@@ -292,12 +304,7 @@ class RankBoostLossFunction(HessianLossFunction):
         for r1 in self.possible_ranks:
             for r2 in self.possible_ranks:
                 if r1 < r2:
-                    if self.messup_penalty == 'square':
-                        self.rank_penalties[r1, r2] = (r2 - r1) ** 2
-                    elif self.messup_penalty == 'linear':
-                        self.rank_penalties[r1, r2] = r2 - r1
-                    else:
-                        raise NotImplementedError()
+                    self.rank_penalties[r1, r2] = (r2 - r1) ** self.penalty_power
 
         self.penalty_matrices = []
         self.penalty_matrices.append(self.rank_penalties / numpy.sqrt(1 + len(y)))
@@ -308,17 +315,6 @@ class RankBoostLossFunction(HessianLossFunction):
         HessianLossFunction.fit(self, X, y, sample_weight=sample_weight)
 
     def __call__(self, y_pred):
-        """
-        loss is defined as  w_ij exp(pred_i - pred_j),
-        w_ij is zero if label_i <= label_j
-        All the other labels are:
-
-        w_ij = (alpha + beta * [query_i = query_j]) rank_penalty_{type_i, type_j}
-        rank_penalty_{ij} is zero if i <= j
-
-        :param y_pred: predictions of shape [n_samples]
-        :return: value of loss, float
-        """
         y_pred -= y_pred.mean()
         pos_exponent = numpy.exp(y_pred)
         neg_exponent = numpy.exp(-y_pred)
