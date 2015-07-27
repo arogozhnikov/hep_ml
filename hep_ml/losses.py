@@ -467,7 +467,7 @@ class KnnAdaLossFunction(AbstractMatrixLossFunction):
         :param int knn: the number of nonzero elements in the row, corresponding to event in 'uniform class'
         :param bool distinguish_classes: if True, 1's will be placed only for events of same class.
 
-        .. [BU] Rogozhnikov A. et al, New approaches for boosting to uniformity
+        .. [BU] A. Rogozhnikov et al, New approaches for boosting to uniformity
             http://arxiv.org/abs/1410.4140
 
         """
@@ -698,7 +698,7 @@ class BinFlatnessLossFunction(AbstractFlatnessLossFunction):
         :param bool allow_wrong_signs: defines whether gradient may different sign from the "sign of class"
             (i.e. may have negative gradient on signal). If False, values will be clipped to zero.
 
-        .. [FL] Rogozhnikov A. et al, New approaches for boosting to uniformity
+        .. [FL] A. Rogozhnikov et al, New approaches for boosting to uniformity
             http://arxiv.org/abs/1410.4140
 
         """
@@ -747,7 +747,7 @@ class KnnFlatnessLossFunction(AbstractFlatnessLossFunction):
         :param int max_groups: to limit memory consumption when training sample is large,
             we randomly pick this number of points with their members.
 
-        .. [FL] Rogozhnikov A. et al, New approaches for boosting to uniformity
+        .. [FL] A. Rogozhnikov et al, New approaches for boosting to uniformity
             http://arxiv.org/abs/1410.4140
 
         """

@@ -147,12 +147,12 @@ class GBReweighter(BaseEstimator, ReweighterMixin):
         original, original_weight = self.normalize_input(original, original_weight)
         target, target_weight = self.normalize_input(target, target_weight)
 
-        self.gb = gb.GradientBoostingClassifier(loss=losses.ReweightLossFunction(),
-                                                n_estimators=self.n_estimators,
-                                                max_depth=self.max_depth,
-                                                min_samples_leaf=self.min_samples_leaf,
-                                                learning_rate=self.learning_rate,
-                                                ** self.other_args)
+        self.gb = gb.UGradientBoostingClassifier(loss=losses.ReweightLossFunction(),
+                                                 n_estimators=self.n_estimators,
+                                                 max_depth=self.max_depth,
+                                                 min_samples_leaf=self.min_samples_leaf,
+                                                 learning_rate=self.learning_rate,
+                                                 **self.other_args)
         data = numpy.vstack([original, target])
         target = numpy.array([1] * len(original) + [0] * len(target))
         weights = numpy.hstack([original_weight, target_weight])
