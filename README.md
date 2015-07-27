@@ -1,30 +1,36 @@
 # hep_ml
-This library provides specific ml-tools for purposes of high energy physics (written in python).
+**hep_ml** provides specific ml-tools for purposes of high energy physics (written in python).
 
 
-# Main points
-* working on uniform classifiers - the classifiers with low correlation of predictions and mass (or some other variable(s))
+## Main points
+* uniform classifiers - the classifiers with low correlation of predictions and mass (or some other variable(s))
   * __uBoost__ optimized implementation inside
-  * __uGradientBoosting__ (with different losses, specially __FlatnessLoss__ is very interesting)
-  * measures of uniformity (`SDE`, `Theil`, `CvM`, `KS`)
-* classifiers and tools have `scikit-learn` compatible interface (and uses many things from `sklearn`) <br />
-  Classifiers are compatible with [REP](https://github.com/yandex/rep) and moreover provided inside the REP docker image.
-* there is also procedure to generate toy Monte-Carlo in `toymc` module <br />
-  (generates new set of events based on the set of events we already have with same distribution) 
-  and special notebook 'ToyMonteCarlo' to demonstrate and analyze its results. 
+  * __UGradientBoosting__ (with different losses, specially __FlatnessLoss__ is very interesting)
+* measures of uniformity (`SDE`, `Theil`, `CvM`, `KS`)
+* __UGradientBoosting__ with advanced losses for classification, regression and ranking.  
+* **hep_ml.nnet** - theano-based neural networks 
 
-### Installation
+
+## Installation
 To use the repository, clone it and install with `pip`:
-<pre>
+```bash
 git clone https://github.com/iamfullofspam/hep_ml.git
 cd hep_ml
 sudo pip install .
-</pre>
+```
 
-### Getting started
-To run most of the notebooks, only IPython and some python libraries are needed.
-Those should be installed by `pip` as well. 
+## Links
+* [documentation](iamfullofspam.github.io/hep_ml/)
+* [notebook examples](https://github.com/iamfullofspam/hep_ml/tree/master/notebooks)
+* [issue tracker](https://github.com/iamfullofspam/hep_ml/issues)
 
+## Related projects you should know about
 
-In order to work with `.root` files, you need CERN ROOT (make sure you have it by typing `root` in the console) 
-with `pyROOT` package.
+* [IPython Notebook](http://ipython.org/notebook.html) -- web-shell for ipython
+* [ROOT](https://root.cern.ch/) -- main data format in HEP 
+* [scikit-learn](http://scikit-learn.org/) -- general-purpose library for machine learning in python
+* [REP](https://github.com/yandex/REP) -- python wrappers around different machine learning libraries (including TMVA) + goodies
+* [numpy](http://www.numpy.org/) -- 'MATLAB in python', vector operation in python. Don't ever try doing 
+* [root_numpy](http://rootpy.github.io/root_numpy/) -- python library to deal with ROOT files (without pain).
+* [theano](http://deeplearning.net/software/theano/) -- optimized vector analytical math engine in python.
+
