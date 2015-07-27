@@ -12,7 +12,12 @@
 
 
 ### Installation
-To use the repository, clone it and install with `pip`:
+
+```bash
+pip install hep_ml
+```
+
+To use latest version, clone it and install with `pip`:
 ```bash
 git clone https://github.com/iamfullofspam/hep_ml.git
 cd hep_ml
