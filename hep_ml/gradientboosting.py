@@ -1,5 +1,5 @@
 """
-Gradient boosting is general-purpose algorithm proposed by Friedman [1].
+Gradient boosting is general-purpose algorithm proposed by Friedman [GB]_.
 It is one of the most efficient machine learning algorithms used for classification, regression and ranking.
 
 The key idea of algorithm is iterative minimization of target **loss** function
@@ -11,7 +11,7 @@ See  :class:`hep_ml.losses` for details.
 
 See also libraries: XGBoost, sklearn.ensemble.GradientBoostingClassifier
 
-.. [1] J.H. Friedman 'Greedy function approximation: A gradient boosting machine.', 2001.
+.. [GB] J.H. Friedman 'Greedy function approximation: A gradient boosting machine.', 2001.
 """
 from __future__ import print_function, division, absolute_import
 
@@ -88,23 +88,6 @@ class UGradientBoostingBase(BaseEstimator):
         """taking indices of leaves and return the corresponding value for each event"""
         leaves = tree.transform(X)
         return leaf_values[leaves]
-
-    # def _find_best_constant(self, loss, n_samples, learning_rate=0.5, n_iterations=4):
-    # """Find best initial constant (in case the loss function doesn't do it automatically)
-    #
-    #     :param loss: fitted loss function
-    #     :param n_iterations: number of steps in iterative procedure
-    #     :return: float, best initial constant.
-    #     """
-    #     y_pred = numpy.zeros(n_samples, dtype=float)
-    #     result = 0.
-    #     terminal_regions = numpy.zeros(n_samples, dtype=int)
-    #     for _ in range(n_iterations):
-    #         residual, weights = self.loss.prepare_tree_params(y_pred + result)
-    #         AdaLossFunction.prepare_new_leaves_values(terminal_regions, leaf_values=numpy.array([numpy.mean(loss)]),
-    #                                                   )
-    #         self.loss.prepare_new_leaves_values()
-
 
     def fit(self, X, y, sample_weight=None):
         self._check_params()
