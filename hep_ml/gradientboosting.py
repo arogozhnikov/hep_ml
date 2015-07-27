@@ -29,7 +29,7 @@ from .losses import AbstractLossFunction, AdaLossFunction, \
 
 
 __author__ = 'Alex Rogozhnikov'
-__all__ = ['UGradientBoostingClassifier', 'UGradientBoostingRegressor' ]
+__all__ = ['UGradientBoostingClassifier', 'UGradientBoostingRegressor']
 
 
 class UGradientBoostingBase(BaseEstimator):
@@ -52,9 +52,8 @@ class UGradientBoostingBase(BaseEstimator):
         `max_depth`, `max_leaf_nodes`, `min_samples_leaf`, `min_samples_split`, `max_features` are parameters
         of regression tree, which is used as base estimator.
 
-        :param loss: any descendant of AbstractLossFunction, those are very various:
-            LogLossFunction, AdaLossFunction, KnnLossFunction, FlatnessLossFunction, RankBoostLossFunction.
-            See hep_ml.losses for details.
+        :param loss: any descendant of AbstractLossFunction, those are very various.
+            See :class:`hep_ml.losses` for available losses.
         :param int n_estimators: number of trained trees.
         :param float subsample: fraction of data to use on each stage
         :param float learning_rate: size of step.
@@ -91,7 +90,7 @@ class UGradientBoostingBase(BaseEstimator):
         return leaf_values[leaves]
 
     # def _find_best_constant(self, loss, n_samples, learning_rate=0.5, n_iterations=4):
-    #     """Find best initial constant (in case the loss function doesn't do it automatically)
+    # """Find best initial constant (in case the loss function doesn't do it automatically)
     #
     #     :param loss: fitted loss function
     #     :param n_iterations: number of steps in iterative procedure

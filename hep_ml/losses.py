@@ -44,7 +44,6 @@ To get uniform predictions in both signal and background:
 from __future__ import division, print_function, absolute_import
 import numbers
 import warnings
-from collections import defaultdict
 
 import numpy
 import pandas
@@ -210,6 +209,9 @@ class MSELossFunction(HessianLossFunction):
     def hessian(self, y_pred):
         return self.sample_weight
 
+    def prepare_tree_params(self, y_pred):
+        return self.y - y_pred, self.sample_weight
+
 
 class LogLossFunction(HessianLossFunction):
     """Logistic loss function (logloss), aka binomial deviance, aka cross-entropy,
@@ -268,7 +270,7 @@ class CompositeLossFunction(HessianLossFunction):
 
 class RankBoostLossFunction(HessianLossFunction):
     def __init__(self, request_column, penalty_power=1., update_iterations=1):
-        """RankBoostLossFunction is target of optimization in RankBoost algorithm,
+        """RankBoostLossFunction is target of optimization in RankBoost [RB]_ algorithm,
         which was developed for ranking and introduces penalties for wrong order of predictions.
 
         However, this implementation goes further and there is selection of optimal leaf values based
@@ -277,15 +279,15 @@ class RankBoostLossFunction(HessianLossFunction):
 
         Loss penalty is :math:`\\sum_{ij} w_{ij} exp(pred_i - pred_j)`,
 
-        :math:`w_ij = ( \\alpha + \\beta * [query_i = query_j]) rank_penalty_{label_i, label_j}`
-        :math:`rank_penalty_{ij}` is zero if i <= j
+        :math:`w_{ij} = ( \\alpha + \\beta * [query_i = query_j]) R_{label_i, label_j}`, where
+        :math:`R_{ij} = 0` if :math:`i \leq j`, else :math:`R_{ij} = (i - j)^{p}`
 
-        :param y_pred: predictions of shape [n_samples]
-        :return: value of loss, float
-
-        :param str request_column: name of column with search query ids.
+        :param str request_column: name of column with search query ids. The higher attention is payed
+          to samples with same query.
         :param float penalty_power: describes dependence of penalty on the difference between target labels.
         :param int update_iterations: number of minimization steps to provide optimal values.
+
+        .. [RB] Y. Freund et al. An Efficient Boosting Algorithm for Combining Preferences
         """
         self.update_terations = update_iterations
         self.penalty_power = penalty_power
@@ -442,7 +444,7 @@ class AbstractMatrixLossFunction(HessianLossFunction):
                                   X, y, y_pred, sample_weight, update_mask, residual):
         exponents = numpy.exp(- self.A.dot(self.y_signed * y_pred))
         # current approach uses Newton-Raphson step
-        # TODO compare with suboptimal choice of value, based on exp(a x) ~ a exp(x)
+        # TODO compare with iterative suboptimal choice of value, based on exp(a x) ~ a exp(x)
         regions_matrix = sparse.csc_matrix((self.y_signed, [numpy.arange(len(y)), terminal_regions]))
         # Z is matrix of shape [n_exponents, n_terminal_regions]
         # with contributions of each terminal region to each exponent
@@ -454,18 +456,23 @@ class AbstractMatrixLossFunction(HessianLossFunction):
 
 
 class KnnAdaLossFunction(AbstractMatrixLossFunction):
-    def __init__(self, uniform_features, uniform_label, knn=10,  distinguish_classes=True, row_norm=1.):
+    def __init__(self, uniform_features, uniform_label, knn=10, distinguish_classes=True, row_norm=1.):
         """
         The formula of loss is:
         :math:`loss = \sum_i w_i * exp(- \sum_j a_{ij} y_j score_j)`
 
         `A` matrix is square, each row corresponds to a single event in train dataset, in each row we put ones
         to the closest neighbours of that event if this event from class along which we want to have uniform prediction.
+        See [BU]_ for details.
 
         :param list[str] uniform_features: the features, along which uniformity is desired
         :param int|list[int] uniform_label: the label (labels) of 'uniform classes'
         :param int knn: the number of nonzero elements in the row, corresponding to event in 'uniform class'
         :param bool distinguish_classes: if True, 1's will be placed only for events of same class.
+
+        .. [BU] Rogozhnikov A. et al, New approaches for boosting to uniformity
+            http://arxiv.org/abs/1410.4140
+
         """
         self.knn = knn
         self.distinguish_classes = distinguish_classes
@@ -509,169 +516,6 @@ class KnnAdaLossFunction(AbstractMatrixLossFunction):
         w = numpy.concatenate(w_parts)
         assert A.shape == (len(trainX), len(trainX))
         return A, w
-
-
-# endregion
-
-
-# region FlatnessLossFunction
-
-def exp_margin(margin):
-    """ margin = - y_signed * y_pred """
-    return numpy.exp(numpy.clip(margin, -1e5, 2))
-
-
-class AbstractFlatnessLossFunction(AbstractLossFunction):
-    def __init__(self, uniform_features, uniform_label, power=2., ada_coefficient=1.,
-                 allow_wrong_signs=True, use_median=False,
-                 keep_debug_info=False):
-        """
-        This loss function contains separately penalty for non-flatness and ada_coefficient.
-        The penalty for non-flatness is using bins.
-
-        :type uniform_features: the vars, along which we want to obtain uniformity
-        :type uniform_label: int | list(int), the labels for which we want to obtain uniformity
-        :type power: the loss contains the difference | F - F_bin |^p, where p is power
-        :type ada_coefficient: coefficient of ada_loss added to this one. The greater the coefficient,
-            the less we tend to uniformity.
-        :type allow_wrong_signs: defines whether gradient may different sign from the "sign of class"
-            (i.e. may have negative gradient on signal). If False, values will be clipped to zero.
-        """
-        self.uniform_features = uniform_features
-        if isinstance(uniform_label, numbers.Number):
-            self.uniform_label = numpy.array([uniform_label])
-        else:
-            self.uniform_label = numpy.array(uniform_label)
-        self.power = power
-        self.ada_coefficient = ada_coefficient
-        self.allow_wrong_signs = allow_wrong_signs
-        self.keep_debug_info = keep_debug_info
-        self.use_median = use_median
-
-    def fit(self, X, y, sample_weight=None):
-        sample_weight = check_sample_weight(y, sample_weight=sample_weight)
-        assert len(X) == len(y), 'lengths are different'
-        X = pandas.DataFrame(X)
-
-        self.group_indices = dict()
-        self.group_matrices = dict()
-        self.group_weights = dict()
-
-        occurences = numpy.zeros(len(X))
-        for label in self.uniform_label:
-            self.group_indices[label] = self.compute_groups_indices(X, y, label=label)
-            self.group_matrices[label] = group_indices_to_groups_matrix(self.group_indices[label], len(X))
-            self.group_weights[label] = compute_group_weights(self.group_matrices[label], sample_weight=sample_weight)
-            for group in self.group_indices[label]:
-                occurences[group] += 1
-
-        out_of_bins = (occurences == 0) & numpy.in1d(y, self.uniform_label)
-        if numpy.mean(out_of_bins) > 0.01:
-            warnings.warn("%i events out of all bins " % numpy.sum(out_of_bins), UserWarning)
-
-        self.y = y
-        self.y_signed = 2 * y - 1
-        self.sample_weight = numpy.copy(sample_weight)
-        self.divided_weight = sample_weight / numpy.maximum(occurences, 1)
-
-        if self.keep_debug_info:
-            self.debug_dict = defaultdict(list)
-        return self
-
-    def compute_groups_indices(self, X, y, label):
-        raise NotImplementedError()
-
-    def __call__(self, pred):
-        # the actual value does not play any role in boosting
-        # optimizing here
-        return 0
-
-    def negative_gradient(self, y_pred):
-        y_pred = numpy.ravel(y_pred)
-        neg_gradient = numpy.zeros(len(self.y), dtype=numpy.float)
-
-        for label in self.uniform_label:
-            label_mask = self.y == label
-            global_positions = numpy.zeros(len(y_pred), dtype=float)
-            global_positions[label_mask] = \
-                _compute_positions(y_pred[label_mask], sample_weight=self.sample_weight[label_mask])
-
-            for indices_in_bin in self.group_indices[label]:
-                local_pos = _compute_positions(y_pred[indices_in_bin],
-                                               sample_weight=self.sample_weight[indices_in_bin])
-                global_pos = global_positions[indices_in_bin]
-                bin_gradient = self.power * numpy.sign(local_pos - global_pos) * \
-                               numpy.abs(local_pos - global_pos) ** (self.power - 1)
-
-                neg_gradient[indices_in_bin] += bin_gradient
-
-        neg_gradient *= self.divided_weight
-
-        assert numpy.all(neg_gradient[~numpy.in1d(self.y, self.uniform_label)] == 0)
-
-        y_signed = self.y_signed
-        if self.keep_debug_info:
-            self.debug_dict['pred'].append(numpy.copy(y_pred))
-            self.debug_dict['fl_grad'].append(numpy.copy(neg_gradient))
-            self.debug_dict['ada_grad'].append(y_signed * self.sample_weight * exp_margin(-y_signed * y_pred))
-
-        # adding ada
-        neg_gradient += self.ada_coefficient * y_signed * self.sample_weight * exp_margin(-y_signed * y_pred)
-
-        if not self.allow_wrong_signs:
-            neg_gradient = y_signed * numpy.clip(y_signed * neg_gradient, 0, 1e5)
-
-        return neg_gradient
-
-
-class BinFlatnessLossFunction(AbstractFlatnessLossFunction):
-    def __init__(self, uniform_features, uniform_label, n_bins=10, power=2., ada_coefficient=1.,
-                 allow_wrong_signs=True, use_median=False, keep_debug_info=False):
-        self.n_bins = n_bins
-        AbstractFlatnessLossFunction.__init__(self, uniform_features,
-                                              uniform_label=uniform_label, power=power, ada_coefficient=ada_coefficient,
-                                              allow_wrong_signs=allow_wrong_signs, use_median=use_median,
-                                              keep_debug_info=keep_debug_info)
-
-    def compute_groups_indices(self, X, y, label):
-        """Returns a list, each element is events' indices in some group."""
-        label_mask = y == label
-        extended_bin_limits = []
-        for var in self.uniform_features:
-            f_min, f_max = numpy.min(X[var][label_mask]), numpy.max(X[var][label_mask])
-            extended_bin_limits.append(numpy.linspace(f_min, f_max, 2 * self.n_bins + 1))
-        groups_indices = list()
-        for shift in [0, 1]:
-            bin_limits = []
-            for axis_limits in extended_bin_limits:
-                bin_limits.append(axis_limits[1 + shift:-1:2])
-            bin_indices = compute_bin_indices(X.ix[:, self.uniform_features].values, bin_limits=bin_limits)
-            groups_indices += list(bin_to_group_indices(bin_indices, mask=label_mask))
-        return groups_indices
-
-
-class KnnFlatnessLossFunction(AbstractFlatnessLossFunction):
-    def __init__(self, uniform_features, uniform_label, n_neighbours=100, power=2., ada_coefficient=1.,
-                 max_groups_on_iteration=3000, allow_wrong_signs=True, use_median=False, keep_debug_info=False,
-                 random_state=None):
-        self.n_neighbours = n_neighbours
-        self.max_group_on_iteration = max_groups_on_iteration
-        self.random_state = random_state
-        AbstractFlatnessLossFunction.__init__(self, uniform_features,
-                                              uniform_label=uniform_label, power=power, ada_coefficient=ada_coefficient,
-                                              allow_wrong_signs=allow_wrong_signs, use_median=use_median,
-                                              keep_debug_info=keep_debug_info)
-
-    def compute_groups_indices(self, X, y, label):
-        mask = y == label
-        self.random_state = check_random_state(self.random_state)
-        knn_indices = compute_knn_indices_of_signal(X[self.uniform_features], mask,
-                                                    n_neighbours=self.n_neighbours)[mask, :]
-        if len(knn_indices) > self.max_group_on_iteration:
-            selected_group = self.random_state.choice(len(knn_indices), size=self.max_group_on_iteration)
-            return knn_indices[selected_group, :]
-        else:
-            return knn_indices
 
 
 # endregion
@@ -741,6 +585,194 @@ class ReweightLossFunction(AbstractLossFunction):
         return numpy.log(w_target + self.regularization) - numpy.log(w_original + self.regularization)
 
 
-
 # endregion
 
+
+# region FlatnessLossFunction
+
+
+def exp_margin(margin):
+    """ margin = - y_signed * y_pred """
+    return numpy.exp(numpy.clip(margin, -1e5, 2))
+
+
+class AbstractFlatnessLossFunction(AbstractLossFunction):
+    """Base class for FlatnessLosses"""
+
+    def __init__(self, uniform_features, uniform_label, power=2., fl_coefficient=3.,
+                 allow_wrong_signs=True):
+
+        self.uniform_features = uniform_features
+        if isinstance(uniform_label, numbers.Number):
+            self.uniform_label = numpy.array([uniform_label])
+        else:
+            self.uniform_label = numpy.array(uniform_label)
+        self.power = power
+        self.fl_coefficient = fl_coefficient
+        self.allow_wrong_signs = allow_wrong_signs
+
+    def fit(self, X, y, sample_weight=None):
+        sample_weight = check_sample_weight(y, sample_weight=sample_weight)
+        assert len(X) == len(y), 'lengths are different'
+        X = pandas.DataFrame(X)
+
+        self.group_indices = dict()
+        self.group_matrices = dict()
+        self.group_weights = dict()
+
+        occurences = numpy.zeros(len(X))
+        for label in self.uniform_label:
+            self.group_indices[label] = self._compute_groups_indices(X, y, label=label)
+            self.group_matrices[label] = group_indices_to_groups_matrix(self.group_indices[label], len(X))
+            self.group_weights[label] = compute_group_weights(self.group_matrices[label], sample_weight=sample_weight)
+            for group in self.group_indices[label]:
+                occurences[group] += 1
+
+        out_of_bins = (occurences == 0) & numpy.in1d(y, self.uniform_label)
+        if numpy.mean(out_of_bins) > 0.01:
+            warnings.warn("%i events out of all bins " % numpy.sum(out_of_bins), UserWarning)
+
+        self.y = y
+        self.y_signed = 2 * y - 1
+        self.sample_weight = numpy.copy(sample_weight)
+        self.divided_weight = sample_weight / numpy.maximum(occurences, 1)
+
+        return self
+
+    def _compute_groups_indices(self, X, y, label):
+        raise NotImplementedError()
+
+    def __call__(self, pred):
+        # the actual value does not play any role in boosting
+        # optimizing here
+        return 0
+
+    def negative_gradient(self, y_pred):
+        y_pred = numpy.ravel(y_pred)
+        neg_gradient = numpy.zeros(len(self.y), dtype=numpy.float)
+
+        for label in self.uniform_label:
+            label_mask = self.y == label
+            global_positions = numpy.zeros(len(y_pred), dtype=float)
+            global_positions[label_mask] = \
+                _compute_positions(y_pred[label_mask], sample_weight=self.sample_weight[label_mask])
+
+            for indices_in_bin in self.group_indices[label]:
+                local_pos = _compute_positions(y_pred[indices_in_bin],
+                                               sample_weight=self.sample_weight[indices_in_bin])
+                global_pos = global_positions[indices_in_bin]
+                bin_gradient = self.power * numpy.sign(local_pos - global_pos) * \
+                               numpy.abs(local_pos - global_pos) ** (self.power - 1)
+
+                neg_gradient[indices_in_bin] += bin_gradient
+
+        neg_gradient *= self.divided_weight
+
+        assert numpy.all(neg_gradient[~numpy.in1d(self.y, self.uniform_label)] == 0)
+
+        y_signed = self.y_signed
+
+        # adding ExpLoss
+        neg_gradient = neg_gradient * self.fl_coefficient + \
+                       y_signed * self.sample_weight * exp_margin(-y_signed * y_pred)
+
+        if not self.allow_wrong_signs:
+            neg_gradient = y_signed * numpy.clip(y_signed * neg_gradient, 0, 1e5)
+
+        return neg_gradient
+
+
+class BinFlatnessLossFunction(AbstractFlatnessLossFunction):
+    def __init__(self, uniform_features, uniform_label, n_bins=10, power=2., fl_coefficient=3.,
+                 allow_wrong_signs=True):
+        """
+        This loss function contains separately penalty for non-flatness and for bad prediction quality.
+        See [FL] for details.
+
+        :math:`\\mathcal{L} =\\text{exploss} + c \\times \\text{FlatnessLoss}`
+
+        FlatnessLoss computed using binning of uniform variables
+
+        :param list[str] uniform_features: names of features, along which we want to obtain uniformity of predictions
+        :param int | list[int] uniform_label: the label(s) of classes for which uniformity is desired
+        :param int n_bins: number of bins along each variable
+        :param float power: the loss contains the difference :math:`| F - F_bin |^p`, where p is power
+        :param float fl_coefficient: multiplier for flatness_loss. Controls the tradeoff of quality vs uniformity.
+        :param bool allow_wrong_signs: defines whether gradient may different sign from the "sign of class"
+            (i.e. may have negative gradient on signal). If False, values will be clipped to zero.
+
+        .. [FL] Rogozhnikov A. et al, New approaches for boosting to uniformity
+            http://arxiv.org/abs/1410.4140
+
+        """
+        self.n_bins = n_bins
+        AbstractFlatnessLossFunction.__init__(self, uniform_features,
+                                              uniform_label=uniform_label, power=power,
+                                              fl_coefficient=fl_coefficient,
+                                              allow_wrong_signs=allow_wrong_signs)
+
+    def _compute_groups_indices(self, X, y, label):
+        """Returns a list, each element is events' indices in some group."""
+        label_mask = y == label
+        extended_bin_limits = []
+        for var in self.uniform_features:
+            f_min, f_max = numpy.min(X[var][label_mask]), numpy.max(X[var][label_mask])
+            extended_bin_limits.append(numpy.linspace(f_min, f_max, 2 * self.n_bins + 1))
+        groups_indices = list()
+        for shift in [0, 1]:
+            bin_limits = []
+            for axis_limits in extended_bin_limits:
+                bin_limits.append(axis_limits[1 + shift:-1:2])
+            bin_indices = compute_bin_indices(X.ix[:, self.uniform_features].values, bin_limits=bin_limits)
+            groups_indices += list(bin_to_group_indices(bin_indices, mask=label_mask))
+        return groups_indices
+
+
+class KnnFlatnessLossFunction(AbstractFlatnessLossFunction):
+
+    def __init__(self, uniform_features, uniform_label, n_neighbours=100, power=2., fl_coefficient=3.,
+                 max_groups=5000, allow_wrong_signs=True, random_state=42):
+        """
+        This loss function contains separately penalty for non-flatness and for bad prediction quality.
+        See [FL] for details.
+
+        :math:`\\mathcal{L} =\\text{exploss} + c \\times \\text{FlatnessLoss}`
+
+        FlatnessLoss computed using nearest neighbors in space of uniform features
+
+        :param list[str] uniform_features: names of features, along which we want to obtain uniformity of predictions
+        :param int | list[int] uniform_label: the label(s) of classes for which uniformity is desired
+        :param int n_neighbours: number of neighbors used in flatness loss
+        :param float power: the loss contains the difference :math:`| F - F_bin |^p`, where p is power
+        :param float fl_coefficient: multiplier for flatness_loss. Controls the tradeoff of quality vs uniformity.
+        :param bool allow_wrong_signs: defines whether gradient may different sign from the "sign of class"
+            (i.e. may have negative gradient on signal). If False, values will be clipped to zero.
+        :param int max_groups: to limit memory consumption when training sample is large,
+            we randomly pick this number of points with their members.
+
+        .. [FL] Rogozhnikov A. et al, New approaches for boosting to uniformity
+            http://arxiv.org/abs/1410.4140
+
+        """
+
+        self.n_neighbours = n_neighbours
+        self.max_groups = max_groups
+        self.random_state = random_state
+        AbstractFlatnessLossFunction.__init__(self, uniform_features,
+                                              uniform_label=uniform_label, power=power,
+                                              fl_coefficient=fl_coefficient,
+                                              allow_wrong_signs=allow_wrong_signs)
+
+    def _compute_groups_indices(self, X, y, label):
+        mask = y == label
+        self.random_state = check_random_state(self.random_state)
+        knn_indices = compute_knn_indices_of_signal(X[self.uniform_features], mask,
+                                                    n_neighbours=self.n_neighbours)[mask, :]
+        if len(knn_indices) > self.max_groups:
+            selected_group = self.random_state.choice(len(knn_indices), size=self.max_groups, replace=False)
+            return knn_indices[selected_group, :]
+        else:
+            return knn_indices
+
+
+# endregion
