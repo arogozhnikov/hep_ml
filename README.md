@@ -7,7 +7,7 @@
   * __uBoost__ optimized implementation inside
   * __UGradientBoosting__ (with different losses, specially __FlatnessLoss__ is very interesting)
 * measures of uniformity (`SDE`, `Theil`, `CvM`, `KS`)
-* __UGradientBoosting__ with advanced losses for classification, regression and ranking.  
+* advanced losses for classification, regression and ranking for __UGradientBoosting__ (see **hep_ml.losses**).  
 * **hep_ml.nnet** - theano-based neural networks 
 
 
@@ -20,11 +20,11 @@ sudo pip install .
 ```
 
 ### Links
-* [documentation](iamfullofspam.github.io/hep_ml/)
+* [documentation](https://iamfullofspam.github.io/hep_ml/)
 * [notebook examples](https://github.com/iamfullofspam/hep_ml/tree/master/notebooks)
 * [issue tracker](https://github.com/iamfullofspam/hep_ml/issues)
 
-### Related projects you should know about
+### Related projects 
 
 * [IPython Notebook](http://ipython.org/notebook.html) &mdash; web-shell for ipython
 * [ROOT](https://root.cern.ch/)  &mdash; main data format in HEP 

@@ -4,7 +4,7 @@ The neural networks from this library provide sklearn classifier's interface.
 
 Definitions for loss functions, trainers of neural networks are defined in this file too.
 Main point of this library: black-box stochastic optimization of any given loss function.
-This gives ability to define any activation expression at the cost of unavailability of pretraining.
+This gives ability to define any activation expression (at the cost of unavailability of pretraining).
 
 In this file we have **examples** of neural networks,
 user is encouraged to write his own specific architecture,
@@ -15,7 +15,7 @@ Also **hep_ml.nnet** allows optimization of parameters in any differentiable dec
 
 Being written in theano, these neural networks are able to make use of your GPU.
 
-See also libraries: theanets, Keras.
+See also libraries: theanets, keras.
 
 Examples
 ________
@@ -112,7 +112,7 @@ losses = {'mse_loss': mse_loss,
           'exp_log_loss': exp_log_loss,
           'squared_loss': squared_loss,
           'smooth_huber_loss': smooth_huber_loss,
-}
+          }
 
 # endregion
 
@@ -278,7 +278,7 @@ trainers = {'sgd': sgd_trainer,
             'irprop+': irprop_plus_trainer,
             'irprop*': irprop_star_trainer,
             'adadelta': adadelta_trainer,
-}
+            }
 # endregion
 
 
@@ -304,6 +304,7 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
     Works in sklearn fit-predict way: X is [n_samples, n_features], y is [n_samples], sample_weight is [n_samples].
     Works as usual sklearn classifier, can be used in boosting, for instance, pickled, etc.
     """
+
     def __init__(self, layers=(10,), scaler='standard', loss='log_loss', trainer='irprop-', epochs=100,
                  trainer_parameters=None, random_state=None):
         """
@@ -466,6 +467,7 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
         X = self.transform(X, fit=False)
         return self.Loss(X, y, sample_weight)
 
+
 # region Neural networks
 
 
@@ -474,6 +476,7 @@ class SimpleNeuralNetwork(AbstractNeuralNetworkClassifier):
     Supports only one hidden layer.
 
     See source code as example."""
+
     def prepare(self):
         n1, n2, n3 = self.layers_
         W1 = self._create_shared_matrix('W1', n1, n2)

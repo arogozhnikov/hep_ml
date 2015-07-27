@@ -275,7 +275,7 @@ class RankBoostLossFunction(HessianLossFunction):
         on iterative procedure. This implementation also uses matrix decomposition of loss function,
         which is very effective, when labels are from some very limited set (usually it is 0, 1, 2, 3, 4)
 
-        Loss penalty is :math:`\\sum_{ij} w_{ij} exp(pred_i - pred_j)`,
+        :math:`\\text{loss} = \\sum_{ij} w_{ij} exp(pred_i - pred_j)`,
 
         :math:`w_{ij} = ( \\alpha + \\beta * [query_i = query_j]) R_{label_i, label_j}`, where
         :math:`R_{ij} = 0` if :math:`i \leq j`, else :math:`R_{ij} = (i - j)^{p}`
@@ -388,11 +388,10 @@ class RankBoostLossFunction(HessianLossFunction):
 
 
 class AbstractMatrixLossFunction(HessianLossFunction):
-    # TODO write better update
     def __init__(self, uniform_features, regularization=5.):
         """AbstractMatrixLossFunction is a base class to be inherited by other loss functions,
         which choose the particular A matrix and w vector. The formula of loss is:
-        loss = \sum_i w_i * exp(- \sum_j a_ij y_j score_j)
+        \\text{loss} = \sum_i w_i * exp(- \sum_j a_ij y_j score_j)
         """
         self.uniform_features = uniform_features
         # real matrix and vector will be computed during fitting
@@ -455,12 +454,12 @@ class AbstractMatrixLossFunction(HessianLossFunction):
 
 class KnnAdaLossFunction(AbstractMatrixLossFunction):
     def __init__(self, uniform_features, uniform_label, knn=10, distinguish_classes=True, row_norm=1.):
-        """
-        The formula of loss is:
-        :math:`loss = \sum_i w_i * exp(- \sum_j a_{ij} y_j score_j)`
+        """Modification of AdaLoss to achieve uniformity of predictions
+
+        :math:`\\text{loss} = \sum_i w_i * exp(- \sum_j a_{ij} y_j score_j)`
 
         `A` matrix is square, each row corresponds to a single event in train dataset, in each row we put ones
-        to the closest neighbours of that event if this event from class along which we want to have uniform prediction.
+        to the closest neighbours if this event from uniform class.
         See [BU]_ for details.
 
         :param list[str] uniform_features: the features, along which uniformity is desired
@@ -687,12 +686,12 @@ class BinFlatnessLossFunction(AbstractFlatnessLossFunction):
         This loss function contains separately penalty for non-flatness and for bad prediction quality.
         See [FL] for details.
 
-        :math:`\\mathcal{L} =\\text{exploss} + c \\times \\text{FlatnessLoss}`
+        :math:`\\text{loss} =\\text{ExpLoss} + c \\times \\text{FlatnessLoss}`
 
         FlatnessLoss computed using binning of uniform variables
 
         :param list[str] uniform_features: names of features, along which we want to obtain uniformity of predictions
-        :param int | list[int] uniform_label: the label(s) of classes for which uniformity is desired
+        :param int|list[int] uniform_label: the label(s) of classes for which uniformity is desired
         :param int n_bins: number of bins along each variable
         :param float power: the loss contains the difference :math:`| F - F_bin |^p`, where p is power
         :param float fl_coefficient: multiplier for flatness_loss. Controls the tradeoff of quality vs uniformity.
@@ -734,12 +733,12 @@ class KnnFlatnessLossFunction(AbstractFlatnessLossFunction):
         This loss function contains separately penalty for non-flatness and for bad prediction quality.
         See [FL] for details.
 
-        :math:`\\mathcal{L} =\\text{exploss} + c \\times \\text{FlatnessLoss}`
+        :math:`\\text{loss} =\\text{ExpLoss} + c \\times \\text{FlatnessLoss}`
 
         FlatnessLoss computed using nearest neighbors in space of uniform features
 
         :param list[str] uniform_features: names of features, along which we want to obtain uniformity of predictions
-        :param int | list[int] uniform_label: the label(s) of classes for which uniformity is desired
+        :param int|list[int] uniform_label: the label(s) of classes for which uniformity is desired
         :param int n_neighbours: number of neighbors used in flatness loss
         :param float power: the loss contains the difference :math:`| F - F_bin |^p`, where p is power
         :param float fl_coefficient: multiplier for flatness_loss. Controls the tradeoff of quality vs uniformity.
