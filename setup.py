@@ -23,14 +23,15 @@ setup(
     package_dir={'hep_ml': 'hep_ml'},
     classifiers=[
         # Indicate who your project is intended for
-        'Intended Audience :: CERN, LHC, HEP, high energy physics scientists, particle physics',
+        'Intended Audience :: Science/Research',
 
         # Pick your license as you wish (should match "license" above)
-        'License :: Apache 2.0 License',
+        'License :: OSI Approved :: Apache Software License',
 
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
-        'Programming Language :: Python :: 2.7, 3.4',
+        'Programming Language :: Python :: 2.7 ',
+        'Programming Language :: Python :: 3.4 ',
     ],
 
     # What does your project relate to?
