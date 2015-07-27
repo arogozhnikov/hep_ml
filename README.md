@@ -20,8 +20,10 @@ sudo pip install .
 ```
 
 ### Links
+
 * [documentation](https://iamfullofspam.github.io/hep_ml/)
 * [notebook examples](https://github.com/iamfullofspam/hep_ml/tree/master/notebooks)
+* [repository](https://github.com/iamfullofspam/hep_ml)
 * [issue tracker](https://github.com/iamfullofspam/hep_ml/issues)
 
 ### Related projects 
@@ -33,6 +35,6 @@ Libraries you'll require to make your life easier.
     required to plot learning curves reports after classification.
 * [numpy](http://www.numpy.org/)  &mdash; 'MATLAB in python', vector operation in python. Don't ever try doing 
 * [theano](http://deeplearning.net/software/theano/)  &mdash; optimized vector analytical math engine in python.
-* [ROOT](https://root.cern.ch/)  &mdash; main data format in HEP (and many other things)
+* [ROOT](https://root.cern.ch/)  &mdash; main data format in HEP 
 * [root_numpy](http://rootpy.github.io/root_numpy/)  &mdash; python library to deal with ROOT files (without pain).
 
