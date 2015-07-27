@@ -27,9 +27,10 @@ def test_loss_functions(size=50, epsilon=1e-3):
     tested_losses = [
         losses.LogLossFunction(),
         losses.AdaLossFunction(),
-        losses.KnnAdaLossFunction(X.columns[:1], knn=5),
+        losses.KnnAdaLossFunction(X.columns[:1], uniform_label=1, knn=5),
         losses.CompositeLossFunction(),
-        losses.RankBoostLossFunction(rank_column)
+        losses.RankBoostLossFunction(rank_column),
+        losses.MSELossFunction(),
     ]
     pred = numpy.random.normal(size=size)
 
@@ -56,7 +57,8 @@ def test_loss_functions(size=50, epsilon=1e-3):
 
         print(loss, numer_gradient, numer_hessian)
         assert numpy.allclose(gradient, numer_gradient), 'wrong computation of gradient'
-        assert (gradient * (2 * y - 1) >= 0).all(), 'wrong signs of gradients'
+        if not isinstance(loss, losses.MSELossFunction):
+            assert (gradient * (2 * y - 1) >= 0).all(), 'wrong signs of gradients'
         assert numpy.allclose(hessian, numer_hessian, atol=1e-7), 'wrong computation of hessian'
 
 
@@ -72,9 +74,10 @@ def test_step_optimality(n_samples=50):
     tested_losses = [
         losses.LogLossFunction(),
         losses.AdaLossFunction(),
-        losses.KnnAdaLossFunction(X.columns[:1], knn=5),
+        losses.KnnAdaLossFunction(X.columns[:1], uniform_label=0, knn=5),
         losses.CompositeLossFunction(),
-        losses.RankBoostLossFunction(rank_column)
+        losses.RankBoostLossFunction(rank_column),
+        losses.MSELossFunction(),
     ]
 
     pred = numpy.random.normal(size=n_samples)
