@@ -1,8 +1,8 @@
 hep\_ml
 =======
 
-**hep\_ml** provides specific ml-tools for purposes of high energy
-physics (written in python).
+**hep\_ml** provides specific machine learning tools for purposes of
+high energy physics (written in python).
 
 Main points
 -----------
@@ -48,11 +48,12 @@ Libraries you'll require to make your life easier.
    for machine learning in python
 -  `REP <https://github.com/yandex/REP>`__ — python wrappers around
    different machine learning libraries (including TMVA) + goodies,
-   required to plot learning curves reports after classification.
+   required to plot learning curves reports after classification
 -  `numpy <http://www.numpy.org/>`__ — 'MATLAB in python', vector
-   operation in python. Don't ever try doing
+   operation in python. Use it you need to perform any number crunching.
 -  `theano <http://deeplearning.net/software/theano/>`__ — optimized
-   vector analytical math engine in python.
--  `ROOT <https://root.cern.ch/>`__ — main data format in HEP
+   vector analytical math engine in python
+-  `ROOT <https://root.cern.ch/>`__ — main data format in high energy
+   physics
 -  `root\_numpy <http://rootpy.github.io/root_numpy/>`__ — python
-   library to deal with ROOT files (without pain).
+   library to deal with ROOT files (without pain)
