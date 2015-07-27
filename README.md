@@ -6,7 +6,7 @@
 * uniform classifiers - the classifiers with low correlation of predictions and mass (or some other variable(s))
   * __uBoost__ optimized implementation inside
   * __UGradientBoosting__ (with different losses, specially __FlatnessLoss__ is very interesting)
-* measures of uniformity (`SDE`, `Theil`, `CvM`, `KS`)
+* measures of uniformity (see **hep_ml.metrics**)
 * advanced losses for classification, regression and ranking for __UGradientBoosting__ (see **hep_ml.losses**).  
 * **hep_ml.nnet** - theano-based neural networks 
 
