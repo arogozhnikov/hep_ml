@@ -23,7 +23,7 @@ setup(
     package_dir={'hep_ml': 'hep_ml'},
     classifiers=[
         # Indicate who your project is intended for
-        'Intended Audience :: CERN, LHC, HEP, particle physics',
+        'Intended Audience :: CERN, LHC, HEP, high energy physics scientists, particle physics',
 
         # Pick your license as you wish (should match "license" above)
         'License :: Apache 2.0 License',
@@ -38,16 +38,12 @@ setup(
              'uncorrelated methods of machine learning, high energy physics, particle physics',
 
     # List run-time dependencies here. These will be installed by pip when your project is installed.
-    # install_requires=[
-    #     'numpy >= 1.9',
-    #     'scipy >= 0.15.0',
-    #     'matplotlib >= 1.4',
-    #     'pandas >= 0.16.0',
-    #     'ipython[all] >= 3.0',
-    #     'root_numpy >= 3.3.0',
-    #     'scikit-learn >= 0.15.2',
-    #     'theano >= 0.7',
-    #     'six',
-    #     'sphinx_rtd_theme',
-    # ],
+    install_requires=[
+        'numpy >= 1.9',
+        'scipy >= 0.15.0',
+        'pandas >= 0.16.0',
+        'scikit-learn >= 0.15.2',
+        'theano >= 0.7',
+        'six',
+    ],
 )
