@@ -39,10 +39,10 @@ def test_gradient_boosting(n_samples=1000):
     loss3 = CompositeLossFunction()
     loss4 = KnnAdaLossFunction(uniform_features=uniform_features, uniform_label=1)
     loss5 = KnnAdaLossFunction(uniform_features=uniform_features, uniform_label=[0, 1])
-    loss6bin = BinFlatnessLossFunction(uniform_features, ada_coefficient=0.5, uniform_label=0)
-    loss7bin = BinFlatnessLossFunction(uniform_features, ada_coefficient=0.5, uniform_label=[0, 1])
-    loss6knn = KnnFlatnessLossFunction(uniform_features, ada_coefficient=0.5, uniform_label=1)
-    loss7knn = KnnFlatnessLossFunction(uniform_features, ada_coefficient=0.5, uniform_label=[0, 1])
+    loss6bin = BinFlatnessLossFunction(uniform_features, fl_coefficient=2., uniform_label=0)
+    loss7bin = BinFlatnessLossFunction(uniform_features, fl_coefficient=2., uniform_label=[0, 1])
+    loss6knn = KnnFlatnessLossFunction(uniform_features, fl_coefficient=2., uniform_label=1)
+    loss7knn = KnnFlatnessLossFunction(uniform_features, fl_coefficient=2., uniform_label=[0, 1])
 
     for loss in [loss1, loss2, loss3, loss4, loss5, loss6bin, loss7bin, loss6knn, loss7knn]:
         clf = UGradientBoostingClassifier(loss=loss, min_samples_split=20, max_depth=5, learning_rate=0.2,

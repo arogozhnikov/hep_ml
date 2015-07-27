@@ -29,14 +29,12 @@ Using composite loss function and subsampling:
 
 To get uniform predictions in mass in background (note that mass should not present in features):
 
->>> loss = BinFlatnessLossFunction(uniform_features=['mass'], uniform_label=0,
->>>                                ada_coefficient=0.1, train_features=['pt', 'flight_time'])
+>>> loss = BinFlatnessLossFunction(uniform_features=['mass'], uniform_label=0, train_features=['pt', 'flight_time'])
 >>> classifier = UGradientBoostingClassifier(loss=loss)
 
 To get uniform predictions in both signal and background:
 
->>> loss = BinFlatnessLossFunction(uniform_features=['mass'], uniform_label=[0, 1],
->>>                                ada_coefficient=0.1, train_features=['pt', 'flight_time'])
+>>> loss = BinFlatnessLossFunction(uniform_features=['mass'], uniform_label=[0, 1], train_features=['pt', 'flight_time'])
 >>> classifier = UGradientBoostingClassifier(loss=loss)
 
 
