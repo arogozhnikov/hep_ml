@@ -10,7 +10,6 @@ from sklearn.ensemble.weight_boosting import AdaBoostClassifier
 
 from hep_ml.commonutils import generate_sample
 from hep_ml.metrics import BinBasedCvM, KnnBasedCvM
-from hep_ml.supplementaryclassifiers import HidingClassifier
 from hep_ml.uboost import uBoostBDT, uBoostClassifier
 
 
@@ -112,8 +111,7 @@ def check_classifiers(n_samples=10000):
     uniform_features = ['column0']
 
     ada = AdaBoostClassifier(n_estimators=50)
-    ideal_bayes = HidingClassifier(train_features=trainX.columns[1:],
-                                   base_estimator=GaussianNB())
+    ideal_bayes = GaussianNB()
 
     uBoost_SAMME = uBoostClassifier(
         uniform_features=uniform_features,
@@ -142,7 +140,6 @@ def check_classifiers(n_samples=10000):
 
     clf_dict = OrderedDict({
         "Ada": ada,
-        "Ideal": ideal_bayes,
         "uBOOST": uBoost_SAMME,
         "uBOOST.R": uBoost_SAMME_R,
         "uBOOST.R2": uBoost_SAMME_R_threaded
@@ -156,4 +153,5 @@ def check_classifiers(n_samples=10000):
         metric.fit(testX, testY)
         cvms[clf_name] = metric(testY, p, sample_weight=np.ones(len(testY)))
 
+    assert cvms['uBOOST'] < cvms['ada']
     print(cvms)
