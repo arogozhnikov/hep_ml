@@ -39,16 +39,17 @@ Links
 Related projects
 ~~~~~~~~~~~~~~~~
 
--  `IPython Notebook <http://ipython.org/notebook.html>`__ — web-shell
-   for ipython
--  `ROOT <https://root.cern.ch/>`__ — main data format in HEP
--  `scikit-learn <http://scikit-learn.org/>`__ — general-purpose library
-   for machine learning in python
--  `REP <https://github.com/yandex/REP>`__ — python wrappers around
-   different machine learning libraries (including TMVA) + goodies
--  `numpy <http://www.numpy.org/>`__ — 'MATLAB in python', vector
-   operation in python. Don't ever try doing
--  `root\_numpy <http://rootpy.github.io/root_numpy/>`__ — python
-   library to deal with ROOT files (without pain).
--  `theano <http://deeplearning.net/software/theano/>`__ — optimized
-   vector analytical math engine in python.
+Libraries you'll require to make your life easier. \* `IPython
+Notebook <http://ipython.org/notebook.html>`__ — web-shell for ipython
+\* `scikit-learn <http://scikit-learn.org/>`__ — general-purpose library
+for machine learning in python \*
+`REP <https://github.com/yandex/REP>`__ — python wrappers around
+different machine learning libraries (including TMVA) + goodies,
+required to plot learning curves reports after classification. \*
+`numpy <http://www.numpy.org/>`__ — 'MATLAB in python', vector operation
+in python. Don't ever try doing \*
+`theano <http://deeplearning.net/software/theano/>`__ — optimized vector
+analytical math engine in python. \* `ROOT <https://root.cern.ch/>`__ —
+main data format in HEP (and many other things) \*
+`root\_numpy <http://rootpy.github.io/root_numpy/>`__ — python library
+to deal with ROOT files (without pain).

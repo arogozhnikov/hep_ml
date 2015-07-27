@@ -25,12 +25,14 @@ sudo pip install .
 * [issue tracker](https://github.com/iamfullofspam/hep_ml/issues)
 
 ### Related projects 
+Libraries you'll require to make your life easier.
 
-* [IPython Notebook](http://ipython.org/notebook.html) &mdash; web-shell for ipython
-* [ROOT](https://root.cern.ch/)  &mdash; main data format in HEP 
+* [IPython Notebook](http://ipython.org/notebook.html) &mdash; web-shell for python
 * [scikit-learn](http://scikit-learn.org/)  &mdash; general-purpose library for machine learning in python
-* [REP](https://github.com/yandex/REP)  &mdash; python wrappers around different machine learning libraries (including TMVA) + goodies
+* [REP](https://github.com/yandex/REP)  &mdash; python wrappers around different machine learning libraries (including TMVA) + goodies, 
+    required to plot learning curves reports after classification.
 * [numpy](http://www.numpy.org/)  &mdash; 'MATLAB in python', vector operation in python. Don't ever try doing 
-* [root_numpy](http://rootpy.github.io/root_numpy/)  &mdash; python library to deal with ROOT files (without pain).
 * [theano](http://deeplearning.net/software/theano/)  &mdash; optimized vector analytical math engine in python.
+* [ROOT](https://root.cern.ch/)  &mdash; main data format in HEP (and many other things)
+* [root_numpy](http://rootpy.github.io/root_numpy/)  &mdash; python library to deal with ROOT files (without pain).
 
