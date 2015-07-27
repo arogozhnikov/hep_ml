@@ -121,7 +121,7 @@ losses = {'mse_loss': mse_loss,
 def get_batch(x, y, w, random_stream, batch_size=10):
     """ Generates subset of training dataset, of size batch"""
     indices = random_stream.choice(a=T.shape(x)[0], size=(batch_size,))
-    return x[indices, :], y[indices], w[indices]
+    return x[indices], y[indices], w[indices]
 
 
 def sgd_trainer(x, y, w, parameters, loss, random_stream, batch=10, learning_rate=0.1,
