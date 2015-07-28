@@ -20,22 +20,26 @@ Main points
 Installation
 ~~~~~~~~~~~~
 
-To use the repository, clone it and install with ``pip``:
+.. code:: bash
+
+    pip install hep_ml
+
+To use latest version, clone it and install with ``pip``:
 
 .. code:: bash
 
-    git clone https://github.com/iamfullofspam/hep_ml.git
+    git clone https://github.com/arogozhnikov/hep_ml.git
     cd hep_ml
     sudo pip install .
 
 Links
 ~~~~~
 
--  `documentation <https://iamfullofspam.github.io/hep_ml/>`__
+-  `documentation <https://arogozhnikov.github.io/hep_ml/>`__
 -  `notebook
-   examples <https://github.com/iamfullofspam/hep_ml/tree/master/notebooks>`__
--  `repository <https://github.com/iamfullofspam/hep_ml>`__
--  `issue tracker <https://github.com/iamfullofspam/hep_ml/issues>`__
+   examples <https://github.com/arogozhnikov/hep_ml/tree/master/notebooks>`__
+-  `repository <https://github.com/arogozhnikov/hep_ml>`__
+-  `issue tracker <https://github.com/arogozhnikov/hep_ml/issues>`__
 
 Related projects
 ~~~~~~~~~~~~~~~~
