@@ -42,7 +42,7 @@ setup(
     install_requires=[
         'numpy >= 1.9',
         'scipy >= 0.15.0',
-        'pandas >= 0.16.0',
+        'pandas >= 0.14.0',
         'scikit-learn >= 0.15.2',
         'theano >= 0.7',
         'six',
