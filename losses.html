@@ -87,6 +87,8 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="nnet.html">Neural networks</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="nnet.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nnet.html#loss-functions">Loss functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nnet.html#trainers">Trainers</a></li>
 </ul>
 </li>
 </ul>
@@ -130,7 +132,8 @@
 <span id="losses-for-gradient-boosting"></span><h1>Losses for Gradient Boosting<a class="headerlink" href="#module-hep_ml.losses" title="Permalink to this headline">¶</a></h1>
 <p><strong>hep_ml.losses</strong> contains different loss functions to use in gradient boosting.</p>
 <p>Apart from standard classification losses, <strong>hep_ml</strong> contains losses for uniform classification
-(see BinFlatnessLoss, KnnFlatnessLoss, KnnAdaLossFunction) and for ranking (see RankBoostLossFunction)</p>
+(see <a class="reference internal" href="#hep_ml.losses.BinFlatnessLossFunction" title="hep_ml.losses.BinFlatnessLossFunction"><code class="xref py py-class docutils literal"><span class="pre">BinFlatnessLossFunction</span></code></a>, <a class="reference internal" href="#hep_ml.losses.KnnFlatnessLossFunction" title="hep_ml.losses.KnnFlatnessLossFunction"><code class="xref py py-class docutils literal"><span class="pre">KnnFlatnessLossFunction</span></code></a>, <a class="reference internal" href="#hep_ml.losses.KnnAdaLossFunction" title="hep_ml.losses.KnnAdaLossFunction"><code class="xref py py-class docutils literal"><span class="pre">KnnAdaLossFunction</span></code></a>)
+and for ranking (see <a class="reference internal" href="#hep_ml.losses.RankBoostLossFunction" title="hep_ml.losses.RankBoostLossFunction"><code class="xref py py-class docutils literal"><span class="pre">RankBoostLossFunction</span></code></a>)</p>
 <p><strong>Interface</strong></p>
 <p>Loss functions inside <strong>hep_ml</strong> are stateful estimators and require initial fitting,
 which is done automatically inside gradient boosting.</p>
@@ -138,26 +141,24 @@ which is done automatically inside gradient boosting.</p>
 <div class="section" id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <p>Training gradient boosting, optimizing LogLoss and using all features</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hep_ml.gradientboosting</span> <span class="kn">import</span> <span class="n">GradientBoostingClassifier</span><span class="p">,</span> <span class="n">LogLossFunction</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span> <span class="o">=</span> <span class="n">GradientBoostingClassifier</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">LogLossFunction</span><span class="p">(),</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hep_ml.gradientboosting</span> <span class="kn">import</span> <span class="n">UGradientBoostingClassifier</span><span class="p">,</span> <span class="n">LogLossFunction</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span> <span class="o">=</span> <span class="n">UGradientBoostingClassifier</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">LogLossFunction</span><span class="p">(),</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Using composite loss function and subsampling:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">loss</span> <span class="o">=</span> <span class="n">CompositeLossFunction</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span> <span class="o">=</span> <span class="n">GradientBoostingClassifier</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">,</span> <span class="n">subsample</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span> <span class="o">=</span> <span class="n">UGradientBoostingClassifier</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">,</span> <span class="n">subsample</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>To get uniform predictions in mass in background (note that mass should not present in features):</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">loss</span> <span class="o">=</span> <span class="n">BinFlatnessLossFunction</span><span class="p">(</span><span class="n">uniform_features</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;mass&#39;</span><span class="p">],</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>                               <span class="n">ada_coefficient</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">train_features</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;pt&#39;</span><span class="p">,</span> <span class="s">&#39;flight_time&#39;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span> <span class="o">=</span> <span class="n">GradientBoostingClassifier</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">loss</span> <span class="o">=</span> <span class="n">BinFlatnessLossFunction</span><span class="p">(</span><span class="n">uniform_features</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;mass&#39;</span><span class="p">],</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">train_features</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;pt&#39;</span><span class="p">,</span> <span class="s">&#39;flight_time&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span> <span class="o">=</span> <span class="n">UGradientBoostingClassifier</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>To get uniform predictions in both signal and background:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">loss</span> <span class="o">=</span> <span class="n">BinFlatnessLossFunction</span><span class="p">(</span><span class="n">uniform_features</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;mass&#39;</span><span class="p">],</span> <span class="n">uniform_label</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-<span class="gp">&gt;&gt;&gt; </span>                               <span class="n">ada_coefficient</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">train_features</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;pt&#39;</span><span class="p">,</span> <span class="s">&#39;flight_time&#39;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span> <span class="o">=</span> <span class="n">GradientBoostingClassifier</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">loss</span> <span class="o">=</span> <span class="n">BinFlatnessLossFunction</span><span class="p">(</span><span class="n">uniform_features</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;mass&#39;</span><span class="p">],</span> <span class="n">uniform_label</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">train_features</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;pt&#39;</span><span class="p">,</span> <span class="s">&#39;flight_time&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span> <span class="o">=</span> <span class="n">UGradientBoostingClassifier</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">)</span>
 </pre></div>
 </div>
 <dl class="class">
@@ -301,47 +302,102 @@ aka log-likelihood loss.</p>
 
 <dl class="class">
 <dt id="hep_ml.losses.BinFlatnessLossFunction">
-<em class="property">class </em><code class="descclassname">hep_ml.losses.</code><code class="descname">BinFlatnessLossFunction</code><span class="sig-paren">(</span><em>uniform_features</em>, <em>n_bins=10</em>, <em>uniform_label=1</em>, <em>power=2.0</em>, <em>ada_coefficient=1.0</em>, <em>allow_wrong_signs=True</em>, <em>use_median=False</em>, <em>keep_debug_info=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#BinFlatnessLossFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.BinFlatnessLossFunction" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">hep_ml.losses.</code><code class="descname">BinFlatnessLossFunction</code><span class="sig-paren">(</span><em>uniform_features</em>, <em>uniform_label</em>, <em>n_bins=10</em>, <em>power=2.0</em>, <em>fl_coefficient=3.0</em>, <em>allow_wrong_signs=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#BinFlatnessLossFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.BinFlatnessLossFunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">hep_ml.losses.AbstractFlatnessLossFunction</span></code></p>
-<dl class="method">
-<dt id="hep_ml.losses.BinFlatnessLossFunction.compute_groups_indices">
-<code class="descname">compute_groups_indices</code><span class="sig-paren">(</span><em>X</em>, <em>y</em>, <em>label</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#BinFlatnessLossFunction.compute_groups_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.BinFlatnessLossFunction.compute_groups_indices" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a list, each element is events&#8217; indices in some group.</p>
-</dd></dl>
-
+<p>This loss function contains separately penalty for non-flatness and for bad prediction quality.
+See [FL] for details.</p>
+<p><span class="math">\(\text{loss} =\text{ExpLoss} + c \times \text{FlatnessLoss}\)</span></p>
+<p>FlatnessLoss computed using binning of uniform variables</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>uniform_features</strong> (<em>list[str]</em>) &#8211; names of features, along which we want to obtain uniformity of predictions</li>
+<li><strong>uniform_label</strong> (<em>int|list[int]</em>) &#8211; the label(s) of classes for which uniformity is desired</li>
+<li><strong>n_bins</strong> (<em>int</em>) &#8211; number of bins along each variable</li>
+<li><strong>power</strong> (<em>float</em>) &#8211; the loss contains the difference <span class="math">\(| F - F_bin |^p\)</span>, where p is power</li>
+<li><strong>fl_coefficient</strong> (<em>float</em>) &#8211; multiplier for flatness_loss. Controls the tradeoff of quality vs uniformity.</li>
+<li><strong>allow_wrong_signs</strong> (<em>bool</em>) &#8211; defines whether gradient may different sign from the &#8220;sign of class&#8221;
+(i.e. may have negative gradient on signal). If False, values will be clipped to zero.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="fl" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[FL]</td><td>A. Rogozhnikov et al, New approaches for boosting to uniformity
+<a class="reference external" href="http://arxiv.org/abs/1410.4140">http://arxiv.org/abs/1410.4140</a></td></tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="class">
 <dt id="hep_ml.losses.KnnFlatnessLossFunction">
-<em class="property">class </em><code class="descclassname">hep_ml.losses.</code><code class="descname">KnnFlatnessLossFunction</code><span class="sig-paren">(</span><em>uniform_features</em>, <em>n_neighbours=100</em>, <em>uniform_label=1</em>, <em>power=2.0</em>, <em>ada_coefficient=1.0</em>, <em>max_groups_on_iteration=3000</em>, <em>allow_wrong_signs=True</em>, <em>use_median=False</em>, <em>keep_debug_info=False</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#KnnFlatnessLossFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.KnnFlatnessLossFunction" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">hep_ml.losses.</code><code class="descname">KnnFlatnessLossFunction</code><span class="sig-paren">(</span><em>uniform_features</em>, <em>uniform_label</em>, <em>n_neighbours=100</em>, <em>power=2.0</em>, <em>fl_coefficient=3.0</em>, <em>max_groups=5000</em>, <em>allow_wrong_signs=True</em>, <em>random_state=42</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#KnnFlatnessLossFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.KnnFlatnessLossFunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">hep_ml.losses.AbstractFlatnessLossFunction</span></code></p>
-<dl class="method">
-<dt id="hep_ml.losses.KnnFlatnessLossFunction.compute_groups_indices">
-<code class="descname">compute_groups_indices</code><span class="sig-paren">(</span><em>X</em>, <em>y</em>, <em>label</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#KnnFlatnessLossFunction.compute_groups_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.KnnFlatnessLossFunction.compute_groups_indices" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
+<p>This loss function contains separately penalty for non-flatness and for bad prediction quality.
+See [FL] for details.</p>
+<p><span class="math">\(\text{loss} =\text{ExpLoss} + c \times \text{FlatnessLoss}\)</span></p>
+<p>FlatnessLoss computed using nearest neighbors in space of uniform features</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>uniform_features</strong> (<em>list[str]</em>) &#8211; names of features, along which we want to obtain uniformity of predictions</li>
+<li><strong>uniform_label</strong> (<em>int|list[int]</em>) &#8211; the label(s) of classes for which uniformity is desired</li>
+<li><strong>n_neighbours</strong> (<em>int</em>) &#8211; number of neighbors used in flatness loss</li>
+<li><strong>power</strong> (<em>float</em>) &#8211; the loss contains the difference <span class="math">\(| F - F_bin |^p\)</span>, where p is power</li>
+<li><strong>fl_coefficient</strong> (<em>float</em>) &#8211; multiplier for flatness_loss. Controls the tradeoff of quality vs uniformity.</li>
+<li><strong>allow_wrong_signs</strong> (<em>bool</em>) &#8211; defines whether gradient may different sign from the &#8220;sign of class&#8221;
+(i.e. may have negative gradient on signal). If False, values will be clipped to zero.</li>
+<li><strong>max_groups</strong> (<em>int</em>) &#8211; to limit memory consumption when training sample is large,
+we randomly pick this number of points with their members.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="id1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[FL]</td><td>A. Rogozhnikov et al, New approaches for boosting to uniformity
+<a class="reference external" href="http://arxiv.org/abs/1410.4140">http://arxiv.org/abs/1410.4140</a></td></tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="class">
 <dt id="hep_ml.losses.KnnAdaLossFunction">
-<em class="property">class </em><code class="descclassname">hep_ml.losses.</code><code class="descname">KnnAdaLossFunction</code><span class="sig-paren">(</span><em>uniform_features</em>, <em>knn=10</em>, <em>uniform_label=1</em>, <em>distinguish_classes=True</em>, <em>row_norm=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#KnnAdaLossFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.KnnAdaLossFunction" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">hep_ml.losses.</code><code class="descname">KnnAdaLossFunction</code><span class="sig-paren">(</span><em>uniform_features</em>, <em>uniform_label</em>, <em>knn=10</em>, <em>distinguish_classes=True</em>, <em>row_norm=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#KnnAdaLossFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.KnnAdaLossFunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">hep_ml.losses.AbstractMatrixLossFunction</span></code></p>
-<p>The formula of loss is:
-<span class="math">\(loss = \sum_i w_i * exp(- \sum_j a_{ij} y_j score_j)\)</span></p>
+<p>Modification of AdaLoss to achieve uniformity of predictions</p>
+<p><span class="math">\(\text{loss} = \sum_i w_i * exp(- \sum_j a_{ij} y_j score_j)\)</span></p>
 <p><cite>A</cite> matrix is square, each row corresponds to a single event in train dataset, in each row we put ones
-to the closest neighbours of that event if this event from class along which we want to have uniform prediction.</p>
+to the closest neighbours if this event from uniform class.
+See <a class="reference internal" href="#bu" id="id2">[BU]</a> for details.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>uniform_features</strong> (<em>list[str]</em>) &#8211; the features, along which uniformity is desired</li>
-<li><strong>knn</strong> (<em>int</em>) &#8211; the number of nonzero elements in the row, corresponding to event in &#8216;uniform class&#8217;</li>
 <li><strong>uniform_label</strong> (<em>int|list[int]</em>) &#8211; the label (labels) of &#8216;uniform classes&#8217;</li>
+<li><strong>knn</strong> (<em>int</em>) &#8211; the number of nonzero elements in the row, corresponding to event in &#8216;uniform class&#8217;</li>
 <li><strong>distinguish_classes</strong> (<em>bool</em>) &#8211; if True, 1&#8217;s will be placed only for events of same class.</li>
 </ul>
 </td>
 </tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="bu" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[BU]</a></td><td>A. Rogozhnikov et al, New approaches for boosting to uniformity
+<a class="reference external" href="http://arxiv.org/abs/1410.4140">http://arxiv.org/abs/1410.4140</a></td></tr>
 </tbody>
 </table>
 <dl class="method">
@@ -353,23 +409,37 @@ to the closest neighbours of that event if this event from class along which we 
 
 <dl class="class">
 <dt id="hep_ml.losses.RankBoostLossFunction">
-<em class="property">class </em><code class="descclassname">hep_ml.losses.</code><code class="descname">RankBoostLossFunction</code><span class="sig-paren">(</span><em>request_column</em>, <em>messup_penalty='square'</em>, <em>update_iterations=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#RankBoostLossFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.RankBoostLossFunction" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">hep_ml.losses.</code><code class="descname">RankBoostLossFunction</code><span class="sig-paren">(</span><em>request_column</em>, <em>penalty_power=1.0</em>, <em>update_iterations=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#RankBoostLossFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.RankBoostLossFunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">hep_ml.losses.HessianLossFunction</span></code></p>
-<p>RankBoostLossFunction is target of optimization in RankBoost algorithm,
+<p>RankBoostLossFunction is target of optimization in RankBoost <a class="reference internal" href="#rb" id="id3">[RB]</a> algorithm,
 which was developed for ranking and introduces penalties for wrong order of predictions.</p>
 <p>However, this implementation goes further and there is selection of optimal leaf values based
-on iterative procedure.</p>
+on iterative procedure. This implementation also uses matrix decomposition of loss function,
+which is very effective, when labels are from some very limited set (usually it is 0, 1, 2, 3, 4)</p>
+<p><span class="math">\(\text{loss} = \sum_{ij} w_{ij} exp(pred_i - pred_j)\)</span>,</p>
+<p><span class="math">\(w_{ij} = ( \alpha + \beta * [query_i = query_j]) R_{label_i, label_j}\)</span>, where
+<span class="math">\(R_{ij} = 0\)</span> if <span class="math">\(i \leq j\)</span>, else <span class="math">\(R_{ij} = (i - j)^{p}\)</span></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>request_column</strong> (<em>str</em>) &#8211; name of column with search query ids.</li>
-<li><strong>messup_penalty</strong> (<em>str</em>) &#8211; &#8216;linear&#8217; or &#8216;square&#8217;, dependency of penalty on difference in target values.</li>
+<li><strong>request_column</strong> (<em>str</em>) &#8211; name of column with search query ids. The higher attention is payed
+to samples with same query.</li>
+<li><strong>penalty_power</strong> (<em>float</em>) &#8211; describes dependence of penalty on the difference between target labels.</li>
 <li><strong>update_iterations</strong> (<em>int</em>) &#8211; number of minimization steps to provide optimal values.</li>
 </ul>
 </td>
 </tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="rb" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[RB]</a></td><td><ol class="first last upperalpha simple" start="25">
+<li>Freund et al. An Efficient Boosting Algorithm for Combining Preferences</li>
+</ol>
+</td></tr>
 </tbody>
 </table>
 <dl class="method">

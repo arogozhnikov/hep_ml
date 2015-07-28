@@ -87,6 +87,8 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="nnet.html">Neural networks</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="nnet.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nnet.html#loss-functions">Loss functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nnet.html#trainers">Trainers</a></li>
 </ul>
 </li>
 </ul>
@@ -128,7 +130,7 @@
             
   <div class="section" id="module-hep_ml.gradientboosting">
 <span id="gradient-boosting"></span><h1>Gradient boosting<a class="headerlink" href="#module-hep_ml.gradientboosting" title="Permalink to this headline">¶</a></h1>
-<p>Gradient boosting is general-purpose algorithm proposed by Friedman [1].
+<p>Gradient boosting is general-purpose algorithm proposed by Friedman <a class="reference internal" href="#gb" id="id1">[GB]</a>.
 It is one of the most efficient machine learning algorithms used for classification, regression and ranking.</p>
 <p>The key idea of algorithm is iterative minimization of target <strong>loss</strong> function
 by training each time one more estimator to the sequence. In this implementation decision trees are taken as such estimators.</p>
@@ -136,16 +138,16 @@ by training each time one more estimator to the sequence. In this implementation
 There are for instance, loss functions to fight with correlation or loss functions for ranking.
 See  <a class="reference internal" href="losses.html#module-hep_ml.losses" title="hep_ml.losses"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.losses</span></code></a> for details.</p>
 <p>See also libraries: XGBoost, sklearn.ensemble.GradientBoostingClassifier</p>
-<table class="docutils footnote" frame="void" id="id1" rules="none">
+<table class="docutils citation" frame="void" id="gb" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[1]</td><td>J.H. Friedman &#8216;Greedy function approximation: A gradient boosting machine.&#8217;, 2001.</td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id1">[GB]</a></td><td>J.H. Friedman &#8216;Greedy function approximation: A gradient boosting machine.&#8217;, 2001.</td></tr>
 </tbody>
 </table>
 <dl class="class">
-<dt id="hep_ml.gradientboosting.GradientBoostingClassifier">
-<em class="property">class </em><code class="descclassname">hep_ml.gradientboosting.</code><code class="descname">GradientBoostingClassifier</code><span class="sig-paren">(</span><em>loss=None</em>, <em>n_estimators=100</em>, <em>learning_rate=0.1</em>, <em>subsample=1.0</em>, <em>min_samples_split=2</em>, <em>min_samples_leaf=1</em>, <em>max_features=None</em>, <em>max_leaf_nodes=None</em>, <em>max_depth=3</em>, <em>criterion='mse'</em>, <em>splitter='best'</em>, <em>update_tree=True</em>, <em>train_features=None</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/gradientboosting.html#GradientBoostingClassifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.gradientboosting.GradientBoostingClassifier" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.BaseEstimator</span></code>, <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.ClassifierMixin</span></code></p>
+<dt id="hep_ml.gradientboosting.UGradientBoostingClassifier">
+<em class="property">class </em><code class="descclassname">hep_ml.gradientboosting.</code><code class="descname">UGradientBoostingClassifier</code><span class="sig-paren">(</span><em>loss=None</em>, <em>n_estimators=100</em>, <em>learning_rate=0.1</em>, <em>subsample=1.0</em>, <em>min_samples_split=2</em>, <em>min_samples_leaf=1</em>, <em>max_features=None</em>, <em>max_leaf_nodes=None</em>, <em>max_depth=3</em>, <em>splitter='best'</em>, <em>update_tree=True</em>, <em>train_features=None</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/gradientboosting.html#UGradientBoostingClassifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.gradientboosting.UGradientBoostingClassifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">hep_ml.gradientboosting.UGradientBoostingBase</span></code>, <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.ClassifierMixin</span></code></p>
 <p>This version of gradient boosting supports only two-class classification and only special losses
 derived from AbstractLossFunction.</p>
 <p><cite>max_depth</cite>, <cite>max_leaf_nodes</cite>, <cite>min_samples_leaf</cite>, <cite>min_samples_split</cite>, <cite>max_features</cite> are parameters
@@ -155,9 +157,8 @@ of regression tree, which is used as base estimator.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>loss</strong> &#8211; any descendant of AbstractLossFunction, those are very various:
-LogLossFunction, AdaLossFunction, KnnLossFunction, FlatnessLossFunction, RankBoostLossFunction.
-See hep_ml.losses for details.</li>
+<li><strong>loss</strong> &#8211; any descendant of AbstractLossFunction, those are very various.
+See <a class="reference internal" href="losses.html#module-hep_ml.losses" title="hep_ml.losses"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.losses</span></code></a> for available losses.</li>
 <li><strong>n_estimators</strong> (<em>int</em>) &#8211; number of trained trees.</li>
 <li><strong>subsample</strong> (<em>float</em>) &#8211; fraction of data to use on each stage</li>
 <li><strong>learning_rate</strong> (<em>float</em>) &#8211; size of step.</li>
@@ -170,40 +171,10 @@ Note that algorithm may require also variables used by loss function, but not li
 </tbody>
 </table>
 <dl class="method">
-<dt id="hep_ml.gradientboosting.GradientBoostingClassifier.decision_function">
-<code class="descname">decision_function</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/gradientboosting.html#GradientBoostingClassifier.decision_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.gradientboosting.GradientBoostingClassifier.decision_function" title="Permalink to this definition">¶</a></dt>
-<dd><p>Raw output, sum of trees&#8217; predictions</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> &#8211; data</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">numpy.array of shape [n_samples]</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="hep_ml.gradientboosting.GradientBoostingClassifier.feature_importances_">
-<code class="descname">feature_importances_</code><a class="headerlink" href="#hep_ml.gradientboosting.GradientBoostingClassifier.feature_importances_" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns feature importances for all features used in training.
-The order corresponds to the order in <cite>self.train_features</cite></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">numpy.array of shape [n_train_features]</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="hep_ml.gradientboosting.GradientBoostingClassifier.fit">
-<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y</em>, <em>sample_weight=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/gradientboosting.html#GradientBoostingClassifier.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.gradientboosting.GradientBoostingClassifier.fit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Only two-class binary classification is supported with labels 0 and 1.</p>
+<dt id="hep_ml.gradientboosting.UGradientBoostingClassifier.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y</em>, <em>sample_weight=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/gradientboosting.html#UGradientBoostingClassifier.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.gradientboosting.UGradientBoostingClassifier.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train formula.
+Only two-class binary classification is supported with labels 0 and 1.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -223,8 +194,8 @@ The order corresponds to the order in <cite>self.train_features</cite></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="hep_ml.gradientboosting.GradientBoostingClassifier.predict">
-<code class="descname">predict</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/gradientboosting.html#GradientBoostingClassifier.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.gradientboosting.GradientBoostingClassifier.predict" title="Permalink to this definition">¶</a></dt>
+<dt id="hep_ml.gradientboosting.UGradientBoostingClassifier.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/gradientboosting.html#UGradientBoostingClassifier.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.gradientboosting.UGradientBoostingClassifier.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predicted classes for each event</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -239,8 +210,8 @@ The order corresponds to the order in <cite>self.train_features</cite></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="hep_ml.gradientboosting.GradientBoostingClassifier.predict_proba">
-<code class="descname">predict_proba</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/gradientboosting.html#GradientBoostingClassifier.predict_proba"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.gradientboosting.GradientBoostingClassifier.predict_proba" title="Permalink to this definition">¶</a></dt>
+<dt id="hep_ml.gradientboosting.UGradientBoostingClassifier.predict_proba">
+<code class="descname">predict_proba</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/gradientboosting.html#UGradientBoostingClassifier.predict_proba"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.gradientboosting.UGradientBoostingClassifier.predict_proba" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predicted probabilities for each event</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -255,24 +226,8 @@ The order corresponds to the order in <cite>self.train_features</cite></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="hep_ml.gradientboosting.GradientBoostingClassifier.staged_decision_function">
-<code class="descname">staged_decision_function</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/gradientboosting.html#GradientBoostingClassifier.staged_decision_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.gradientboosting.GradientBoostingClassifier.staged_decision_function" title="Permalink to this definition">¶</a></dt>
-<dd><p>Raw output, sum of trees&#8217; predictions after each iteration.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> &#8211; data</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">sequence of numpy.array of shape [n_samples]</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="hep_ml.gradientboosting.GradientBoostingClassifier.staged_predict_proba">
-<code class="descname">staged_predict_proba</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/gradientboosting.html#GradientBoostingClassifier.staged_predict_proba"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.gradientboosting.GradientBoostingClassifier.staged_predict_proba" title="Permalink to this definition">¶</a></dt>
+<dt id="hep_ml.gradientboosting.UGradientBoostingClassifier.staged_predict_proba">
+<code class="descname">staged_predict_proba</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/gradientboosting.html#UGradientBoostingClassifier.staged_predict_proba"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.gradientboosting.UGradientBoostingClassifier.staged_predict_proba" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predicted probabilities for each event</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -281,6 +236,88 @@ The order corresponds to the order in <cite>self.train_features</cite></p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> &#8211; data</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">sequence of numpy.array of shape [n_samples, n_classes]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="hep_ml.gradientboosting.UGradientBoostingRegressor">
+<em class="property">class </em><code class="descclassname">hep_ml.gradientboosting.</code><code class="descname">UGradientBoostingRegressor</code><span class="sig-paren">(</span><em>loss=None</em>, <em>n_estimators=100</em>, <em>learning_rate=0.1</em>, <em>subsample=1.0</em>, <em>min_samples_split=2</em>, <em>min_samples_leaf=1</em>, <em>max_features=None</em>, <em>max_leaf_nodes=None</em>, <em>max_depth=3</em>, <em>splitter='best'</em>, <em>update_tree=True</em>, <em>train_features=None</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/gradientboosting.html#UGradientBoostingRegressor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.gradientboosting.UGradientBoostingRegressor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">hep_ml.gradientboosting.UGradientBoostingBase</span></code>, <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.RegressorMixin</span></code></p>
+<p>This version of gradient boosting supports only two-class classification and only special losses
+derived from AbstractLossFunction.</p>
+<p><cite>max_depth</cite>, <cite>max_leaf_nodes</cite>, <cite>min_samples_leaf</cite>, <cite>min_samples_split</cite>, <cite>max_features</cite> are parameters
+of regression tree, which is used as base estimator.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>loss</strong> &#8211; any descendant of AbstractLossFunction, those are very various.
+See <a class="reference internal" href="losses.html#module-hep_ml.losses" title="hep_ml.losses"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.losses</span></code></a> for available losses.</li>
+<li><strong>n_estimators</strong> (<em>int</em>) &#8211; number of trained trees.</li>
+<li><strong>subsample</strong> (<em>float</em>) &#8211; fraction of data to use on each stage</li>
+<li><strong>learning_rate</strong> (<em>float</em>) &#8211; size of step.</li>
+<li><strong>update_tree</strong> (<em>bool</em>) &#8211; True by default. If False, &#8216;improvement&#8217; step after fitting tree will be skipped.</li>
+<li><strong>train_features</strong> &#8211; features used by tree.
+Note that algorithm may require also variables used by loss function, but not listed here.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="hep_ml.gradientboosting.UGradientBoostingRegressor.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y</em>, <em>sample_weight=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/gradientboosting.html#UGradientBoostingRegressor.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.gradientboosting.UGradientBoostingRegressor.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit estimator.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> &#8211; dataset of shape [n_samples, n_features]</li>
+<li><strong>y</strong> &#8211; target values, array-like of shape [n_samples]</li>
+<li><strong>sample_weight</strong> &#8211; array-like of shape [n_samples] or None</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">self</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hep_ml.gradientboosting.UGradientBoostingRegressor.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/gradientboosting.html#UGradientBoostingRegressor.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.gradientboosting.UGradientBoostingRegressor.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict values for new samples</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> &#8211; pandas.DataFrame with all train_features</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">numpy.array of shape [n_samples]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hep_ml.gradientboosting.UGradientBoostingRegressor.staged_predict">
+<code class="descname">staged_predict</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/gradientboosting.html#UGradientBoostingRegressor.staged_predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.gradientboosting.UGradientBoostingRegressor.staged_predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return predictions after each new tree</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> &#8211; data</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">sequence of numpy.array of shape [n_samples]</td>
 </tr>
 </tbody>
 </table>

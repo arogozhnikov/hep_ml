@@ -86,6 +86,8 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../nnet.html">Neural networks</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../nnet.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nnet.html#loss-functions">Loss functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nnet.html#trainers">Trainers</a></li>
 </ul>
 </li>
 </ul>
@@ -127,7 +129,7 @@
             
   <h1>Source code for hep_ml.gradientboosting</h1><div class="highlight"><pre>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Gradient boosting is general-purpose algorithm proposed by Friedman [1].</span>
+<span class="sd">Gradient boosting is general-purpose algorithm proposed by Friedman [GB]_.</span>
 <span class="sd">It is one of the most efficient machine learning algorithms used for classification, regression and ranking.</span>
 
 <span class="sd">The key idea of algorithm is iterative minimization of target **loss** function</span>
@@ -139,15 +141,14 @@
 
 <span class="sd">See also libraries: XGBoost, sklearn.ensemble.GradientBoostingClassifier</span>
 
-<span class="sd">.. [1] J.H. Friedman &#39;Greedy function approximation: A gradient boosting machine.&#39;, 2001.</span>
+<span class="sd">.. [GB] J.H. Friedman &#39;Greedy function approximation: A gradient boosting machine.&#39;, 2001.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
 
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
 
-<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span>
-<span class="kn">from</span> <span class="nn">sklearn.tree.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeRegressor</span><span class="p">,</span> <span class="n">DTYPE</span>
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span><span class="p">,</span> <span class="n">RegressorMixin</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils.random</span> <span class="kn">import</span> <span class="n">check_random_state</span>
 
 <span class="kn">from</span> <span class="nn">.commonutils</span> <span class="kn">import</span> <span class="n">score_to_proba</span><span class="p">,</span> <span class="n">check_xyw</span>
@@ -158,9 +159,12 @@
 
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s">&#39;Alex Rogozhnikov&#39;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;UGradientBoostingClassifier&#39;</span><span class="p">,</span> <span class="s">&#39;UGradientBoostingRegressor&#39;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="GradientBoostingClassifier"><a class="viewcode-back" href="../../gb.html#hep_ml.gradientboosting.GradientBoostingClassifier">[docs]</a><span class="k">class</span> <span class="nc">GradientBoostingClassifier</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">UGradientBoostingBase</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Base class for gradient boosting estimators &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                  <span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
                  <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
@@ -170,21 +174,16 @@
                  <span class="n">max_features</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                  <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                  <span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-                 <span class="n">criterion</span><span class="o">=</span><span class="s">&#39;mse&#39;</span><span class="p">,</span>
                  <span class="n">splitter</span><span class="o">=</span><span class="s">&#39;best&#39;</span><span class="p">,</span>
                  <span class="n">update_tree</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
                  <span class="n">train_features</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                  <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This version of gradient boosting supports only two-class classification and only special losses</span>
-<span class="sd">        derived from AbstractLossFunction.</span>
-
 <span class="sd">        `max_depth`, `max_leaf_nodes`, `min_samples_leaf`, `min_samples_split`, `max_features` are parameters</span>
 <span class="sd">        of regression tree, which is used as base estimator.</span>
 
-<span class="sd">        :param loss: any descendant of AbstractLossFunction, those are very various:</span>
-<span class="sd">            LogLossFunction, AdaLossFunction, KnnLossFunction, FlatnessLossFunction, RankBoostLossFunction.</span>
-<span class="sd">            See hep_ml.losses for details.</span>
+<span class="sd">        :param loss: any descendant of AbstractLossFunction, those are very various.</span>
+<span class="sd">            See :class:`hep_ml.losses` for available losses.</span>
 <span class="sd">        :param int n_estimators: number of trained trees.</span>
 <span class="sd">        :param float subsample: fraction of data to use on each stage</span>
 <span class="sd">        :param float learning_rate: size of step.</span>
@@ -204,7 +203,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">update_tree</span> <span class="o">=</span> <span class="n">update_tree</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">train_features</span> <span class="o">=</span> <span class="n">train_features</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span> <span class="o">=</span> <span class="n">criterion</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">splitter</span> <span class="o">=</span> <span class="n">splitter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
 
@@ -221,15 +219,7 @@
         <span class="n">leaves</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">leaf_values</span><span class="p">[</span><span class="n">leaves</span><span class="p">]</span>
 
-<div class="viewcode-block" id="GradientBoostingClassifier.fit"><a class="viewcode-back" href="../../gb.html#hep_ml.gradientboosting.GradientBoostingClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Only two-class binary classification is supported with labels 0 and 1.</span>
-
-<span class="sd">        :param X: dataset of shape [n_samples, n_features]</span>
-<span class="sd">        :param y: labels, array-like of shape [n_samples]</span>
-<span class="sd">        :param sample_weight: array-like of shape [n_samples] or None</span>
-<span class="sd">        :return: self</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_params</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">estimators</span> <span class="o">=</span> <span class="p">[]</span>
@@ -237,17 +227,17 @@
 
         <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
         <span class="n">n_inbag</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subsample</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+        <span class="n">update_mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
 
         <span class="c"># preparing for loss function</span>
-        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span> <span class="o">=</span> <span class="n">check_xyw</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">,</span> <span class="n">classification</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-        <span class="n">sample_weight</span> <span class="o">=</span> <span class="n">sample_weight</span> <span class="o">*</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sample_weight</span><span class="p">)</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span> <span class="o">=</span> <span class="n">check_xyw</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">loss</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loss</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loss</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
 
         <span class="c"># preparing for fitting in trees, setting appropriate DTYPE</span>
         <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_train_features</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-        <span class="n">X</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">DTYPE</span><span class="p">)</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">SklearnClusteringTree</span><span class="o">.</span><span class="n">prepare_data</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
         <span class="n">y_pred</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
@@ -255,7 +245,7 @@
         <span class="k">for</span> <span class="n">stage</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_estimators</span><span class="p">):</span>
             <span class="c"># tree creation</span>
             <span class="n">tree</span> <span class="o">=</span> <span class="n">SklearnClusteringTree</span><span class="p">(</span>
-                <span class="n">criterion</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">,</span>
+                <span class="n">criterion</span><span class="o">=</span><span class="s">&#39;mse&#39;</span><span class="p">,</span>
                 <span class="n">splitter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">splitter</span><span class="p">,</span>
                 <span class="n">max_depth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span><span class="p">,</span>
                 <span class="n">min_samples_split</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">min_samples_split</span><span class="p">,</span>
@@ -275,33 +265,34 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_tree</span><span class="p">:</span>
                 <span class="n">terminal_regions</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
                 <span class="n">leaf_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss</span><span class="o">.</span><span class="n">prepare_new_leaves_values</span><span class="p">(</span><span class="n">terminal_regions</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred</span><span class="p">,</span>
-                    <span class="n">leaf_values</span><span class="o">=</span><span class="n">leaf_values</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">,</span>
-                    <span class="n">update_mask</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">),</span> <span class="n">residual</span><span class="o">=</span><span class="n">residual</span><span class="p">)</span>
+                                                                  <span class="n">leaf_values</span><span class="o">=</span><span class="n">leaf_values</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">,</span>
+                                                                  <span class="n">update_mask</span><span class="o">=</span><span class="n">update_mask</span><span class="p">,</span>
+                                                                  <span class="n">residual</span><span class="o">=</span><span class="n">residual</span><span class="p">)</span>
 
             <span class="n">y_pred</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">leaf_values</span><span class="o">=</span><span class="n">leaf_values</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">estimators</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">tree</span><span class="p">,</span> <span class="n">leaf_values</span><span class="p">])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loss</span><span class="p">(</span><span class="n">y_pred</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span>
-</div>
+
     <span class="k">def</span> <span class="nf">_get_train_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_features</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">X</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_features</span><span class="p">]</span>
 
-<div class="viewcode-block" id="GradientBoostingClassifier.staged_decision_function"><a class="viewcode-back" href="../../gb.html#hep_ml.gradientboosting.GradientBoostingClassifier.staged_decision_function">[docs]</a>    <span class="k">def</span> <span class="nf">staged_decision_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">staged_decision_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Raw output, sum of trees&#39; predictions after each iteration.</span>
 
 <span class="sd">        :param X: data</span>
 <span class="sd">        :return: sequence of numpy.array of shape [n_samples]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">X</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_train_features</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">DTYPE</span><span class="p">)</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">SklearnClusteringTree</span><span class="o">.</span><span class="n">prepare_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_train_features</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
         <span class="n">y_pred</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">tree</span><span class="p">,</span> <span class="n">leaf_values</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators</span><span class="p">:</span>
             <span class="n">y_pred</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">leaf_values</span><span class="o">=</span><span class="n">leaf_values</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">)</span>
             <span class="k">yield</span> <span class="n">y_pred</span>
-</div>
-<div class="viewcode-block" id="GradientBoostingClassifier.decision_function"><a class="viewcode-back" href="../../gb.html#hep_ml.gradientboosting.GradientBoostingClassifier.decision_function">[docs]</a>    <span class="k">def</span> <span class="nf">decision_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">decision_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Raw output, sum of trees&#39; predictions</span>
 
 <span class="sd">        :param X: data</span>
@@ -311,32 +302,7 @@
         <span class="k">for</span> <span class="n">score</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">staged_decision_function</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">score</span>
         <span class="k">return</span> <span class="n">result</span>
-</div>
-<div class="viewcode-block" id="GradientBoostingClassifier.staged_predict_proba"><a class="viewcode-back" href="../../gb.html#hep_ml.gradientboosting.GradientBoostingClassifier.staged_predict_proba">[docs]</a>    <span class="k">def</span> <span class="nf">staged_predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Predicted probabilities for each event</span>
 
-<span class="sd">        :param X: data</span>
-<span class="sd">        :return: sequence of numpy.array of shape [n_samples, n_classes]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">score</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">staged_decision_function</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-            <span class="k">yield</span> <span class="n">score_to_proba</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
-</div>
-<div class="viewcode-block" id="GradientBoostingClassifier.predict_proba"><a class="viewcode-back" href="../../gb.html#hep_ml.gradientboosting.GradientBoostingClassifier.predict_proba">[docs]</a>    <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Predicted probabilities for each event</span>
-
-<span class="sd">        :param X: pandas.DataFrame with all train_features</span>
-<span class="sd">        :return: numpy.array of shape [n_samples, n_classes]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">score_to_proba</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">decision_function</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
-</div>
-<div class="viewcode-block" id="GradientBoostingClassifier.predict"><a class="viewcode-back" href="../../gb.html#hep_ml.gradientboosting.GradientBoostingClassifier.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Predicted classes for each event</span>
-
-<span class="sd">        :param X: pandas.DataFrame with all train_features</span>
-<span class="sd">        :return: numpy.array of shape [n_samples] with predicted classes.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</div>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">feature_importances_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns feature importances for all features used in training.</span>
@@ -345,9 +311,84 @@
 <span class="sd">        :return: numpy.array of shape [n_train_features]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">import</span> <span class="nn">warnings</span>
+
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&#39;feature_importances_ of gb returns importances corresponding to used columns &#39;</span><span class="p">)</span>
         <span class="n">total_sum</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">feature_importances_</span> <span class="k">for</span> <span class="n">tree</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">total_sum</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimators</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">total_sum</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimators</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="UGradientBoostingClassifier"><a class="viewcode-back" href="../../gb.html#hep_ml.gradientboosting.UGradientBoostingClassifier">[docs]</a><span class="k">class</span> <span class="nc">UGradientBoostingClassifier</span><span class="p">(</span><span class="n">UGradientBoostingBase</span><span class="p">,</span> <span class="n">ClassifierMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This version of gradient boosting supports only two-class classification and only special losses</span>
+<span class="sd">    derived from AbstractLossFunction.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="UGradientBoostingClassifier.fit"><a class="viewcode-back" href="../../gb.html#hep_ml.gradientboosting.UGradientBoostingClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Train formula.</span>
+<span class="sd">        Only two-class binary classification is supported with labels 0 and 1.</span>
+
+<span class="sd">        :param X: dataset of shape [n_samples, n_features]</span>
+<span class="sd">        :param y: labels, array-like of shape [n_samples]</span>
+<span class="sd">        :param sample_weight: array-like of shape [n_samples] or None</span>
+<span class="sd">        :return: self</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span> <span class="o">=</span> <span class="n">check_xyw</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">,</span> <span class="n">classification</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">UGradientBoostingBase</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="UGradientBoostingClassifier.staged_predict_proba"><a class="viewcode-back" href="../../gb.html#hep_ml.gradientboosting.UGradientBoostingClassifier.staged_predict_proba">[docs]</a>    <span class="k">def</span> <span class="nf">staged_predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Predicted probabilities for each event</span>
+
+<span class="sd">        :param X: data</span>
+<span class="sd">        :return: sequence of numpy.array of shape [n_samples, n_classes]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">score</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">staged_decision_function</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">score_to_proba</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="UGradientBoostingClassifier.predict_proba"><a class="viewcode-back" href="../../gb.html#hep_ml.gradientboosting.UGradientBoostingClassifier.predict_proba">[docs]</a>    <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Predicted probabilities for each event</span>
+
+<span class="sd">        :param X: pandas.DataFrame with all train_features</span>
+<span class="sd">        :return: numpy.array of shape [n_samples, n_classes]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">score_to_proba</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">decision_function</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="UGradientBoostingClassifier.predict"><a class="viewcode-back" href="../../gb.html#hep_ml.gradientboosting.UGradientBoostingClassifier.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Predicted classes for each event</span>
+
+<span class="sd">        :param X: pandas.DataFrame with all train_features</span>
+<span class="sd">        :return: numpy.array of shape [n_samples] with predicted classes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+</div></div>
+<div class="viewcode-block" id="UGradientBoostingRegressor"><a class="viewcode-back" href="../../gb.html#hep_ml.gradientboosting.UGradientBoostingRegressor">[docs]</a><span class="k">class</span> <span class="nc">UGradientBoostingRegressor</span><span class="p">(</span><span class="n">UGradientBoostingBase</span><span class="p">,</span> <span class="n">RegressorMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This version of gradient boosting supports only two-class classification and only special losses</span>
+<span class="sd">    derived from AbstractLossFunction.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="UGradientBoostingRegressor.fit"><a class="viewcode-back" href="../../gb.html#hep_ml.gradientboosting.UGradientBoostingRegressor.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fit estimator.</span>
+
+<span class="sd">        :param X: dataset of shape [n_samples, n_features]</span>
+<span class="sd">        :param y: target values, array-like of shape [n_samples]</span>
+<span class="sd">        :param sample_weight: array-like of shape [n_samples] or None</span>
+<span class="sd">        :return: self</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">UGradientBoostingBase</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="UGradientBoostingRegressor.staged_predict"><a class="viewcode-back" href="../../gb.html#hep_ml.gradientboosting.UGradientBoostingRegressor.staged_predict">[docs]</a>    <span class="k">def</span> <span class="nf">staged_predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return predictions after each new tree</span>
+
+<span class="sd">        :param X: data</span>
+<span class="sd">        :return: sequence of numpy.array of shape [n_samples]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">score</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">staged_decision_function</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">score</span>
+</div>
+<div class="viewcode-block" id="UGradientBoostingRegressor.predict"><a class="viewcode-back" href="../../gb.html#hep_ml.gradientboosting.UGradientBoostingRegressor.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Predict values for new samples</span>
+
+<span class="sd">        :param X: pandas.DataFrame with all train_features</span>
+<span class="sd">        :return: numpy.array of shape [n_samples]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">decision_function</span><span class="p">(</span><span class="n">X</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>

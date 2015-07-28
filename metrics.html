@@ -87,6 +87,8 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="nnet.html">Neural networks</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="nnet.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nnet.html#loss-functions">Loss functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nnet.html#trainers">Trainers</a></li>
 </ul>
 </li>
 </ul>
@@ -174,7 +176,7 @@ can be found in <strong>REP</strong> package.</p>
 Don&#8217;t forget to scale features is those are of different nature.</p>
 <dl class="class">
 <dt id="hep_ml.metrics.BinBasedSDE">
-<em class="property">class </em><code class="descclassname">hep_ml.metrics.</code><code class="descname">BinBasedSDE</code><span class="sig-paren">(</span><em>uniform_features</em>, <em>uniform_label=0</em>, <em>n_bins=10</em>, <em>target_rcp=None</em>, <em>power=2.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/metrics.html#BinBasedSDE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.metrics.BinBasedSDE" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">hep_ml.metrics.</code><code class="descname">BinBasedSDE</code><span class="sig-paren">(</span><em>uniform_features</em>, <em>uniform_label</em>, <em>n_bins=10</em>, <em>target_rcp=None</em>, <em>power=2.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/metrics.html#BinBasedSDE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.metrics.BinBasedSDE" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">hep_ml.metrics.AbstractBinMetric</span></code></p>
 <p>Standard Deviation of Efficiency, computed using bins.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -198,7 +200,7 @@ Default values are [0.5, 0.6, 0.7, 0.8, 0.9]</li>
 
 <dl class="class">
 <dt id="hep_ml.metrics.BinBasedCvM">
-<em class="property">class </em><code class="descclassname">hep_ml.metrics.</code><code class="descname">BinBasedCvM</code><span class="sig-paren">(</span><em>uniform_features</em>, <em>n_bins=10</em>, <em>uniform_label=0</em>, <em>power=2.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/metrics.html#BinBasedCvM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.metrics.BinBasedCvM" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">hep_ml.metrics.</code><code class="descname">BinBasedCvM</code><span class="sig-paren">(</span><em>uniform_features</em>, <em>uniform_label</em>, <em>n_bins=10</em>, <em>power=2.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/metrics.html#BinBasedCvM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.metrics.BinBasedCvM" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">hep_ml.metrics.AbstractBinMetric</span></code></p>
 <p>Nonuniformity metric based on Cramer-von Mises distance between distributions, computed on bins.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -219,7 +221,7 @@ Default values are [0.5, 0.6, 0.7, 0.8, 0.9]</li>
 
 <dl class="class">
 <dt id="hep_ml.metrics.BinBasedTheil">
-<em class="property">class </em><code class="descclassname">hep_ml.metrics.</code><code class="descname">BinBasedTheil</code><span class="sig-paren">(</span><em>uniform_features</em>, <em>uniform_label=0</em>, <em>n_bins=10</em>, <em>target_rcp=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/metrics.html#BinBasedTheil"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.metrics.BinBasedTheil" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">hep_ml.metrics.</code><code class="descname">BinBasedTheil</code><span class="sig-paren">(</span><em>uniform_features</em>, <em>uniform_label</em>, <em>n_bins=10</em>, <em>target_rcp=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/metrics.html#BinBasedTheil"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.metrics.BinBasedTheil" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">hep_ml.metrics.AbstractBinMetric</span></code></p>
 <p>Theil index of Efficiency, computed using bins.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -242,7 +244,7 @@ Default values are [0.5, 0.6, 0.7, 0.8, 0.9]</li>
 
 <dl class="class">
 <dt id="hep_ml.metrics.KnnBasedSDE">
-<em class="property">class </em><code class="descclassname">hep_ml.metrics.</code><code class="descname">KnnBasedSDE</code><span class="sig-paren">(</span><em>uniform_features</em>, <em>uniform_label=0</em>, <em>n_neighbours=50</em>, <em>target_rcp=None</em>, <em>power=2.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/metrics.html#KnnBasedSDE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.metrics.KnnBasedSDE" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">hep_ml.metrics.</code><code class="descname">KnnBasedSDE</code><span class="sig-paren">(</span><em>uniform_features</em>, <em>uniform_label</em>, <em>n_neighbours=50</em>, <em>target_rcp=None</em>, <em>power=2.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/metrics.html#KnnBasedSDE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.metrics.KnnBasedSDE" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">hep_ml.metrics.AbstractKnnMetric</span></code></p>
 <p>Standard Deviation of Efficiency, computed using k nearest neighbours.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -266,7 +268,7 @@ Default values are [0.5, 0.6, 0.7, 0.8, 0.9]</li>
 
 <dl class="class">
 <dt id="hep_ml.metrics.KnnBasedCvM">
-<em class="property">class </em><code class="descclassname">hep_ml.metrics.</code><code class="descname">KnnBasedCvM</code><span class="sig-paren">(</span><em>uniform_features</em>, <em>n_neighbours=50</em>, <em>uniform_label=0</em>, <em>power=2.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/metrics.html#KnnBasedCvM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.metrics.KnnBasedCvM" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">hep_ml.metrics.</code><code class="descname">KnnBasedCvM</code><span class="sig-paren">(</span><em>uniform_features</em>, <em>uniform_label</em>, <em>n_neighbours=50</em>, <em>power=2.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/metrics.html#KnnBasedCvM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.metrics.KnnBasedCvM" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">hep_ml.metrics.AbstractKnnMetric</span></code></p>
 <p>Nonuniformity metric based on Cramer-von Mises distance between distributions, computed on nearest neighbours.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -287,7 +289,7 @@ Default values are [0.5, 0.6, 0.7, 0.8, 0.9]</li>
 
 <dl class="class">
 <dt id="hep_ml.metrics.KnnBasedTheil">
-<em class="property">class </em><code class="descclassname">hep_ml.metrics.</code><code class="descname">KnnBasedTheil</code><span class="sig-paren">(</span><em>uniform_features</em>, <em>n_neighbours=50</em>, <em>uniform_label=0</em>, <em>target_rcp=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/metrics.html#KnnBasedTheil"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.metrics.KnnBasedTheil" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">hep_ml.metrics.</code><code class="descname">KnnBasedTheil</code><span class="sig-paren">(</span><em>uniform_features</em>, <em>uniform_label</em>, <em>n_neighbours=50</em>, <em>target_rcp=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/metrics.html#KnnBasedTheil"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.metrics.KnnBasedTheil" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">hep_ml.metrics.AbstractKnnMetric</span></code></p>
 <p>Theil index of Efficiency, computed using k nearest neighbours.</p>
 <table class="docutils field-list" frame="void" rules="none">

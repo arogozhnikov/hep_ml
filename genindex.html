@@ -86,6 +86,8 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="nnet.html">Neural networks</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="nnet.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nnet.html#loss-functions">Loss functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nnet.html#trainers">Trainers</a></li>
 </ul>
 </li>
 </ul>
@@ -131,9 +133,10 @@
  | <a href="#B"><strong>B</strong></a>
  | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
- | <a href="#G"><strong>G</strong></a>
  | <a href="#H"><strong>H</strong></a>
+ | <a href="#I"><strong>I</strong></a>
  | <a href="#K"><strong>K</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
@@ -156,10 +159,14 @@
   <dt><a href="nnet.html#hep_ml.nnet.AbstractNeuralNetworkClassifier">AbstractNeuralNetworkClassifier (class in hep_ml.nnet)</a>
   </dt>
 
+      
+  <dt><a href="nnet.html#hep_ml.nnet.AbstractNeuralNetworkClassifier.activate">activate() (hep_ml.nnet.AbstractNeuralNetworkClassifier method)</a>
+  </dt>
+
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="nnet.html#hep_ml.nnet.AbstractNeuralNetworkClassifier.activate">activate() (hep_ml.nnet.AbstractNeuralNetworkClassifier method)</a>
+  <dt><a href="nnet.html#hep_ml.nnet.adadelta_trainer">adadelta_trainer() (in module hep_ml.nnet)</a>
   </dt>
 
       
@@ -201,21 +208,11 @@
   </dt>
 
       
-  <dt><a href="losses.html#hep_ml.losses.BinFlatnessLossFunction.compute_groups_indices">compute_groups_indices() (hep_ml.losses.BinFlatnessLossFunction method)</a>
-  </dt>
-
-      <dd><dl>
-        
-  <dt><a href="losses.html#hep_ml.losses.KnnFlatnessLossFunction.compute_groups_indices">(hep_ml.losses.KnnFlatnessLossFunction method)</a>
-  </dt>
-
-      </dl></dd>
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
-      
   <dt><a href="nnet.html#hep_ml.nnet.AbstractNeuralNetworkClassifier.compute_loss">compute_loss() (hep_ml.nnet.AbstractNeuralNetworkClassifier method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="losses.html#hep_ml.losses.KnnAdaLossFunction.compute_parameters">compute_parameters() (hep_ml.losses.KnnAdaLossFunction method)</a>
   </dt>
@@ -227,15 +224,25 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="gb.html#hep_ml.gradientboosting.GradientBoostingClassifier.decision_function">decision_function() (hep_ml.gradientboosting.GradientBoostingClassifier method)</a>
+  <dt><a href="uboost.html#hep_ml.uboost.uBoostBDT.decision_function">decision_function() (hep_ml.uboost.uBoostBDT method)</a>
   </dt>
 
-      <dd><dl>
-        
-  <dt><a href="uboost.html#hep_ml.uboost.uBoostBDT.decision_function">(hep_ml.uboost.uBoostBDT method)</a>
+  </dl></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="nnet.html#hep_ml.nnet.exp_log_loss">exp_log_loss() (in module hep_ml.nnet)</a>
   </dt>
 
-      </dl></dd>
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="nnet.html#hep_ml.nnet.exp_loss">exp_loss() (in module hep_ml.nnet)</a>
+  </dt>
+
   </dl></td>
 </tr></table>
 
@@ -243,22 +250,20 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="gb.html#hep_ml.gradientboosting.GradientBoostingClassifier.feature_importances_">feature_importances_ (hep_ml.gradientboosting.GradientBoostingClassifier attribute)</a>
+  <dt><a href="uboost.html#hep_ml.uboost.uBoostBDT.feature_importances_">feature_importances_ (hep_ml.uboost.uBoostBDT attribute)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="gb.html#hep_ml.gradientboosting.UGradientBoostingClassifier.fit">fit() (hep_ml.gradientboosting.UGradientBoostingClassifier method)</a>
   </dt>
 
       <dd><dl>
         
-  <dt><a href="uboost.html#hep_ml.uboost.uBoostBDT.feature_importances_">(hep_ml.uboost.uBoostBDT attribute)</a>
+  <dt><a href="gb.html#hep_ml.gradientboosting.UGradientBoostingRegressor.fit">(hep_ml.gradientboosting.UGradientBoostingRegressor method)</a>
   </dt>
 
-      </dl></dd>
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
-      
-  <dt><a href="gb.html#hep_ml.gradientboosting.GradientBoostingClassifier.fit">fit() (hep_ml.gradientboosting.GradientBoostingClassifier method)</a>
-  </dt>
-
-      <dd><dl>
         
   <dt><a href="losses.html#hep_ml.losses.AbstractLossFunction.fit">(hep_ml.losses.AbstractLossFunction method)</a>
   </dt>
@@ -292,16 +297,6 @@
   </dt>
 
       </dl></dd>
-  </dl></td>
-</tr></table>
-
-<h2 id="G">G</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%" valign="top"><dl>
-      
-  <dt><a href="gb.html#hep_ml.gradientboosting.GradientBoostingClassifier">GradientBoostingClassifier (class in hep_ml.gradientboosting)</a>
-  </dt>
-
   </dl></td>
 </tr></table>
 
@@ -351,6 +346,26 @@
   </dl></td>
 </tr></table>
 
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="nnet.html#hep_ml.nnet.irprop_minus_trainer">irprop_minus_trainer() (in module hep_ml.nnet)</a>
+  </dt>
+
+      
+  <dt><a href="nnet.html#hep_ml.nnet.irprop_plus_trainer">irprop_plus_trainer() (in module hep_ml.nnet)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="nnet.html#hep_ml.nnet.irprop_star_trainer">irprop_star_trainer() (in module hep_ml.nnet)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
 <h2 id="K">K</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
@@ -381,6 +396,12 @@
 
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="nnet.html#hep_ml.nnet.log_loss">log_loss() (in module hep_ml.nnet)</a>
+  </dt>
+
+  </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="losses.html#hep_ml.losses.LogLossFunction">LogLossFunction (class in hep_ml.losses)</a>
@@ -439,10 +460,14 @@
   </dt>
 
       
-  <dt><a href="gb.html#hep_ml.gradientboosting.GradientBoostingClassifier.predict">predict() (hep_ml.gradientboosting.GradientBoostingClassifier method)</a>
+  <dt><a href="gb.html#hep_ml.gradientboosting.UGradientBoostingClassifier.predict">predict() (hep_ml.gradientboosting.UGradientBoostingClassifier method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="gb.html#hep_ml.gradientboosting.UGradientBoostingRegressor.predict">(hep_ml.gradientboosting.UGradientBoostingRegressor method)</a>
+  </dt>
+
         
   <dt><a href="nnet.html#hep_ml.nnet.AbstractNeuralNetworkClassifier.predict">(hep_ml.nnet.AbstractNeuralNetworkClassifier method)</a>
   </dt>
@@ -457,7 +482,7 @@
 
       </dl></dd>
       
-  <dt><a href="gb.html#hep_ml.gradientboosting.GradientBoostingClassifier.predict_proba">predict_proba() (hep_ml.gradientboosting.GradientBoostingClassifier method)</a>
+  <dt><a href="gb.html#hep_ml.gradientboosting.UGradientBoostingClassifier.predict_proba">predict_proba() (hep_ml.gradientboosting.UGradientBoostingClassifier method)</a>
   </dt>
 
       <dd><dl>
@@ -543,6 +568,10 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
+  <dt><a href="nnet.html#hep_ml.nnet.sgd_trainer">sgd_trainer() (in module hep_ml.nnet)</a>
+  </dt>
+
+      
   <dt><a href="nnet.html#hep_ml.nnet.SimpleNeuralNetwork">SimpleNeuralNetwork (class in hep_ml.nnet)</a>
   </dt>
 
@@ -550,20 +579,22 @@
   <dt><a href="nnet.html#hep_ml.nnet.SoftmaxNeuralNetwork">SoftmaxNeuralNetwork (class in hep_ml.nnet)</a>
   </dt>
 
+      
+  <dt><a href="nnet.html#hep_ml.nnet.squared_loss">squared_loss() (in module hep_ml.nnet)</a>
+  </dt>
+
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="gb.html#hep_ml.gradientboosting.GradientBoostingClassifier.staged_decision_function">staged_decision_function() (hep_ml.gradientboosting.GradientBoostingClassifier method)</a>
+  <dt><a href="uboost.html#hep_ml.uboost.uBoostBDT.staged_decision_function">staged_decision_function() (hep_ml.uboost.uBoostBDT method)</a>
   </dt>
 
-      <dd><dl>
-        
-  <dt><a href="uboost.html#hep_ml.uboost.uBoostBDT.staged_decision_function">(hep_ml.uboost.uBoostBDT method)</a>
-  </dt>
-
-      </dl></dd>
       
-  <dt><a href="gb.html#hep_ml.gradientboosting.GradientBoostingClassifier.staged_predict_proba">staged_predict_proba() (hep_ml.gradientboosting.GradientBoostingClassifier method)</a>
+  <dt><a href="gb.html#hep_ml.gradientboosting.UGradientBoostingRegressor.staged_predict">staged_predict() (hep_ml.gradientboosting.UGradientBoostingRegressor method)</a>
+  </dt>
+
+      
+  <dt><a href="gb.html#hep_ml.gradientboosting.UGradientBoostingClassifier.staged_predict_proba">staged_predict_proba() (hep_ml.gradientboosting.UGradientBoostingClassifier method)</a>
   </dt>
 
       <dd><dl>
@@ -596,10 +627,18 @@
   <dt><a href="uboost.html#hep_ml.uboost.uBoostBDT">uBoostBDT (class in hep_ml.uboost)</a>
   </dt>
 
+      
+  <dt><a href="uboost.html#hep_ml.uboost.uBoostClassifier">uBoostClassifier (class in hep_ml.uboost)</a>
+  </dt>
+
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="uboost.html#hep_ml.uboost.uBoostClassifier">uBoostClassifier (class in hep_ml.uboost)</a>
+  <dt><a href="gb.html#hep_ml.gradientboosting.UGradientBoostingClassifier">UGradientBoostingClassifier (class in hep_ml.gradientboosting)</a>
+  </dt>
+
+      
+  <dt><a href="gb.html#hep_ml.gradientboosting.UGradientBoostingRegressor">UGradientBoostingRegressor (class in hep_ml.gradientboosting)</a>
   </dt>
 
   </dl></td>

@@ -86,6 +86,8 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../nnet.html">Neural networks</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../nnet.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nnet.html#loss-functions">Loss functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nnet.html#trainers">Trainers</a></li>
 </ul>
 </li>
 </ul>
@@ -209,7 +211,7 @@
 
 
 <span class="k">class</span> <span class="nc">AbstractBinMetric</span><span class="p">(</span><span class="n">AbstractMetric</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_bins</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_bins</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">uniform_label</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Abstract class for bin-based metrics of uniformity.</span>
 
@@ -237,7 +239,7 @@
 
 
 <div class="viewcode-block" id="BinBasedSDE"><a class="viewcode-back" href="../../metrics.html#hep_ml.metrics.BinBasedSDE">[docs]</a><span class="k">class</span> <span class="nc">BinBasedSDE</span><span class="p">(</span><span class="n">AbstractBinMetric</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">target_rcp</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">2.</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">uniform_label</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">target_rcp</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">2.</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Standard Deviation of Efficiency, computed using bins.</span>
 
@@ -271,7 +273,7 @@
 
 </div>
 <div class="viewcode-block" id="BinBasedTheil"><a class="viewcode-back" href="../../metrics.html#hep_ml.metrics.BinBasedTheil">[docs]</a><span class="k">class</span> <span class="nc">BinBasedTheil</span><span class="p">(</span><span class="n">AbstractBinMetric</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">target_rcp</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">uniform_label</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">target_rcp</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Theil index of Efficiency, computed using bins.</span>
 
@@ -302,7 +304,7 @@
 
 </div>
 <div class="viewcode-block" id="BinBasedCvM"><a class="viewcode-back" href="../../metrics.html#hep_ml.metrics.BinBasedCvM">[docs]</a><span class="k">class</span> <span class="nc">BinBasedCvM</span><span class="p">(</span><span class="n">AbstractBinMetric</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">2.</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">uniform_label</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">2.</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Nonuniformity metric based on Cramer-von Mises distance between distributions, computed on bins.</span>
 
@@ -334,7 +336,7 @@
 
 </div>
 <span class="k">class</span> <span class="nc">AbstractKnnMetric</span><span class="p">(</span><span class="n">AbstractMetric</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">n_neighbours</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">uniform_label</span><span class="p">,</span> <span class="n">n_neighbours</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Abstract class for knn-based metrics of uniformity.</span>
 
@@ -371,7 +373,7 @@
 
 
 <div class="viewcode-block" id="KnnBasedSDE"><a class="viewcode-back" href="../../metrics.html#hep_ml.metrics.KnnBasedSDE">[docs]</a><span class="k">class</span> <span class="nc">KnnBasedSDE</span><span class="p">(</span><span class="n">AbstractKnnMetric</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_neighbours</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">target_rcp</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">2.</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">uniform_label</span><span class="p">,</span> <span class="n">n_neighbours</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">target_rcp</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">2.</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Standard Deviation of Efficiency, computed using k nearest neighbours.</span>
 
@@ -405,7 +407,7 @@
 
 </div>
 <div class="viewcode-block" id="KnnBasedTheil"><a class="viewcode-back" href="../../metrics.html#hep_ml.metrics.KnnBasedTheil">[docs]</a><span class="k">class</span> <span class="nc">KnnBasedTheil</span><span class="p">(</span><span class="n">AbstractKnnMetric</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">n_neighbours</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">target_rcp</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">uniform_label</span><span class="p">,</span> <span class="n">n_neighbours</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">target_rcp</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Theil index of Efficiency, computed using k nearest neighbours.</span>
 
@@ -437,7 +439,7 @@
 
 </div>
 <div class="viewcode-block" id="KnnBasedCvM"><a class="viewcode-back" href="../../metrics.html#hep_ml.metrics.KnnBasedCvM">[docs]</a><span class="k">class</span> <span class="nc">KnnBasedCvM</span><span class="p">(</span><span class="n">AbstractKnnMetric</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">n_neighbours</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">2.</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">uniform_label</span><span class="p">,</span> <span class="n">n_neighbours</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">2.</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Nonuniformity metric based on Cramer-von Mises distance between distributions, computed on nearest neighbours.</span>
 

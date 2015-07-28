@@ -86,6 +86,8 @@
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Neural networks</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#loss-functions">Loss functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#trainers">Trainers</a></li>
 </ul>
 </li>
 </ul>
@@ -131,14 +133,14 @@
 The neural networks from this library provide sklearn classifier&#8217;s interface.</p>
 <p>Definitions for loss functions, trainers of neural networks are defined in this file too.
 Main point of this library: black-box stochastic optimization of any given loss function.
-This gives ability to define any activation expression at the cost of unavailability of pretraining.</p>
+This gives ability to define any activation expression (at the cost of unavailability of pretraining).</p>
 <p>In this file we have <strong>examples</strong> of neural networks,
 user is encouraged to write his own specific architecture,
 which can be much more complex than those used usually.</p>
 <p>This library should be preferred for different experiments with architectures.
-Also hep_ml.nnet allows optimization of parameters in any differentiable decision function.</p>
+Also <strong>hep_ml.nnet</strong> allows optimization of parameters in any differentiable decision function.</p>
 <p>Being written in theano, these neural networks are able to make use of your GPU.</p>
-<p>See also libraries: theanets, Keras.</p>
+<p>See also libraries: theanets, keras.</p>
 <div class="section" id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <p>Training a neural network with two hidden layers using IRPROP- algorithm</p>
@@ -147,9 +149,10 @@ Also hep_ml.nnet allows optimization of parameters in any differentiable decisio
 <span class="gp">&gt;&gt;&gt; </span><span class="n">probability</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Training an AdaBoost over neural network, adadelta trainer was used,</p>
+<p>Training an AdaBoost over neural network, adadelta trainer was used and trainer specific parameter was used
+(size of minibatch)</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">AdaBoostClassifier</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">base_network</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span><span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">trainer</span><span class="o">=</span><span class="s">&#39;adadelta&#39;</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">base_network</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span><span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">trainer</span><span class="o">=</span><span class="s">&#39;adadelta&#39;</span><span class="p">,</span> <span class="n">trainer_parameters</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;batch&#39;</span><span class="p">:</span> <span class="mi">600</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span> <span class="o">=</span> <span class="n">AdaBoostClassifier</span><span class="p">(</span><span class="n">base_estimator</span><span class="o">=</span><span class="n">base_network</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 </pre></div>
@@ -204,16 +207,18 @@ Default is &#8216;standard&#8217;, which will apply StandardScaler from sklearn.
 <dl class="method">
 <dt id="hep_ml.nnet.AbstractNeuralNetworkClassifier.compute_loss">
 <code class="descname">compute_loss</code><span class="sig-paren">(</span><em>X</em>, <em>y</em>, <em>sample_weight=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#AbstractNeuralNetworkClassifier.compute_loss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.AbstractNeuralNetworkClassifier.compute_loss" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes loss (that was used in training) on labeled dataset
-:param X: numpy.array of shape [n_samples, n_features]
-:param y: numpy.array with integer labels of shape [n_samples],</p>
-<blockquote>
-<div>in two-class classification 0 and 1 labels should be used</div></blockquote>
+<dd><p>Computes loss (that was used in training) on labeled dataset</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sample_weight</strong> &#8211; optional, numpy.array of shape [n_samples].</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>X</strong> &#8211; numpy.array of shape [n_samples, n_features]</li>
+<li><strong>y</strong> &#8211; numpy.array with integer labels of shape [n_samples],
+in two-class classification 0 and 1 labels should be used</li>
+<li><strong>sample_weight</strong> &#8211; optional, numpy.array of shape [n_samples].</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -442,7 +447,7 @@ Default is &#8216;standard&#8217;, which will apply StandardScaler from sklearn.
 <dt id="hep_ml.nnet.PairwiseNeuralNetwork">
 <em class="property">class </em><code class="descclassname">hep_ml.nnet.</code><code class="descname">PairwiseNeuralNetwork</code><span class="sig-paren">(</span><em>layers=(10</em>, <em>)</em>, <em>scaler='standard'</em>, <em>loss='log_loss'</em>, <em>trainer='irprop-'</em>, <em>epochs=100</em>, <em>trainer_parameters=None</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#PairwiseNeuralNetwork"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.PairwiseNeuralNetwork" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#hep_ml.nnet.AbstractNeuralNetworkClassifier" title="hep_ml.nnet.AbstractNeuralNetworkClassifier"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.nnet.AbstractNeuralNetworkClassifier</span></code></a></p>
-<p>The result is computed as h = sigmoid(Ax), output = sum_{ij} B_ij h_i (1 - h_j),
+<p>The result is computed as <span class="math">\(h = sigmoid(Ax)\)</span>, <span class="math">\(output = \sum_{ij} B_{ij} h_i (1 - h_j)\)</span>,
 this is a brilliant example when easier to define activation
 function rather than trying to implement this inside some framework.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -473,7 +478,7 @@ Default is &#8216;standard&#8217;, which will apply StandardScaler from sklearn.
 <dt id="hep_ml.nnet.PairwiseSoftplusNeuralNetwork">
 <em class="property">class </em><code class="descclassname">hep_ml.nnet.</code><code class="descname">PairwiseSoftplusNeuralNetwork</code><span class="sig-paren">(</span><em>layers=(10</em>, <em>)</em>, <em>scaler='standard'</em>, <em>loss='log_loss'</em>, <em>trainer='irprop-'</em>, <em>epochs=100</em>, <em>trainer_parameters=None</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#PairwiseSoftplusNeuralNetwork"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.PairwiseSoftplusNeuralNetwork" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#hep_ml.nnet.AbstractNeuralNetworkClassifier" title="hep_ml.nnet.AbstractNeuralNetworkClassifier"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.nnet.AbstractNeuralNetworkClassifier</span></code></a></p>
-<p>The result is computed as h = softplus(Ax), output = sum_{ij} B_ij h_i (1 - h_j)</p>
+<p>The result is computed as <span class="math">\(h = softplus(Ax)\)</span>, <span class="math">\(output = \sum_{ij} B_{ij} h_i (1 - h_j)\)</span></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -496,6 +501,128 @@ Default is &#8216;standard&#8217;, which will apply StandardScaler from sklearn.
 <code class="descname">prepare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#PairwiseSoftplusNeuralNetwork.prepare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.PairwiseSoftplusNeuralNetwork.prepare" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+</dd></dl>
+
+</div>
+<div class="section" id="loss-functions">
+<h2>Loss functions<a class="headerlink" href="#loss-functions" title="Permalink to this headline">¶</a></h2>
+<p>loss functions are targets in optimization.
+The following functions are available for classification.</p>
+<dl class="function">
+<dt id="hep_ml.nnet.log_loss">
+<code class="descclassname">hep_ml.nnet.</code><code class="descname">log_loss</code><span class="sig-paren">(</span><em>y</em>, <em>pred</em>, <em>w</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#log_loss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.log_loss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logistic loss for classification (aka cross-entropy, aka binomial deviance)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="hep_ml.nnet.exp_loss">
+<code class="descclassname">hep_ml.nnet.</code><code class="descname">exp_loss</code><span class="sig-paren">(</span><em>y</em>, <em>pred</em>, <em>w</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#exp_loss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.exp_loss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exponential loss for classification (aka AdaLoss function)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="hep_ml.nnet.exp_log_loss">
+<code class="descclassname">hep_ml.nnet.</code><code class="descname">exp_log_loss</code><span class="sig-paren">(</span><em>y</em>, <em>pred</em>, <em>w</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#exp_log_loss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.exp_log_loss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Classification loss function,
+combines logistic loss for signal and exponential loss for background</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="hep_ml.nnet.squared_loss">
+<code class="descclassname">hep_ml.nnet.</code><code class="descname">squared_loss</code><span class="sig-paren">(</span><em>y</em>, <em>pred</em>, <em>w</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#squared_loss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.squared_loss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Squared loss for classification, not to be messed up with MSE</p>
+</dd></dl>
+
+</div>
+<div class="section" id="trainers">
+<h2>Trainers<a class="headerlink" href="#trainers" title="Permalink to this headline">¶</a></h2>
+<p>trainers are implemented as functions with some standard parameters and some optional.
+Their aim is to optimize the target loss function as some black box.</p>
+<dl class="function">
+<dt id="hep_ml.nnet.sgd_trainer">
+<code class="descclassname">hep_ml.nnet.</code><code class="descname">sgd_trainer</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>w</em>, <em>parameters</em>, <em>loss</em>, <em>random_stream</em>, <em>batch=10</em>, <em>learning_rate=0.1</em>, <em>l2_penalty=0.001</em>, <em>momentum=0.9</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#sgd_trainer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.sgd_trainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stochastic gradient descent with momentum,</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>batch</strong> (<em>int</em>) &#8211; size of minibatch, each time averaging gradient over minibatch.</li>
+<li><strong>learning_rate</strong> (<em>float</em>) &#8211; size of step</li>
+<li><strong>l2_penalty</strong> (<em>float</em>) &#8211; speed of weights&#8217; decay, l2 regularization prevents overfitting</li>
+<li><strong>momentum</strong> (<em>float</em>) &#8211; momentum to stabilize learning process.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="hep_ml.nnet.irprop_minus_trainer">
+<code class="descclassname">hep_ml.nnet.</code><code class="descname">irprop_minus_trainer</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>w</em>, <em>parameters</em>, <em>loss</em>, <em>random_stream</em>, <em>positive_step=1.2</em>, <em>negative_step=0.5</em>, <em>max_step=1.0</em>, <em>min_step=1e-06</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#irprop_minus_trainer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.irprop_minus_trainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>IRPROP- is batch trainer, for details see <a class="reference external" href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.21.3428">http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.21.3428</a>
+This is default trainer, very stable for classification.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>positive_step</strong> &#8211; factor, by which the step is increased when continuing going in the direction</li>
+<li><strong>negative_step</strong> &#8211; factor, by which the step is increased when changing direction to opposite</li>
+<li><strong>min_step</strong> &#8211; minimal change of weight during iteration</li>
+<li><strong>max_step</strong> &#8211; maximal change of weight during iteration</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="hep_ml.nnet.irprop_plus_trainer">
+<code class="descclassname">hep_ml.nnet.</code><code class="descname">irprop_plus_trainer</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>w</em>, <em>parameters</em>, <em>loss</em>, <em>random_stream</em>, <em>positive_step=1.2</em>, <em>negative_step=0.5</em>, <em>max_step=1.0</em>, <em>min_step=1e-06</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#irprop_plus_trainer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.irprop_plus_trainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>IRPROP+ is batch trainer, for details see <a class="reference external" href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.21.3428">http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.21.3428</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>positive_step</strong> &#8211; factor, by which the step is increased when continuing going in the direction</li>
+<li><strong>negative_step</strong> &#8211; factor, by which the step is increased when changing direction to opposite</li>
+<li><strong>min_step</strong> &#8211; minimal change of weight during iteration</li>
+<li><strong>max_step</strong> &#8211; maximal change of weight during iteration</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="hep_ml.nnet.irprop_star_trainer">
+<code class="descclassname">hep_ml.nnet.</code><code class="descname">irprop_star_trainer</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>w</em>, <em>parameters</em>, <em>loss</em>, <em>random_stream</em>, <em>positive_step=1.2</em>, <em>negative_step=0.5</em>, <em>max_step=1.0</em>, <em>min_step=1e-06</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#irprop_star_trainer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.irprop_star_trainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>IRPROP* trainer (own experimental modification of IRPROP-, not recommended for usage)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="hep_ml.nnet.adadelta_trainer">
+<code class="descclassname">hep_ml.nnet.</code><code class="descname">adadelta_trainer</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>w</em>, <em>parameters</em>, <em>loss</em>, <em>random_stream</em>, <em>decay_rate=0.95</em>, <em>epsilon=1e-05</em>, <em>learning_rate=1.0</em>, <em>batch=1000</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#adadelta_trainer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.adadelta_trainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>AdaDelta is trainer with adaptive learning rate.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>decay_rate</strong> &#8211; momentum-like parameter</li>
+<li><strong>learning_rate</strong> &#8211; size of step</li>
+<li><strong>batch</strong> &#8211; size of minibatch</li>
+<li><strong>epsilon</strong> &#8211; regularization</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>

@@ -86,6 +86,8 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../nnet.html">Neural networks</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../nnet.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nnet.html#loss-functions">Loss functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nnet.html#trainers">Trainers</a></li>
 </ul>
 </li>
 </ul>
@@ -130,7 +132,8 @@
 <span class="sd">**hep_ml.losses** contains different loss functions to use in gradient boosting.</span>
 
 <span class="sd">Apart from standard classification losses, **hep_ml** contains losses for uniform classification</span>
-<span class="sd">(see BinFlatnessLoss, KnnFlatnessLoss, KnnAdaLossFunction) and for ranking (see RankBoostLossFunction)</span>
+<span class="sd">(see :class:`BinFlatnessLossFunction`, :class:`KnnFlatnessLossFunction`, :class:`KnnAdaLossFunction`)</span>
+<span class="sd">and for ranking (see :class:`RankBoostLossFunction`)</span>
 
 <span class="sd">**Interface**</span>
 
@@ -139,37 +142,36 @@
 
 <span class="sd">All loss function should be derived from AbstractLossFunction and implement this interface.</span>
 
+
 <span class="sd">Examples</span>
 <span class="sd">________</span>
 
 <span class="sd">Training gradient boosting, optimizing LogLoss and using all features</span>
 
-<span class="sd">&gt;&gt;&gt; from hep_ml.gradientboosting import GradientBoostingClassifier, LogLossFunction</span>
-<span class="sd">&gt;&gt;&gt; classifier = GradientBoostingClassifier(loss=LogLossFunction(), n_estimators=100)</span>
+<span class="sd">&gt;&gt;&gt; from hep_ml.gradientboosting import UGradientBoostingClassifier, LogLossFunction</span>
+<span class="sd">&gt;&gt;&gt; classifier = UGradientBoostingClassifier(loss=LogLossFunction(), n_estimators=100)</span>
 <span class="sd">&gt;&gt;&gt; classifier.fit(X, y, sample_weight=sample_weight)</span>
 
 <span class="sd">Using composite loss function and subsampling:</span>
 
 <span class="sd">&gt;&gt;&gt; loss = CompositeLossFunction()</span>
-<span class="sd">&gt;&gt;&gt; classifier = GradientBoostingClassifier(loss=loss, subsample=0.5)</span>
+<span class="sd">&gt;&gt;&gt; classifier = UGradientBoostingClassifier(loss=loss, subsample=0.5)</span>
 
 <span class="sd">To get uniform predictions in mass in background (note that mass should not present in features):</span>
 
-<span class="sd">&gt;&gt;&gt; loss = BinFlatnessLossFunction(uniform_features=[&#39;mass&#39;], uniform_label=0,</span>
-<span class="sd">&gt;&gt;&gt;                                ada_coefficient=0.1, train_features=[&#39;pt&#39;, &#39;flight_time&#39;])</span>
-<span class="sd">&gt;&gt;&gt; classifier = GradientBoostingClassifier(loss=loss)</span>
+<span class="sd">&gt;&gt;&gt; loss = BinFlatnessLossFunction(uniform_features=[&#39;mass&#39;], uniform_label=0, train_features=[&#39;pt&#39;, &#39;flight_time&#39;])</span>
+<span class="sd">&gt;&gt;&gt; classifier = UGradientBoostingClassifier(loss=loss)</span>
 
 <span class="sd">To get uniform predictions in both signal and background:</span>
 
-<span class="sd">&gt;&gt;&gt; loss = BinFlatnessLossFunction(uniform_features=[&#39;mass&#39;], uniform_label=[0, 1],</span>
-<span class="sd">&gt;&gt;&gt;                                ada_coefficient=0.1, train_features=[&#39;pt&#39;, &#39;flight_time&#39;])</span>
-<span class="sd">&gt;&gt;&gt; classifier = GradientBoostingClassifier(loss=loss)</span>
+<span class="sd">&gt;&gt;&gt; loss = BinFlatnessLossFunction(uniform_features=[&#39;mass&#39;], uniform_label=[0, 1], train_features=[&#39;pt&#39;, &#39;flight_time&#39;])</span>
+<span class="sd">&gt;&gt;&gt; classifier = UGradientBoostingClassifier(loss=loss)</span>
+
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span>
 <span class="kn">import</span> <span class="nn">numbers</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">pandas</span>
@@ -298,7 +300,7 @@
 
 
 <div class="viewcode-block" id="AdaLossFunction"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.AdaLossFunction">[docs]</a><span class="k">class</span> <span class="nc">AdaLossFunction</span><span class="p">(</span><span class="n">HessianLossFunction</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; AdaLossFunction is the same as Exponential Loss Function (aka exploss)&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot; AdaLossFunction is the same as Exponential Loss Function (aka exploss) &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="AdaLossFunction.fit"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.AdaLossFunction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
@@ -317,6 +319,28 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">)</span>
 
 </div></div>
+<span class="k">class</span> <span class="nc">MSELossFunction</span><span class="p">(</span><span class="n">HessianLossFunction</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Mean squared error loss function, used for regression &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">=</span> <span class="n">sample_weight</span>
+        <span class="n">HessianLossFunction</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">negative_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">hessian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span>
+
+    <span class="k">def</span> <span class="nf">prepare_tree_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span>
+
+
 <div class="viewcode-block" id="LogLossFunction"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.LogLossFunction">[docs]</a><span class="k">class</span> <span class="nc">LogLossFunction</span><span class="p">(</span><span class="n">HessianLossFunction</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Logistic loss function (logloss), aka binomial deviance, aka cross-entropy,</span>
 <span class="sd">    aka log-likelihood loss.</span>
@@ -373,19 +397,28 @@
 
 </div></div>
 <div class="viewcode-block" id="RankBoostLossFunction"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.RankBoostLossFunction">[docs]</a><span class="k">class</span> <span class="nc">RankBoostLossFunction</span><span class="p">(</span><span class="n">HessianLossFunction</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_column</span><span class="p">,</span> <span class="n">messup_penalty</span><span class="o">=</span><span class="s">&#39;square&#39;</span><span class="p">,</span> <span class="n">update_iterations</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;RankBoostLossFunction is target of optimization in RankBoost algorithm,</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_column</span><span class="p">,</span> <span class="n">penalty_power</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">update_iterations</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;RankBoostLossFunction is target of optimization in RankBoost [RB]_ algorithm,</span>
 <span class="sd">        which was developed for ranking and introduces penalties for wrong order of predictions.</span>
 
 <span class="sd">        However, this implementation goes further and there is selection of optimal leaf values based</span>
-<span class="sd">        on iterative procedure.</span>
+<span class="sd">        on iterative procedure. This implementation also uses matrix decomposition of loss function,</span>
+<span class="sd">        which is very effective, when labels are from some very limited set (usually it is 0, 1, 2, 3, 4)</span>
 
-<span class="sd">        :param str request_column: name of column with search query ids.</span>
-<span class="sd">        :param str messup_penalty: &#39;linear&#39; or &#39;square&#39;, dependency of penalty on difference in target values.</span>
+<span class="sd">        :math:`\\text{loss} = \\sum_{ij} w_{ij} exp(pred_i - pred_j)`,</span>
+
+<span class="sd">        :math:`w_{ij} = ( \\alpha + \\beta * [query_i = query_j]) R_{label_i, label_j}`, where</span>
+<span class="sd">        :math:`R_{ij} = 0` if :math:`i \leq j`, else :math:`R_{ij} = (i - j)^{p}`</span>
+
+<span class="sd">        :param str request_column: name of column with search query ids. The higher attention is payed</span>
+<span class="sd">          to samples with same query.</span>
+<span class="sd">        :param float penalty_power: describes dependence of penalty on the difference between target labels.</span>
 <span class="sd">        :param int update_iterations: number of minimization steps to provide optimal values.</span>
+
+<span class="sd">        .. [RB] Y. Freund et al. An Efficient Boosting Algorithm for Combining Preferences</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_terations</span> <span class="o">=</span> <span class="n">update_iterations</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">messup_penalty</span> <span class="o">=</span> <span class="n">messup_penalty</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">penalty_power</span> <span class="o">=</span> <span class="n">penalty_power</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">request_column</span> <span class="o">=</span> <span class="n">request_column</span>
         <span class="n">HessianLossFunction</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regularization</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 
@@ -401,12 +434,7 @@
         <span class="k">for</span> <span class="n">r1</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">possible_ranks</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">r2</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">possible_ranks</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">r1</span> <span class="o">&lt;</span> <span class="n">r2</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">messup_penalty</span> <span class="o">==</span> <span class="s">&#39;square&#39;</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">rank_penalties</span><span class="p">[</span><span class="n">r1</span><span class="p">,</span> <span class="n">r2</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">r2</span> <span class="o">-</span> <span class="n">r1</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
-                    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">messup_penalty</span> <span class="o">==</span> <span class="s">&#39;linear&#39;</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">rank_penalties</span><span class="p">[</span><span class="n">r1</span><span class="p">,</span> <span class="n">r2</span><span class="p">]</span> <span class="o">=</span> <span class="n">r2</span> <span class="o">-</span> <span class="n">r1</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">rank_penalties</span><span class="p">[</span><span class="n">r1</span><span class="p">,</span> <span class="n">r2</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">r2</span> <span class="o">-</span> <span class="n">r1</span><span class="p">)</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">penalty_power</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">penalty_matrices</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">penalty_matrices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rank_penalties</span> <span class="o">/</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)))</span>
@@ -417,17 +445,6 @@
         <span class="n">HessianLossFunction</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
 </div>
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        loss is defined as  w_ij exp(pred_i - pred_j),</span>
-<span class="sd">        w_ij is zero if label_i &lt;= label_j</span>
-<span class="sd">        All the other labels are:</span>
-
-<span class="sd">        w_ij = (alpha + beta * [query_i = query_j]) rank_penalty_{type_i, type_j}</span>
-<span class="sd">        rank_penalty_{ij} is zero if i &lt;= j</span>
-
-<span class="sd">        :param y_pred: predictions of shape [n_samples]</span>
-<span class="sd">        :return: value of loss, float</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">y_pred</span> <span class="o">-=</span> <span class="n">y_pred</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
         <span class="n">pos_exponent</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
         <span class="n">neg_exponent</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">y_pred</span><span class="p">)</span>
@@ -501,11 +518,10 @@
 
 </div>
 <span class="k">class</span> <span class="nc">AbstractMatrixLossFunction</span><span class="p">(</span><span class="n">HessianLossFunction</span><span class="p">):</span>
-    <span class="c"># TODO write better update</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">regularization</span><span class="o">=</span><span class="mf">5.</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;AbstractMatrixLossFunction is a base class to be inherited by other loss functions,</span>
 <span class="sd">        which choose the particular A matrix and w vector. The formula of loss is:</span>
-<span class="sd">        loss = \sum_i w_i * exp(- \sum_j a_ij y_j score_j)</span>
+<span class="sd">        \\text{loss} = \sum_i w_i * exp(- \sum_j a_ij y_j score_j)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">uniform_features</span> <span class="o">=</span> <span class="n">uniform_features</span>
         <span class="c"># real matrix and vector will be computed during fitting</span>
@@ -555,7 +571,7 @@
                                   <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">,</span> <span class="n">update_mask</span><span class="p">,</span> <span class="n">residual</span><span class="p">):</span>
         <span class="n">exponents</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">))</span>
         <span class="c"># current approach uses Newton-Raphson step</span>
-        <span class="c"># TODO compare with suboptimal choice of value, based on exp(a x) ~ a exp(x)</span>
+        <span class="c"># TODO compare with iterative suboptimal choice of value, based on exp(a x) ~ a exp(x)</span>
         <span class="n">regions_matrix</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">csc_matrix</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span><span class="p">,</span> <span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)),</span> <span class="n">terminal_regions</span><span class="p">]))</span>
         <span class="c"># Z is matrix of shape [n_exponents, n_terminal_regions]</span>
         <span class="c"># with contributions of each terminal region to each exponent</span>
@@ -565,28 +581,25 @@
         <span class="n">denominator</span> <span class="o">=</span> <span class="n">Z</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">*</span> <span class="n">exponents</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">nominator</span> <span class="o">/</span> <span class="p">(</span><span class="n">denominator</span> <span class="o">+</span> <span class="mf">1e-5</span><span class="p">)</span>
 
-        <span class="c"># def update_tree_leaf(self, leaf, indices_in_leaf, X, y, y_pred, sample_weight, update_mask, residual):</span>
-        <span class="c"># terminal_region = numpy.zeros(len(X), dtype=float)</span>
-        <span class="c">#     terminal_region[indices_in_leaf] += 1</span>
-        <span class="c">#     z = self.A.dot(terminal_region * self.y_signed)</span>
-        <span class="c">#     # optimal value here by several steps?</span>
-        <span class="c">#     alpha = numpy.sum(self.update_exponents * z) / (numpy.sum(self.update_exponents * z * z) + 1e-10)</span>
-        <span class="c">#     return alpha</span>
-
 
 <div class="viewcode-block" id="KnnAdaLossFunction"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.KnnAdaLossFunction">[docs]</a><span class="k">class</span> <span class="nc">KnnAdaLossFunction</span><span class="p">(</span><span class="n">AbstractMatrixLossFunction</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">knn</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">distinguish_classes</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">row_norm</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The formula of loss is:</span>
-<span class="sd">        :math:`loss = \sum_i w_i * exp(- \sum_j a_{ij} y_j score_j)`</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">uniform_label</span><span class="p">,</span> <span class="n">knn</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">distinguish_classes</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">row_norm</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Modification of AdaLoss to achieve uniformity of predictions</span>
+
+<span class="sd">        :math:`\\text{loss} = \sum_i w_i * exp(- \sum_j a_{ij} y_j score_j)`</span>
 
 <span class="sd">        `A` matrix is square, each row corresponds to a single event in train dataset, in each row we put ones</span>
-<span class="sd">        to the closest neighbours of that event if this event from class along which we want to have uniform prediction.</span>
+<span class="sd">        to the closest neighbours if this event from uniform class.</span>
+<span class="sd">        See [BU]_ for details.</span>
 
 <span class="sd">        :param list[str] uniform_features: the features, along which uniformity is desired</span>
-<span class="sd">        :param int knn: the number of nonzero elements in the row, corresponding to event in &#39;uniform class&#39;</span>
 <span class="sd">        :param int|list[int] uniform_label: the label (labels) of &#39;uniform classes&#39;</span>
+<span class="sd">        :param int knn: the number of nonzero elements in the row, corresponding to event in &#39;uniform class&#39;</span>
 <span class="sd">        :param bool distinguish_classes: if True, 1&#39;s will be placed only for events of same class.</span>
+
+<span class="sd">        .. [BU] A. Rogozhnikov et al, New approaches for boosting to uniformity</span>
+<span class="sd">            http://arxiv.org/abs/1410.4140</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">knn</span> <span class="o">=</span> <span class="n">knn</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">distinguish_classes</span> <span class="o">=</span> <span class="n">distinguish_classes</span>
@@ -630,169 +643,6 @@
         <span class="n">w</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">w_parts</span><span class="p">)</span>
         <span class="k">assert</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">trainX</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">trainX</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">A</span><span class="p">,</span> <span class="n">w</span>
-
-
-<span class="c"># endregion</span>
-
-
-<span class="c"># region FlatnessLossFunction</span>
-</div></div>
-<span class="k">def</span> <span class="nf">exp_margin</span><span class="p">(</span><span class="n">margin</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; margin = - y_signed * y_pred &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">margin</span><span class="p">,</span> <span class="o">-</span><span class="mf">1e5</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-
-
-<span class="k">class</span> <span class="nc">AbstractFlatnessLossFunction</span><span class="p">(</span><span class="n">AbstractLossFunction</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span> <span class="n">ada_coefficient</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
-                 <span class="n">allow_wrong_signs</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">use_median</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-                 <span class="n">keep_debug_info</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This loss function contains separately penalty for non-flatness and ada_coefficient.</span>
-<span class="sd">        The penalty for non-flatness is using bins.</span>
-
-<span class="sd">        :type uniform_features: the vars, along which we want to obtain uniformity</span>
-<span class="sd">        :type uniform_label: int | list(int), the labels for which we want to obtain uniformity</span>
-<span class="sd">        :type power: the loss contains the difference | F - F_bin |^p, where p is power</span>
-<span class="sd">        :type ada_coefficient: coefficient of ada_loss added to this one. The greater the coefficient,</span>
-<span class="sd">            the less we tend to uniformity.</span>
-<span class="sd">        :type allow_wrong_signs: defines whether gradient may different sign from the &quot;sign of class&quot;</span>
-<span class="sd">            (i.e. may have negative gradient on signal). If False, values will be clipped to zero.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">uniform_features</span> <span class="o">=</span> <span class="n">uniform_features</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">uniform_label</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">uniform_label</span><span class="p">])</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">uniform_label</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">=</span> <span class="n">power</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ada_coefficient</span> <span class="o">=</span> <span class="n">ada_coefficient</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">allow_wrong_signs</span> <span class="o">=</span> <span class="n">allow_wrong_signs</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">keep_debug_info</span> <span class="o">=</span> <span class="n">keep_debug_info</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">use_median</span> <span class="o">=</span> <span class="n">use_median</span>
-
-    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="n">sample_weight</span> <span class="o">=</span> <span class="n">check_sample_weight</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="s">&#39;lengths are different&#39;</span>
-        <span class="n">X</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">group_indices</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">group_matrices</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">group_weights</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-
-        <span class="n">occurences</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">group_indices</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_groups_indices</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">group_matrices</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">group_indices_to_groups_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">group_indices</span><span class="p">[</span><span class="n">label</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">group_weights</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">compute_group_weights</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">group_matrices</span><span class="p">[</span><span class="n">label</span><span class="p">],</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_indices</span><span class="p">[</span><span class="n">label</span><span class="p">]:</span>
-                <span class="n">occurences</span><span class="p">[</span><span class="n">group</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-
-        <span class="n">out_of_bins</span> <span class="o">=</span> <span class="p">(</span><span class="n">occurences</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">out_of_bins</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.01</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%i</span><span class="s"> events out of all bins &quot;</span> <span class="o">%</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">out_of_bins</span><span class="p">),</span> <span class="ne">UserWarning</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">1</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">sample_weight</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">divided_weight</span> <span class="o">=</span> <span class="n">sample_weight</span> <span class="o">/</span> <span class="n">numpy</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">occurences</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep_debug_info</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">debug_dict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span>
-
-    <span class="k">def</span> <span class="nf">compute_groups_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pred</span><span class="p">):</span>
-        <span class="c"># the actual value does not play any role in boosting</span>
-        <span class="c"># optimizing here</span>
-        <span class="k">return</span> <span class="mi">0</span>
-
-    <span class="k">def</span> <span class="nf">negative_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
-        <span class="n">neg_gradient</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span><span class="p">:</span>
-            <span class="n">label_mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">==</span> <span class="n">label</span>
-            <span class="n">global_positions</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y_pred</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-            <span class="n">global_positions</span><span class="p">[</span><span class="n">label_mask</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="n">_compute_positions</span><span class="p">(</span><span class="n">y_pred</span><span class="p">[</span><span class="n">label_mask</span><span class="p">],</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span><span class="p">[</span><span class="n">label_mask</span><span class="p">])</span>
-
-            <span class="k">for</span> <span class="n">indices_in_bin</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_indices</span><span class="p">[</span><span class="n">label</span><span class="p">]:</span>
-                <span class="n">local_pos</span> <span class="o">=</span> <span class="n">_compute_positions</span><span class="p">(</span><span class="n">y_pred</span><span class="p">[</span><span class="n">indices_in_bin</span><span class="p">],</span>
-                                               <span class="n">sample_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span><span class="p">[</span><span class="n">indices_in_bin</span><span class="p">])</span>
-                <span class="n">global_pos</span> <span class="o">=</span> <span class="n">global_positions</span><span class="p">[</span><span class="n">indices_in_bin</span><span class="p">]</span>
-                <span class="n">bin_gradient</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">local_pos</span> <span class="o">-</span> <span class="n">global_pos</span><span class="p">)</span> <span class="o">*</span> \
-                               <span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">local_pos</span> <span class="o">-</span> <span class="n">global_pos</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-
-                <span class="n">neg_gradient</span><span class="p">[</span><span class="n">indices_in_bin</span><span class="p">]</span> <span class="o">+=</span> <span class="n">bin_gradient</span>
-
-        <span class="n">neg_gradient</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">divided_weight</span>
-
-        <span class="k">assert</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">neg_gradient</span><span class="p">[</span><span class="o">~</span><span class="n">numpy</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span><span class="p">)]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
-
-        <span class="n">y_signed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep_debug_info</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">debug_dict</span><span class="p">[</span><span class="s">&#39;pred&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">y_pred</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">debug_dict</span><span class="p">[</span><span class="s">&#39;fl_grad&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">neg_gradient</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">debug_dict</span><span class="p">[</span><span class="s">&#39;ada_grad&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y_signed</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">*</span> <span class="n">exp_margin</span><span class="p">(</span><span class="o">-</span><span class="n">y_signed</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">))</span>
-
-        <span class="c"># adding ada</span>
-        <span class="n">neg_gradient</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ada_coefficient</span> <span class="o">*</span> <span class="n">y_signed</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">*</span> <span class="n">exp_margin</span><span class="p">(</span><span class="o">-</span><span class="n">y_signed</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_wrong_signs</span><span class="p">:</span>
-            <span class="n">neg_gradient</span> <span class="o">=</span> <span class="n">y_signed</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">y_signed</span> <span class="o">*</span> <span class="n">neg_gradient</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1e5</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">neg_gradient</span>
-
-
-<div class="viewcode-block" id="BinFlatnessLossFunction"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.BinFlatnessLossFunction">[docs]</a><span class="k">class</span> <span class="nc">BinFlatnessLossFunction</span><span class="p">(</span><span class="n">AbstractFlatnessLossFunction</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span> <span class="n">ada_coefficient</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
-                 <span class="n">allow_wrong_signs</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">use_median</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">keep_debug_info</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span> <span class="o">=</span> <span class="n">n_bins</span>
-        <span class="n">AbstractFlatnessLossFunction</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span>
-                                              <span class="n">uniform_label</span><span class="o">=</span><span class="n">uniform_label</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="n">power</span><span class="p">,</span> <span class="n">ada_coefficient</span><span class="o">=</span><span class="n">ada_coefficient</span><span class="p">,</span>
-                                              <span class="n">allow_wrong_signs</span><span class="o">=</span><span class="n">allow_wrong_signs</span><span class="p">,</span> <span class="n">use_median</span><span class="o">=</span><span class="n">use_median</span><span class="p">,</span>
-                                              <span class="n">keep_debug_info</span><span class="o">=</span><span class="n">keep_debug_info</span><span class="p">)</span>
-
-<div class="viewcode-block" id="BinFlatnessLossFunction.compute_groups_indices"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.BinFlatnessLossFunction.compute_groups_indices">[docs]</a>    <span class="k">def</span> <span class="nf">compute_groups_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns a list, each element is events&#39; indices in some group.&quot;&quot;&quot;</span>
-        <span class="n">label_mask</span> <span class="o">=</span> <span class="n">y</span> <span class="o">==</span> <span class="n">label</span>
-        <span class="n">extended_bin_limits</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_features</span><span class="p">:</span>
-            <span class="n">f_min</span><span class="p">,</span> <span class="n">f_max</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">var</span><span class="p">][</span><span class="n">label_mask</span><span class="p">]),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">var</span><span class="p">][</span><span class="n">label_mask</span><span class="p">])</span>
-            <span class="n">extended_bin_limits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">f_min</span><span class="p">,</span> <span class="n">f_max</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
-        <span class="n">groups_indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">shift</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
-            <span class="n">bin_limits</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">axis_limits</span> <span class="ow">in</span> <span class="n">extended_bin_limits</span><span class="p">:</span>
-                <span class="n">bin_limits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">axis_limits</span><span class="p">[</span><span class="mi">1</span> <span class="o">+</span> <span class="n">shift</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
-            <span class="n">bin_indices</span> <span class="o">=</span> <span class="n">compute_bin_indices</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">ix</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_features</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">bin_limits</span><span class="o">=</span><span class="n">bin_limits</span><span class="p">)</span>
-            <span class="n">groups_indices</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="n">bin_to_group_indices</span><span class="p">(</span><span class="n">bin_indices</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">label_mask</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">groups_indices</span>
-
-</div></div>
-<div class="viewcode-block" id="KnnFlatnessLossFunction"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.KnnFlatnessLossFunction">[docs]</a><span class="k">class</span> <span class="nc">KnnFlatnessLossFunction</span><span class="p">(</span><span class="n">AbstractFlatnessLossFunction</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">n_neighbours</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span> <span class="n">ada_coefficient</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
-                 <span class="n">max_groups_on_iteration</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span> <span class="n">allow_wrong_signs</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">use_median</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">keep_debug_info</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-                 <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">n_neighbours</span> <span class="o">=</span> <span class="n">n_neighbours</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">max_group_on_iteration</span> <span class="o">=</span> <span class="n">max_groups_on_iteration</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
-        <span class="n">AbstractFlatnessLossFunction</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span>
-                                              <span class="n">uniform_label</span><span class="o">=</span><span class="n">uniform_label</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="n">power</span><span class="p">,</span> <span class="n">ada_coefficient</span><span class="o">=</span><span class="n">ada_coefficient</span><span class="p">,</span>
-                                              <span class="n">allow_wrong_signs</span><span class="o">=</span><span class="n">allow_wrong_signs</span><span class="p">,</span> <span class="n">use_median</span><span class="o">=</span><span class="n">use_median</span><span class="p">,</span>
-                                              <span class="n">keep_debug_info</span><span class="o">=</span><span class="n">keep_debug_info</span><span class="p">)</span>
-
-<div class="viewcode-block" id="KnnFlatnessLossFunction.compute_groups_indices"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.KnnFlatnessLossFunction.compute_groups_indices">[docs]</a>    <span class="k">def</span> <span class="nf">compute_groups_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
-        <span class="n">mask</span> <span class="o">=</span> <span class="n">y</span> <span class="o">==</span> <span class="n">label</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>
-        <span class="n">knn_indices</span> <span class="o">=</span> <span class="n">compute_knn_indices_of_signal</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">uniform_features</span><span class="p">],</span> <span class="n">mask</span><span class="p">,</span>
-                                                    <span class="n">n_neighbours</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_neighbours</span><span class="p">)[</span><span class="n">mask</span><span class="p">,</span> <span class="p">:]</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">knn_indices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_group_on_iteration</span><span class="p">:</span>
-            <span class="n">selected_group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">knn_indices</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_group_on_iteration</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">knn_indices</span><span class="p">[</span><span class="n">selected_group</span><span class="p">,</span> <span class="p">:]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">knn_indices</span>
 
 
 <span class="c"># endregion</span>
@@ -862,8 +712,197 @@
         <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">w_target</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">regularization</span><span class="p">)</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">w_original</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">regularization</span><span class="p">)</span>
 
 
-
 <span class="c"># endregion</span>
+
+
+<span class="c"># region FlatnessLossFunction</span>
+
+
+<span class="k">def</span> <span class="nf">exp_margin</span><span class="p">(</span><span class="n">margin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; margin = - y_signed * y_pred &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">margin</span><span class="p">,</span> <span class="o">-</span><span class="mf">1e5</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+
+<span class="k">class</span> <span class="nc">AbstractFlatnessLossFunction</span><span class="p">(</span><span class="n">AbstractLossFunction</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for FlatnessLosses&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">uniform_label</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span> <span class="n">fl_coefficient</span><span class="o">=</span><span class="mf">3.</span><span class="p">,</span>
+                 <span class="n">allow_wrong_signs</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">uniform_features</span> <span class="o">=</span> <span class="n">uniform_features</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">uniform_label</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">uniform_label</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">uniform_label</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">=</span> <span class="n">power</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fl_coefficient</span> <span class="o">=</span> <span class="n">fl_coefficient</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allow_wrong_signs</span> <span class="o">=</span> <span class="n">allow_wrong_signs</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="n">sample_weight</span> <span class="o">=</span> <span class="n">check_sample_weight</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="s">&#39;lengths are different&#39;</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">group_indices</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group_matrices</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group_weights</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+        <span class="n">occurences</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">group_indices</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_groups_indices</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">group_matrices</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">group_indices_to_groups_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">group_indices</span><span class="p">[</span><span class="n">label</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">group_weights</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">compute_group_weights</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">group_matrices</span><span class="p">[</span><span class="n">label</span><span class="p">],</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_indices</span><span class="p">[</span><span class="n">label</span><span class="p">]:</span>
+                <span class="n">occurences</span><span class="p">[</span><span class="n">group</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="n">out_of_bins</span> <span class="o">=</span> <span class="p">(</span><span class="n">occurences</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">out_of_bins</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.01</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%i</span><span class="s"> events out of all bins &quot;</span> <span class="o">%</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">out_of_bins</span><span class="p">),</span> <span class="ne">UserWarning</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">sample_weight</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">divided_weight</span> <span class="o">=</span> <span class="n">sample_weight</span> <span class="o">/</span> <span class="n">numpy</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">occurences</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_compute_groups_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pred</span><span class="p">):</span>
+        <span class="c"># the actual value does not play any role in boosting</span>
+        <span class="c"># optimizing here</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">negative_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
+        <span class="n">neg_gradient</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span><span class="p">:</span>
+            <span class="n">label_mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">==</span> <span class="n">label</span>
+            <span class="n">global_positions</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y_pred</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+            <span class="n">global_positions</span><span class="p">[</span><span class="n">label_mask</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="n">_compute_positions</span><span class="p">(</span><span class="n">y_pred</span><span class="p">[</span><span class="n">label_mask</span><span class="p">],</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span><span class="p">[</span><span class="n">label_mask</span><span class="p">])</span>
+
+            <span class="k">for</span> <span class="n">indices_in_bin</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_indices</span><span class="p">[</span><span class="n">label</span><span class="p">]:</span>
+                <span class="n">local_pos</span> <span class="o">=</span> <span class="n">_compute_positions</span><span class="p">(</span><span class="n">y_pred</span><span class="p">[</span><span class="n">indices_in_bin</span><span class="p">],</span>
+                                               <span class="n">sample_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span><span class="p">[</span><span class="n">indices_in_bin</span><span class="p">])</span>
+                <span class="n">global_pos</span> <span class="o">=</span> <span class="n">global_positions</span><span class="p">[</span><span class="n">indices_in_bin</span><span class="p">]</span>
+                <span class="n">bin_gradient</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">local_pos</span> <span class="o">-</span> <span class="n">global_pos</span><span class="p">)</span> <span class="o">*</span> \
+                               <span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">local_pos</span> <span class="o">-</span> <span class="n">global_pos</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+                <span class="n">neg_gradient</span><span class="p">[</span><span class="n">indices_in_bin</span><span class="p">]</span> <span class="o">+=</span> <span class="n">bin_gradient</span>
+
+        <span class="n">neg_gradient</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">divided_weight</span>
+
+        <span class="k">assert</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">neg_gradient</span><span class="p">[</span><span class="o">~</span><span class="n">numpy</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span><span class="p">)]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">y_signed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span>
+
+        <span class="c"># adding ExpLoss</span>
+        <span class="n">neg_gradient</span> <span class="o">=</span> <span class="n">neg_gradient</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">fl_coefficient</span> <span class="o">+</span> \
+                       <span class="n">y_signed</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">*</span> <span class="n">exp_margin</span><span class="p">(</span><span class="o">-</span><span class="n">y_signed</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_wrong_signs</span><span class="p">:</span>
+            <span class="n">neg_gradient</span> <span class="o">=</span> <span class="n">y_signed</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">y_signed</span> <span class="o">*</span> <span class="n">neg_gradient</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1e5</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">neg_gradient</span>
+
+
+<div class="viewcode-block" id="BinFlatnessLossFunction"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.BinFlatnessLossFunction">[docs]</a><span class="k">class</span> <span class="nc">BinFlatnessLossFunction</span><span class="p">(</span><span class="n">AbstractFlatnessLossFunction</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">uniform_label</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span> <span class="n">fl_coefficient</span><span class="o">=</span><span class="mf">3.</span><span class="p">,</span>
+                 <span class="n">allow_wrong_signs</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This loss function contains separately penalty for non-flatness and for bad prediction quality.</span>
+<span class="sd">        See [FL] for details.</span>
+
+<span class="sd">        :math:`\\text{loss} =\\text{ExpLoss} + c \\times \\text{FlatnessLoss}`</span>
+
+<span class="sd">        FlatnessLoss computed using binning of uniform variables</span>
+
+<span class="sd">        :param list[str] uniform_features: names of features, along which we want to obtain uniformity of predictions</span>
+<span class="sd">        :param int|list[int] uniform_label: the label(s) of classes for which uniformity is desired</span>
+<span class="sd">        :param int n_bins: number of bins along each variable</span>
+<span class="sd">        :param float power: the loss contains the difference :math:`| F - F_bin |^p`, where p is power</span>
+<span class="sd">        :param float fl_coefficient: multiplier for flatness_loss. Controls the tradeoff of quality vs uniformity.</span>
+<span class="sd">        :param bool allow_wrong_signs: defines whether gradient may different sign from the &quot;sign of class&quot;</span>
+<span class="sd">            (i.e. may have negative gradient on signal). If False, values will be clipped to zero.</span>
+
+<span class="sd">        .. [FL] A. Rogozhnikov et al, New approaches for boosting to uniformity</span>
+<span class="sd">            http://arxiv.org/abs/1410.4140</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span> <span class="o">=</span> <span class="n">n_bins</span>
+        <span class="n">AbstractFlatnessLossFunction</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span>
+                                              <span class="n">uniform_label</span><span class="o">=</span><span class="n">uniform_label</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="n">power</span><span class="p">,</span>
+                                              <span class="n">fl_coefficient</span><span class="o">=</span><span class="n">fl_coefficient</span><span class="p">,</span>
+                                              <span class="n">allow_wrong_signs</span><span class="o">=</span><span class="n">allow_wrong_signs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_compute_groups_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a list, each element is events&#39; indices in some group.&quot;&quot;&quot;</span>
+        <span class="n">label_mask</span> <span class="o">=</span> <span class="n">y</span> <span class="o">==</span> <span class="n">label</span>
+        <span class="n">extended_bin_limits</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_features</span><span class="p">:</span>
+            <span class="n">f_min</span><span class="p">,</span> <span class="n">f_max</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">var</span><span class="p">][</span><span class="n">label_mask</span><span class="p">]),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">var</span><span class="p">][</span><span class="n">label_mask</span><span class="p">])</span>
+            <span class="n">extended_bin_limits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">f_min</span><span class="p">,</span> <span class="n">f_max</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">groups_indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">shift</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
+            <span class="n">bin_limits</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">axis_limits</span> <span class="ow">in</span> <span class="n">extended_bin_limits</span><span class="p">:</span>
+                <span class="n">bin_limits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">axis_limits</span><span class="p">[</span><span class="mi">1</span> <span class="o">+</span> <span class="n">shift</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">bin_indices</span> <span class="o">=</span> <span class="n">compute_bin_indices</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">ix</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_features</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">bin_limits</span><span class="o">=</span><span class="n">bin_limits</span><span class="p">)</span>
+            <span class="n">groups_indices</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="n">bin_to_group_indices</span><span class="p">(</span><span class="n">bin_indices</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">label_mask</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">groups_indices</span>
+
+</div>
+<div class="viewcode-block" id="KnnFlatnessLossFunction"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.KnnFlatnessLossFunction">[docs]</a><span class="k">class</span> <span class="nc">KnnFlatnessLossFunction</span><span class="p">(</span><span class="n">AbstractFlatnessLossFunction</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">uniform_label</span><span class="p">,</span> <span class="n">n_neighbours</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span> <span class="n">fl_coefficient</span><span class="o">=</span><span class="mf">3.</span><span class="p">,</span>
+                 <span class="n">max_groups</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">allow_wrong_signs</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This loss function contains separately penalty for non-flatness and for bad prediction quality.</span>
+<span class="sd">        See [FL] for details.</span>
+
+<span class="sd">        :math:`\\text{loss} =\\text{ExpLoss} + c \\times \\text{FlatnessLoss}`</span>
+
+<span class="sd">        FlatnessLoss computed using nearest neighbors in space of uniform features</span>
+
+<span class="sd">        :param list[str] uniform_features: names of features, along which we want to obtain uniformity of predictions</span>
+<span class="sd">        :param int|list[int] uniform_label: the label(s) of classes for which uniformity is desired</span>
+<span class="sd">        :param int n_neighbours: number of neighbors used in flatness loss</span>
+<span class="sd">        :param float power: the loss contains the difference :math:`| F - F_bin |^p`, where p is power</span>
+<span class="sd">        :param float fl_coefficient: multiplier for flatness_loss. Controls the tradeoff of quality vs uniformity.</span>
+<span class="sd">        :param bool allow_wrong_signs: defines whether gradient may different sign from the &quot;sign of class&quot;</span>
+<span class="sd">            (i.e. may have negative gradient on signal). If False, values will be clipped to zero.</span>
+<span class="sd">        :param int max_groups: to limit memory consumption when training sample is large,</span>
+<span class="sd">            we randomly pick this number of points with their members.</span>
+
+<span class="sd">        .. [FL] A. Rogozhnikov et al, New approaches for boosting to uniformity</span>
+<span class="sd">            http://arxiv.org/abs/1410.4140</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_neighbours</span> <span class="o">=</span> <span class="n">n_neighbours</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_groups</span> <span class="o">=</span> <span class="n">max_groups</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
+        <span class="n">AbstractFlatnessLossFunction</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span>
+                                              <span class="n">uniform_label</span><span class="o">=</span><span class="n">uniform_label</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="n">power</span><span class="p">,</span>
+                                              <span class="n">fl_coefficient</span><span class="o">=</span><span class="n">fl_coefficient</span><span class="p">,</span>
+                                              <span class="n">allow_wrong_signs</span><span class="o">=</span><span class="n">allow_wrong_signs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_compute_groups_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">y</span> <span class="o">==</span> <span class="n">label</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>
+        <span class="n">knn_indices</span> <span class="o">=</span> <span class="n">compute_knn_indices_of_signal</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">uniform_features</span><span class="p">],</span> <span class="n">mask</span><span class="p">,</span>
+                                                    <span class="n">n_neighbours</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_neighbours</span><span class="p">)[</span><span class="n">mask</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">knn_indices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_groups</span><span class="p">:</span>
+            <span class="n">selected_group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">knn_indices</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_groups</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">knn_indices</span><span class="p">[</span><span class="n">selected_group</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">knn_indices</span>
+
+
+<span class="c"># endregion</span></div>
 </pre></div>
 
           </div>
