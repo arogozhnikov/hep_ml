@@ -10,6 +10,16 @@ hep_ml documentation
 Classifiers from **hep_ml** are **sklearn**-compatible.
 
 
+Installation
+____________
+
+To install **hep_ml**, use **pip**. Type in terminal:
+
+.. code:: bash
+
+    pip install hep_ml
+
+
 Modules:
 ________
 
