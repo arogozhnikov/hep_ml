@@ -254,6 +254,7 @@ def indices_of_values(array):
 def print_header(text, level=3):
     """
     Function to be used in notebooks to display headers not just plain text
+
     :param text: str or object to print its __repr__
     :param level: int, from 1 to 6 (1st, 2nd, 3rd order header)
     """
@@ -265,10 +266,11 @@ def print_header(text, level=3):
 def take_features(X, features):
     """
     Takes features from dataset.
+    NOTE: may return view to original data!
+
     :param X: numpy.array or pandas.DataFrame
     :param features: list of strings (if pandas.DataFrame) or list of ints
     :return: pandas.DataFrame or numpy.array with the same length.
-    NOTE: may return view to original data!
     """
     from numbers import Number
 
@@ -283,8 +285,8 @@ def take_features(X, features):
 
 
 def check_sample_weight(y_true, sample_weight, normalize=False, normalize_by_class=False):
-    """
-    Checks the weights, returns normalized version
+    """Checks the weights, returns normalized version
+
     :param y_true: numpy.array of shape [n_samples]
     :param sample_weight: array-like of shape [n_samples] or None
     :param normalize: bool, if True, will scale everything to mean = 1.
