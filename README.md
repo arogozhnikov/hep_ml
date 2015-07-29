@@ -3,7 +3,7 @@
 
 
 
-## Main points
+### Main points
 * uniform classifiers - the classifiers with low correlation of predictions and mass (or some other variable(s))
   * __uBoost__ optimized implementation inside
   * __UGradientBoosting__ (with different losses, specially __FlatnessLoss__ is very interesting)

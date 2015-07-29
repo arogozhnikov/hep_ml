@@ -15,7 +15,7 @@ uniform_label:
     * 1, if you want to measure non-uniformity in signal predictions
     * 0, if background.
 
-Metrics are following **REP** conventions (first fit, then compute metrics on same dataset).
+Metrics are following `REP <https://github.com/yandex/rep>`_ conventions (first fit, then compute metrics on same dataset).
 For these metrics `fit` stage is crucial, since it precomputes information using dataset X,
 which is quite long and better to do this once. Different quality metrics with same interface
 can be found in **REP** package.
