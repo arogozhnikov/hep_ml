@@ -69,7 +69,6 @@ def test_step_optimality(n_samples=50):
     X, y = generate_sample(n_samples, n_features=10)
     rank_column = X.columns[2]
     X[rank_column] = numpy.random.randint(0, 3, size=n_samples)
-    sample_weight = numpy.random.exponential(size=n_samples)
 
     tested_losses = [
         losses.LogLossFunction(),
@@ -78,11 +77,17 @@ def test_step_optimality(n_samples=50):
         losses.CompositeLossFunction(),
         losses.RankBoostLossFunction(rank_column),
         losses.MSELossFunction(),
+        losses.MAELossFunction(),
     ]
 
     pred = numpy.random.normal(size=n_samples)
 
     for loss in tested_losses:
+        if isinstance(loss, losses.MAELossFunction):
+            sample_weight = numpy.ones(n_samples)
+        else:
+            sample_weight = numpy.random.exponential(size=n_samples)
+
         loss.fit(X, y, sample_weight=sample_weight)
         leaf_value = numpy.random.normal()
         # Some basic optimization goes here:

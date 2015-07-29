@@ -288,7 +288,7 @@ class MAELossFunction(HessianLossFunction):
         return self
 
     def __call__(self, y_pred):
-        return 0.5 * numpy.sum(self.sample_weight * (self.y - y_pred) ** 2)
+        return 0.5 * numpy.sum(self.sample_weight * numpy.abs(self.y - y_pred))
 
     def negative_gradient(self, y_pred):
         return self.sample_weight * numpy.sign(self.y - y_pred)
@@ -306,7 +306,7 @@ class MAELossFunction(HessianLossFunction):
         for terminal_region in range(len(leaf_values)):
             values = residual[terminal_regions == terminal_region]
             values = numpy.insert(values, [0], [0])
-            new_leaf_values = numpy.median(values)
+            new_leaf_values[terminal_region] = numpy.median(values)
         return new_leaf_values
 
 
