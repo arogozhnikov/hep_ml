@@ -58,6 +58,8 @@ __author__ = 'Alex Rogozhnikov'
 
 __all__ = [
     'AbstractLossFunction',
+    'MSELossFunction',
+    'MAELossFunction',
     'LogLossFunction',
     'AdaLossFunction',
     'CompositeLossFunction',
@@ -163,20 +165,22 @@ class HessianLossFunction(AbstractLossFunction):
     def prepare_new_leaves_values(self, terminal_regions, leaf_values,
                                   X, y, y_pred, sample_weight, update_mask, residual):
         """ This expression comes from optimization of second-order approximation of loss function."""
-        minlength = len(leaf_values)
-        nominators = numpy.bincount(terminal_regions, weights=residual, minlength=minlength)
-        denominators = numpy.bincount(terminal_regions, weights=self.hessian(y_pred), minlength=minlength)
+        min_length = len(leaf_values)
+        nominators = numpy.bincount(terminal_regions, weights=residual, minlength=min_length)
+        denominators = numpy.bincount(terminal_regions, weights=self.hessian(y_pred), minlength=min_length)
         return nominators / (denominators + self.regularization_)
 
+
+# region Classification losses
 
 class AdaLossFunction(HessianLossFunction):
     """ AdaLossFunction is the same as Exponential Loss Function (aka exploss) """
 
     def fit(self, X, y, sample_weight):
-        self.y = y
-        self.sample_weight = sample_weight
+        self.sample_weight = check_sample_weight(y, sample_weight=sample_weight,
+                                                 normalize=True, normalize_by_class=True)
         self.y_signed = 2 * y - 1
-        HessianLossFunction.fit(self, X, y, sample_weight=sample_weight)
+        HessianLossFunction.fit(self, X, y, sample_weight=self.sample_weight)
         return self
 
     def __call__(self, y_pred):
@@ -189,39 +193,16 @@ class AdaLossFunction(HessianLossFunction):
         return self.sample_weight * numpy.exp(- self.y_signed * y_pred)
 
 
-class MSELossFunction(HessianLossFunction):
-    """ Mean squared error loss function, used for regression """
-
-    def fit(self, X, y, sample_weight):
-        self.y = y
-        self.sample_weight = sample_weight
-        HessianLossFunction.fit(self, X, y, sample_weight=sample_weight)
-        return self
-
-    def __call__(self, y_pred):
-        return 0.5 * numpy.sum(self.sample_weight * (self.y - y_pred) ** 2)
-
-    def negative_gradient(self, y_pred):
-        return self.sample_weight * (self.y - y_pred)
-
-    def hessian(self, y_pred):
-        return self.sample_weight
-
-    def prepare_tree_params(self, y_pred):
-        return self.y - y_pred, self.sample_weight
-
-
 class LogLossFunction(HessianLossFunction):
     """Logistic loss function (logloss), aka binomial deviance, aka cross-entropy,
     aka log-likelihood loss.
     """
 
     def fit(self, X, y, sample_weight):
-        self.y = y
-        self.sample_weight = sample_weight
+        self.sample_weight = check_sample_weight(y, sample_weight=sample_weight,
+                                                 normalize=True, normalize_by_class=True)
         self.y_signed = 2 * y - 1
-        self.adjusted_regularization = numpy.mean(sample_weight) * self.regularization
-        HessianLossFunction.fit(self, X, y, sample_weight=sample_weight)
+        HessianLossFunction.fit(self, X, y, sample_weight=self.sample_weight)
         return self
 
     def __call__(self, y_pred):
@@ -244,11 +225,12 @@ class CompositeLossFunction(HessianLossFunction):
 
     def fit(self, X, y, sample_weight):
         self.y = y
-        self.sample_weight = sample_weight
+        self.sample_weight = check_sample_weight(y, sample_weight=sample_weight,
+                                                 normalize=True, normalize_by_class=True)
         self.y_signed = 2 * y - 1
         self.sig_w = (y == 1) * self.sample_weight
         self.bck_w = (y == 0) * self.sample_weight
-        HessianLossFunction.fit(self, X, y, sample_weight=sample_weight)
+        HessianLossFunction.fit(self, X, y, sample_weight=self.sample_weight)
         return self
 
     def __call__(self, y_pred):
@@ -266,18 +248,83 @@ class CompositeLossFunction(HessianLossFunction):
         return self.sig_w * expits * (1 - expits) + self.bck_w * 0.25 * numpy.exp(0.5 * y_pred)
 
 
+# endregion
+
+# region Regression Losses
+
+class MSELossFunction(HessianLossFunction):
+    r""" Mean squared error loss function, used for regression.
+    :math:`\text{loss} = \sum_i (y_i - \hat{y}_i)^2`
+    """
+
+    def fit(self, X, y, sample_weight):
+        self.y = y
+        self.sample_weight = check_sample_weight(y, sample_weight=sample_weight, normalize=True)
+        HessianLossFunction.fit(self, X, y, sample_weight=sample_weight)
+        return self
+
+    def __call__(self, y_pred):
+        return 0.5 * numpy.sum(self.sample_weight * (self.y - y_pred) ** 2)
+
+    def negative_gradient(self, y_pred):
+        return self.sample_weight * (self.y - y_pred)
+
+    def hessian(self, y_pred):
+        return self.sample_weight
+
+    def prepare_tree_params(self, y_pred):
+        return self.y - y_pred, self.sample_weight
+
+
+class MAELossFunction(HessianLossFunction):
+    r""" Mean absolute error loss function, used for regression.
+    :math:`\text{loss} = \sum_i |y_i - \hat{y}_i|`
+    """
+
+    def fit(self, X, y, sample_weight):
+        self.y = y
+        self.sample_weight = check_sample_weight(y, sample_weight=sample_weight, normalize=True)
+        HessianLossFunction.fit(self, X, y, sample_weight=sample_weight)
+        return self
+
+    def __call__(self, y_pred):
+        return 0.5 * numpy.sum(self.sample_weight * (self.y - y_pred) ** 2)
+
+    def negative_gradient(self, y_pred):
+        return self.sample_weight * numpy.sign(self.y - y_pred)
+
+    def hessian(self, y_pred):
+        return self.sample_weight
+
+    def prepare_tree_params(self, y_pred):
+        return numpy.sign(self.y - y_pred), self.sample_weight
+
+    def prepare_new_leaves_values(self, terminal_regions, leaf_values,
+                                  X, y, y_pred, sample_weight, update_mask, residual):
+        # TODO use weighted median
+        new_leaf_values = numpy.zeros(len(leaf_values), dtype='float')
+        for terminal_region in range(len(leaf_values)):
+            values = residual[terminal_regions == terminal_region]
+            values = numpy.insert(values, [0], [0])
+            new_leaf_values = numpy.median(values)
+        return new_leaf_values
+
+
+# endregion RegressionLosses
+
+
 class RankBoostLossFunction(HessianLossFunction):
     def __init__(self, request_column, penalty_power=1., update_iterations=1):
-        """RankBoostLossFunction is target of optimization in RankBoost [RB]_ algorithm,
+        r"""RankBoostLossFunction is target of optimization in RankBoost [RB]_ algorithm,
         which was developed for ranking and introduces penalties for wrong order of predictions.
 
         However, this implementation goes further and there is selection of optimal leaf values based
         on iterative procedure. This implementation also uses matrix decomposition of loss function,
         which is very effective, when labels are from some very limited set (usually it is 0, 1, 2, 3, 4)
 
-        :math:`\\text{loss} = \\sum_{ij} w_{ij} exp(pred_i - pred_j)`,
+        :math:`\text{loss} = \sum_{ij} w_{ij} exp(pred_i - pred_j)`,
 
-        :math:`w_{ij} = ( \\alpha + \\beta * [query_i = query_j]) R_{label_i, label_j}`, where
+        :math:`w_{ij} = ( \alpha + \beta * [query_i = query_j]) R_{label_i, label_j}`, where
         :math:`R_{ij} = 0` if :math:`i \leq j`, else :math:`R_{ij} = (i - j)^{p}`
 
         :param str request_column: name of column with search query ids. The higher attention is payed
@@ -362,8 +409,7 @@ class RankBoostLossFunction(HessianLossFunction):
     def _prepare_new_leaves_values(self, terminal_regions, leaf_values,
                                    X, y, y_pred, sample_weight, update_mask, residual):
         """
-        For each event we shall represent loss as
-        w_plus * e^{pred} + w_minus * e^{-pred},
+        For each event we shall represent loss as w_plus * e^{pred} + w_minus * e^{-pred},
         then we are able to construct optimal step.
         Pay attention: this is not an optimal, since we are ignoring,
         that some events belong to the same leaf
@@ -389,9 +435,9 @@ class RankBoostLossFunction(HessianLossFunction):
 
 class AbstractMatrixLossFunction(HessianLossFunction):
     def __init__(self, uniform_features, regularization=5.):
-        """AbstractMatrixLossFunction is a base class to be inherited by other loss functions,
+        r"""AbstractMatrixLossFunction is a base class to be inherited by other loss functions,
         which choose the particular A matrix and w vector. The formula of loss is:
-        \\text{loss} = \sum_i w_i * exp(- \sum_j a_ij y_j score_j)
+        \text{loss} = \sum_i w_i * exp(- \sum_j a_ij y_j score_j)
         """
         self.uniform_features = uniform_features
         # real matrix and vector will be computed during fitting
@@ -454,9 +500,9 @@ class AbstractMatrixLossFunction(HessianLossFunction):
 
 class KnnAdaLossFunction(AbstractMatrixLossFunction):
     def __init__(self, uniform_features, uniform_label, knn=10, distinguish_classes=True, row_norm=1.):
-        """Modification of AdaLoss to achieve uniformity of predictions
+        r"""Modification of AdaLoss to achieve uniformity of predictions
 
-        :math:`\\text{loss} = \sum_i w_i * exp(- \sum_j a_{ij} y_j score_j)`
+        :math:`\text{loss} = \sum_i w_i * exp(- \sum_j a_{ij} y_j score_j)`
 
         `A` matrix is square, each row corresponds to a single event in train dataset, in each row we put ones
         to the closest neighbours if this event from uniform class.
@@ -588,7 +634,7 @@ class ReweightLossFunction(AbstractLossFunction):
 # region FlatnessLossFunction
 
 
-def exp_margin(margin):
+def _exp_margin(margin):
     """ margin = - y_signed * y_pred """
     return numpy.exp(numpy.clip(margin, -1e5, 2))
 
@@ -644,7 +690,7 @@ class AbstractFlatnessLossFunction(AbstractLossFunction):
         # optimizing here
         return 0
 
-    def negative_gradient(self, y_pred):
+    def _compute_fl_derivatives(self, y_pred):
         y_pred = numpy.ravel(y_pred)
         neg_gradient = numpy.zeros(len(self.y), dtype=numpy.float)
 
@@ -660,18 +706,18 @@ class AbstractFlatnessLossFunction(AbstractLossFunction):
                 global_pos = global_positions[indices_in_bin]
                 bin_gradient = self.power * numpy.sign(local_pos - global_pos) * \
                                numpy.abs(local_pos - global_pos) ** (self.power - 1)
-
                 neg_gradient[indices_in_bin] += bin_gradient
 
         neg_gradient *= self.divided_weight
-
+        # check that events outside uniform uniform classes are not touched
         assert numpy.all(neg_gradient[~numpy.in1d(self.y, self.uniform_label)] == 0)
+        return neg_gradient
 
+    def negative_gradient(self, y_pred):
         y_signed = self.y_signed
-
+        neg_gradient = self._compute_fl_derivatives(y_pred) * self.fl_coefficient
         # adding ExpLoss
-        neg_gradient = neg_gradient * self.fl_coefficient + \
-                       y_signed * self.sample_weight * exp_margin(-y_signed * y_pred)
+        neg_gradient += y_signed * self.sample_weight * _exp_margin(-y_signed * y_pred)
 
         if not self.allow_wrong_signs:
             neg_gradient = y_signed * numpy.clip(y_signed * neg_gradient, 0, 1e5)
@@ -682,11 +728,11 @@ class AbstractFlatnessLossFunction(AbstractLossFunction):
 class BinFlatnessLossFunction(AbstractFlatnessLossFunction):
     def __init__(self, uniform_features, uniform_label, n_bins=10, power=2., fl_coefficient=3.,
                  allow_wrong_signs=True):
-        """
+        r"""
         This loss function contains separately penalty for non-flatness and for bad prediction quality.
-        See [FL] for details.
+        See [FL]_ for details.
 
-        :math:`\\text{loss} =\\text{ExpLoss} + c \\times \\text{FlatnessLoss}`
+        :math:`\text{loss} =\text{ExpLoss} + c \times \text{FlatnessLoss}`
 
         FlatnessLoss computed using binning of uniform variables
 
@@ -700,7 +746,6 @@ class BinFlatnessLossFunction(AbstractFlatnessLossFunction):
 
         .. [FL] A. Rogozhnikov et al, New approaches for boosting to uniformity
             http://arxiv.org/abs/1410.4140
-
         """
         self.n_bins = n_bins
         AbstractFlatnessLossFunction.__init__(self, uniform_features,
@@ -726,14 +771,13 @@ class BinFlatnessLossFunction(AbstractFlatnessLossFunction):
 
 
 class KnnFlatnessLossFunction(AbstractFlatnessLossFunction):
-
     def __init__(self, uniform_features, uniform_label, n_neighbours=100, power=2., fl_coefficient=3.,
                  max_groups=5000, allow_wrong_signs=True, random_state=42):
-        """
+        r"""
         This loss function contains separately penalty for non-flatness and for bad prediction quality.
-        See [FL] for details.
+        See [FL]_ for details.
 
-        :math:`\\text{loss} =\\text{ExpLoss} + c \\times \\text{FlatnessLoss}`
+        :math:`\text{loss} = \text{ExpLoss} + c \times \text{FlatnessLoss}`
 
         FlatnessLoss computed using nearest neighbors in space of uniform features
 
@@ -749,7 +793,6 @@ class KnnFlatnessLossFunction(AbstractFlatnessLossFunction):
 
         .. [FL] A. Rogozhnikov et al, New approaches for boosting to uniformity
             http://arxiv.org/abs/1410.4140
-
         """
 
         self.n_neighbours = n_neighbours
@@ -770,6 +813,5 @@ class KnnFlatnessLossFunction(AbstractFlatnessLossFunction):
             return knn_indices[selected_group, :]
         else:
             return knn_indices
-
 
 # endregion
