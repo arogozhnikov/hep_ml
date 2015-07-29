@@ -327,11 +327,18 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
         self.random_state = random_state
         self.classes_ = numpy.array([0, 1])
 
-    def _create_shared_matrix(self, name, n1, n2):
-        """Creates a parameter of neural network, which is typically a matrix """
+    def _create_matrix_parameter(self, name, n1, n2):
+        """Creates a parameter of neural network, which is typically a matrix"""
         matrix = theano.shared(value=self.random_state_.normal(size=[n1, n2]).astype(floatX) * 0.01, name=name)
         self.parameters[name] = matrix
         return matrix
+
+    def _create_scalar_parameters(self, *names):
+        """Creates a parameter of neural network, which is typically a matrix"""
+        for name in names:
+            param = theano.shared(value=self.random_state_.normal().astype(floatX) * 0.01, name=name)
+            self.parameters[name] = param
+            yield param
 
     def prepare(self):
         """This method should provide activation function and set parameters.
@@ -479,8 +486,8 @@ class SimpleNeuralNetwork(AbstractNeuralNetworkClassifier):
 
     def prepare(self):
         n1, n2, n3 = self.layers_
-        W1 = self._create_shared_matrix('W1', n1, n2)
-        W2 = self._create_shared_matrix('W2', n2, n3)
+        W1 = self._create_matrix_parameter('W1', n1, n2)
+        W2 = self._create_matrix_parameter('W2', n2, n3)
 
         def activation(input):
             first = T.nnet.sigmoid(T.dot(input, W1))
@@ -495,7 +502,7 @@ class MLPClassifier(AbstractNeuralNetworkClassifier):
     def prepare(self):
         activation = lambda x: x
         for i, layer in list(enumerate(self.layers_))[1:]:
-            W = self._create_shared_matrix('W' + str(i), self.layers_[i - 1], self.layers_[i])
+            W = self._create_matrix_parameter('W' + str(i), self.layers_[i - 1], self.layers_[i])
             # act=activation and W_=W are tricks to avoid lambda-capturing
             if i == 0:
                 activation = lambda x, act=activation, W_=W: T.dot(act(x), W_)
@@ -512,8 +519,8 @@ class RBFNeuralNetwork(AbstractNeuralNetworkClassifier):
 
     def prepare(self):
         n1, n2, n3 = self.layers_
-        W1 = self._create_shared_matrix('W1', n2, n1)
-        W2 = self._create_shared_matrix('W2', n2, n3)
+        W1 = self._create_matrix_parameter('W1', n2, n1)
+        W2 = self._create_matrix_parameter('W2', n2, n3)
         # this parameter is responsible for scaling, it is optimised too
         G = theano.shared(value=0.1, name='G')
         self.parameters['G'] = G
@@ -532,8 +539,8 @@ class SoftmaxNeuralNetwork(AbstractNeuralNetworkClassifier):
 
     def prepare(self):
         n1, n2, n3 = self.layers_
-        W1 = self._create_shared_matrix('W1', n1, n2)
-        W2 = self._create_shared_matrix('W2', n2, n3)
+        W1 = self._create_matrix_parameter('W1', n1, n2)
+        W2 = self._create_matrix_parameter('W2', n2, n3)
 
         def activation(input):
             first = T.nnet.softmax(T.dot(input, W1))
@@ -549,8 +556,8 @@ class PairwiseNeuralNetwork(AbstractNeuralNetworkClassifier):
 
     def prepare(self):
         n1, n2, n3 = self.layers_
-        W1 = self._create_shared_matrix('W1', n1, n2)
-        W2 = self._create_shared_matrix('W2', n2, n2)
+        W1 = self._create_matrix_parameter('W1', n1, n2)
+        W2 = self._create_matrix_parameter('W2', n2, n2)
 
         def activation(input):
             first = T.nnet.sigmoid(T.dot(input, W1))
@@ -564,8 +571,8 @@ class PairwiseSoftplusNeuralNetwork(AbstractNeuralNetworkClassifier):
 
     def prepare(self):
         n1, n2, n3 = self.layers_
-        W1 = self._create_shared_matrix('W1', n1, n2)
-        W2 = self._create_shared_matrix('W2', n2, n2)
+        W1 = self._create_matrix_parameter('W1', n1, n2)
+        W2 = self._create_matrix_parameter('W2', n2, n2)
 
         def activation(input):
             z = T.dot(input, W1)
