@@ -1,0 +1,7 @@
+FROM anaderi/rep:0.6.1
+
+RUN mkdir -p /notebooks/ && \
+	git clone https://github.com/arogozhnikov/hep_ml.git /notebooks/hep_ml && \
+	cd /notebooks/hep_ml && \
+	pip install .
+RUN apt-get install -y wget
