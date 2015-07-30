@@ -336,7 +336,7 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
     def _create_scalar_parameters(self, *names):
         """Creates a parameter of neural network, which is typically a matrix"""
         for name in names:
-            param = theano.shared(value=self.random_state_.normal().astype(floatX) * 0.01, name=name)
+            param = theano.shared(value=self.random_state_.normal() * 0.01, name=name)
             self.parameters[name] = param
             yield param
 
