@@ -11,7 +11,7 @@ setup(
     description="Machine Learning for High Energy Physics",
     long_description=long_description,
 
-    url='https://github.com/iamfullofspam/hep_ml',
+    url='https://github.com/arogozhnikov/hep_ml',
 
     # Author details
     author='Alex Rogozhnikov',
