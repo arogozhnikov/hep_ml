@@ -137,13 +137,13 @@ class AbstractLossFunction(BaseEstimator):
 
 
 class HessianLossFunction(AbstractLossFunction):
-    """Loss function with diagonal hessian, provides uses Newton-Raphson step to update trees.
-
-    :param regularization: float, penalty for leaves with few events,
-        corresponds roughly to the number of added events of both classes to each leaf.
-    """
+    """Loss function with diagonal hessian, provides uses Newton-Raphson step to update trees. """
 
     def __init__(self, regularization=5.):
+        """
+        :param regularization: float, penalty for leaves with few events,
+         corresponds roughly to the number of added events of both classes to each leaf.
+        """
         self.regularization = regularization
 
     def fit(self, X, y, sample_weight):
@@ -192,6 +192,9 @@ class AdaLossFunction(HessianLossFunction):
     def hessian(self, y_pred):
         return self.sample_weight * numpy.exp(- self.y_signed * y_pred)
 
+    def prepare_tree_params(self, y_pred):
+        return self.y_signed, self.hessian(y_pred)
+
 
 class LogLossFunction(HessianLossFunction):
     """Logistic loss function (logloss), aka binomial deviance, aka cross-entropy,
@@ -214,6 +217,9 @@ class LogLossFunction(HessianLossFunction):
     def hessian(self, y_pred):
         expits = expit(self.y_signed * y_pred)
         return self.sample_weight * expits * (1 - expits)
+
+    def prepare_tree_params(self, y_pred):
+        return self.y_signed * expit(- self.y_signed * y_pred), self.sample_weight
 
 
 class CompositeLossFunction(HessianLossFunction):
@@ -276,7 +282,7 @@ class MSELossFunction(HessianLossFunction):
         return self.y - y_pred, self.sample_weight
 
 
-class MAELossFunction(HessianLossFunction):
+class MAELossFunction(AbstractLossFunction):
     r""" Mean absolute error loss function, used for regression.
     :math:`\text{loss} = \sum_i |y_i - \hat{y}_i|`
     """
@@ -284,7 +290,6 @@ class MAELossFunction(HessianLossFunction):
     def fit(self, X, y, sample_weight):
         self.y = y
         self.sample_weight = check_sample_weight(y, sample_weight=sample_weight, normalize=True)
-        HessianLossFunction.fit(self, X, y, sample_weight=sample_weight)
         return self
 
     def __call__(self, y_pred):
@@ -292,9 +297,6 @@ class MAELossFunction(HessianLossFunction):
 
     def negative_gradient(self, y_pred):
         return self.sample_weight * numpy.sign(self.y - y_pred)
-
-    def hessian(self, y_pred):
-        return self.sample_weight
 
     def prepare_tree_params(self, y_pred):
         return numpy.sign(self.y - y_pred), self.sample_weight
@@ -499,7 +501,7 @@ class AbstractMatrixLossFunction(HessianLossFunction):
 
 
 class KnnAdaLossFunction(AbstractMatrixLossFunction):
-    def __init__(self, uniform_features, uniform_label, knn=10, distinguish_classes=True, row_norm=1.):
+    def __init__(self, uniform_features, uniform_label, knn=10, row_norm=1.):
         r"""Modification of AdaLoss to achieve uniformity of predictions
 
         :math:`\text{loss} = \sum_i w_i * exp(- \sum_j a_{ij} y_j score_j)`
@@ -511,14 +513,12 @@ class KnnAdaLossFunction(AbstractMatrixLossFunction):
         :param list[str] uniform_features: the features, along which uniformity is desired
         :param int|list[int] uniform_label: the label (labels) of 'uniform classes'
         :param int knn: the number of nonzero elements in the row, corresponding to event in 'uniform class'
-        :param bool distinguish_classes: if True, 1's will be placed only for events of same class.
 
         .. [BU] A. Rogozhnikov et al, New approaches for boosting to uniformity
             http://arxiv.org/abs/1410.4140
 
         """
         self.knn = knn
-        self.distinguish_classes = distinguish_classes
         self.row_norm = row_norm
         self.uniform_label = check_uniform_label(uniform_label)
         AbstractMatrixLossFunction.__init__(self, uniform_features)
@@ -527,13 +527,9 @@ class KnnAdaLossFunction(AbstractMatrixLossFunction):
         A_parts = []
         w_parts = []
         for label in self.uniform_label:
-            label_mask = trainY == label
+            label_mask = numpy.array(trainY == label)
             n_label = numpy.sum(label_mask)
-            if self.distinguish_classes:
-                mask = label_mask
-            else:
-                mask = numpy.ones(len(trainY), dtype=numpy.bool)
-            knn_indices = compute_knn_indices_of_signal(trainX[self.uniform_features], mask, self.knn)
+            knn_indices = compute_knn_indices_of_signal(trainX[self.uniform_features], label_mask, self.knn)
             knn_indices = knn_indices[label_mask, :]
             ind_ptr = numpy.arange(0, n_label * self.knn + 1, self.knn)
             column_indices = knn_indices.flatten()
