@@ -651,7 +651,8 @@ class AbstractFlatnessLossFunction(AbstractLossFunction):
         self.allow_wrong_signs = allow_wrong_signs
 
     def fit(self, X, y, sample_weight=None):
-        sample_weight = check_sample_weight(y, sample_weight=sample_weight)
+        sample_weight = check_sample_weight(y, sample_weight=sample_weight,
+                                            normalize=True, normalize_by_class=True)
         assert len(X) == len(y), 'lengths are different'
         X = pandas.DataFrame(X)
 
@@ -679,7 +680,7 @@ class AbstractFlatnessLossFunction(AbstractLossFunction):
         return self
 
     def _compute_groups_indices(self, X, y, label):
-        raise NotImplementedError()
+        raise NotImplementedError('To be overriden in descendants.')
 
     def __call__(self, pred):
         # the actual value does not play any role in boosting
