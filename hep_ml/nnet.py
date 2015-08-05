@@ -356,7 +356,7 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
         and initializes the weights
         :return: loss function as lambda (x, y, w) -> loss"""
         self.random_state_ = check_random_state(self.random_state)
-        self.layers_ = [n_input_features] + self.layers + [1]
+        self.layers_ = [n_input_features] + list(self.layers) + [1]
         self.parameters = {}
         self.prepared = True
 
