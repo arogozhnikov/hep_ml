@@ -134,10 +134,8 @@ class UGradientBoostingBase(BaseEstimator):
             leaf_values = tree.get_leaf_values()
             if self.update_tree:
                 terminal_regions = tree.transform(X)
-                leaf_values = self.loss.prepare_new_leaves_values(terminal_regions, X=X, y=y, y_pred=y_pred,
-                                                                  leaf_values=leaf_values, sample_weight=sample_weight,
-                                                                  update_mask=update_mask,
-                                                                  residual=residual)
+                leaf_values = self.loss.prepare_new_leaves_values(terminal_regions, leaf_values=leaf_values,
+                                                                  y_pred=y_pred, residual=residual)
 
             y_pred += self.learning_rate * self._estimate_tree(tree, leaf_values=leaf_values, X=X)
             self.estimators.append([tree, leaf_values])

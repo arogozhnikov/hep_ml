@@ -118,18 +118,13 @@ class AbstractLossFunction(BaseEstimator):
         """
         return self.negative_gradient(y_pred), numpy.ones(len(y_pred))
 
-    def prepare_new_leaves_values(self, terminal_regions, leaf_values,
-                                  X, y, y_pred, sample_weight, update_mask, residual):
+    def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred, residual):
         """
         Method for pruning. Loss function can prepare better values for leaves
 
         :param terminal_regions: indices of terminal regions of each event.
         :param leaf_values: numpy.array, current mapping of leaf indices to prediction values.
-        :param X: data (same as passed in fit, ignored usually)
-        :param y: labels (same as passed in fit)
         :param y_pred: predictions before adding new tree.
-        :param sample_weight: weights od samples (same as passed in fit)
-        :param update_mask: which events to use during update?
         :param residual: computed value of negative gradient (before adding tree)
         :return: numpy.array with new prediction values for all leaves.
         """
@@ -162,8 +157,7 @@ class HessianLossFunction(AbstractLossFunction):
         hess = self.hessian(y_pred) + 0.01
         return grad / hess, hess
 
-    def prepare_new_leaves_values(self, terminal_regions, leaf_values,
-                                  X, y, y_pred, sample_weight, update_mask, residual):
+    def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred, residual):
         """ This expression comes from optimization of second-order approximation of loss function."""
         min_length = len(leaf_values)
         nominators = numpy.bincount(terminal_regions, weights=residual, minlength=min_length)
@@ -301,8 +295,7 @@ class MAELossFunction(AbstractLossFunction):
     def prepare_tree_params(self, y_pred):
         return numpy.sign(self.y - y_pred), self.sample_weight
 
-    def prepare_new_leaves_values(self, terminal_regions, leaf_values,
-                                  X, y, y_pred, sample_weight, update_mask, residual):
+    def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred, residual):
         # TODO use weighted median
         new_leaf_values = numpy.zeros(len(leaf_values), dtype='float')
         for terminal_region in range(len(leaf_values)):
@@ -398,18 +391,15 @@ class RankBoostLossFunction(HessianLossFunction):
             result += neg_exponent * penalty_matrix.T.dot(pos_stats)[lookup]
         return result
 
-    def prepare_new_leaves_values(self, terminal_regions, leaf_values,
-                                  X, y, y_pred, sample_weight, update_mask, residual):
+    def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred, residual):
         leaves_values = numpy.zeros(len(leaf_values))
         for _ in range(self.update_terations):
             y_test = y_pred + leaves_values[terminal_regions]
-            new_leaves_values = self._prepare_new_leaves_values(terminal_regions, leaves_values,
-                                                                X, y, y_test, sample_weight, update_mask, residual)
+            new_leaves_values = self._prepare_new_leaves_values(terminal_regions, leaves_values, y_test, residual)
             leaves_values = 0.5 * new_leaves_values + leaves_values
         return leaves_values
 
-    def _prepare_new_leaves_values(self, terminal_regions, leaf_values,
-                                   X, y, y_pred, sample_weight, update_mask, residual):
+    def _prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred,  residual):
         """
         For each event we shall represent loss as w_plus * e^{pred} + w_minus * e^{-pred},
         then we are able to construct optimal step.
@@ -458,7 +448,7 @@ class AbstractMatrixLossFunction(HessianLossFunction):
         self.w = numpy.array(w)
         assert A.shape[0] == len(w), "inconsistent sizes"
         assert A.shape[1] == len(X), "wrong size of matrix"
-        self.y_signed = 2 * y - 1
+        self.y_signed = numpy.array(2 * y - 1)
         HessianLossFunction.fit(self, X, y, sample_weight=sample_weight)
         return self
 
@@ -485,12 +475,11 @@ class AbstractMatrixLossFunction(HessianLossFunction):
         """This method should be overloaded in descendant, and should return A, w (matrix and vector)"""
         raise NotImplementedError()
 
-    def prepare_new_leaves_values(self, terminal_regions, leaf_values,
-                                  X, y, y_pred, sample_weight, update_mask, residual):
+    def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred, residual):
         exponents = numpy.exp(- self.A.dot(self.y_signed * y_pred))
         # current approach uses Newton-Raphson step
         # TODO compare with iterative suboptimal choice of value, based on exp(a x) ~ a exp(x)
-        regions_matrix = sparse.csc_matrix((self.y_signed, [numpy.arange(len(y)), terminal_regions]))
+        regions_matrix = sparse.csc_matrix((self.y_signed, [numpy.arange(len(self.y_signed)), terminal_regions]))
         # Z is matrix of shape [n_exponents, n_terminal_regions]
         # with contributions of each terminal region to each exponent
         Z = self.A.dot(regions_matrix)
@@ -593,11 +582,12 @@ class ReweightLossFunction(AbstractLossFunction):
         # signs encounter transfer to opposite distribution
         self.signs = (2 * y - 1) * numpy.sign(sample_weight)
 
-        self.mask_original = self.y
-        self.mask_target = (1 - self.y)
+        self.mask_original = numpy.array(self.y)
+        self.mask_target = numpy.array(1 - self.y)
         return self
 
     def _compute_weights(self, y_pred):
+        """We need renormalization at eac step"""
         weights = self.sample_weight * numpy.exp(self.y * y_pred)
         return check_sample_weight(self.y, weights, normalize=True, normalize_by_class=True)
 
@@ -611,8 +601,7 @@ class ReweightLossFunction(AbstractLossFunction):
     def prepare_tree_params(self, y_pred):
         return self.signs, numpy.abs(self._compute_weights(y_pred))
 
-    def prepare_new_leaves_values(self, terminal_regions, leaf_values,
-                                  X, y, y_pred, sample_weight, update_mask, residual):
+    def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred, residual):
         weights = self._compute_weights(y_pred)
         w_target = numpy.bincount(terminal_regions, weights=self.mask_target * weights)
         w_original = numpy.bincount(terminal_regions, weights=self.mask_original * weights)
