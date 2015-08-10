@@ -312,7 +312,7 @@ def check_sample_weight(y_true, sample_weight, normalize=False, normalize_by_cla
     return sample_weight
 
 
-def check_xyw(X, y, sample_weight=None, classification=False):
+def check_xyw(X, y, sample_weight=None, classification=False, allow_multiple_outputs=False):
     """
     Checks parameters of classifier / loss / metrics.
     :param X: array-like of shape [n_samples, n_features] (numpy.array or pandas.DataFrame)
@@ -322,7 +322,8 @@ def check_xyw(X, y, sample_weight=None, classification=False):
     """
 
     y = numpy.array(y)
-    assert numpy.ndim(y) == 1, 'y should be one-dimensional'
+    if not allow_multiple_outputs:
+        assert numpy.ndim(y) == 1, 'y should be one-dimensional'
     sample_weight = check_sample_weight(y, sample_weight=sample_weight)
 
     # only pandas.DataFrame and numpy.array are allowed. No checks on sparsity here.
