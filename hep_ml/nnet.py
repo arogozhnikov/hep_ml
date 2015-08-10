@@ -184,7 +184,7 @@ def irprop_star_trainer(x, y, w, parameters, loss, random_stream,
 
     for name, param in parameters.items():
         param_shape = param.get_value().shape
-        n = numpy.prod(param_shape).astype(int)
+        n = int(numpy.prod(param_shape))
         new_derivative_ = T.grad(loss_value, param).flatten()
         lnewder, rnewder = new_derivative_.reshape([n, 1]), new_derivative_.reshape([1, n])
         new_derivative_plus = lnewder + rnewder
@@ -371,7 +371,7 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
         self.Loss = theano.function([x, y, w], loss_(x, y, w))
         return loss_
 
-    def transform(self, X, y=None, fit=True):
+    def _transform(self, X, y=None, fit=True):
         """Apply selected scaler or transformer to dataset
         (also this method adds a column filled with ones).
 
@@ -392,6 +392,15 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
 
         return result
 
+    def _prepare_inputs(self, X, y, sample_weight):
+        X, y, sample_weight = check_xyw(X, y, sample_weight)
+        sample_weight = check_sample_weight(y, sample_weight, normalize=True)
+        X = self._transform(X, y, fit=True)
+        self.classes_ = numpy.array([0, 1])
+        assert (numpy.unique(y) == self.classes_).all(), 'only two-class classification supported, labels are 0 and 1'
+        return X, y, sample_weight
+
+
     def fit(self, X, y, sample_weight=None, trainer=None, epochs=None, **trainer_parameters):
         """ Prepare the model by optimizing selected loss function with some trainer.
         This method doesn't support additional fitting, use `partial_fit`.
@@ -402,11 +411,8 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
         :param trainer: str, method used to minimize loss, overrides one in the ctor
         :param trainer_parameters: parameters for this method, override ones in ctor
         :return: self """
-        X, y, sample_weight = check_xyw(X, y, sample_weight)
-        sample_weight = check_sample_weight(y, sample_weight, normalize=True)
-        X = self.transform(X, y, fit=True)
-        self.classes_ = numpy.array([0, 1])
-        assert (numpy.unique(y) == self.classes_).all(), 'only two-class classification supported, labels are 0 and 1'
+        X, y, sample_weight = self._prepare_inputs(X, y, sample_weight=sample_weight)
+
         loss_lambda = self._prepare(X.shape[1])
 
         trainer = trainers[self.trainer if trainer is None else trainer]
@@ -441,7 +447,7 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
         :param numpy.array X: of shape [n_samples, n_features]
         :return: numpy.array with results of shape [n_samples]
         """
-        X = self.transform(X, fit=False)
+        X = self._transform(X, fit=False)
         return self.Activation(X)
 
     def predict_proba(self, X):
