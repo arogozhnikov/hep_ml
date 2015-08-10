@@ -27,6 +27,7 @@ To install **hep_ml**, use **pip**. Type in terminal:
    * :doc:`uboost`
    * :doc:`metrics`
    * :doc:`nnet`
+   * :doc:`reweight`
 
 
 
@@ -41,6 +42,7 @@ _________
    uboost
    metrics
    nnet
+   reweight
 
 
 Links
