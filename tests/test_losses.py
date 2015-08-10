@@ -93,10 +93,9 @@ def test_step_optimality(n_samples=50):
         # Some basic optimization goes here:
         new_value = 0.
         for _ in range(4):
-            ministep, = loss.prepare_new_leaves_values(
-                terminal_regions=numpy.zeros(n_samples, dtype=int),
-                leaf_values=[leaf_value], X=X, y=y, y_pred=pred + new_value, sample_weight=sample_weight,
-                update_mask=None, residual=loss.negative_gradient(pred + new_value))
+            ministep, = loss.prepare_new_leaves_values(terminal_regions=numpy.zeros(n_samples, dtype=int),
+                                                       leaf_values=[leaf_value], y_pred=pred + new_value,
+                                                       residual=loss.negative_gradient(pred + new_value))
             new_value += ministep
 
         print(new_value)
