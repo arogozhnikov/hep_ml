@@ -10,6 +10,8 @@
 * measures of uniformity (see **hep_ml.metrics**)
 * advanced losses for classification, regression and ranking for __UGradientBoosting__ (see **hep_ml.losses**).  
 * **hep_ml.nnet** - theano-based flexible neural networks 
+* **hep_ml.reweight** - reweighting multidimensional distributions <br />
+  (_multi_ means really many, 2, 3, 5 and more - see GBReweighter)
 * **sklearn**-compatibility of estimators.
 
 ### Installation
