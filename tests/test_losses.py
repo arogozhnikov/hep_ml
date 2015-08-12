@@ -62,7 +62,7 @@ def test_loss_functions(size=50, epsilon=1e-3):
         assert numpy.allclose(hessian, numer_hessian, atol=1e-7), 'wrong computation of hessian'
 
 
-def test_step_optimality(n_samples=50):
+def test_step_optimality(n_samples=100):
     """
     testing that for single leaf function returns the optimal value
     """
@@ -71,13 +71,13 @@ def test_step_optimality(n_samples=50):
     X[rank_column] = numpy.random.randint(0, 3, size=n_samples)
 
     tested_losses = [
+        losses.MAELossFunction(),
         losses.LogLossFunction(),
         losses.AdaLossFunction(),
         losses.KnnAdaLossFunction(X.columns[:1], uniform_label=0, knn=5),
         losses.CompositeLossFunction(),
         losses.RankBoostLossFunction(rank_column),
         losses.MSELossFunction(),
-        losses.MAELossFunction(),
     ]
 
     pred = numpy.random.normal(size=n_samples)
@@ -89,20 +89,32 @@ def test_step_optimality(n_samples=50):
             sample_weight = numpy.random.exponential(size=n_samples)
 
         loss.fit(X, y, sample_weight=sample_weight)
+
+        # Test simple way to get optimal step
         leaf_value = numpy.random.normal()
         # Some basic optimization goes here:
-        new_value = 0.
+        step = 0.
         for _ in range(4):
             ministep, = loss.prepare_new_leaves_values(terminal_regions=numpy.zeros(n_samples, dtype=int),
-                                                       leaf_values=[leaf_value], y_pred=pred + new_value,
-                                                       residual=loss.negative_gradient(pred + new_value))
-            new_value += ministep
+                                                       leaf_values=[leaf_value], y_pred=pred + step)
+            step += ministep
 
-        print(new_value)
+        print(step)
         loss_values = []
         coeffs = [0.9, 1.0, 1.1]
         for coeff in coeffs:
-            loss_values.append(loss(pred + coeff * new_value))
-        print(loss, new_value, 'losses: ', loss_values)
+            loss_values.append(loss(pred + coeff * step))
+        print(loss, step, 'losses: ', loss_values)
         assert loss_values[1] <= loss_values[0] + 1e-7
         assert loss_values[1] <= loss_values[2] + 1e-7
+
+        # Test standard function
+        opt_value = loss.compute_optimal_step(y_pred=pred)
+        loss_values2 = []
+        for coeff in coeffs:
+            loss_values2.append(loss(pred + coeff * opt_value))
+        print(loss, step, 'losses: ', loss_values)
+        assert loss_values2[1] <= loss_values2[0] + 1e-7
+        assert loss_values2[1] <= loss_values2[2] + 1e-7
+
+

@@ -50,7 +50,7 @@ from scipy.special import expit
 from sklearn.utils.validation import check_random_state
 from sklearn.base import BaseEstimator
 
-from .commonutils import compute_knn_indices_of_signal, check_sample_weight, check_uniform_label
+from .commonutils import compute_knn_indices_of_signal, check_sample_weight, check_uniform_label, weighted_quantile
 from .metrics_utils import bin_to_group_indices, compute_bin_indices, compute_group_weights, \
     group_indices_to_groups_matrix
 
@@ -114,21 +114,29 @@ class AbstractLossFunction(BaseEstimator):
 
         :param y_pred: contains predictions for all the events passed to `fit` method,
          moreover, the order should be the same
-        :return: tuple (residual, sample_weight) with target and weight to be used in decision tree
+        :return: tuple (tree_target, tree_weight) with target and weight to be used in decision tree
         """
         return self.negative_gradient(y_pred), numpy.ones(len(y_pred))
 
-    def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred, residual):
+    def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred):
         """
         Method for pruning. Loss function can prepare better values for leaves
 
         :param terminal_regions: indices of terminal regions of each event.
         :param leaf_values: numpy.array, current mapping of leaf indices to prediction values.
         :param y_pred: predictions before adding new tree.
-        :param residual: computed value of negative gradient (before adding tree)
         :return: numpy.array with new prediction values for all leaves.
         """
         return leaf_values
+
+    def compute_optimal_step(self, y_pred):
+        """
+        Compute optimal global step. This method is typically used to make optimal step
+        before fitting trees to reduce variance.
+        :param y_pred: initial predictions, numpy.array of shape [n_samples]
+        :return: float
+        """
+        return 0.
 
 
 class HessianLossFunction(AbstractLossFunction):
@@ -157,12 +165,27 @@ class HessianLossFunction(AbstractLossFunction):
         hess = self.hessian(y_pred) + 0.01
         return grad / hess, hess
 
-    def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred, residual):
+    def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred):
         """ This expression comes from optimization of second-order approximation of loss function."""
         min_length = len(leaf_values)
-        nominators = numpy.bincount(terminal_regions, weights=residual, minlength=min_length)
+        nominators = numpy.bincount(terminal_regions, weights=self.negative_gradient(y_pred), minlength=min_length)
         denominators = numpy.bincount(terminal_regions, weights=self.hessian(y_pred), minlength=min_length)
         return nominators / (denominators + self.regularization_)
+
+    def compute_optimal_step(self, y_pred):
+        """
+        Optimal step is computed using Newton-Raphson algorithm (10 iterations).
+        :param y_pred: predictions (usually, zeros)
+        :return: float
+        """
+        terminal_regions = numpy.zeros(len(y_pred), dtype='int')
+        leaf_values = numpy.zeros(shape=1)
+        step = 0.
+        for _ in range(10):
+            step_ = self.prepare_new_leaves_values(terminal_regions, leaf_values=leaf_values, y_pred=y_pred + step)[0]
+            step += 0.5 * step_
+        return step
+
 
 
 # region Classification losses
@@ -275,6 +298,9 @@ class MSELossFunction(HessianLossFunction):
     def prepare_tree_params(self, y_pred):
         return self.y - y_pred, self.sample_weight
 
+    def compute_optimal_step(self, y_pred):
+        return numpy.average(self.y - y_pred, weights=self.sample_weight)
+
 
 class MAELossFunction(AbstractLossFunction):
     r""" Mean absolute error loss function, used for regression.
@@ -295,14 +321,18 @@ class MAELossFunction(AbstractLossFunction):
     def prepare_tree_params(self, y_pred):
         return numpy.sign(self.y - y_pred), self.sample_weight
 
-    def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred, residual):
+    def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred):
         # TODO use weighted median
         new_leaf_values = numpy.zeros(len(leaf_values), dtype='float')
+        target = (self.y - y_pred)
         for terminal_region in range(len(leaf_values)):
-            values = residual[terminal_regions == terminal_region]
+            values = target[terminal_regions == terminal_region]
             values = numpy.insert(values, [0], [0])
             new_leaf_values[terminal_region] = numpy.median(values)
         return new_leaf_values
+
+    def compute_optimal_step(self, y_pred):
+        return weighted_quantile(self.y - y_pred, quantiles=[0.5], sample_weight=self.sample_weight)[0]
 
 
 # endregion RegressionLosses
@@ -391,15 +421,15 @@ class RankBoostLossFunction(HessianLossFunction):
             result += neg_exponent * penalty_matrix.T.dot(pos_stats)[lookup]
         return result
 
-    def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred, residual):
+    def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred):
         leaves_values = numpy.zeros(len(leaf_values))
         for _ in range(self.update_terations):
             y_test = y_pred + leaves_values[terminal_regions]
-            new_leaves_values = self._prepare_new_leaves_values(terminal_regions, leaves_values, y_test, residual)
+            new_leaves_values = self._prepare_new_leaves_values(terminal_regions, leaves_values, y_test)
             leaves_values = 0.5 * new_leaves_values + leaves_values
         return leaves_values
 
-    def _prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred,  residual):
+    def _prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred):
         """
         For each event we shall represent loss as w_plus * e^{pred} + w_minus * e^{-pred},
         then we are able to construct optimal step.
@@ -475,7 +505,7 @@ class AbstractMatrixLossFunction(HessianLossFunction):
         """This method should be overloaded in descendant, and should return A, w (matrix and vector)"""
         raise NotImplementedError()
 
-    def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred, residual):
+    def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred):
         exponents = numpy.exp(- self.A.dot(self.y_signed * y_pred))
         # current approach uses Newton-Raphson step
         # TODO compare with iterative suboptimal choice of value, based on exp(a x) ~ a exp(x)
@@ -601,7 +631,7 @@ class ReweightLossFunction(AbstractLossFunction):
     def prepare_tree_params(self, y_pred):
         return self.signs, numpy.abs(self._compute_weights(y_pred))
 
-    def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred, residual):
+    def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred):
         weights = self._compute_weights(y_pred)
         w_target = numpy.bincount(terminal_regions, weights=self.mask_target * weights)
         w_original = numpy.bincount(terminal_regions, weights=self.mask_original * weights)
