@@ -54,6 +54,7 @@ class UGradientBoostingBase(BaseEstimator):
 
         :param loss: any descendant of AbstractLossFunction, those are very various.
             See :class:`hep_ml.losses` for available losses.
+        :type loss: AbstractLossFunction
         :param int n_estimators: number of trained trees.
         :param float subsample: fraction of data to use on each stage
         :param float learning_rate: size of step.
@@ -97,11 +98,11 @@ class UGradientBoostingBase(BaseEstimator):
 
         n_samples = len(X)
         n_inbag = int(self.subsample * len(X))
-        update_mask = numpy.ones(len(X), dtype=bool)
 
         # preparing for loss function
         X, y, sample_weight = check_xyw(X, y, sample_weight=sample_weight)
 
+        assert isinstance(self.loss, AbstractLossFunction), 'loss function should be derived from AbstractLossFunction'
         self.loss = copy.deepcopy(self.loss)
         self.loss.fit(X, y, sample_weight=sample_weight)
 
@@ -111,6 +112,8 @@ class UGradientBoostingBase(BaseEstimator):
         self.n_features = X.shape[1]
 
         y_pred = numpy.zeros(len(X), dtype=float)
+        self.initial_step = self.loss.compute_optimal_step(y_pred=y_pred)
+        y_pred += self.initial_step
 
         for stage in range(self.n_estimators):
             # tree creation
@@ -135,7 +138,7 @@ class UGradientBoostingBase(BaseEstimator):
             if self.update_tree:
                 terminal_regions = tree.transform(X)
                 leaf_values = self.loss.prepare_new_leaves_values(terminal_regions, leaf_values=leaf_values,
-                                                                  y_pred=y_pred, residual=residual)
+                                                                  y_pred=y_pred)
 
             y_pred += self.learning_rate * self._estimate_tree(tree, leaf_values=leaf_values, X=X)
             self.estimators.append([tree, leaf_values])
@@ -155,7 +158,7 @@ class UGradientBoostingBase(BaseEstimator):
         :return: sequence of numpy.array of shape [n_samples]
         """
         X = SklearnClusteringTree.prepare_data(self._get_train_features(X))
-        y_pred = numpy.zeros(len(X))
+        y_pred = numpy.zeros(len(X)) + self.initial_step
         for tree, leaf_values in self.estimators:
             y_pred += self.learning_rate * self._estimate_tree(tree, leaf_values=leaf_values, X=X)
             yield y_pred
@@ -228,8 +231,7 @@ class UGradientBoostingClassifier(UGradientBoostingBase, ClassifierMixin):
 
 
 class UGradientBoostingRegressor(UGradientBoostingBase, RegressorMixin):
-    """This version of gradient boosting supports only two-class classification and only special losses
-    derived from AbstractLossFunction."""
+    """Gradient Boosted regressor. Approximates target by sum of predictions of several trees."""
 
     def fit(self, X, y, sample_weight=None):
         """Fit estimator.
