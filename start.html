@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>hep_ml documentation &mdash; hep_ml 0.3.0 documentation</title>
+  <title>hep_ml &mdash; hep_ml 0.2 documentation</title>
   
 
   
@@ -24,14 +24,15 @@
 
   
   
-    <link rel="stylesheet" href="_static/css/my_style.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   
 
   
 
   
-    <link rel="top" title="hep_ml 0.3.0 documentation" href="#"/>
-        <link rel="next" title="Gradient boosting" href="gb.html"/> 
+    <link rel="top" title="hep_ml 0.2 documentation" href="index.html"/>
+        <link rel="next" title="Gradient boosting" href="gb.html"/>
+        <link rel="prev" title="hep_ml documentation" href="index.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -48,7 +49,7 @@
         
 
         
-          <a href="#" class="icon icon-home"> hep_ml
+          <a href="index.html" class="icon icon-home"> hep_ml
         
 
         
@@ -71,7 +72,15 @@
           
           
               <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="">hep_ml documentation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">hep_ml</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#main-points">Main points</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#links">Links</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#related-projects">Related projects</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="gb.html">Gradient boosting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="losses.html">Losses for Gradient Boosting</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="losses.html#examples">Examples</a></li>
@@ -91,11 +100,6 @@
 <li class="toctree-l2"><a class="reference internal" href="nnet.html#trainers">Trainers</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="reweight.html">Reweighting algorithms</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="reweight.html#examples">Examples</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks.html">Code Examples</a></li>
 </ul>
 
           
@@ -109,7 +113,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="#">hep_ml</a>
+        <a href="index.html">hep_ml</a>
       </nav>
 
 
@@ -118,13 +122,13 @@
         <div class="rst-content">
           <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="#">Docs</a> &raquo;</li>
+    <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li>hep_ml documentation</li>
+    <li>hep_ml</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/index.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/start.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -133,51 +137,37 @@
 </div>
           <div role="main" class="document">
             
-  <div class="section" id="hep-ml-documentation">
-<h1>hep_ml documentation<a class="headerlink" href="#hep-ml-documentation" title="Permalink to this headline">¶</a></h1>
-<p><strong>hep_ml</strong> is machine learning library filled with methods used in high energy physics.
-Classifiers from <strong>hep_ml</strong> are <strong>sklearn</strong>-compatible.</p>
+  <div class="section" id="hep-ml">
+<h1>hep_ml<a class="headerlink" href="#hep-ml" title="Permalink to this headline">¶</a></h1>
+<p><strong>hep_ml</strong> provides specific machine learning tools for purposes of
+high energy physics (written in python).</p>
+<div class="section" id="main-points">
+<h2>Main points<a class="headerlink" href="#main-points" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>uniform classifiers - the classifiers with low correlation of
+predictions and mass (or some other variable(s))</li>
+<li><strong>uBoost</strong> optimized implementation inside</li>
+<li><strong>UGradientBoosting</strong> (with different losses, specially
+<strong>FlatnessLoss</strong> is very interesting)</li>
+<li>measures of uniformity (see <strong>hep_ml.metrics</strong>)</li>
+<li>advanced losses for classification, regression and ranking for
+<strong>UGradientBoosting</strong> (see <strong>hep_ml.losses</strong>).</li>
+<li><strong>hep_ml.nnet</strong> - theano-based neural networks</li>
+</ul>
 <div class="section" id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>To install <strong>hep_ml</strong>, use <strong>pip</strong>. Type in terminal:</p>
+<h3>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h3>
 <div class="code bash highlight-python"><div class="highlight"><pre>pip install hep_ml
 </pre></div>
 </div>
-</div>
-<div class="section" id="contents">
-<h2>Contents:<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="">hep_ml documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="gb.html">Gradient boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="losses.html">Losses for Gradient Boosting</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="losses.html#examples">Examples</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="uboost.html">uBoost</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="uboost.html#examples">Examples</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metric functions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="metrics.html#examples">Examples</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="nnet.html">Neural networks</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="nnet.html#examples">Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="nnet.html#loss-functions">Loss functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="nnet.html#trainers">Trainers</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="reweight.html">Reweighting algorithms</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="reweight.html#examples">Examples</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks.html">Code Examples</a></li>
-</ul>
+<p>To use latest version, clone it and install with <code class="docutils literal"><span class="pre">pip</span></code>:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>git clone https://github.com/arogozhnikov/hep_ml.git
+cd hep_ml
+sudo pip install .
+</pre></div>
 </div>
 </div>
 <div class="section" id="links">
-<h2>Links<a class="headerlink" href="#links" title="Permalink to this headline">¶</a></h2>
+<h3>Links<a class="headerlink" href="#links" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><a class="reference external" href="https://arogozhnikov.github.io/hep_ml/">documentation</a></li>
 <li><a class="reference external" href="https://github.com/arogozhnikov/hep_ml/tree/master/notebooks">notebook
@@ -187,7 +177,7 @@ examples</a></li>
 </ul>
 </div>
 <div class="section" id="related-projects">
-<h2>Related projects<a class="headerlink" href="#related-projects" title="Permalink to this headline">¶</a></h2>
+<h3>Related projects<a class="headerlink" href="#related-projects" title="Permalink to this headline">¶</a></h3>
 <p>Libraries you&#8217;ll require to make your life easier.</p>
 <ul class="simple">
 <li><a class="reference external" href="http://ipython.org/notebook.html">IPython Notebook</a> — web-shell
@@ -208,6 +198,7 @@ library to deal with ROOT files (without pain)</li>
 </ul>
 </div>
 </div>
+</div>
 
 
           </div>
@@ -217,6 +208,8 @@ library to deal with ROOT files (without pain)</li>
       
         <a href="gb.html" class="btn btn-neutral float-right" title="Gradient boosting" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
+      
+        <a href="index.html" class="btn btn-neutral" title="hep_ml documentation" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -246,7 +239,7 @@ library to deal with ROOT files (without pain)</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.3.0',
+            VERSION:'0.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

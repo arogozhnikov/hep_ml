@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Metric functions &mdash; hep_ml 0.2 documentation</title>
+  <title>Metric functions &mdash; hep_ml 0.3.0 documentation</title>
   
 
   
@@ -24,13 +24,13 @@
 
   
   
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/my_style.css" type="text/css" />
   
 
   
 
   
-    <link rel="top" title="hep_ml 0.2 documentation" href="index.html"/>
+    <link rel="top" title="hep_ml 0.3.0 documentation" href="index.html"/>
         <link rel="next" title="Neural networks" href="nnet.html"/>
         <link rel="prev" title="uBoost" href="uboost.html"/> 
 
@@ -72,6 +72,7 @@
           
           
               <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">hep_ml documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gb.html">Gradient boosting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="losses.html">Losses for Gradient Boosting</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="losses.html#examples">Examples</a></li>
@@ -91,6 +92,11 @@
 <li class="toctree-l2"><a class="reference internal" href="nnet.html#trainers">Trainers</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="reweight.html">Reweighting algorithms</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reweight.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks.html">Code Examples</a></li>
 </ul>
 
           
@@ -148,7 +154,7 @@ but also mass (or other variables along which we want to have uniformity)</p>
 </ul>
 </dd>
 </dl>
-<p>Metrics are following <strong>REP</strong> conventions (first fit, then compute metrics on same dataset).
+<p>Metrics are following <a class="reference external" href="https://github.com/yandex/rep">REP</a> conventions (first fit, then compute metrics on same dataset).
 For these metrics <cite>fit</cite> stage is crucial, since it precomputes information using dataset X,
 which is quite long and better to do this once. Different quality metrics with same interface
 can be found in <strong>REP</strong> package.</p>
@@ -352,7 +358,7 @@ Default values are [0.5, 0.6, 0.7, 0.8, 0.9]</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.2',
+            VERSION:'0.3.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

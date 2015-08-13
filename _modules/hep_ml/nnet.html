@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>hep_ml.nnet &mdash; hep_ml 0.2 documentation</title>
+  <title>hep_ml.nnet &mdash; hep_ml 0.3.0 documentation</title>
   
 
   
@@ -24,13 +24,13 @@
 
   
   
-    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/css/my_style.css" type="text/css" />
   
 
   
 
   
-    <link rel="top" title="hep_ml 0.2 documentation" href="../../index.html"/>
+    <link rel="top" title="hep_ml 0.3.0 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -71,6 +71,7 @@
           
           
               <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">hep_ml documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../gb.html">Gradient boosting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../losses.html">Losses for Gradient Boosting</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../losses.html#examples">Examples</a></li>
@@ -90,6 +91,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../../nnet.html#trainers">Trainers</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../reweight.html">Reweighting algorithms</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reweight.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Code Examples</a></li>
 </ul>
 
           
@@ -314,7 +320,7 @@
 
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">parameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">param_shape</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">param_shape</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">param_shape</span><span class="p">))</span>
         <span class="n">new_derivative_</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">loss_value</span><span class="p">,</span> <span class="n">param</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
         <span class="n">lnewder</span><span class="p">,</span> <span class="n">rnewder</span> <span class="o">=</span> <span class="n">new_derivative_</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">new_derivative_</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">])</span>
         <span class="n">new_derivative_plus</span> <span class="o">=</span> <span class="n">lnewder</span> <span class="o">+</span> <span class="n">rnewder</span>
@@ -457,11 +463,18 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
 
-    <span class="k">def</span> <span class="nf">_create_shared_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Creates a parameter of neural network, which is typically a matrix &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_create_matrix_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates a parameter of neural network, which is typically a matrix&quot;&quot;&quot;</span>
         <span class="n">matrix</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">shared</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state_</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">floatX</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.01</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">matrix</span>
         <span class="k">return</span> <span class="n">matrix</span>
+
+    <span class="k">def</span> <span class="nf">_create_scalar_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">names</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates a parameter of neural network, which is typically a matrix&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+            <span class="n">param</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">shared</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state_</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.01</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">param</span>
+            <span class="k">yield</span> <span class="n">param</span>
 
 <div class="viewcode-block" id="AbstractNeuralNetworkClassifier.prepare"><a class="viewcode-back" href="../../nnet.html#hep_ml.nnet.AbstractNeuralNetworkClassifier.prepare">[docs]</a>    <span class="k">def</span> <span class="nf">prepare</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;This method should provide activation function and set parameters.</span>
@@ -479,7 +492,7 @@
 <span class="sd">        and initializes the weights</span>
 <span class="sd">        :return: loss function as lambda (x, y, w) -&gt; loss&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">random_state_</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">layers_</span> <span class="o">=</span> <span class="p">[</span><span class="n">n_input_features</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span> <span class="o">+</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layers_</span> <span class="o">=</span> <span class="p">[</span><span class="n">n_input_features</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prepared</span> <span class="o">=</span> <span class="bp">True</span>
 
@@ -494,7 +507,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">Loss</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">function</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">],</span> <span class="n">loss_</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">loss_</span>
 
-<div class="viewcode-block" id="AbstractNeuralNetworkClassifier.transform"><a class="viewcode-back" href="../../nnet.html#hep_ml.nnet.AbstractNeuralNetworkClassifier.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fit</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fit</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Apply selected scaler or transformer to dataset</span>
 <span class="sd">        (also this method adds a column filled with ones).</span>
 
@@ -514,7 +527,16 @@
         <span class="n">result</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">result</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="mi">1</span><span class="p">])])</span>
 
         <span class="k">return</span> <span class="n">result</span>
-</div>
+
+    <span class="k">def</span> <span class="nf">_prepare_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span> <span class="o">=</span> <span class="n">check_xyw</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">)</span>
+        <span class="n">sample_weight</span> <span class="o">=</span> <span class="n">check_sample_weight</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">fit</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="k">assert</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="s">&#39;only two-class classification supported, labels are 0 and 1&#39;</span>
+        <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span>
+
+
 <div class="viewcode-block" id="AbstractNeuralNetworkClassifier.fit"><a class="viewcode-back" href="../../nnet.html#hep_ml.nnet.AbstractNeuralNetworkClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">trainer</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">trainer_parameters</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Prepare the model by optimizing selected loss function with some trainer.</span>
 <span class="sd">        This method doesn&#39;t support additional fitting, use `partial_fit`.</span>
@@ -525,11 +547,8 @@
 <span class="sd">        :param trainer: str, method used to minimize loss, overrides one in the ctor</span>
 <span class="sd">        :param trainer_parameters: parameters for this method, override ones in ctor</span>
 <span class="sd">        :return: self &quot;&quot;&quot;</span>
-        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span> <span class="o">=</span> <span class="n">check_xyw</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">)</span>
-        <span class="n">sample_weight</span> <span class="o">=</span> <span class="n">check_sample_weight</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-        <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">fit</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
-        <span class="k">assert</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="s">&#39;only two-class classification supported, labels are 0 and 1&#39;</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_inputs</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
+
         <span class="n">loss_lambda</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
         <span class="n">trainer</span> <span class="o">=</span> <span class="n">trainers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">trainer</span> <span class="k">if</span> <span class="n">trainer</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">trainer</span><span class="p">]</span>
@@ -564,7 +583,7 @@
 <span class="sd">        :param numpy.array X: of shape [n_samples, n_features]</span>
 <span class="sd">        :return: numpy.array with results of shape [n_samples]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">fit</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">fit</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="AbstractNeuralNetworkClassifier.predict_proba"><a class="viewcode-back" href="../../nnet.html#hep_ml.nnet.AbstractNeuralNetworkClassifier.predict_proba">[docs]</a>    <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
@@ -609,8 +628,8 @@
 
 <div class="viewcode-block" id="SimpleNeuralNetwork.prepare"><a class="viewcode-back" href="../../nnet.html#hep_ml.nnet.SimpleNeuralNetwork.prepare">[docs]</a>    <span class="k">def</span> <span class="nf">prepare</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers_</span>
-        <span class="n">W1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_shared_matrix</span><span class="p">(</span><span class="s">&#39;W1&#39;</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
-        <span class="n">W2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_shared_matrix</span><span class="p">(</span><span class="s">&#39;W2&#39;</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n3</span><span class="p">)</span>
+        <span class="n">W1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_matrix_parameter</span><span class="p">(</span><span class="s">&#39;W1&#39;</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
+        <span class="n">W2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_matrix_parameter</span><span class="p">(</span><span class="s">&#39;W2&#39;</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n3</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">activation</span><span class="p">(</span><span class="nb">input</span><span class="p">):</span>
             <span class="n">first</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">nnet</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">W1</span><span class="p">))</span>
@@ -625,7 +644,7 @@
 <div class="viewcode-block" id="MLPClassifier.prepare"><a class="viewcode-back" href="../../nnet.html#hep_ml.nnet.MLPClassifier.prepare">[docs]</a>    <span class="k">def</span> <span class="nf">prepare</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">activation</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layers_</span><span class="p">))[</span><span class="mi">1</span><span class="p">:]:</span>
-            <span class="n">W</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_shared_matrix</span><span class="p">(</span><span class="s">&#39;W&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers_</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers_</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">W</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_matrix_parameter</span><span class="p">(</span><span class="s">&#39;W&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers_</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers_</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
             <span class="c"># act=activation and W_=W are tricks to avoid lambda-capturing</span>
             <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">activation</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">act</span><span class="o">=</span><span class="n">activation</span><span class="p">,</span> <span class="n">W_</span><span class="o">=</span><span class="n">W</span><span class="p">:</span> <span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">act</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">W_</span><span class="p">)</span>
@@ -642,8 +661,8 @@
 
 <div class="viewcode-block" id="RBFNeuralNetwork.prepare"><a class="viewcode-back" href="../../nnet.html#hep_ml.nnet.RBFNeuralNetwork.prepare">[docs]</a>    <span class="k">def</span> <span class="nf">prepare</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers_</span>
-        <span class="n">W1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_shared_matrix</span><span class="p">(</span><span class="s">&#39;W1&#39;</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n1</span><span class="p">)</span>
-        <span class="n">W2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_shared_matrix</span><span class="p">(</span><span class="s">&#39;W2&#39;</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n3</span><span class="p">)</span>
+        <span class="n">W1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_matrix_parameter</span><span class="p">(</span><span class="s">&#39;W1&#39;</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n1</span><span class="p">)</span>
+        <span class="n">W2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_matrix_parameter</span><span class="p">(</span><span class="s">&#39;W2&#39;</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n3</span><span class="p">)</span>
         <span class="c"># this parameter is responsible for scaling, it is optimised too</span>
         <span class="n">G</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">shared</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&#39;G&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s">&#39;G&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span>
@@ -662,8 +681,8 @@
 
 <div class="viewcode-block" id="SoftmaxNeuralNetwork.prepare"><a class="viewcode-back" href="../../nnet.html#hep_ml.nnet.SoftmaxNeuralNetwork.prepare">[docs]</a>    <span class="k">def</span> <span class="nf">prepare</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers_</span>
-        <span class="n">W1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_shared_matrix</span><span class="p">(</span><span class="s">&#39;W1&#39;</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
-        <span class="n">W2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_shared_matrix</span><span class="p">(</span><span class="s">&#39;W2&#39;</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n3</span><span class="p">)</span>
+        <span class="n">W1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_matrix_parameter</span><span class="p">(</span><span class="s">&#39;W1&#39;</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
+        <span class="n">W2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_matrix_parameter</span><span class="p">(</span><span class="s">&#39;W2&#39;</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n3</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">activation</span><span class="p">(</span><span class="nb">input</span><span class="p">):</span>
             <span class="n">first</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">nnet</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">W1</span><span class="p">))</span>
@@ -679,8 +698,8 @@
 
 <div class="viewcode-block" id="PairwiseNeuralNetwork.prepare"><a class="viewcode-back" href="../../nnet.html#hep_ml.nnet.PairwiseNeuralNetwork.prepare">[docs]</a>    <span class="k">def</span> <span class="nf">prepare</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers_</span>
-        <span class="n">W1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_shared_matrix</span><span class="p">(</span><span class="s">&#39;W1&#39;</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
-        <span class="n">W2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_shared_matrix</span><span class="p">(</span><span class="s">&#39;W2&#39;</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
+        <span class="n">W1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_matrix_parameter</span><span class="p">(</span><span class="s">&#39;W1&#39;</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
+        <span class="n">W2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_matrix_parameter</span><span class="p">(</span><span class="s">&#39;W2&#39;</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">activation</span><span class="p">(</span><span class="nb">input</span><span class="p">):</span>
             <span class="n">first</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">nnet</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">W1</span><span class="p">))</span>
@@ -694,8 +713,8 @@
 
 <div class="viewcode-block" id="PairwiseSoftplusNeuralNetwork.prepare"><a class="viewcode-back" href="../../nnet.html#hep_ml.nnet.PairwiseSoftplusNeuralNetwork.prepare">[docs]</a>    <span class="k">def</span> <span class="nf">prepare</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers_</span>
-        <span class="n">W1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_shared_matrix</span><span class="p">(</span><span class="s">&#39;W1&#39;</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
-        <span class="n">W2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_shared_matrix</span><span class="p">(</span><span class="s">&#39;W2&#39;</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
+        <span class="n">W1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_matrix_parameter</span><span class="p">(</span><span class="s">&#39;W1&#39;</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
+        <span class="n">W2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_matrix_parameter</span><span class="p">(</span><span class="s">&#39;W2&#39;</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">activation</span><span class="p">(</span><span class="nb">input</span><span class="p">):</span>
             <span class="n">z</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">W1</span><span class="p">)</span>
@@ -737,7 +756,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.2',
+            VERSION:'0.3.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

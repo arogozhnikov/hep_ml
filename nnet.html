@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Neural networks &mdash; hep_ml 0.2 documentation</title>
+  <title>Neural networks &mdash; hep_ml 0.3.0 documentation</title>
   
 
   
@@ -24,13 +24,14 @@
 
   
   
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/my_style.css" type="text/css" />
   
 
   
 
   
-    <link rel="top" title="hep_ml 0.2 documentation" href="index.html"/>
+    <link rel="top" title="hep_ml 0.3.0 documentation" href="index.html"/>
+        <link rel="next" title="Reweighting algorithms" href="reweight.html"/>
         <link rel="prev" title="Metric functions" href="metrics.html"/> 
 
   
@@ -71,6 +72,7 @@
           
           
               <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">hep_ml documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gb.html">Gradient boosting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="losses.html">Losses for Gradient Boosting</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="losses.html#examples">Examples</a></li>
@@ -90,6 +92,11 @@
 <li class="toctree-l2"><a class="reference internal" href="#trainers">Trainers</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="reweight.html">Reweighting algorithms</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reweight.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks.html">Code Examples</a></li>
 </ul>
 
           
@@ -295,29 +302,6 @@ Each network overrides this function.</p>
 X of shape [n_events, n_outputs], p of shape [n_events].
 For classification, p is arbitrary real, the greater p, the more event
 looks like signal event (label 1).</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="hep_ml.nnet.AbstractNeuralNetworkClassifier.transform">
-<code class="descname">transform</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em>, <em>fit=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#AbstractNeuralNetworkClassifier.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.AbstractNeuralNetworkClassifier.transform" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply selected scaler or transformer to dataset
-(also this method adds a column filled with ones).</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>X</strong> (<em>numpy.array</em>) &#8211; of shape [n_samples, n_features], data</li>
-<li><strong>y</strong> (<em>numpy.array</em>) &#8211; of shape [n_samples], labels</li>
-<li><strong>fit</strong> (<em>bool</em>) &#8211; if True, will</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">transformed data, numpy.array of shape [n_samples, n_output_features]</p>
-</td>
 </tr>
 </tbody>
 </table>
@@ -634,6 +618,8 @@ This is default trainer, very stable for classification.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
+        <a href="reweight.html" class="btn btn-neutral float-right" title="Reweighting algorithms" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
       
         <a href="metrics.html" class="btn btn-neutral" title="Metric functions" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
@@ -665,7 +651,7 @@ This is default trainer, very stable for classification.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.2',
+            VERSION:'0.3.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

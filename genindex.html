@@ -9,7 +9,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; hep_ml 0.2 documentation</title>
+  <title>Index &mdash; hep_ml 0.3.0 documentation</title>
   
 
   
@@ -25,13 +25,13 @@
 
   
   
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/my_style.css" type="text/css" />
   
 
   
 
   
-    <link rel="top" title="hep_ml 0.2 documentation" href="index.html"/> 
+    <link rel="top" title="hep_ml 0.3.0 documentation" href="index.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -71,6 +71,7 @@
           
           
               <ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">hep_ml documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gb.html">Gradient boosting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="losses.html">Losses for Gradient Boosting</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="losses.html#examples">Examples</a></li>
@@ -90,6 +91,11 @@
 <li class="toctree-l2"><a class="reference internal" href="nnet.html#trainers">Trainers</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="reweight.html">Reweighting algorithms</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reweight.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks.html">Code Examples</a></li>
 </ul>
 
           
@@ -135,6 +141,7 @@
  | <a href="#D"><strong>D</strong></a>
  | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
  | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
  | <a href="#K"><strong>K</strong></a>
@@ -144,7 +151,6 @@
  | <a href="#P"><strong>P</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
- | <a href="#T"><strong>T</strong></a>
  | <a href="#U"><strong>U</strong></a>
  
 </div>
@@ -187,14 +193,18 @@
   <dt><a href="metrics.html#hep_ml.metrics.BinBasedSDE">BinBasedSDE (class in hep_ml.metrics)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="metrics.html#hep_ml.metrics.BinBasedTheil">BinBasedTheil (class in hep_ml.metrics)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="losses.html#hep_ml.losses.BinFlatnessLossFunction">BinFlatnessLossFunction (class in hep_ml.losses)</a>
+  </dt>
+
+      
+  <dt><a href="reweight.html#hep_ml.reweight.BinsReweighter">BinsReweighter (class in hep_ml.reweight)</a>
   </dt>
 
   </dl></td>
@@ -208,11 +218,29 @@
   </dt>
 
       
+  <dt><a href="reweight.html#hep_ml.reweight.BinsReweighter.compute_bin_indices">compute_bin_indices() (hep_ml.reweight.BinsReweighter method)</a>
+  </dt>
+
+      
   <dt><a href="nnet.html#hep_ml.nnet.AbstractNeuralNetworkClassifier.compute_loss">compute_loss() (hep_ml.nnet.AbstractNeuralNetworkClassifier method)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="losses.html#hep_ml.losses.AbstractLossFunction.compute_optimal_step">compute_optimal_step() (hep_ml.losses.AbstractLossFunction method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="losses.html#hep_ml.losses.MAELossFunction.compute_optimal_step">(hep_ml.losses.MAELossFunction method)</a>
+  </dt>
+
+        
+  <dt><a href="losses.html#hep_ml.losses.MSELossFunction.compute_optimal_step">(hep_ml.losses.MSELossFunction method)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="losses.html#hep_ml.losses.KnnAdaLossFunction.compute_parameters">compute_parameters() (hep_ml.losses.KnnAdaLossFunction method)</a>
   </dt>
@@ -281,11 +309,27 @@
   </dt>
 
         
+  <dt><a href="losses.html#hep_ml.losses.MAELossFunction.fit">(hep_ml.losses.MAELossFunction method)</a>
+  </dt>
+
+        
+  <dt><a href="losses.html#hep_ml.losses.MSELossFunction.fit">(hep_ml.losses.MSELossFunction method)</a>
+  </dt>
+
+        
   <dt><a href="losses.html#hep_ml.losses.RankBoostLossFunction.fit">(hep_ml.losses.RankBoostLossFunction method)</a>
   </dt>
 
         
   <dt><a href="nnet.html#hep_ml.nnet.AbstractNeuralNetworkClassifier.fit">(hep_ml.nnet.AbstractNeuralNetworkClassifier method)</a>
+  </dt>
+
+        
+  <dt><a href="reweight.html#hep_ml.reweight.BinsReweighter.fit">(hep_ml.reweight.BinsReweighter method)</a>
+  </dt>
+
+        
+  <dt><a href="reweight.html#hep_ml.reweight.GBReweighter.fit">(hep_ml.reweight.GBReweighter method)</a>
   </dt>
 
         
@@ -297,6 +341,16 @@
   </dt>
 
       </dl></dd>
+  </dl></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="reweight.html#hep_ml.reweight.GBReweighter">GBReweighter (class in hep_ml.reweight)</a>
+  </dt>
+
   </dl></td>
 </tr></table>
 
@@ -315,10 +369,14 @@
   <dt><a href="metrics.html#module-hep_ml.metrics">hep_ml.metrics (module)</a>
   </dt>
 
+      
+  <dt><a href="nnet.html#module-hep_ml.nnet">hep_ml.nnet (module)</a>
+  </dt>
+
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="nnet.html#module-hep_ml.nnet">hep_ml.nnet (module)</a>
+  <dt><a href="reweight.html#module-hep_ml.reweight">hep_ml.reweight (module)</a>
   </dt>
 
       
@@ -336,6 +394,10 @@
 
         
   <dt><a href="losses.html#hep_ml.losses.LogLossFunction.hessian">(hep_ml.losses.LogLossFunction method)</a>
+  </dt>
+
+        
+  <dt><a href="losses.html#hep_ml.losses.MSELossFunction.hessian">(hep_ml.losses.MSELossFunction method)</a>
   </dt>
 
         
@@ -414,7 +476,17 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
+  <dt><a href="losses.html#hep_ml.losses.MAELossFunction">MAELossFunction (class in hep_ml.losses)</a>
+  </dt>
+
+      
   <dt><a href="nnet.html#hep_ml.nnet.MLPClassifier">MLPClassifier (class in hep_ml.nnet)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="losses.html#hep_ml.losses.MSELossFunction">MSELossFunction (class in hep_ml.losses)</a>
   </dt>
 
   </dl></td>
@@ -438,6 +510,14 @@
 
         
   <dt><a href="losses.html#hep_ml.losses.LogLossFunction.negative_gradient">(hep_ml.losses.LogLossFunction method)</a>
+  </dt>
+
+        
+  <dt><a href="losses.html#hep_ml.losses.MAELossFunction.negative_gradient">(hep_ml.losses.MAELossFunction method)</a>
+  </dt>
+
+        
+  <dt><a href="losses.html#hep_ml.losses.MSELossFunction.negative_gradient">(hep_ml.losses.MSELossFunction method)</a>
   </dt>
 
         
@@ -502,6 +582,16 @@
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
+  <dt><a href="reweight.html#hep_ml.reweight.BinsReweighter.predict_weights">predict_weights() (hep_ml.reweight.BinsReweighter method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="reweight.html#hep_ml.reweight.GBReweighter.predict_weights">(hep_ml.reweight.GBReweighter method)</a>
+  </dt>
+
+      </dl></dd>
+      
   <dt><a href="nnet.html#hep_ml.nnet.AbstractNeuralNetworkClassifier.prepare">prepare() (hep_ml.nnet.AbstractNeuralNetworkClassifier method)</a>
   </dt>
 
@@ -537,6 +627,10 @@
 
       <dd><dl>
         
+  <dt><a href="losses.html#hep_ml.losses.MAELossFunction.prepare_new_leaves_values">(hep_ml.losses.MAELossFunction method)</a>
+  </dt>
+
+        
   <dt><a href="losses.html#hep_ml.losses.RankBoostLossFunction.prepare_new_leaves_values">(hep_ml.losses.RankBoostLossFunction method)</a>
   </dt>
 
@@ -545,6 +639,24 @@
   <dt><a href="losses.html#hep_ml.losses.AbstractLossFunction.prepare_tree_params">prepare_tree_params() (hep_ml.losses.AbstractLossFunction method)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="losses.html#hep_ml.losses.AdaLossFunction.prepare_tree_params">(hep_ml.losses.AdaLossFunction method)</a>
+  </dt>
+
+        
+  <dt><a href="losses.html#hep_ml.losses.LogLossFunction.prepare_tree_params">(hep_ml.losses.LogLossFunction method)</a>
+  </dt>
+
+        
+  <dt><a href="losses.html#hep_ml.losses.MAELossFunction.prepare_tree_params">(hep_ml.losses.MAELossFunction method)</a>
+  </dt>
+
+        
+  <dt><a href="losses.html#hep_ml.losses.MSELossFunction.prepare_tree_params">(hep_ml.losses.MSELossFunction method)</a>
+  </dt>
+
+      </dl></dd>
   </dl></td>
 </tr></table>
 
@@ -610,16 +722,6 @@
   </dl></td>
 </tr></table>
 
-<h2 id="T">T</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%" valign="top"><dl>
-      
-  <dt><a href="nnet.html#hep_ml.nnet.AbstractNeuralNetworkClassifier.transform">transform() (hep_ml.nnet.AbstractNeuralNetworkClassifier method)</a>
-  </dt>
-
-  </dl></td>
-</tr></table>
-
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
@@ -675,7 +777,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.2',
+            VERSION:'0.3.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

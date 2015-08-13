@@ -1,0 +1,5 @@
+Notebook example
+~~~~~~~~~~~~~~~~
+
+.. raw:: html
+   :file: BoostingToUniformity.html

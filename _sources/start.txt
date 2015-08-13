@@ -1,54 +1,39 @@
-.. hep_ml documentation master file, created by
-   sphinx-quickstart on Wed Jul 22 20:45:24 2015.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+hep\_ml
+=======
 
-hep_ml documentation
-====================
+**hep\_ml** provides specific machine learning tools for purposes of
+high energy physics (written in python).
 
-**hep_ml** is machine learning library filled with methods used in high energy physics.
-Classifiers from **hep_ml** are **sklearn**-compatible.
+Main points
+-----------
 
+-  uniform classifiers - the classifiers with low correlation of
+   predictions and mass (or some other variable(s))
+-  **uBoost** optimized implementation inside
+-  **UGradientBoosting** (with different losses, specially
+   **FlatnessLoss** is very interesting)
+-  measures of uniformity (see **hep\_ml.metrics**)
+-  advanced losses for classification, regression and ranking for
+   **UGradientBoosting** (see **hep\_ml.losses**).
+-  **hep\_ml.nnet** - theano-based neural networks
 
 Installation
-____________
-
-To install **hep_ml**, use **pip**. Type in terminal:
+~~~~~~~~~~~~
 
 .. code:: bash
 
     pip install hep_ml
 
+To use latest version, clone it and install with ``pip``:
 
-.. Modules:
-   ________
-   * :doc:`gb`
-   * :doc:`losses`
-   * :doc:`uboost`
-   * :doc:`metrics`
-   * :doc:`nnet`
-   * :doc:`reweight`
+.. code:: bash
 
-
-
-Contents:
-_________
-
-.. toctree::
-   :maxdepth: 2
-
-   self
-   gb
-   losses
-   uboost
-   metrics
-   nnet
-   reweight
-   notebooks
-
+    git clone https://github.com/arogozhnikov/hep_ml.git
+    cd hep_ml
+    sudo pip install .
 
 Links
-_____
+~~~~~
 
 -  `documentation <https://arogozhnikov.github.io/hep_ml/>`__
 -  `notebook
@@ -57,7 +42,7 @@ _____
 -  `issue tracker <https://github.com/arogozhnikov/hep_ml/issues>`__
 
 Related projects
-________________
+~~~~~~~~~~~~~~~~
 
 Libraries you'll require to make your life easier.
 
@@ -76,11 +61,3 @@ Libraries you'll require to make your life easier.
    physics
 -  `root\_numpy <http://rootpy.github.io/root_numpy/>`__ — python
    library to deal with ROOT files (without pain)
-
-
-..  Indices and tables
-    ==================
-    * :ref:`genindex`
-    * :ref:`modindex`
-    * :ref:`search`
-

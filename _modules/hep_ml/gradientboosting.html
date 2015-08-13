@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>hep_ml.gradientboosting &mdash; hep_ml 0.2 documentation</title>
+  <title>hep_ml.gradientboosting &mdash; hep_ml 0.3.0 documentation</title>
   
 
   
@@ -24,13 +24,13 @@
 
   
   
-    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/css/my_style.css" type="text/css" />
   
 
   
 
   
-    <link rel="top" title="hep_ml 0.2 documentation" href="../../index.html"/>
+    <link rel="top" title="hep_ml 0.3.0 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -71,6 +71,7 @@
           
           
               <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">hep_ml documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../gb.html">Gradient boosting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../losses.html">Losses for Gradient Boosting</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../losses.html#examples">Examples</a></li>
@@ -90,6 +91,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../../nnet.html#trainers">Trainers</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../reweight.html">Reweighting algorithms</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reweight.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Code Examples</a></li>
 </ul>
 
           
@@ -184,6 +190,7 @@
 
 <span class="sd">        :param loss: any descendant of AbstractLossFunction, those are very various.</span>
 <span class="sd">            See :class:`hep_ml.losses` for available losses.</span>
+<span class="sd">        :type loss: AbstractLossFunction</span>
 <span class="sd">        :param int n_estimators: number of trained trees.</span>
 <span class="sd">        :param float subsample: fraction of data to use on each stage</span>
 <span class="sd">        :param float learning_rate: size of step.</span>
@@ -227,11 +234,11 @@
 
         <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
         <span class="n">n_inbag</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subsample</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
-        <span class="n">update_mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
 
         <span class="c"># preparing for loss function</span>
         <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span> <span class="o">=</span> <span class="n">check_xyw</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
 
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loss</span><span class="p">,</span> <span class="n">AbstractLossFunction</span><span class="p">),</span> <span class="s">&#39;loss function should be derived from AbstractLossFunction&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loss</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loss</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loss</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
 
@@ -241,6 +248,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">n_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
         <span class="n">y_pred</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss</span><span class="o">.</span><span class="n">compute_optimal_step</span><span class="p">(</span><span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred</span><span class="p">)</span>
+        <span class="n">y_pred</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_step</span>
 
         <span class="k">for</span> <span class="n">stage</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_estimators</span><span class="p">):</span>
             <span class="c"># tree creation</span>
@@ -264,10 +273,8 @@
             <span class="n">leaf_values</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">get_leaf_values</span><span class="p">()</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_tree</span><span class="p">:</span>
                 <span class="n">terminal_regions</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-                <span class="n">leaf_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss</span><span class="o">.</span><span class="n">prepare_new_leaves_values</span><span class="p">(</span><span class="n">terminal_regions</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred</span><span class="p">,</span>
-                                                                  <span class="n">leaf_values</span><span class="o">=</span><span class="n">leaf_values</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">,</span>
-                                                                  <span class="n">update_mask</span><span class="o">=</span><span class="n">update_mask</span><span class="p">,</span>
-                                                                  <span class="n">residual</span><span class="o">=</span><span class="n">residual</span><span class="p">)</span>
+                <span class="n">leaf_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss</span><span class="o">.</span><span class="n">prepare_new_leaves_values</span><span class="p">(</span><span class="n">terminal_regions</span><span class="p">,</span> <span class="n">leaf_values</span><span class="o">=</span><span class="n">leaf_values</span><span class="p">,</span>
+                                                                  <span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred</span><span class="p">)</span>
 
             <span class="n">y_pred</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">leaf_values</span><span class="o">=</span><span class="n">leaf_values</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">estimators</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">tree</span><span class="p">,</span> <span class="n">leaf_values</span><span class="p">])</span>
@@ -287,7 +294,7 @@
 <span class="sd">        :return: sequence of numpy.array of shape [n_samples]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">X</span> <span class="o">=</span> <span class="n">SklearnClusteringTree</span><span class="o">.</span><span class="n">prepare_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_train_features</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
-        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_step</span>
         <span class="k">for</span> <span class="n">tree</span><span class="p">,</span> <span class="n">leaf_values</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators</span><span class="p">:</span>
             <span class="n">y_pred</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">leaf_values</span><span class="o">=</span><span class="n">leaf_values</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">)</span>
             <span class="k">yield</span> <span class="n">y_pred</span>
@@ -360,8 +367,7 @@
 
 </div></div>
 <div class="viewcode-block" id="UGradientBoostingRegressor"><a class="viewcode-back" href="../../gb.html#hep_ml.gradientboosting.UGradientBoostingRegressor">[docs]</a><span class="k">class</span> <span class="nc">UGradientBoostingRegressor</span><span class="p">(</span><span class="n">UGradientBoostingBase</span><span class="p">,</span> <span class="n">RegressorMixin</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;This version of gradient boosting supports only two-class classification and only special losses</span>
-<span class="sd">    derived from AbstractLossFunction.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Gradient Boosted regressor. Approximates target by sum of predictions of several trees.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="UGradientBoostingRegressor.fit"><a class="viewcode-back" href="../../gb.html#hep_ml.gradientboosting.UGradientBoostingRegressor.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fit estimator.</span>
@@ -420,7 +426,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.2',
+            VERSION:'0.3.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

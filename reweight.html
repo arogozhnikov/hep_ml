@@ -1,0 +1,393 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Reweighting algorithms &mdash; hep_ml 0.3.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/my_style.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="hep_ml 0.3.0 documentation" href="index.html"/>
+        <link rel="next" title="Code Examples" href="notebooks.html"/>
+        <link rel="prev" title="Neural networks" href="nnet.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+
+        
+          <a href="index.html" class="icon icon-home"> hep_ml
+        
+
+        
+        </a>
+
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">hep_ml documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gb.html">Gradient boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="losses.html">Losses for Gradient Boosting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="losses.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="uboost.html">uBoost</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="uboost.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metric functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nnet.html">Neural networks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nnet.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nnet.html#loss-functions">Loss functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nnet.html#trainers">Trainers</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Reweighting algorithms</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks.html">Code Examples</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">hep_ml</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Reweighting algorithms</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/reweight.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="module-hep_ml.reweight">
+<span id="reweighting-algorithms"></span><h1>Reweighting algorithms<a class="headerlink" href="#module-hep_ml.reweight" title="Permalink to this headline">¶</a></h1>
+<p><strong>hep_ml.reweight</strong> contains reweighting algorithms.</p>
+<p>Reweighting is procedure of finding such weights for original distribution,
+that make distribution of one or several variables identical in original distribution and target distribution.</p>
+<p>Remark: if each variable has identical distribution in two samples,
+this doesn&#8217;t imply that multidimensional distributions are equal (almost surely they aren&#8217;t).
+Aim of reweighters is to get identical multidimensional distributions.</p>
+<p>Algorithms are implemented as estimators, fitting and reweighting stages are split.
+Fitted reweighter can be applied many times to different data, pickled and so on.</p>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>The most common use case is reweighting of Monte-Carlo simulations results to sPlotted real data.
+(original weights are all equal to 1 and could be skipped, but left here for example)</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hep_ml.reweight</span> <span class="kn">import</span> <span class="n">BinsReweighter</span><span class="p">,</span> <span class="n">GBReweighter</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">original_weights</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">MC_data</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">reweighter</span> <span class="o">=</span> <span class="n">BinsReweighter</span><span class="p">(</span><span class="n">n_bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_neighs</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">reweighter</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">original</span><span class="o">=</span><span class="n">MC_data</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">RealData</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>               <span class="n">original_weight</span><span class="o">=</span><span class="n">original_weights</span><span class="p">,</span> <span class="n">target_weight</span><span class="o">=</span><span class="n">sWeights</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">MC_weights</span> <span class="o">=</span> <span class="n">reweighter</span><span class="o">.</span><span class="n">predict_weights</span><span class="p">(</span><span class="n">MC_data</span><span class="p">,</span> <span class="n">original_weight</span><span class="o">=</span><span class="n">original_weights</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The same example for <cite>GBReweighter</cite>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">reweighter</span> <span class="o">=</span> <span class="n">GBReweighter</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">other_args</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;subsample&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">reweighter</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">original</span><span class="o">=</span><span class="n">MC_data</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">RealData</span><span class="p">,</span> <span class="n">target_weight</span><span class="o">=</span><span class="n">sWeights</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">MC_weights</span> <span class="o">=</span> <span class="n">reweighter</span><span class="o">.</span><span class="n">predict_weights</span><span class="p">(</span><span class="n">MC_data</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="class">
+<dt id="hep_ml.reweight.BinsReweighter">
+<em class="property">class </em><code class="descclassname">hep_ml.reweight.</code><code class="descname">BinsReweighter</code><span class="sig-paren">(</span><em>n_bins=200</em>, <em>n_neighs=3.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/reweight.html#BinsReweighter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.reweight.BinsReweighter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.BaseEstimator</span></code>, <code class="xref py py-class docutils literal"><span class="pre">hep_ml.reweight.ReweighterMixin</span></code></p>
+<p>Use bins for reweighting. Bins&#8217; edges are computed using quantiles along each axis
+(which is better than bins of even size).</p>
+<p>This method works fine for 1d/2d histograms,
+while being quite unstable or inaccurate for higher dimensions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>n_bins</strong> (<em>int</em>) &#8211; how many bins to use for each input variable.</li>
+<li><strong>n_neighs</strong> (<em>int</em>) &#8211; size of gaussian filter (in bins).
+This parameter is responsible for tradeoff between stability of rule and accuracy of predictions.
+With increase of n_neighs the</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="hep_ml.reweight.BinsReweighter.compute_bin_indices">
+<code class="descname">compute_bin_indices</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/reweight.html#BinsReweighter.compute_bin_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.reweight.BinsReweighter.compute_bin_indices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute id of bin along each axis.
+:param data: data, array-like of shape [n_samples, n_features]</p>
+<blockquote>
+<div>with the same order of features as in training</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">numpy.array of shape [n_samples, n_features] with integers, each from [0, n_bins - 1]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hep_ml.reweight.BinsReweighter.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>original</em>, <em>target</em>, <em>original_weight=None</em>, <em>target_weight=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/reweight.html#BinsReweighter.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.reweight.BinsReweighter.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepare reweighting formula by computing histograms.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>original</strong> &#8211; values from original distribution, array-like of shape [n_samples, n_features]</li>
+<li><strong>target</strong> &#8211; values from target distribution, array-like of shape [n_samples, n_features]</li>
+<li><strong>original_weight</strong> &#8211; weights for samples of original distributions</li>
+<li><strong>target_weight</strong> &#8211; weights for samples of original distributions</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">self</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hep_ml.reweight.BinsReweighter.predict_weights">
+<code class="descname">predict_weights</code><span class="sig-paren">(</span><em>original</em>, <em>original_weight=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/reweight.html#BinsReweighter.predict_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.reweight.BinsReweighter.predict_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns corrected weights. Result is computed as original_weight * reweighter_multipliers.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>original</strong> &#8211; values from original distribution of shape [n_samples, n_features]</li>
+<li><strong>original_weight</strong> &#8211; weights of samples before reweighting.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">numpy.array of shape [n_samples] with new weights.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="hep_ml.reweight.GBReweighter">
+<em class="property">class </em><code class="descclassname">hep_ml.reweight.</code><code class="descname">GBReweighter</code><span class="sig-paren">(</span><em>n_estimators=40</em>, <em>learning_rate=0.2</em>, <em>max_depth=3</em>, <em>min_samples_leaf=200</em>, <em>gb_args=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/reweight.html#GBReweighter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.reweight.GBReweighter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.BaseEstimator</span></code>, <code class="xref py py-class docutils literal"><span class="pre">hep_ml.reweight.ReweighterMixin</span></code></p>
+<p>Gradient Boosted Reweighter - a reweighter algorithm based on ensemble of regression trees.
+Parameters have the same role, as in gradient boosting.
+Special loss function is used, trees are trained to maximize symmetrized binned chi-squared statistics.</p>
+<p>Training takes much more time than for bin-based versions, but <cite>GBReweighter</cite> is capable
+to work in high dimensions while keeping reweighting rule reliable and precise
+(and even smooth if many trees are used).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>n_estimators</strong> &#8211; number of trees</li>
+<li><strong>learning_rate</strong> &#8211; float from [0, 1]. Lesser learning rate requires more trees,
+but makes reweighting rule more stable.</li>
+<li><strong>max_depth</strong> &#8211; maximal depth of trees</li>
+<li><strong>min_samples_leaf</strong> &#8211; minimal number of events in the leaf. If many</li>
+<li><strong>gb_args</strong> &#8211; other parameters passed to gradient boosting.
+See <a class="reference internal" href="gb.html#hep_ml.gradientboosting.UGradientBoostingClassifier" title="hep_ml.gradientboosting.UGradientBoostingClassifier"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.gradientboosting.UGradientBoostingClassifier</span></code></a></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="hep_ml.reweight.GBReweighter.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>original</em>, <em>target</em>, <em>original_weight=None</em>, <em>target_weight=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/reweight.html#GBReweighter.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.reweight.GBReweighter.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepare reweighting formula by training sequence of trees.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>original</strong> &#8211; values from original distribution, array-like of shape [n_samples, n_features]</li>
+<li><strong>target</strong> &#8211; values from target distribution, array-like of shape [n_samples, n_features]</li>
+<li><strong>original_weight</strong> &#8211; weights for samples of original distributions</li>
+<li><strong>target_weight</strong> &#8211; weights for samples of original distributions</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">self</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hep_ml.reweight.GBReweighter.predict_weights">
+<code class="descname">predict_weights</code><span class="sig-paren">(</span><em>original</em>, <em>original_weight=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/reweight.html#GBReweighter.predict_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.reweight.GBReweighter.predict_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns corrected weights. Result is computed as original_weight * reweighter_multipliers.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>original</strong> &#8211; values from original distribution of shape [n_samples, n_features]</li>
+<li><strong>original_weight</strong> &#8211; weights of samples before reweighting.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">numpy.array of shape [n_samples] with new weights.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="notebooks.html" class="btn btn-neutral float-right" title="Code Examples" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="nnet.html" class="btn btn-neutral" title="Neural networks" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Yandex; Alex Rogozhnikov and contributors.
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
