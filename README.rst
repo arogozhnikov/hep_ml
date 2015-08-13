@@ -15,10 +15,13 @@ Main points
 -  measures of uniformity (see **hep\_ml.metrics**)
 -  advanced losses for classification, regression and ranking for
    **UGradientBoosting** (see **hep\_ml.losses**).
--  **hep\_ml.nnet** - theano-based neural networks
+-  **hep\_ml.nnet** - theano-based flexible neural networks
+-  **hep\_ml.reweight** - reweighting multidimensional distributions
+   (*multi* here means 2, 3, 5 and more dimensions - see GBReweighter!)
+-  **sklearn**-compatibility of estimators.
 
 Installation
-~~~~~~~~~~~~
+------------
 
 .. code:: bash
 
@@ -33,16 +36,17 @@ To use latest version, clone it and install with ``pip``:
     sudo pip install .
 
 Links
-~~~~~
+-----
 
 -  `documentation <https://arogozhnikov.github.io/hep_ml/>`__
 -  `notebook
    examples <https://github.com/arogozhnikov/hep_ml/tree/master/notebooks>`__
 -  `repository <https://github.com/arogozhnikov/hep_ml>`__
 -  `issue tracker <https://github.com/arogozhnikov/hep_ml/issues>`__
+-  `old repository <https://github.com/anaderi/lhcb_trigger_ml>`__
 
 Related projects
-~~~~~~~~~~~~~~~~
+----------------
 
 Libraries you'll require to make your life easier.
 
@@ -52,7 +56,8 @@ Libraries you'll require to make your life easier.
    for machine learning in python
 -  `REP <https://github.com/yandex/REP>`__ — python wrappers around
    different machine learning libraries (including TMVA) + goodies,
-   required to plot learning curves reports after classification
+   required to plot learning curves and reports after classification.
+   Required to execute *howto*\ s from this repository
 -  `numpy <http://www.numpy.org/>`__ — 'MATLAB in python', vector
    operation in python. Use it you need to perform any number crunching.
 -  `theano <http://deeplearning.net/software/theano/>`__ — optimized
@@ -61,3 +66,8 @@ Libraries you'll require to make your life easier.
    physics
 -  `root\_numpy <http://rootpy.github.io/root_numpy/>`__ — python
    library to deal with ROOT files (without pain)
+
+License
+-------
+
+Apache 2.0, library is open-source.
