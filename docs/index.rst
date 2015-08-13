@@ -20,14 +20,12 @@ To install **hep_ml**, use **pip**. Type in terminal:
     pip install hep_ml
 
 
-.. Modules:
-   ________
-   * :doc:`gb`
-   * :doc:`losses`
-   * :doc:`uboost`
-   * :doc:`metrics`
-   * :doc:`nnet`
-   * :doc:`reweight`
+Developer installation, after cloning:
+
+.. code:: bash
+
+    cd hep_ml
+    pip install -e . -r requirements.txt
 
 
 
@@ -76,11 +74,4 @@ Libraries you'll require to make your life easier.
    physics
 -  `root\_numpy <http://rootpy.github.io/root_numpy/>`__ — python
    library to deal with ROOT files (without pain)
-
-
-..  Indices and tables
-    ==================
-    * :ref:`genindex`
-    * :ref:`modindex`
-    * :ref:`search`
 
