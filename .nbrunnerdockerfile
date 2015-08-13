@@ -1,3 +1,3 @@
-FROM anaderi/rep-juyterhub:latest
+FROM anaderi/rep-jupyterhub:latest
 
 RUN pip2 install hep_ml
