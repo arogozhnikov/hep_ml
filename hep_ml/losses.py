@@ -66,7 +66,8 @@ __all__ = [
     'BinFlatnessLossFunction',
     'KnnFlatnessLossFunction',
     'KnnAdaLossFunction',
-    'RankBoostLossFunction'
+    'RankBoostLossFunction',
+    'ReweightLossFunction'
 ]
 
 
@@ -586,12 +587,14 @@ class KnnAdaLossFunction(AbstractMatrixLossFunction):
 # 0. recompute weights
 # 1. normalize ratio between distributions (negatives are in opposite distribution)
 # 2. chi2 - changing only sign, weights are the same
-# 3. optimal value: simply log as usual (negatives are in the same distribution with sign -)
+# 3. optimal value: simply log (negatives are in the same distribution with sign -)
 
 class ReweightLossFunction(AbstractLossFunction):
     def __init__(self, regularization=5.):
         """
-        Loss function used to reweight events. Conventions:
+        Loss function used to reweight destributions. Works inside :class:`hep_ml.reweight.GBReweighter`
+
+        Conventions:
          y=0 - target distribution, y=1 - original distribution.
         Weights after look like:
          w = w_0 for target distribution
