@@ -37,12 +37,14 @@ _________
 .. toctree::
    :maxdepth: 2
 
+   self
    gb
    losses
    uboost
    metrics
    nnet
    reweight
+   notebooks
 
 
 Links
