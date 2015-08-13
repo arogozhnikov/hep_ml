@@ -6,8 +6,8 @@ The main goal of **uBoost** is to fight correlation between predictions and some
 * `uBoostClassifier` is a combination of uBoostBDTs for different efficiencies
 
 This implementation is more advanced than one described in the original paper,
-contains smoothing and trains classifiers in threads, has `learning_rate` and `uniforming_rate` parameters
-and supports SAMME.R modification to use predicted probabilities.
+contains smoothing and trains classifiers in threads, has `learning_rate` and `uniforming_rate` parameters,
+does automatic weights renormalization and supports SAMME.R modification to use predicted probabilities.
 
 Only binary classification is implemented.
 
