@@ -112,7 +112,7 @@ class BinsReweighter(BaseEstimator, ReweighterMixin):
             With increase of n_neighs the
 
         """
-        self.n_percentiles = n_bins
+        self.n_bins = n_bins
         self.n_neighs = n_neighs
         # if number of events in bins is less than this value, number of events is clipped.
         self.min_in_the_bin = 1.
@@ -142,7 +142,7 @@ class BinsReweighter(BaseEstimator, ReweighterMixin):
         self.n_features_ = None
         original, original_weight = self._normalize_input(original, original_weight)
         target, target_weight = self._normalize_input(target, target_weight)
-        target_perc = numpy.linspace(0, 1, self.n_percentiles + 1)[1:-1]
+        target_perc = numpy.linspace(0, 1, self.n_bins + 1)[1:-1]
         self.edges = []
         for axis in range(self.n_features_):
             self.edges.append(weighted_quantile(target[:, axis], quantiles=target_perc, sample_weight=target_weight))
@@ -150,7 +150,7 @@ class BinsReweighter(BaseEstimator, ReweighterMixin):
         bins_weights = []
         for data, weights in [(original, original_weight), (target, target_weight)]:
             bin_indices = self.compute_bin_indices(data)
-            bin_w = bincount_nd(bin_indices, weights=weights, shape=[self.n_percentiles] * self.n_features_)
+            bin_w = bincount_nd(bin_indices, weights=weights, shape=[self.n_bins] * self.n_features_)
             smeared_weights = gaussian_filter(bin_w, sigma=self.n_neighs, truncate=2.5)
             bins_weights.append(smeared_weights.clip(self.min_in_the_bin))
         bin_orig_weights, bin_targ_weights = bins_weights
