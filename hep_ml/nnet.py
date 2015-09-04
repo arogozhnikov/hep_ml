@@ -57,7 +57,6 @@ from sklearn import preprocessing
 from .commonutils import check_xyw, check_sample_weight
 from scipy.special import expit
 
-
 floatX = theano.config.floatX
 __author__ = 'Alex Rogozhnikov'
 __all__ = ['AbstractNeuralNetworkClassifier',
@@ -68,6 +67,7 @@ __all__ = ['AbstractNeuralNetworkClassifier',
            'PairwiseNeuralNetwork',
            'PairwiseSoftplusNeuralNetwork',
            ]
+
 
 # region Loss functions
 
@@ -113,6 +113,7 @@ losses = {'mse_loss': mse_loss,
           'squared_loss': squared_loss,
           'smooth_huber_loss': smooth_huber_loss,
           }
+
 
 # endregion
 
@@ -279,6 +280,8 @@ trainers = {'sgd': sgd_trainer,
             'irprop*': irprop_star_trainer,
             'adadelta': adadelta_trainer,
             }
+
+
 # endregion
 
 
@@ -380,12 +383,12 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
         :param bool fit: if True, will
         :return: transformed data, numpy.array of shape [n_samples, n_output_features]
         """
+        # Fighting copy-bug of sklearn's transformers
+        X = numpy.array(X, dtype=float)
+
         if fit:
             self.scaler_ = _prepare_scaler(self.scaler)
             self.scaler_.fit(X, y)
-
-        # Fighting copy-bug of sklearn's transformers
-        X = numpy.array(X, dtype=float)
 
         result = self.scaler_.transform(X)
         result = numpy.hstack([result, numpy.ones([len(X), 1])])
@@ -399,7 +402,6 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
         self.classes_ = numpy.array([0, 1])
         assert (numpy.unique(y) == self.classes_).all(), 'only two-class classification supported, labels are 0 and 1'
         return X, y, sample_weight
-
 
     def fit(self, X, y, sample_weight=None, trainer=None, epochs=None, **trainer_parameters):
         """ Prepare the model by optimizing selected loss function with some trainer.
