@@ -2,7 +2,8 @@
 **hep_ml.preprocessing** contains useful operations with data.
 Algorithms implemented here follow sklearn conventions for transformers and inherited from BaseEstimator and TransformerMixin.
 
-Minor difference compared to sklearn is that transformations preserve names of features (if it is possible).
+Minor difference compared to sklearn is that transformations preserve names of features in DataFrames
+(if it is possible).
 
 See also: sklearn.preprocessing
 
