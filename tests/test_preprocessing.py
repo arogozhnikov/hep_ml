@@ -31,6 +31,8 @@ def test_bin_transform(n_features=10, n_samples=10000):
     result = transformer.transform(data)
 
     assert numpy.all(result < n_bins)
+    assert numpy.all(result >= 0)
+    assert numpy.allclose(numpy.max(result, axis=0), n_bins - 1)
     assure_monotonic(data, result)
 
     # check reproducibility
