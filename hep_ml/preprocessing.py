@@ -98,7 +98,7 @@ class IronTransformer(BaseEstimator, TransformerMixin):
         The name of transformer comes from https://en.wikipedia.org/wiki/Clothes_iron,
         which makes anything flat, being applied with enough pressure :)
 
-        Recommended to apply with neural networks.
+        Recommended to apply with neural networks and other algorithms sensitive to scale of features.
         """
         self.max_points = max_points
 
