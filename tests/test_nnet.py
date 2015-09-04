@@ -9,12 +9,17 @@ from sklearn.datasets import make_blobs
 from sklearn.metrics import roc_auc_score
 
 from hep_ml import nnet
+from hep_ml.commonutils import generate_sample
+from hep_ml.preprocessing import BinTransformer, IronTransformer
 
 
 __author__ = 'Alex Rogozhnikov'
 
 
 def test_nnet(n_samples=200, n_features=5, distance=0.5, complete=False):
+    """
+    :param complete: if True, all possible combinations will be checked
+    """
     X, y = make_blobs(n_samples=n_samples, n_features=5,
                       centers=[numpy.ones(n_features) * distance, - numpy.ones(n_features) * distance])
 
@@ -43,7 +48,6 @@ def test_nnet(n_samples=200, n_features=5, distance=0.5, complete=False):
     else:
         # checking combinations of losses, nn_types, trainers, most of them are used once during tests.
         attempts = max(len(nnet.losses), len(nnet.trainers), len(nn_types))
-        attempts = 4
         losses_shift = numpy.random.randint(10)
         trainers_shift = numpy.random.randint(10)
         for attempt in range(attempts):
@@ -58,3 +62,12 @@ def test_nnet(n_samples=200, n_features=5, distance=0.5, complete=False):
             assert roc_auc_score(y, nn.predict_proba(X)[:, 1]) > 0.8, \
                 'quality of model is too low: {}'.format(nn)
 
+
+def test_with_scaler(n_samples=200, n_features=5, distance=0.5):
+    X, y = generate_sample(n_samples=n_samples, n_features=n_features, distance=distance)
+    for scaler in [BinTransformer(max_bins=16), IronTransformer()]:
+        clf = nnet.SimpleNeuralNetwork(scaler=scaler)
+        clf.fit(X, y, epochs=300)
+
+        p = clf.predict_proba(X)
+        assert roc_auc_score(y, p[:, 1]) > 0.8, 'quality is too low for model: {}'.format(clf)
