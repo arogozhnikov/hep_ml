@@ -7,6 +7,25 @@ Minor difference compared to sklearn is that transformations preserve names of f
 
 See also: sklearn.preprocessing
 
+Examples
+--------
+
+Transformers may be used as any other transformer, manually training and applying:
+
+>>> from hep_ml.preprocessing import IronTransformer
+>>> transformer = IronTransformer().fit(trainX)
+>>> new_trainX = transformer.transform(trainX)
+>>> new_testX = transformer.transform(testX)
+
+Apart from this, transformers may be plugged as part of sklearn.Pipeline:
+>>> from sklearn.pipeline import Pipeline
+>>> from hep_ml.nnet import SimpleNeuralNetwork
+>>> clf = Pipeline(['pre', IronTransformer(),
+>>>                 'nnet', SimpleNeuralNetwork()])
+
+Also, neural networks support special argument 'scaler'. You can pass any transformer there:
+>>> clf = SimpleNeuralNetwork(layers=[10, 8], scaler=IronTransformer())
+
 """
 
 from __future__ import division, print_function, absolute_import

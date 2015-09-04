@@ -46,7 +46,6 @@ def test_iron_transformer(n_features=10, n_samples=10000):
     """
     Testing FlatTransformer
     """
-
     data = numpy.random.random([n_samples, n_features])
 
     transformer = IronTransformer().fit(data)
