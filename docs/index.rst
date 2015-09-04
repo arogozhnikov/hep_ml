@@ -20,7 +20,10 @@ To install **hep_ml**, use **pip**. Type in terminal:
     pip install hep_ml
 
 
-Developer installation, after cloning:
+Installation for developers
+___________________________
+
+After cloning repository type in bash:
 
 .. code:: bash
 
