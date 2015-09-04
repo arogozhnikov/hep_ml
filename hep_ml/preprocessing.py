@@ -99,6 +99,8 @@ class IronTransformer(BaseEstimator, TransformerMixin):
         which makes anything flat, being applied with enough pressure :)
 
         Recommended to apply with neural networks and other algorithms sensitive to scale of features.
+
+        :param int max_points: leave so many points in monotonic transformation.
         """
         self.max_points = max_points
 
@@ -118,12 +120,14 @@ class IronTransformer(BaseEstimator, TransformerMixin):
         self.feature_percentiles = numpy.zeros(X.shape, dtype=float)
 
         self.feature_maps = OrderedDict()
+        random_state = numpy.random.RandomState(seed=42)
         for column in X.columns:
-            data = X[column]
+            # adding little noise for symmetrical gaps around concentrations.
+            data = X[column] + random_state.normal(0, scale=1e-10, size=len(X))
             order = numpy.argsort(data)
-            cdf = numpy.cumsum(sample_weight[order])
-            ordered_data = data[order]
-            self.feature_maps[column] = (ordered_data, cdf)
+            feature_percentiles = numpy.cumsum(sample_weight[order])
+            feature_values = data[order]
+            self.feature_maps[column] = (feature_values, feature_percentiles)
 
         return self
 
