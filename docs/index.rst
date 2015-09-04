@@ -7,7 +7,7 @@ hep_ml documentation
 ====================
 
 **hep_ml** is machine learning library filled with methods used in high energy physics.
-Classifiers from **hep_ml** are **sklearn**-compatible.
+Classifiers and transformers from **hep_ml** are **sklearn**-compatible.
 
 
 Installation
@@ -41,6 +41,7 @@ _________
    uboost
    metrics
    nnet
+   preprocessing
    reweight
    notebooks
 
