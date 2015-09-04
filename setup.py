@@ -19,8 +19,8 @@ setup(
 
     # Choose your license
     license='Apache 2.0',
-    packages=['hep_ml'],
-    package_dir={'hep_ml': 'hep_ml'},
+    packages=['hep_ml', 'hep_ml.experiments'],
+
     classifiers=[
         # Indicate who your project is intended for
         'Intended Audience :: Science/Research',
