@@ -16,7 +16,6 @@ import time
 
 
 def test_lookup(n_samples=10000, n_features=7, n_bins=8):
-    # and dict with predefined thresholds
     X, y = generate_sample(n_samples=n_samples, n_features=n_features, distance=0.6)
 
     base_estimator = GradientBoostingClassifier()
