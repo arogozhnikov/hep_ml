@@ -356,7 +356,7 @@ class RankBoostLossFunction(HessianLossFunction):
         :param str request_column: name of column with search query ids. The higher attention is payed
           to samples with same query.
         :param float penalty_power: describes dependence of penalty on the difference between target labels.
-        :param int update_iterations: number of minimization steps to provide optimal values.
+        :param int update_iterations: number of minimization steps to provide optimal values in leaves.
 
         .. [RB] Y. Freund et al. An Efficient Boosting Algorithm for Combining Preferences
         """
@@ -594,14 +594,15 @@ class ReweightLossFunction(AbstractLossFunction):
         """
         Loss function used to reweight destributions. Works inside :class:`hep_ml.reweight.GBReweighter`
 
-        Conventions:
-         y=0 - target distribution, y=1 - original distribution.
-        Weights after look like:
-         w = w_0 for target distribution
-         w = w_0 * exp(pred) for events from original distribution
-         (so pred for target distribution is ignored)
+        Conventions: :math:`y=0` - target distribution, :math:`y=1` - original distribution.
 
-        :param regularization: roughly, it's number of events added in each leaf to prevent overfitting.
+        Weights after look like:
+
+        * :math:`w = w_0` for target distribution
+        * :math:`w = w_0 * exp(pred)` for events from original distribution
+          (so predictions for target distribution is ignored)
+
+        :param float regularization: roughly, it's number of events added in each leaf to prevent overfitting.
         """
         self.regularization = regularization
 
