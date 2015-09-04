@@ -43,6 +43,7 @@ _________
    nnet
    preprocessing
    reweight
+   speedup
    notebooks
 
 

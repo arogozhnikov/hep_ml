@@ -1,6 +1,7 @@
 """
 **hep_ml.speedup** is module to obtain formulas with machine learning,
-which can be applied very fast (with a speed comparable to simple selections).
+which can be applied very fast (with a speed comparable to simple selections),
+while keeping high quality of classification.
 
 In many application (i.e. triggers in HEP) it is pressing to get really fast formula.
 This module contains tools to prepare formulas, which can be applied with the speed comparable to cuts.
@@ -17,6 +18,7 @@ Let's show how one can use some really heavy classifier and still have fast pred
 
 Though training takes much time, all predictions are precomputed and saved to lookup table,
 so you are able to predict millions of events per second using single CPU.
+
 >>> classifier.predict_proba(testX)
 
 
@@ -36,12 +38,13 @@ class LookupClassifier(BaseEstimator, ClassifierMixin):
         """
         LookupClassifier splits each of features into bins, trains a base_estimator to use this data.
         To predict class for new observation, results of base_estimator are kept for all possible combinations of bins,
-         and saved together
+        and saved together
 
-        :param n_bins: int or dict
-            int: how many bins to use for each axis
-            dict: feature_name -> int, specialize how many bins to use for each axis
-            dict: feature_name -> list of floats, set manually edges of bins
+        :param n_bins:
+
+            * int: how many bins to use for each axis
+            * dict: feature_name -> int, specialize how many bins to use for each axis
+            * dict: feature_name -> list of floats, set manually edges of bins
 
             By default, the (weighted) quantiles are used to compute bin edges.
         :type n_bins: int | dict
@@ -60,6 +63,13 @@ class LookupClassifier(BaseEstimator, ClassifierMixin):
         self.keep_trained_estimator = keep_trained_estimator
 
     def fit(self, X, y, sample_weight=None):
+        """Train a classifier and collect predictions for all possible combinations.
+
+        :param X: pandas.DataFrame or numpy.array with data of shape [n_samples, n_features]
+        :param y: array with labels of shape [n_samples]
+        :param sample_weight: None or array of shape [n_samples] with weights of events
+        :return: self
+        """
         self.classes_ = numpy.unique(y)
         X, y, normed_weights = check_xyw(X, y, sample_weight=sample_weight, classification=True)
         X = to_pandas_dataframe(X)
@@ -136,7 +146,7 @@ class LookupClassifier(BaseEstimator, ClassifierMixin):
         return result
 
     def transform(self, X):
-        """Convert data to indices.
+        """Convert data to bin indices.
 
         :param X: pandas.DataFrame or numpy.array with data
         :return: pandas.DataFrame, where each column is replaced with index of bin
