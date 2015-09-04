@@ -104,12 +104,15 @@ class BinsReweighter(BaseEstimator, ReweighterMixin):
         (which is better than bins of even size).
 
         This method works fine for 1d/2d histograms,
-        while being quite unstable or inaccurate for higher dimensions.
+        while being unstable or inaccurate for higher dimensions.
+
+        To make computed rule more smooth and stable, after computing weights in bins,
+        gaussian filter is applied (so reweighting coefficient also includes information from neighbouring bins).
 
         :param int n_bins: how many bins to use for each input variable.
-        :param int n_neighs: size of gaussian filter (in bins).
+        :param float n_neighs: size of gaussian filter (in bins).
             This parameter is responsible for tradeoff between stability of rule and accuracy of predictions.
-            With increase of n_neighs the
+            With increase of n_neighs the reweighting rule becomes more stable.
 
         """
         self.n_bins = n_bins

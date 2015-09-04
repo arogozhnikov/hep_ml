@@ -1,5 +1,5 @@
 """
-**hep_ml.nnet** is minimalistic version of feed-forward neural networks on theano.
+**hep_ml.nnet** is minimalistic version of feed-forward neural networks on **theano**.
 The neural networks from this library provide sklearn classifier's interface.
 
 Definitions for loss functions, trainers of neural networks are defined in this file too.
@@ -26,7 +26,7 @@ Training a neural network with two hidden layers using IRPROP- algorithm
 >>> network.fit(X, y)
 >>> probability = network.predict_proba(X)
 
-Training an AdaBoost over neural network, adadelta trainer was used and trainer specific parameter was used
+Training an AdaBoost over neural network with adadelta trainer. Trainer specific parameter was used
 (size of minibatch)
 
 >>> from sklearn.ensemble import AdaBoostClassifier
@@ -39,7 +39,7 @@ Using custom pretransformer and ExponentialLoss:
 >>> from sklearn.preprocessing import PolynomialFeatures
 >>> network = MLPClassifier(layers=[10], scaler=PolynomialFeatures(), loss='exp_loss')
 
-To create custom neural network, see code of SimpleNeuralNetwork.
+To create custom neural network, see code of SimpleNeuralNetwork, which is good place to start.
 
 """
 from __future__ import print_function, division, absolute_import
