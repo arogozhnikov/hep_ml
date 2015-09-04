@@ -5,7 +5,7 @@ Algorithms implemented here follow sklearn conventions for transformers and inhe
 Minor difference compared to sklearn is that transformations preserve names of features in DataFrames
 (if it is possible).
 
-See also: sklearn.preprocessing
+See also: sklearn.preprocessing for other useful data transformations.
 
 Examples
 --------
@@ -18,12 +18,14 @@ Transformers may be used as any other transformer, manually training and applyin
 >>> new_testX = transformer.transform(testX)
 
 Apart from this, transformers may be plugged as part of sklearn.Pipeline:
+
 >>> from sklearn.pipeline import Pipeline
 >>> from hep_ml.nnet import SimpleNeuralNetwork
 >>> clf = Pipeline(['pre', IronTransformer(),
 >>>                 'nnet', SimpleNeuralNetwork()])
 
 Also, neural networks support special argument 'scaler'. You can pass any transformer there:
+
 >>> clf = SimpleNeuralNetwork(layers=[10, 8], scaler=IronTransformer())
 
 """
@@ -43,7 +45,9 @@ class BinTransformer(BaseEstimator, TransformerMixin):
     def __init__(self, max_bins=128):
         """
         Bin transformer transforms all features (which are expected to be numerical)
-        to small integers, which can increase speed of some algorithms.
+        to small integers.
+
+        This simple transformation, while loosing part of information, can increase speed of some algorithms.
 
         :param int max_bins: maximal number of bins along each axis.
         """
