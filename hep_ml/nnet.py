@@ -247,7 +247,7 @@ def irprop_plus_trainer(x, y, w, parameters, loss, random_stream,
 
 
 def adadelta_trainer(x, y, w, parameters, loss, random_stream,
-                     decay_rate=0.95, epsilon=1e-5, learning_rate=1., batch=1000):
+                     decay_rate=0.95, epsilon=1e-4, learning_rate=0.1, batch=1000):
     """AdaDelta is trainer with adaptive learning rate.
 
     :param decay_rate: momentum-like parameter
@@ -265,9 +265,10 @@ def adadelta_trainer(x, y, w, parameters, loss, random_stream,
         cumulative_step = theano.shared(param.get_value() * 0.)
         shareds.extend([cumulative_derivative, cumulative_step])
 
-        updates.append([cumulative_derivative, cumulative_derivative * decay_rate + (1 - decay_rate) * derivative ** 2])
-        step = - derivative * T.sqrt((cumulative_step + epsilon) / (cumulative_derivative + epsilon))
+        new_cumulative_derivative = cumulative_derivative * decay_rate + (1 - decay_rate) * derivative ** 2
+        step = - derivative * T.sqrt((cumulative_step + epsilon) / (new_cumulative_derivative + epsilon))
 
+        updates.append([cumulative_derivative, new_cumulative_derivative])
         updates.append([cumulative_step, cumulative_step * decay_rate + (1 - decay_rate) * step ** 2])
         updates.append([param, param + learning_rate * step])
 
