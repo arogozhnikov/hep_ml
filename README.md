@@ -1,7 +1,11 @@
 # hep_ml
 **hep_ml** provides specific machine learning tools for purposes of high energy physics (written in python).
 
+![travis status](https://travis-ci.org/arogozhnikov/hep_ml.svg?branch=develop)
+[![PyPI version](https://badge.fury.io/py/hep_ml.svg)](http://badge.fury.io/py/hep_ml)
+
 ![hep_ml, python library for high energy physics](https://github.com/arogozhnikov/hep_ml/blob/data/data_to_download/hep_ml_image.png)
+
 
 ### Main points
 * uniform classifiers - the classifiers with low correlation of predictions and mass (or some other variable(s))
