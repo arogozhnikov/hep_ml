@@ -1,12 +1,21 @@
 language: python
+sudo: false
+addons:
+  apt:
+    packages:
+      # Only used by the DISTRIB="ubuntu" setting
+      - libblas-dev
+      - liblapack-dev
+      - python-numpy
+      - python-scipy
+      - python-matplotlib
+      - python-pandas
+      - python-nose
 python:
   - "2.7"
+  - "3.3"
   - "3.4"
   - "nightly"
-# command to install dependencies
-before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq libatlas3gf-base libatlas-dev python-scipy
 install:
   - "pip install ."
   - "pip install -r requirements.txt"

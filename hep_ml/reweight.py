@@ -4,6 +4,11 @@
 Reweighting is procedure of finding such weights for original distribution,
 that make distribution of one or several variables identical in original distribution and target distribution.
 
+Typical application of this technique in HEP is reweighting of Monte-Carlo simulation results to minimize
+disagreement between simulated data and real data.
+Frequently the reweighting rule is trained on one part of data (normalization channel)
+and applied to different (signal channel).
+
 Remark: if each variable has identical distribution in two samples,
 this doesn't imply that multidimensional distributions are equal (almost surely they aren't).
 Aim of reweighters is to get identical multidimensional distributions.
