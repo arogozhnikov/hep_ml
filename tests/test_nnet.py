@@ -57,7 +57,7 @@ def test_nnet(n_samples=200, n_features=7, distance=0.8, complete=False):
 
                 nn_type = nn_types[attempt % len(nn_types)]
 
-                nn = nn_type(layers=[5], loss=loss, trainer=trainer, random_state=42)
+                nn = nn_type(layers=[5], loss=loss, trainer=trainer, random_state=42 + retry_attempt)
                 print(nn)
                 nn.fit(X, y, epochs=200)
                 quality = roc_auc_score(y, nn.predict_proba(X)[:, 1])
