@@ -222,7 +222,7 @@ def irprop_plus_trainer(x, y, w, parameters, loss, random_stream,
     prev_loss_value = theano.shared(1e10)
     shareds = []
     updates = []
-    for name, param in parameters.iteritems():
+    for name, param in parameters.items():
         old_derivative = theano.shared(param.get_value() * 0.)
         delta = theano.shared(param.get_value() * 0. + 1e-3)
         new_derivative = T.grad(loss_value, param)
@@ -432,7 +432,7 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
 
         # TODO epochs are computed wrongly at the moment if 'batch' parameter not passed.
         n_batches = 1
-        if parameters_.has_key('batch'):
+        if 'batch' in parameters_:
             batch = parameters_['batch']
             n_batches = len(X) // batch + 1
 

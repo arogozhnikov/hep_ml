@@ -60,7 +60,7 @@ def test_sizes(n_samples=10000, n_features=4, n_bins=8):
 
     clf = LookupClassifier(base_estimator=base_estimator, n_bins=maximals).fit(X, y)
     bin_indices = clf.transform(X)
-    assert numpy.allclose(numpy.max(bin_indices, axis=0) + 1, maximals.values())
+    assert numpy.allclose(numpy.max(bin_indices, axis=0) + 1, list(maximals.values()))
 
     assert numpy.allclose(numpy.min(bin_indices, axis=0), 0)
 

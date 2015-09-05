@@ -142,7 +142,7 @@ class IronTransformer(BaseEstimator, TransformerMixin):
             'Columns passed {} are different from expected {}'.format(X.columns, list(self.feature_maps.keys()))
 
         result = pandas.DataFrame(numpy.zeros(X.shape, dtype=float), columns=X.columns)
-        for column, (feature_values, feature_percentiles) in self.feature_maps.iteritems():
+        for column, (feature_values, feature_percentiles) in self.feature_maps.items():
             result[column] = numpy.interp(X[column], feature_values, feature_percentiles)
 
         return result
