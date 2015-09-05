@@ -32,7 +32,7 @@ The most common use case is reweighting of Monte-Carlo simulations results to sP
 
 The same example for `GBReweighter`:
 
->>> reweighter = GBReweighter(max_depth=2, other_args={'subsample': 0.5})
+>>> reweighter = GBReweighter(max_depth=2, gb_args={'subsample': 0.5})
 >>> reweighter.fit(original=MC_data, target=RealData, target_weight=sWeights)
 >>> MC_weights = reweighter.predict_weights(MC_data)
 
