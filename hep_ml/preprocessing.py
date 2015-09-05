@@ -80,7 +80,7 @@ class BinTransformer(BaseEstimator, TransformerMixin):
             dtype is 'int8' for space economy
         """
         X = to_pandas_dataframe(X)
-        assert list(X.columns) == self.percentiles.keys(), 'Wrong names of columns'
+        assert list(X.columns) == list(self.percentiles.keys()), 'Wrong names of columns'
         bin_indices = numpy.zeros(X.shape, dtype='uint8')
         for i, column in enumerate(X.columns):
             bin_indices[:, i] = numpy.searchsorted(self.percentiles[column], X[column])
@@ -138,8 +138,8 @@ class IronTransformer(BaseEstimator, TransformerMixin):
         :return: pandas.DataFrame with transformed features
         """
         X = to_pandas_dataframe(X)
-        assert list(X.columns) == self.feature_maps.keys(), \
-            'Columns passed {} are different from expected {}'.format(X.columns, self.feature_maps.keys())
+        assert list(X.columns) == list(self.feature_maps.keys()), \
+            'Columns passed {} are different from expected {}'.format(X.columns, list(self.feature_maps.keys()))
 
         result = pandas.DataFrame(numpy.zeros(X.shape, dtype=float), columns=X.columns)
         for column, (feature_values, feature_percentiles) in self.feature_maps.iteritems():

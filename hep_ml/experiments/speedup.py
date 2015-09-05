@@ -152,7 +152,7 @@ class LookupClassifier(BaseEstimator, ClassifierMixin):
         :return: pandas.DataFrame, where each column is replaced with index of bin
         """
         X = to_pandas_dataframe(X)
-        assert list(X.columns) == self.bin_edges.keys(), 'passed dataset with wrong columns'
+        assert list(X.columns) == list(self.bin_edges.keys()), 'passed dataset with wrong columns'
         result = numpy.zeros(X.shape, dtype='uint8')
         for i, column in enumerate(X.columns):
             edges = self.bin_edges[column]

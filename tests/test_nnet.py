@@ -16,11 +16,11 @@ from hep_ml.preprocessing import BinTransformer, IronTransformer
 __author__ = 'Alex Rogozhnikov'
 
 
-def test_nnet(n_samples=200, n_features=5, distance=0.5, complete=False):
+def test_nnet(n_samples=200, n_features=7, distance=0.5, complete=False):
     """
     :param complete: if True, all possible combinations will be checked
     """
-    X, y = make_blobs(n_samples=n_samples, n_features=5,
+    X, y = make_blobs(n_samples=n_samples, n_features=n_features,
                       centers=[numpy.ones(n_features) * distance, - numpy.ones(n_features) * distance])
 
     nn_types = [
@@ -51,8 +51,8 @@ def test_nnet(n_samples=200, n_features=5, distance=0.5, complete=False):
         losses_shift = numpy.random.randint(10)
         trainers_shift = numpy.random.randint(10)
         for attempt in range(attempts):
-            loss = nnet.losses.keys()[(attempt + losses_shift) % len(nnet.losses)]
-            trainer = nnet.trainers.keys()[(attempt + trainers_shift) % len(nnet.trainers)]
+            loss = list(nnet.losses.keys())[(attempt + losses_shift) % len(nnet.losses)]
+            trainer = list(nnet.trainers.keys())[(attempt + trainers_shift) % len(nnet.trainers)]
 
             nn_type = nn_types[attempt % len(nn_types)]
 
@@ -63,7 +63,7 @@ def test_nnet(n_samples=200, n_features=5, distance=0.5, complete=False):
                 'quality of model is too low: {}'.format(nn)
 
 
-def test_with_scaler(n_samples=200, n_features=5, distance=0.5):
+def test_with_scaler(n_samples=200, n_features=15, distance=0.5):
     X, y = generate_sample(n_samples=n_samples, n_features=n_features, distance=distance)
     for scaler in [BinTransformer(max_bins=16), IronTransformer()]:
         clf = nnet.SimpleNeuralNetwork(scaler=scaler)
