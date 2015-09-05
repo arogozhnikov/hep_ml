@@ -9,6 +9,13 @@ hep_ml documentation
 **hep_ml** is machine learning library filled with methods used in high energy physics.
 Classifiers and transformers from **hep_ml** are **sklearn**-compatible.
 
+.. raw:: html
+
+    <div style='height: 36px;'>
+    <iframe src="https://ghbtns.com/github-btn.html?user=arogozhnikov&repo=hep_ml&type=star&count=true" frameborder="0" scrolling="0" width="120px" height="24px"></iframe>
+    <iframe src="https://ghbtns.com/github-btn.html?user=arogozhnikov&repo=hep_ml&type=watch&count=true&v=2" frameborder="0" scrolling="0" width="120px" height="24px"></iframe>
+    <div style='clear: both' ></div>
+    </div>
 
 Installation
 ____________

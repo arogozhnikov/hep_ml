@@ -20,7 +20,7 @@
 pip install hep_ml
 ```
 
-To use latest version, clone it and install with `pip`:
+To use latest development version, clone it and install with `pip`:
 ```bash
 git clone https://github.com/arogozhnikov/hep_ml.git
 cd hep_ml
