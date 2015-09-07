@@ -55,6 +55,7 @@ from sklearn.utils.validation import check_random_state
 from sklearn.base import BaseEstimator, ClassifierMixin, TransformerMixin, clone
 from sklearn import preprocessing
 from .commonutils import check_xyw, check_sample_weight
+from .preprocessing import IronTransformer
 from scipy.special import expit
 
 floatX = theano.config.floatX
@@ -295,6 +296,8 @@ def _prepare_scaler(transform):
         return preprocessing.StandardScaler()
     elif transform == 'minmax':
         return preprocessing.MinMaxScaler()
+    elif transform == 'iron':
+        return IronTransformer()
     else:
         assert isinstance(transform, TransformerMixin), 'provided transformer should be derived from TransformerMixin'
         return clone(transform)
@@ -352,6 +355,7 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
             X of shape [n_events, n_outputs], p of shape [n_events].
             For classification, p is arbitrary real, the greater p, the more event
             looks like signal event (label 1).
+            Probabilities are computed by applying logistic function to output of activation.
         """
         raise NotImplementedError()
 
@@ -480,7 +484,7 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
         :param sample_weight: optional, numpy.array of shape [n_samples].
         :return float, the loss vales computed"""
         sample_weight = check_sample_weight(y, sample_weight, normalize=False)
-        X = self.transform(X, fit=False)
+        X = self._transform(X, fit=False)
         return self.Loss(X, y, sample_weight)
 
 
@@ -513,7 +517,7 @@ class MLPClassifier(AbstractNeuralNetworkClassifier):
         for i, layer in list(enumerate(self.layers_))[1:]:
             W = self._create_matrix_parameter('W' + str(i), self.layers_[i - 1], self.layers_[i])
             # act=activation and W_=W are tricks to avoid lambda-capturing
-            if i == 0:
+            if i == 1:
                 activation = lambda x, act=activation, W_=W: T.dot(act(x), W_)
             else:
                 activation = lambda x, act=activation, W_=W: T.dot(T.tanh(act(x)), W_)

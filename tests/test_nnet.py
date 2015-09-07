@@ -61,6 +61,7 @@ def test_nnet(n_samples=200, n_features=7, distance=0.8, complete=False):
                 print(nn)
                 nn.fit(X, y, epochs=200)
                 quality = roc_auc_score(y, nn.predict_proba(X)[:, 1])
+                computed_loss = nn.compute_loss(X, y)
                 if quality > 0.8:
                     break
                 else:
