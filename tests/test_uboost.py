@@ -136,6 +136,7 @@ def check_classifiers(n_samples=10000):
         efficiency_steps=5,
         n_estimators=50,
         n_threads=3,
+        subsample=0.9,
         algorithm="SAMME.R")
 
     clf_dict = OrderedDict({
