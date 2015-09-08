@@ -101,7 +101,7 @@ def test_ks(n_samples=1000, n_bins=10):
     assert numpy.allclose(a, b)
 
 
-def test_ks2samp(n_samples1=20, n_samples2=30):
+def test_ks2samp(n_samples1=100, n_samples2=100):
     """
     checking that KS can be computed with ROC curve
     """
@@ -109,6 +109,8 @@ def test_ks2samp(n_samples1=20, n_samples2=30):
     weights1 = numpy.random.random(size=n_samples1)
     data2 = numpy.random.normal(size=n_samples2)
     weights2 = numpy.random.random(size=n_samples2)
+
+    print(weights1.sum(), 'SUM')
 
     KS = ks_2samp_weighted(data1, data2, weights1=weights1, weights2=weights2)
 
@@ -118,11 +120,17 @@ def test_ks2samp(n_samples1=20, n_samples2=30):
     weights = numpy.concatenate([weights1, weights2])
     from sklearn.metrics import roc_curve
     fpr, tpr, _ = roc_curve(labels, data, sample_weight=weights)
-    KS2 = numpy.max(fpr - tpr)
+    KS2 = numpy.max(numpy.abs(symmetrize(fpr) - symmetrize(tpr)))
+    print(KS, KS2)
+    print(weights1.sum(), 'SUM')
     assert numpy.allclose(KS, KS2), 'different values of KS'
 
 
-def test_cvm2samp(n_samples1=20, n_samples2=30):
+def symmetrize(F):
+    return 0.5 * (F + numpy.insert(F[:-1], 0, [0]))
+
+
+def test_cvm2samp(n_samples1=100, n_samples2=100):
     data1 = numpy.random.normal(size=n_samples1)
     weights1 = numpy.random.random(size=n_samples1)
     data2 = numpy.random.normal(size=n_samples2)
@@ -138,7 +146,8 @@ def test_cvm2samp(n_samples1=20, n_samples2=30):
     fpr, tpr, _ = roc_curve(labels, data, sample_weight=weights)
     # data1 corresponds to
     weights1 = numpy.diff(numpy.insert(fpr, 0, [0]))
-    CVM2 = numpy.sum(weights1 * (fpr - tpr) ** 2)
+    CVM2 = numpy.sum(weights1 * (symmetrize(fpr) - symmetrize(tpr)) ** 2)
+    print(CVM, CVM2)
     assert numpy.allclose(CVM, CVM2), 'different values of CVM'
 
 
