@@ -111,7 +111,9 @@ def group_indices_to_groups_matrix(group_indices, n_events):
 
 def compute_cdf(ordered_weights):
     """Computes cumulative distribution function (CDF) by ordered weights,
-    be sure that sum(ordered_weights) == 1
+    be sure that sum(ordered_weights) == 1.
+    Minor difference: using symmetrized version
+    F(x) = 1/2 (F(x-0) + F(x+0))
     """
     return numpy.cumsum(ordered_weights) - 0.5 * ordered_weights
 
@@ -230,8 +232,8 @@ def ks_2samp_weighted(data1, data2, weights1, weights2):
     :return: float, Kolmogorov-Smirnov distance.
     """
     x = numpy.unique(numpy.concatenate([data1, data2]))
-    weights1 /= numpy.sum(weights1) * 1.
-    weights2 /= numpy.sum(weights2) * 1.
+    weights1 = weights1 / numpy.sum(weights1) * 1.
+    weights2 = weights2 / numpy.sum(weights2) * 1.
     inds1 = numpy.searchsorted(x, data1)
     inds2 = numpy.searchsorted(x, data2)
     w1 = numpy.bincount(inds1, weights=weights1, minlength=len(x))
