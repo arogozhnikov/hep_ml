@@ -314,7 +314,7 @@ class MAELossFunction(AbstractLossFunction):
         return self
 
     def __call__(self, y_pred):
-        return 0.5 * numpy.sum(self.sample_weight * numpy.abs(self.y - y_pred))
+        return numpy.sum(self.sample_weight * numpy.abs(self.y - y_pred))
 
     def negative_gradient(self, y_pred):
         return self.sample_weight * numpy.sign(self.y - y_pred)

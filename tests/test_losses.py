@@ -31,6 +31,7 @@ def test_loss_functions(size=50, epsilon=1e-3):
         losses.CompositeLossFunction(),
         losses.RankBoostLossFunction(rank_column),
         losses.MSELossFunction(),
+        losses.MAELossFunction(),
     ]
     pred = numpy.random.normal(size=size)
 
@@ -39,7 +40,6 @@ def test_loss_functions(size=50, epsilon=1e-3):
         # testing sign of gradient
         val = loss(pred)
         gradient = loss.negative_gradient(pred)
-        hessian = loss.hessian(pred)
 
         numer_gradient = numpy.zeros(len(pred))
         numer_hessian = numpy.zeros(len(pred))
@@ -57,9 +57,11 @@ def test_loss_functions(size=50, epsilon=1e-3):
 
         print(loss, numer_gradient, numer_hessian)
         assert numpy.allclose(gradient, numer_gradient), 'wrong computation of gradient'
-        if not isinstance(loss, losses.MSELossFunction):
+        if not isinstance(loss, losses.MSELossFunction) and not isinstance(loss, losses.MAELossFunction):
             assert (gradient * (2 * y - 1) >= 0).all(), 'wrong signs of gradients'
-        assert numpy.allclose(hessian, numer_hessian, atol=1e-7), 'wrong computation of hessian'
+        if isinstance(loss, losses.HessianLossFunction):
+            hessian = loss.hessian(pred)
+            assert numpy.allclose(hessian, numer_hessian, atol=1e-7), 'wrong computation of hessian'
 
 
 def test_step_optimality(n_samples=100):
