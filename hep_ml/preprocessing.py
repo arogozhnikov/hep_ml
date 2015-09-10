@@ -39,6 +39,7 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from .commonutils import check_sample_weight, to_pandas_dataframe
 
 __author__ = 'Alex Rogozhnikov'
+__all__ = ['BinTransformer', 'IronTransformer']
 
 
 class BinTransformer(BaseEstimator, TransformerMixin):
