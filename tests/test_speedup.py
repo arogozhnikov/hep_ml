@@ -7,7 +7,7 @@ __author__ = 'Alex Rogozhnikov'
 
 import numpy
 import pandas
-from hep_ml.experiments.speedup import LookupClassifier
+from hep_ml.speedup import LookupClassifier
 from hep_ml.commonutils import generate_sample
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import roc_auc_score

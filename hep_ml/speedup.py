@@ -11,7 +11,7 @@ Example
 Let's show how one can use some really heavy classifier and still have fast predictions:
 
 >>> from sklearn.ensemble import RandomForestClassifier
->>> from hep_ml.experiments.speedup import LookupClassifier
+>>> from hep_ml.speedup import LookupClassifier
 >>> base_classifier = RandomForestClassifier(n_estimators=1000, max_depth=25)
 >>> classifier = LookupClassifier(base_estimator=base_classifier, keep_trained_estimator=False)
 >>> classifier.fit(X, y, sample_weight=sample_weight)
@@ -28,7 +28,7 @@ import numpy
 import pandas
 from collections import OrderedDict
 from sklearn.base import ClassifierMixin, BaseEstimator, clone
-from ..commonutils import to_pandas_dataframe, check_xyw, check_sample_weight, weighted_quantile
+from hep_ml.commonutils import to_pandas_dataframe, check_xyw, check_sample_weight, weighted_quantile
 
 __author__ = 'Alex Rogozhnikov'
 
