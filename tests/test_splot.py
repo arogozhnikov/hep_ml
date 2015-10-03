@@ -19,7 +19,7 @@ def test_splot(n_samples=100):
             p = numpy.random.random([n_samples, n_classes])
             p /= numpy.sum(p, axis=1, keepdims=True)
 
-            sWeights = splot.SPlot().compute_sweights(probabilities=p, sample_weight=weights)
+            sWeights = splot.compute_sweights(probabilities=p, sample_weight=weights)
             initial_stats = numpy.sum(p * real_weights[:, numpy.newaxis], axis=0)
 
             # How much inside each bin
