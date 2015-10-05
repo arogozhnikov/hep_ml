@@ -28,7 +28,7 @@ import numpy
 import pandas
 from collections import OrderedDict
 from sklearn.base import ClassifierMixin, BaseEstimator, clone
-from hep_ml.commonutils import to_pandas_dataframe, check_xyw, check_sample_weight, weighted_quantile
+from .commonutils import to_pandas_dataframe, check_xyw, check_sample_weight, weighted_quantile
 
 __author__ = 'Alex Rogozhnikov'
 

@@ -41,19 +41,17 @@ from __future__ import division, print_function, absolute_import
 
 from sklearn.base import BaseEstimator
 from scipy.ndimage import gaussian_filter
-from hep_ml.commonutils import check_sample_weight, weighted_quantile
-from hep_ml import gradientboosting as gb
-from hep_ml import losses
-from warnings import warn
 import numpy
+
+from .commonutils import check_sample_weight, weighted_quantile
+from . import gradientboosting as gb
+from . import losses
 
 __author__ = 'Alex Rogozhnikov'
 __all__ = ['BinsReweighter', 'GBReweighter']
 
-warn("Module hep_ml.reweight is unstable, it's API may be changed in near future.")
 
-
-def bincount_nd(x, weights, shape):
+def _bincount_nd(x, weights, shape):
     """
     Does the same thing as numpy.bincount, but allows binning in several integer variables.
     :param x: numpy.array of shape [n_samples, n_features] with non-negative integers
@@ -158,7 +156,7 @@ class BinsReweighter(BaseEstimator, ReweighterMixin):
         bins_weights = []
         for data, weights in [(original, original_weight), (target, target_weight)]:
             bin_indices = self.compute_bin_indices(data)
-            bin_w = bincount_nd(bin_indices, weights=weights, shape=[self.n_bins] * self.n_features_)
+            bin_w = _bincount_nd(bin_indices, weights=weights, shape=[self.n_bins] * self.n_features_)
             smeared_weights = gaussian_filter(bin_w, sigma=self.n_neighs, truncate=2.5)
             bins_weights.append(smeared_weights.clip(self.min_in_the_bin))
         bin_orig_weights, bin_targ_weights = bins_weights
