@@ -54,6 +54,7 @@ _________
    preprocessing
    reweight
    speedup
+   splot
    notebooks
 
 
