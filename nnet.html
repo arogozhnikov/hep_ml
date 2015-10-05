@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Neural networks &mdash; hep_ml 0.3.0 documentation</title>
+  <title>Neural networks &mdash; hep_ml 0.4.0 documentation</title>
   
 
   
@@ -24,14 +24,14 @@
 
   
   
-    <link rel="stylesheet" href="_static/css/my_style.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   
 
   
 
   
-    <link rel="top" title="hep_ml 0.3.0 documentation" href="index.html"/>
-        <link rel="next" title="Reweighting algorithms" href="reweight.html"/>
+    <link rel="top" title="hep_ml 0.4.0 documentation" href="index.html"/>
+        <link rel="next" title="Preprocessing data" href="preprocessing.html"/>
         <link rel="prev" title="Metric functions" href="metrics.html"/> 
 
   
@@ -92,8 +92,20 @@
 <li class="toctree-l2"><a class="reference internal" href="#trainers">Trainers</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="preprocessing.html#examples">Examples</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="reweight.html">Reweighting algorithms</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="reweight.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="speedup.html">Fast predictions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="speedup.html#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="splot.html">sPlot</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="splot.html#example">Example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks.html">Code Examples</a></li>
@@ -136,7 +148,7 @@
             
   <div class="section" id="module-hep_ml.nnet">
 <span id="neural-networks"></span><h1>Neural networks<a class="headerlink" href="#module-hep_ml.nnet" title="Permalink to this headline">¶</a></h1>
-<p><strong>hep_ml.nnet</strong> is minimalistic version of feed-forward neural networks on theano.
+<p><strong>hep_ml.nnet</strong> is minimalistic version of feed-forward neural networks on <strong>theano</strong>.
 The neural networks from this library provide sklearn classifier&#8217;s interface.</p>
 <p>Definitions for loss functions, trainers of neural networks are defined in this file too.
 Main point of this library: black-box stochastic optimization of any given loss function.
@@ -156,7 +168,7 @@ Also <strong>hep_ml.nnet</strong> allows optimization of parameters in any diffe
 <span class="gp">&gt;&gt;&gt; </span><span class="n">probability</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Training an AdaBoost over neural network, adadelta trainer was used and trainer specific parameter was used
+<p>Training an AdaBoost over neural network with adadelta trainer. Trainer specific parameter was used
 (size of minibatch)</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">AdaBoostClassifier</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">base_network</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span><span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">trainer</span><span class="o">=</span><span class="s">&#39;adadelta&#39;</span><span class="p">,</span> <span class="n">trainer_parameters</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;batch&#39;</span><span class="p">:</span> <span class="mi">600</span><span class="p">})</span>
@@ -169,7 +181,7 @@ Also <strong>hep_ml.nnet</strong> allows optimization of parameters in any diffe
 <span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span><span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">scaler</span><span class="o">=</span><span class="n">PolynomialFeatures</span><span class="p">(),</span> <span class="n">loss</span><span class="o">=</span><span class="s">&#39;exp_loss&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>To create custom neural network, see code of SimpleNeuralNetwork.</p>
+<p>To create custom neural network, see code of SimpleNeuralNetwork, which is good place to start.</p>
 <dl class="class">
 <dt id="hep_ml.nnet.AbstractNeuralNetworkClassifier">
 <em class="property">class </em><code class="descclassname">hep_ml.nnet.</code><code class="descname">AbstractNeuralNetworkClassifier</code><span class="sig-paren">(</span><em>layers=(10</em>, <em>)</em>, <em>scaler='standard'</em>, <em>loss='log_loss'</em>, <em>trainer='irprop-'</em>, <em>epochs=100</em>, <em>trainer_parameters=None</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#AbstractNeuralNetworkClassifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.AbstractNeuralNetworkClassifier" title="Permalink to this definition">¶</a></dt>
@@ -301,7 +313,8 @@ Each network overrides this function.</p>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Activation function, f: X -&gt; p,
 X of shape [n_events, n_outputs], p of shape [n_events].
 For classification, p is arbitrary real, the greater p, the more event
-looks like signal event (label 1).</td>
+looks like signal event (label 1).
+Probabilities are computed by applying logistic function to output of activation.</td>
 </tr>
 </tbody>
 </table>
@@ -591,7 +604,7 @@ This is default trainer, very stable for classification.</p>
 
 <dl class="function">
 <dt id="hep_ml.nnet.adadelta_trainer">
-<code class="descclassname">hep_ml.nnet.</code><code class="descname">adadelta_trainer</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>w</em>, <em>parameters</em>, <em>loss</em>, <em>random_stream</em>, <em>decay_rate=0.95</em>, <em>epsilon=1e-05</em>, <em>learning_rate=1.0</em>, <em>batch=1000</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#adadelta_trainer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.adadelta_trainer" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">hep_ml.nnet.</code><code class="descname">adadelta_trainer</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>w</em>, <em>parameters</em>, <em>loss</em>, <em>random_stream</em>, <em>decay_rate=0.95</em>, <em>epsilon=0.0001</em>, <em>learning_rate=0.1</em>, <em>batch=1000</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#adadelta_trainer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.adadelta_trainer" title="Permalink to this definition">¶</a></dt>
 <dd><p>AdaDelta is trainer with adaptive learning rate.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -618,7 +631,7 @@ This is default trainer, very stable for classification.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="reweight.html" class="btn btn-neutral float-right" title="Reweighting algorithms" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="preprocessing.html" class="btn btn-neutral float-right" title="Preprocessing data" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="metrics.html" class="btn btn-neutral" title="Metric functions" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -651,7 +664,7 @@ This is default trainer, very stable for classification.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.3.0',
+            VERSION:'0.4.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

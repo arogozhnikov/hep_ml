@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Reweighting algorithms &mdash; hep_ml 0.3.0 documentation</title>
+  <title>Reweighting algorithms &mdash; hep_ml 0.4.0 documentation</title>
   
 
   
@@ -24,15 +24,15 @@
 
   
   
-    <link rel="stylesheet" href="_static/css/my_style.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   
 
   
 
   
-    <link rel="top" title="hep_ml 0.3.0 documentation" href="index.html"/>
-        <link rel="next" title="Code Examples" href="notebooks.html"/>
-        <link rel="prev" title="Neural networks" href="nnet.html"/> 
+    <link rel="top" title="hep_ml 0.4.0 documentation" href="index.html"/>
+        <link rel="next" title="Fast predictions" href="speedup.html"/>
+        <link rel="prev" title="Preprocessing data" href="preprocessing.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -92,8 +92,20 @@
 <li class="toctree-l2"><a class="reference internal" href="nnet.html#trainers">Trainers</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="preprocessing.html#examples">Examples</a></li>
+</ul>
+</li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Reweighting algorithms</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="speedup.html">Fast predictions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="speedup.html#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="splot.html">sPlot</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="splot.html#example">Example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks.html">Code Examples</a></li>
@@ -139,6 +151,10 @@
 <p><strong>hep_ml.reweight</strong> contains reweighting algorithms.</p>
 <p>Reweighting is procedure of finding such weights for original distribution,
 that make distribution of one or several variables identical in original distribution and target distribution.</p>
+<p>Typical application of this technique in HEP is reweighting of Monte-Carlo simulation results to minimize
+disagreement between simulated data and real data.
+Frequently the reweighting rule is trained on one part of data (normalization channel)
+and applied to different (signal channel).</p>
 <p>Remark: if each variable has identical distribution in two samples,
 this doesn&#8217;t imply that multidimensional distributions are equal (almost surely they aren&#8217;t).
 Aim of reweighters is to get identical multidimensional distributions.</p>
@@ -157,7 +173,7 @@ Fitted reweighter can be applied many times to different data, pickled and so on
 </pre></div>
 </div>
 <p>The same example for <cite>GBReweighter</cite>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">reweighter</span> <span class="o">=</span> <span class="n">GBReweighter</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">other_args</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;subsample&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">})</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">reweighter</span> <span class="o">=</span> <span class="n">GBReweighter</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">gb_args</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;subsample&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">reweighter</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">original</span><span class="o">=</span><span class="n">MC_data</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">RealData</span><span class="p">,</span> <span class="n">target_weight</span><span class="o">=</span><span class="n">sWeights</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">MC_weights</span> <span class="o">=</span> <span class="n">reweighter</span><span class="o">.</span><span class="n">predict_weights</span><span class="p">(</span><span class="n">MC_data</span><span class="p">)</span>
 </pre></div>
@@ -169,16 +185,18 @@ Fitted reweighter can be applied many times to different data, pickled and so on
 <p>Use bins for reweighting. Bins&#8217; edges are computed using quantiles along each axis
 (which is better than bins of even size).</p>
 <p>This method works fine for 1d/2d histograms,
-while being quite unstable or inaccurate for higher dimensions.</p>
+while being unstable or inaccurate for higher dimensions.</p>
+<p>To make computed rule more smooth and stable, after computing weights in bins,
+gaussian filter is applied (so reweighting coefficient also includes information from neighbouring bins).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>n_bins</strong> (<em>int</em>) &#8211; how many bins to use for each input variable.</li>
-<li><strong>n_neighs</strong> (<em>int</em>) &#8211; size of gaussian filter (in bins).
+<li><strong>n_neighs</strong> (<em>float</em>) &#8211; size of gaussian filter (in bins).
 This parameter is responsible for tradeoff between stability of rule and accuracy of predictions.
-With increase of n_neighs the</li>
+With increase of n_neighs the reweighting rule becomes more stable.</li>
 </ul>
 </td>
 </tr>
@@ -187,15 +205,15 @@ With increase of n_neighs the</li>
 <dl class="method">
 <dt id="hep_ml.reweight.BinsReweighter.compute_bin_indices">
 <code class="descname">compute_bin_indices</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/reweight.html#BinsReweighter.compute_bin_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.reweight.BinsReweighter.compute_bin_indices" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute id of bin along each axis.
-:param data: data, array-like of shape [n_samples, n_features]</p>
-<blockquote>
-<div>with the same order of features as in training</div></blockquote>
+<dd><p>Compute id of bin along each axis.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">numpy.array of shape [n_samples, n_features] with integers, each from [0, n_bins - 1]</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> &#8211; data, array-like of shape [n_samples, n_features]
+with the same order of features as in training</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">numpy.array of shape [n_samples, n_features] with integers, each from [0, n_bins - 1]</td>
 </tr>
 </tbody>
 </table>
@@ -329,10 +347,10 @@ See <a class="reference internal" href="gb.html#hep_ml.gradientboosting.UGradien
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="notebooks.html" class="btn btn-neutral float-right" title="Code Examples" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="speedup.html" class="btn btn-neutral float-right" title="Fast predictions" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="nnet.html" class="btn btn-neutral" title="Neural networks" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="preprocessing.html" class="btn btn-neutral" title="Preprocessing data" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -362,7 +380,7 @@ See <a class="reference internal" href="gb.html#hep_ml.gradientboosting.UGradien
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.3.0',
+            VERSION:'0.4.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

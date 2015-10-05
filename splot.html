@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Search &mdash; hep_ml 0.4.0 documentation</title>
+  <title>sPlot &mdash; hep_ml 0.4.0 documentation</title>
   
 
   
@@ -30,7 +30,9 @@
   
 
   
-    <link rel="top" title="hep_ml 0.4.0 documentation" href="index.html"/> 
+    <link rel="top" title="hep_ml 0.4.0 documentation" href="index.html"/>
+        <link rel="next" title="Code Examples" href="notebooks.html"/>
+        <link rel="prev" title="Fast predictions" href="speedup.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -55,7 +57,7 @@
 
         
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="#" method="get">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -69,7 +71,7 @@
         
           
           
-              <ul>
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="index.html">hep_ml documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gb.html">Gradient boosting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="losses.html">Losses for Gradient Boosting</a><ul>
@@ -102,8 +104,8 @@
 <li class="toctree-l2"><a class="reference internal" href="speedup.html#example">Example</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="splot.html">sPlot</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="splot.html#example">Example</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">sPlot</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks.html">Code Examples</a></li>
@@ -131,8 +133,12 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li></li>
+    <li>sPlot</li>
       <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/splot.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
@@ -140,22 +146,61 @@
 </div>
           <div role="main" class="document">
             
-  <noscript>
-  <div id="fallback" class="admonition warning">
-    <p class="last">
-      Please activate JavaScript to enable the search
-      functionality.
-    </p>
-  </div>
-  </noscript>
+  <div class="section" id="module-hep_ml.splot">
+<span id="splot"></span><h1>sPlot<a class="headerlink" href="#module-hep_ml.splot" title="Permalink to this headline">¶</a></h1>
+<p><strong>sPlot</strong> is reweighting technique frequently used in HEP to reconstruct the distributions of features in mixture.
+Initial information used is the probabilities obtained after fitting.</p>
+<p><strong>hep_ml.splot</strong> contains standalone python implementation of this technique.
+This implementation is brilliantly simple and clear - just as it should be.</p>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hep_ml.splot</span> <span class="kn">import</span> <span class="n">compute_sweights</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s">&#39;signal&#39;</span><span class="p">:</span> <span class="n">p_signal</span><span class="p">,</span> <span class="s">&#39;bkg&#39;</span><span class="p">,</span> <span class="n">b_bkg</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sWeights</span> <span class="o">=</span> <span class="n">compute_sweights</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c"># plotting reconstructed distribution of some other variable</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">other_var</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">sWeights</span><span class="o">.</span><span class="n">signal</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">other_var</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">sWeights</span><span class="o">.</span><span class="n">bkg</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For more examples and explanations, see notebooks/Splot in repository.</p>
+<dl class="function">
+<dt id="hep_ml.splot.compute_sweights">
+<code class="descclassname">hep_ml.splot.</code><code class="descname">compute_sweights</code><span class="sig-paren">(</span><em>probabilities</em>, <em>sample_weight=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/splot.html#compute_sweights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.splot.compute_sweights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes sWeights based on probabilities obtained from distribution fit.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>probabilities</strong> &#8211; pandas.DataFrame with probabilities of shape [n_samples, n_classes].
+These probabilities are obtained after fit (typically, mass fit).
+Pay attention, that for each sample sum of probabilities should be equal to 1.</li>
+<li><strong>sample_weight</strong> &#8211; optionally you can pass weights of events, numpy.array of shape [n_samples]</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">pandas.DataFrame with sWeights of shape [n_samples, n_classes]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
-  
-  <div id="search-results">
-  
-  </div>
+</div>
+</div>
+
 
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="notebooks.html" class="btn btn-neutral float-right" title="Code Examples" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="speedup.html" class="btn btn-neutral" title="Fast predictions" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>
@@ -193,7 +238,6 @@
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
       <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-      <script type="text/javascript" src="_static/searchtools.js"></script>
 
   
 
@@ -209,14 +253,7 @@
           SphinxRtdTheme.StickyNav.enable();
       });
   </script>
-  
-  <script type="text/javascript">
-    jQuery(function() { Search.loadIndex("searchindex.js"); });
-  </script>
-  
-  <script type="text/javascript" id="searchindexloader"></script>
    
-
 
 </body>
 </html>

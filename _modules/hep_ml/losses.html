@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>hep_ml.losses &mdash; hep_ml 0.3.0 documentation</title>
+  <title>hep_ml.losses &mdash; hep_ml 0.4.0 documentation</title>
   
 
   
@@ -24,13 +24,13 @@
 
   
   
-    <link rel="stylesheet" href="../../_static/css/my_style.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   
 
   
 
   
-    <link rel="top" title="hep_ml 0.3.0 documentation" href="../../index.html"/>
+    <link rel="top" title="hep_ml 0.4.0 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -91,8 +91,20 @@
 <li class="toctree-l2"><a class="reference internal" href="../../nnet.html#trainers">Trainers</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../preprocessing.html">Preprocessing data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../preprocessing.html#examples">Examples</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../reweight.html">Reweighting algorithms</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../reweight.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../speedup.html">Fast predictions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../speedup.html#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../splot.html">sPlot</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../splot.html#example">Example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Code Examples</a></li>
@@ -202,7 +214,8 @@
     <span class="s">&#39;BinFlatnessLossFunction&#39;</span><span class="p">,</span>
     <span class="s">&#39;KnnFlatnessLossFunction&#39;</span><span class="p">,</span>
     <span class="s">&#39;KnnAdaLossFunction&#39;</span><span class="p">,</span>
-    <span class="s">&#39;RankBoostLossFunction&#39;</span>
+    <span class="s">&#39;RankBoostLossFunction&#39;</span><span class="p">,</span>
+    <span class="s">&#39;ReweightLossFunction&#39;</span>
 <span class="p">]</span>
 
 
@@ -304,8 +317,10 @@
     <span class="k">def</span> <span class="nf">prepare_new_leaves_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">terminal_regions</span><span class="p">,</span> <span class="n">leaf_values</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This expression comes from optimization of second-order approximation of loss function.&quot;&quot;&quot;</span>
         <span class="n">min_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">leaf_values</span><span class="p">)</span>
-        <span class="n">nominators</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">terminal_regions</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">negative_gradient</span><span class="p">(</span><span class="n">y_pred</span><span class="p">),</span> <span class="n">minlength</span><span class="o">=</span><span class="n">min_length</span><span class="p">)</span>
-        <span class="n">denominators</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">terminal_regions</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hessian</span><span class="p">(</span><span class="n">y_pred</span><span class="p">),</span> <span class="n">minlength</span><span class="o">=</span><span class="n">min_length</span><span class="p">)</span>
+        <span class="n">gradients</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">negative_gradient</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
+        <span class="n">hessians</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hessian</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
+        <span class="n">nominators</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">terminal_regions</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">gradients</span><span class="p">,</span> <span class="n">minlength</span><span class="o">=</span><span class="n">min_length</span><span class="p">)</span>
+        <span class="n">denominators</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">terminal_regions</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">hessians</span><span class="p">,</span> <span class="n">minlength</span><span class="o">=</span><span class="n">min_length</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">nominators</span> <span class="o">/</span> <span class="p">(</span><span class="n">denominators</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">regularization_</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">compute_optimal_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
@@ -321,7 +336,6 @@
             <span class="n">step_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prepare_new_leaves_values</span><span class="p">(</span><span class="n">terminal_regions</span><span class="p">,</span> <span class="n">leaf_values</span><span class="o">=</span><span class="n">leaf_values</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred</span> <span class="o">+</span> <span class="n">step</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">step</span> <span class="o">+=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">step_</span>
         <span class="k">return</span> <span class="n">step</span>
-
 
 
 <span class="c"># region Classification losses</span>
@@ -449,7 +463,7 @@
         <span class="k">return</span> <span class="bp">self</span>
 </div>
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-        <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">))</span>
 
 <div class="viewcode-block" id="MAELossFunction.negative_gradient"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.MAELossFunction.negative_gradient">[docs]</a>    <span class="k">def</span> <span class="nf">negative_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span>
@@ -491,7 +505,7 @@
 <span class="sd">        :param str request_column: name of column with search query ids. The higher attention is payed</span>
 <span class="sd">          to samples with same query.</span>
 <span class="sd">        :param float penalty_power: describes dependence of penalty on the difference between target labels.</span>
-<span class="sd">        :param int update_iterations: number of minimization steps to provide optimal values.</span>
+<span class="sd">        :param int update_iterations: number of minimization steps to provide optimal values in leaves.</span>
 
 <span class="sd">        .. [RB] Y. Freund et al. An Efficient Boosting Algorithm for Combining Preferences</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -722,23 +736,26 @@
 <span class="c"># 0. recompute weights</span>
 <span class="c"># 1. normalize ratio between distributions (negatives are in opposite distribution)</span>
 <span class="c"># 2. chi2 - changing only sign, weights are the same</span>
-<span class="c"># 3. optimal value: simply log as usual (negatives are in the same distribution with sign -)</span>
+<span class="c"># 3. optimal value: simply log (negatives are in the same distribution with sign -)</span>
 </div></div>
-<span class="k">class</span> <span class="nc">ReweightLossFunction</span><span class="p">(</span><span class="n">AbstractLossFunction</span><span class="p">):</span>
+<div class="viewcode-block" id="ReweightLossFunction"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.ReweightLossFunction">[docs]</a><span class="k">class</span> <span class="nc">ReweightLossFunction</span><span class="p">(</span><span class="n">AbstractLossFunction</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regularization</span><span class="o">=</span><span class="mf">5.</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Loss function used to reweight events. Conventions:</span>
-<span class="sd">         y=0 - target distribution, y=1 - original distribution.</span>
-<span class="sd">        Weights after look like:</span>
-<span class="sd">         w = w_0 for target distribution</span>
-<span class="sd">         w = w_0 * exp(pred) for events from original distribution</span>
-<span class="sd">         (so pred for target distribution is ignored)</span>
+<span class="sd">        Loss function used to reweight destributions. Works inside :class:`hep_ml.reweight.GBReweighter`</span>
 
-<span class="sd">        :param regularization: roughly, it&#39;s number of events added in each leaf to prevent overfitting.</span>
+<span class="sd">        Conventions: :math:`y=0` - target distribution, :math:`y=1` - original distribution.</span>
+
+<span class="sd">        Weights after look like:</span>
+
+<span class="sd">        * :math:`w = w_0` for target distribution</span>
+<span class="sd">        * :math:`w = w_0 * exp(pred)` for events from original distribution</span>
+<span class="sd">          (so predictions for target distribution is ignored)</span>
+
+<span class="sd">        :param float regularization: roughly, it&#39;s number of events added in each leaf to prevent overfitting.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">regularization</span> <span class="o">=</span> <span class="n">regularization</span>
 
-    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
+<div class="viewcode-block" id="ReweightLossFunction.fit"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.ReweightLossFunction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
         <span class="k">assert</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
         <span class="k">if</span> <span class="n">sample_weight</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
@@ -751,7 +768,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">mask_original</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mask_target</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span>
-
+</div>
     <span class="k">def</span> <span class="nf">_compute_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;We need renormalization at eac step&quot;&quot;&quot;</span>
         <span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">)</span>
@@ -761,13 +778,13 @@
         <span class="sd">&quot;&quot;&quot; Loss function doesn&#39;t have precise expression &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="mi">0</span>
 
-    <span class="k">def</span> <span class="nf">negative_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+<div class="viewcode-block" id="ReweightLossFunction.negative_gradient"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.ReweightLossFunction.negative_gradient">[docs]</a>    <span class="k">def</span> <span class="nf">negative_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="k">return</span> <span class="mf">0.</span>
-
-    <span class="k">def</span> <span class="nf">prepare_tree_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+</div>
+<div class="viewcode-block" id="ReweightLossFunction.prepare_tree_params"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.ReweightLossFunction.prepare_tree_params">[docs]</a>    <span class="k">def</span> <span class="nf">prepare_tree_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">signs</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_compute_weights</span><span class="p">(</span><span class="n">y_pred</span><span class="p">))</span>
-
-    <span class="k">def</span> <span class="nf">prepare_new_leaves_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">terminal_regions</span><span class="p">,</span> <span class="n">leaf_values</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+</div>
+<div class="viewcode-block" id="ReweightLossFunction.prepare_new_leaves_values"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.ReweightLossFunction.prepare_new_leaves_values">[docs]</a>    <span class="k">def</span> <span class="nf">prepare_new_leaves_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">terminal_regions</span><span class="p">,</span> <span class="n">leaf_values</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_weights</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
         <span class="n">w_target</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">terminal_regions</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mask_target</span> <span class="o">*</span> <span class="n">weights</span><span class="p">)</span>
         <span class="n">w_original</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">terminal_regions</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mask_original</span> <span class="o">*</span> <span class="n">weights</span><span class="p">)</span>
@@ -784,7 +801,7 @@
 
 <span class="c"># region FlatnessLossFunction</span>
 
-
+</div></div>
 <span class="k">def</span> <span class="nf">_exp_margin</span><span class="p">(</span><span class="n">margin</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; margin = - y_signed * y_pred &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">margin</span><span class="p">,</span> <span class="o">-</span><span class="mf">1e5</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
@@ -998,7 +1015,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.3.0',
+            VERSION:'0.4.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

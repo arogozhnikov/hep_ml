@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>hep_ml.nnet &mdash; hep_ml 0.3.0 documentation</title>
+  <title>hep_ml.nnet &mdash; hep_ml 0.4.0 documentation</title>
   
 
   
@@ -24,13 +24,13 @@
 
   
   
-    <link rel="stylesheet" href="../../_static/css/my_style.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   
 
   
 
   
-    <link rel="top" title="hep_ml 0.3.0 documentation" href="../../index.html"/>
+    <link rel="top" title="hep_ml 0.4.0 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -91,8 +91,20 @@
 <li class="toctree-l2"><a class="reference internal" href="../../nnet.html#trainers">Trainers</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../preprocessing.html">Preprocessing data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../preprocessing.html#examples">Examples</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../reweight.html">Reweighting algorithms</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../reweight.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../speedup.html">Fast predictions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../speedup.html#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../splot.html">sPlot</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../splot.html#example">Example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Code Examples</a></li>
@@ -135,7 +147,7 @@
             
   <h1>Source code for hep_ml.nnet</h1><div class="highlight"><pre>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">**hep_ml.nnet** is minimalistic version of feed-forward neural networks on theano.</span>
+<span class="sd">**hep_ml.nnet** is minimalistic version of feed-forward neural networks on **theano**.</span>
 <span class="sd">The neural networks from this library provide sklearn classifier&#39;s interface.</span>
 
 <span class="sd">Definitions for loss functions, trainers of neural networks are defined in this file too.</span>
@@ -162,7 +174,7 @@
 <span class="sd">&gt;&gt;&gt; network.fit(X, y)</span>
 <span class="sd">&gt;&gt;&gt; probability = network.predict_proba(X)</span>
 
-<span class="sd">Training an AdaBoost over neural network, adadelta trainer was used and trainer specific parameter was used</span>
+<span class="sd">Training an AdaBoost over neural network with adadelta trainer. Trainer specific parameter was used</span>
 <span class="sd">(size of minibatch)</span>
 
 <span class="sd">&gt;&gt;&gt; from sklearn.ensemble import AdaBoostClassifier</span>
@@ -175,7 +187,7 @@
 <span class="sd">&gt;&gt;&gt; from sklearn.preprocessing import PolynomialFeatures</span>
 <span class="sd">&gt;&gt;&gt; network = MLPClassifier(layers=[10], scaler=PolynomialFeatures(), loss=&#39;exp_loss&#39;)</span>
 
-<span class="sd">To create custom neural network, see code of SimpleNeuralNetwork.</span>
+<span class="sd">To create custom neural network, see code of SimpleNeuralNetwork, which is good place to start.</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
@@ -191,8 +203,8 @@
 <span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">,</span> <span class="n">clone</span>
 <span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">preprocessing</span>
 <span class="kn">from</span> <span class="nn">.commonutils</span> <span class="kn">import</span> <span class="n">check_xyw</span><span class="p">,</span> <span class="n">check_sample_weight</span>
+<span class="kn">from</span> <span class="nn">.preprocessing</span> <span class="kn">import</span> <span class="n">IronTransformer</span>
 <span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">expit</span>
-
 
 <span class="n">floatX</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">floatX</span>
 <span class="n">__author__</span> <span class="o">=</span> <span class="s">&#39;Alex Rogozhnikov&#39;</span>
@@ -204,6 +216,7 @@
            <span class="s">&#39;PairwiseNeuralNetwork&#39;</span><span class="p">,</span>
            <span class="s">&#39;PairwiseSoftplusNeuralNetwork&#39;</span><span class="p">,</span>
            <span class="p">]</span>
+
 
 <span class="c"># region Loss functions</span>
 
@@ -249,6 +262,7 @@
           <span class="s">&#39;squared_loss&#39;</span><span class="p">:</span> <span class="n">squared_loss</span><span class="p">,</span>
           <span class="s">&#39;smooth_huber_loss&#39;</span><span class="p">:</span> <span class="n">smooth_huber_loss</span><span class="p">,</span>
           <span class="p">}</span>
+
 
 <span class="c"># endregion</span>
 
@@ -357,7 +371,7 @@
     <span class="n">prev_loss_value</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">shared</span><span class="p">(</span><span class="mf">1e10</span><span class="p">)</span>
     <span class="n">shareds</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">updates</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">parameters</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">parameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">old_derivative</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">shared</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.</span><span class="p">)</span>
         <span class="n">delta</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">shared</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.</span> <span class="o">+</span> <span class="mf">1e-3</span><span class="p">)</span>
         <span class="n">new_derivative</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">loss_value</span><span class="p">,</span> <span class="n">param</span><span class="p">)</span>
@@ -382,7 +396,7 @@
 
 </div>
 <div class="viewcode-block" id="adadelta_trainer"><a class="viewcode-back" href="../../nnet.html#hep_ml.nnet.adadelta_trainer">[docs]</a><span class="k">def</span> <span class="nf">adadelta_trainer</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">loss</span><span class="p">,</span> <span class="n">random_stream</span><span class="p">,</span>
-                     <span class="n">decay_rate</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+                     <span class="n">decay_rate</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;AdaDelta is trainer with adaptive learning rate.</span>
 
 <span class="sd">    :param decay_rate: momentum-like parameter</span>
@@ -400,9 +414,10 @@
         <span class="n">cumulative_step</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">shared</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.</span><span class="p">)</span>
         <span class="n">shareds</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">cumulative_derivative</span><span class="p">,</span> <span class="n">cumulative_step</span><span class="p">])</span>
 
-        <span class="n">updates</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">cumulative_derivative</span><span class="p">,</span> <span class="n">cumulative_derivative</span> <span class="o">*</span> <span class="n">decay_rate</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">decay_rate</span><span class="p">)</span> <span class="o">*</span> <span class="n">derivative</span> <span class="o">**</span> <span class="mi">2</span><span class="p">])</span>
-        <span class="n">step</span> <span class="o">=</span> <span class="o">-</span> <span class="n">derivative</span> <span class="o">*</span> <span class="n">T</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">cumulative_step</span> <span class="o">+</span> <span class="n">epsilon</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">cumulative_derivative</span> <span class="o">+</span> <span class="n">epsilon</span><span class="p">))</span>
+        <span class="n">new_cumulative_derivative</span> <span class="o">=</span> <span class="n">cumulative_derivative</span> <span class="o">*</span> <span class="n">decay_rate</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">decay_rate</span><span class="p">)</span> <span class="o">*</span> <span class="n">derivative</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="o">-</span> <span class="n">derivative</span> <span class="o">*</span> <span class="n">T</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">cumulative_step</span> <span class="o">+</span> <span class="n">epsilon</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">new_cumulative_derivative</span> <span class="o">+</span> <span class="n">epsilon</span><span class="p">))</span>
 
+        <span class="n">updates</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">cumulative_derivative</span><span class="p">,</span> <span class="n">new_cumulative_derivative</span><span class="p">])</span>
         <span class="n">updates</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">cumulative_step</span><span class="p">,</span> <span class="n">cumulative_step</span> <span class="o">*</span> <span class="n">decay_rate</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">decay_rate</span><span class="p">)</span> <span class="o">*</span> <span class="n">step</span> <span class="o">**</span> <span class="mi">2</span><span class="p">])</span>
         <span class="n">updates</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">param</span><span class="p">,</span> <span class="n">param</span> <span class="o">+</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">step</span><span class="p">])</span>
 
@@ -415,6 +430,8 @@
             <span class="s">&#39;irprop*&#39;</span><span class="p">:</span> <span class="n">irprop_star_trainer</span><span class="p">,</span>
             <span class="s">&#39;adadelta&#39;</span><span class="p">:</span> <span class="n">adadelta_trainer</span><span class="p">,</span>
             <span class="p">}</span>
+
+
 <span class="c"># endregion</span>
 
 
@@ -427,6 +444,8 @@
         <span class="k">return</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">StandardScaler</span><span class="p">()</span>
     <span class="k">elif</span> <span class="n">transform</span> <span class="o">==</span> <span class="s">&#39;minmax&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">MinMaxScaler</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">transform</span> <span class="o">==</span> <span class="s">&#39;iron&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">IronTransformer</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">transform</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">),</span> <span class="s">&#39;provided transformer should be derived from TransformerMixin&#39;</span>
         <span class="k">return</span> <span class="n">clone</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span>
@@ -484,6 +503,7 @@
 <span class="sd">            X of shape [n_events, n_outputs], p of shape [n_events].</span>
 <span class="sd">            For classification, p is arbitrary real, the greater p, the more event</span>
 <span class="sd">            looks like signal event (label 1).</span>
+<span class="sd">            Probabilities are computed by applying logistic function to output of activation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 </div>
@@ -516,12 +536,12 @@
 <span class="sd">        :param bool fit: if True, will</span>
 <span class="sd">        :return: transformed data, numpy.array of shape [n_samples, n_output_features]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># Fighting copy-bug of sklearn&#39;s transformers</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">fit</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">scaler_</span> <span class="o">=</span> <span class="n">_prepare_scaler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scaler</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">scaler_</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-
-        <span class="c"># Fighting copy-bug of sklearn&#39;s transformers</span>
-        <span class="n">X</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
 
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaler_</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">result</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="mi">1</span><span class="p">])])</span>
@@ -535,7 +555,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
         <span class="k">assert</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="s">&#39;only two-class classification supported, labels are 0 and 1&#39;</span>
         <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span>
-
 
 <div class="viewcode-block" id="AbstractNeuralNetworkClassifier.fit"><a class="viewcode-back" href="../../nnet.html#hep_ml.nnet.AbstractNeuralNetworkClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">trainer</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">trainer_parameters</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Prepare the model by optimizing selected loss function with some trainer.</span>
@@ -566,7 +585,7 @@
 
         <span class="c"># TODO epochs are computed wrongly at the moment if &#39;batch&#39; parameter not passed.</span>
         <span class="n">n_batches</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="k">if</span> <span class="n">parameters_</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s">&#39;batch&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s">&#39;batch&#39;</span> <span class="ow">in</span> <span class="n">parameters_</span><span class="p">:</span>
             <span class="n">batch</span> <span class="o">=</span> <span class="n">parameters_</span><span class="p">[</span><span class="s">&#39;batch&#39;</span><span class="p">]</span>
             <span class="n">n_batches</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">//</span> <span class="n">batch</span> <span class="o">+</span> <span class="mi">1</span>
 
@@ -613,7 +632,7 @@
 <span class="sd">        :param sample_weight: optional, numpy.array of shape [n_samples].</span>
 <span class="sd">        :return float, the loss vales computed&quot;&quot;&quot;</span>
         <span class="n">sample_weight</span> <span class="o">=</span> <span class="n">check_sample_weight</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-        <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">fit</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">fit</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Loss</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">)</span>
 
 
@@ -646,7 +665,7 @@
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layers_</span><span class="p">))[</span><span class="mi">1</span><span class="p">:]:</span>
             <span class="n">W</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_matrix_parameter</span><span class="p">(</span><span class="s">&#39;W&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers_</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers_</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
             <span class="c"># act=activation and W_=W are tricks to avoid lambda-capturing</span>
-            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">activation</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">act</span><span class="o">=</span><span class="n">activation</span><span class="p">,</span> <span class="n">W_</span><span class="o">=</span><span class="n">W</span><span class="p">:</span> <span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">act</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">W_</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">activation</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">act</span><span class="o">=</span><span class="n">activation</span><span class="p">,</span> <span class="n">W_</span><span class="o">=</span><span class="n">W</span><span class="p">:</span> <span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">act</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="n">W_</span><span class="p">)</span>
@@ -756,7 +775,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.3.0',
+            VERSION:'0.4.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>uBoost &mdash; hep_ml 0.3.0 documentation</title>
+  <title>uBoost &mdash; hep_ml 0.4.0 documentation</title>
   
 
   
@@ -24,13 +24,13 @@
 
   
   
-    <link rel="stylesheet" href="_static/css/my_style.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   
 
   
 
   
-    <link rel="top" title="hep_ml 0.3.0 documentation" href="index.html"/>
+    <link rel="top" title="hep_ml 0.4.0 documentation" href="index.html"/>
         <link rel="next" title="Metric functions" href="metrics.html"/>
         <link rel="prev" title="Losses for Gradient Boosting" href="losses.html"/> 
 
@@ -92,8 +92,20 @@
 <li class="toctree-l2"><a class="reference internal" href="nnet.html#trainers">Trainers</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="preprocessing.html#examples">Examples</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="reweight.html">Reweighting algorithms</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="reweight.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="speedup.html">Fast predictions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="speedup.html#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="splot.html">sPlot</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="splot.html#example">Example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks.html">Code Examples</a></li>
@@ -143,8 +155,8 @@ The main goal of <strong>uBoost</strong> is to fight correlation between predict
 <li><cite>uBoostClassifier</cite> is a combination of uBoostBDTs for different efficiencies</li>
 </ul>
 <p>This implementation is more advanced than one described in the original paper,
-contains smoothing and trains classifiers in threads, has <cite>learning_rate</cite> and <cite>uniforming_rate</cite> parameters
-and supports SAMME.R modification to use predicted probabilities.</p>
+contains smoothing and trains classifiers in threads, has <cite>learning_rate</cite> and <cite>uniforming_rate</cite> parameters,
+does automatic weights renormalization and supports SAMME.R modification to use predicted probabilities.</p>
 <p>Only binary classification is implemented.</p>
 <p>See also: <a class="reference internal" href="losses.html#hep_ml.losses.BinFlatnessLossFunction" title="hep_ml.losses.BinFlatnessLossFunction"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.losses.BinFlatnessLossFunction</span></code></a>, <a class="reference internal" href="losses.html#hep_ml.losses.KnnFlatnessLossFunction" title="hep_ml.losses.KnnFlatnessLossFunction"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.losses.KnnFlatnessLossFunction</span></code></a>,
 <a class="reference internal" href="losses.html#hep_ml.losses.KnnAdaLossFunction" title="hep_ml.losses.KnnAdaLossFunction"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.losses.KnnAdaLossFunction</span></code></a>
@@ -509,7 +521,7 @@ The target values (integers that correspond to classes).</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.3.0',
+            VERSION:'0.4.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

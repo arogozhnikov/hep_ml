@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>hep_ml.reweight &mdash; hep_ml 0.3.0 documentation</title>
+  <title>hep_ml.reweight &mdash; hep_ml 0.4.0 documentation</title>
   
 
   
@@ -24,13 +24,13 @@
 
   
   
-    <link rel="stylesheet" href="../../_static/css/my_style.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   
 
   
 
   
-    <link rel="top" title="hep_ml 0.3.0 documentation" href="../../index.html"/>
+    <link rel="top" title="hep_ml 0.4.0 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -91,8 +91,20 @@
 <li class="toctree-l2"><a class="reference internal" href="../../nnet.html#trainers">Trainers</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../preprocessing.html">Preprocessing data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../preprocessing.html#examples">Examples</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../reweight.html">Reweighting algorithms</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../reweight.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../speedup.html">Fast predictions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../speedup.html#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../splot.html">sPlot</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../splot.html#example">Example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Code Examples</a></li>
@@ -140,6 +152,11 @@
 <span class="sd">Reweighting is procedure of finding such weights for original distribution,</span>
 <span class="sd">that make distribution of one or several variables identical in original distribution and target distribution.</span>
 
+<span class="sd">Typical application of this technique in HEP is reweighting of Monte-Carlo simulation results to minimize</span>
+<span class="sd">disagreement between simulated data and real data.</span>
+<span class="sd">Frequently the reweighting rule is trained on one part of data (normalization channel)</span>
+<span class="sd">and applied to different (signal channel).</span>
+
 <span class="sd">Remark: if each variable has identical distribution in two samples,</span>
 <span class="sd">this doesn&#39;t imply that multidimensional distributions are equal (almost surely they aren&#39;t).</span>
 <span class="sd">Aim of reweighters is to get identical multidimensional distributions.</span>
@@ -163,29 +180,26 @@
 
 <span class="sd">The same example for `GBReweighter`:</span>
 
-<span class="sd">&gt;&gt;&gt; reweighter = GBReweighter(max_depth=2, other_args={&#39;subsample&#39;: 0.5})</span>
+<span class="sd">&gt;&gt;&gt; reweighter = GBReweighter(max_depth=2, gb_args={&#39;subsample&#39;: 0.5})</span>
 <span class="sd">&gt;&gt;&gt; reweighter.fit(original=MC_data, target=RealData, target_weight=sWeights)</span>
 <span class="sd">&gt;&gt;&gt; MC_weights = reweighter.predict_weights(MC_data)</span>
-
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span>
 
 <span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span>
 <span class="kn">from</span> <span class="nn">scipy.ndimage</span> <span class="kn">import</span> <span class="n">gaussian_filter</span>
-<span class="kn">from</span> <span class="nn">hep_ml.commonutils</span> <span class="kn">import</span> <span class="n">check_sample_weight</span><span class="p">,</span> <span class="n">weighted_quantile</span>
-<span class="kn">from</span> <span class="nn">hep_ml</span> <span class="kn">import</span> <span class="n">gradientboosting</span> <span class="k">as</span> <span class="n">gb</span>
-<span class="kn">from</span> <span class="nn">hep_ml</span> <span class="kn">import</span> <span class="n">losses</span>
-<span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
+
+<span class="kn">from</span> <span class="nn">.commonutils</span> <span class="kn">import</span> <span class="n">check_sample_weight</span><span class="p">,</span> <span class="n">weighted_quantile</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">gradientboosting</span> <span class="k">as</span> <span class="n">gb</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">losses</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s">&#39;Alex Rogozhnikov&#39;</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;BinsReweighter&#39;</span><span class="p">,</span> <span class="s">&#39;GBReweighter&#39;</span><span class="p">]</span>
 
-<span class="n">warn</span><span class="p">(</span><span class="s">&quot;Module hep_ml.reweight is unstable, it&#39;s API may be changed in near future.&quot;</span><span class="p">)</span>
 
-
-<span class="k">def</span> <span class="nf">bincount_nd</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_bincount_nd</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Does the same thing as numpy.bincount, but allows binning in several integer variables.</span>
 <span class="sd">    :param x: numpy.array of shape [n_samples, n_features] with non-negative integers</span>
@@ -240,15 +254,18 @@
 <span class="sd">        (which is better than bins of even size).</span>
 
 <span class="sd">        This method works fine for 1d/2d histograms,</span>
-<span class="sd">        while being quite unstable or inaccurate for higher dimensions.</span>
+<span class="sd">        while being unstable or inaccurate for higher dimensions.</span>
+
+<span class="sd">        To make computed rule more smooth and stable, after computing weights in bins,</span>
+<span class="sd">        gaussian filter is applied (so reweighting coefficient also includes information from neighbouring bins).</span>
 
 <span class="sd">        :param int n_bins: how many bins to use for each input variable.</span>
-<span class="sd">        :param int n_neighs: size of gaussian filter (in bins).</span>
+<span class="sd">        :param float n_neighs: size of gaussian filter (in bins).</span>
 <span class="sd">            This parameter is responsible for tradeoff between stability of rule and accuracy of predictions.</span>
-<span class="sd">            With increase of n_neighs the</span>
+<span class="sd">            With increase of n_neighs the reweighting rule becomes more stable.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">n_percentiles</span> <span class="o">=</span> <span class="n">n_bins</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span> <span class="o">=</span> <span class="n">n_bins</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_neighs</span> <span class="o">=</span> <span class="n">n_neighs</span>
         <span class="c"># if number of events in bins is less than this value, number of events is clipped.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_in_the_bin</span> <span class="o">=</span> <span class="mf">1.</span>
@@ -256,6 +273,7 @@
 <div class="viewcode-block" id="BinsReweighter.compute_bin_indices"><a class="viewcode-back" href="../../reweight.html#hep_ml.reweight.BinsReweighter.compute_bin_indices">[docs]</a>    <span class="k">def</span> <span class="nf">compute_bin_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute id of bin along each axis.</span>
+
 <span class="sd">        :param data: data, array-like of shape [n_samples, n_features]</span>
 <span class="sd">            with the same order of features as in training</span>
 <span class="sd">        :return: numpy.array of shape [n_samples, n_features] with integers, each from [0, n_bins - 1]</span>
@@ -278,7 +296,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">n_features_</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="n">original</span><span class="p">,</span> <span class="n">original_weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_input</span><span class="p">(</span><span class="n">original</span><span class="p">,</span> <span class="n">original_weight</span><span class="p">)</span>
         <span class="n">target</span><span class="p">,</span> <span class="n">target_weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_input</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">target_weight</span><span class="p">)</span>
-        <span class="n">target_perc</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_percentiles</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">target_perc</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">axis</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_features_</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">weighted_quantile</span><span class="p">(</span><span class="n">target</span><span class="p">[:,</span> <span class="n">axis</span><span class="p">],</span> <span class="n">quantiles</span><span class="o">=</span><span class="n">target_perc</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">target_weight</span><span class="p">))</span>
@@ -286,7 +304,7 @@
         <span class="n">bins_weights</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">data</span><span class="p">,</span> <span class="n">weights</span> <span class="ow">in</span> <span class="p">[(</span><span class="n">original</span><span class="p">,</span> <span class="n">original_weight</span><span class="p">),</span> <span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">target_weight</span><span class="p">)]:</span>
             <span class="n">bin_indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_bin_indices</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-            <span class="n">bin_w</span> <span class="o">=</span> <span class="n">bincount_nd</span><span class="p">(</span><span class="n">bin_indices</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">n_percentiles</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_features_</span><span class="p">)</span>
+            <span class="n">bin_w</span> <span class="o">=</span> <span class="n">_bincount_nd</span><span class="p">(</span><span class="n">bin_indices</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_features_</span><span class="p">)</span>
             <span class="n">smeared_weights</span> <span class="o">=</span> <span class="n">gaussian_filter</span><span class="p">(</span><span class="n">bin_w</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_neighs</span><span class="p">,</span> <span class="n">truncate</span><span class="o">=</span><span class="mf">2.5</span><span class="p">)</span>
             <span class="n">bins_weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">smeared_weights</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_in_the_bin</span><span class="p">))</span>
         <span class="n">bin_orig_weights</span><span class="p">,</span> <span class="n">bin_targ_weights</span> <span class="o">=</span> <span class="n">bins_weights</span>
@@ -407,7 +425,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.3.0',
+            VERSION:'0.4.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

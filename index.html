@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>hep_ml documentation &mdash; hep_ml 0.3.0 documentation</title>
+  <title>hep_ml documentation &mdash; hep_ml 0.4.0 documentation</title>
   
 
   
@@ -24,13 +24,13 @@
 
   
   
-    <link rel="stylesheet" href="_static/css/my_style.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   
 
   
 
   
-    <link rel="top" title="hep_ml 0.3.0 documentation" href="#"/>
+    <link rel="top" title="hep_ml 0.4.0 documentation" href="#"/>
         <link rel="next" title="Gradient boosting" href="gb.html"/> 
 
   
@@ -91,8 +91,20 @@
 <li class="toctree-l2"><a class="reference internal" href="nnet.html#trainers">Trainers</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="preprocessing.html#examples">Examples</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="reweight.html">Reweighting algorithms</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="reweight.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="speedup.html">Fast predictions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="speedup.html#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="splot.html">sPlot</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="splot.html#example">Example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks.html">Code Examples</a></li>
@@ -136,11 +148,23 @@
   <div class="section" id="hep-ml-documentation">
 <h1>hep_ml documentation<a class="headerlink" href="#hep-ml-documentation" title="Permalink to this headline">¶</a></h1>
 <p><strong>hep_ml</strong> is machine learning library filled with methods used in high energy physics.
-Classifiers from <strong>hep_ml</strong> are <strong>sklearn</strong>-compatible.</p>
-<div class="section" id="installation">
+Classifiers and transformers from <strong>hep_ml</strong> are <strong>sklearn</strong>-compatible.</p>
+<div style='height: 36px;'>
+<iframe src="https://ghbtns.com/github-btn.html?user=arogozhnikov&repo=hep_ml&type=star&count=true" frameborder="0" scrolling="0" width="120px" height="27px"></iframe>
+<iframe src="https://ghbtns.com/github-btn.html?user=arogozhnikov&repo=hep_ml&type=watch&count=true&v=2" frameborder="0" scrolling="0" width="120px" height="27px"></iframe>
+<div style='clear: both' ></div>
+</div><div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>To install <strong>hep_ml</strong>, use <strong>pip</strong>. Type in terminal:</p>
 <div class="code bash highlight-python"><div class="highlight"><pre>pip install hep_ml
+</pre></div>
+</div>
+</div>
+<div class="section" id="installation-for-developers">
+<h2>Installation for developers<a class="headerlink" href="#installation-for-developers" title="Permalink to this headline">¶</a></h2>
+<p>After cloning repository type in bash:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>cd hep_ml
+pip install -e . -r requirements.txt
 </pre></div>
 </div>
 </div>
@@ -168,8 +192,20 @@ Classifiers from <strong>hep_ml</strong> are <strong>sklearn</strong>-compatible
 <li class="toctree-l2"><a class="reference internal" href="nnet.html#trainers">Trainers</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="preprocessing.html#examples">Examples</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="reweight.html">Reweighting algorithms</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="reweight.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="speedup.html">Fast predictions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="speedup.html#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="splot.html">sPlot</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="splot.html#example">Example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks.html">Code Examples</a></li>
@@ -246,7 +282,7 @@ library to deal with ROOT files (without pain)</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.3.0',
+            VERSION:'0.4.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

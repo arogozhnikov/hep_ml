@@ -9,7 +9,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; hep_ml 0.3.0 documentation</title>
+  <title>Index &mdash; hep_ml 0.4.0 documentation</title>
   
 
   
@@ -25,13 +25,13 @@
 
   
   
-    <link rel="stylesheet" href="_static/css/my_style.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   
 
   
 
   
-    <link rel="top" title="hep_ml 0.3.0 documentation" href="index.html"/> 
+    <link rel="top" title="hep_ml 0.4.0 documentation" href="index.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -91,8 +91,20 @@
 <li class="toctree-l2"><a class="reference internal" href="nnet.html#trainers">Trainers</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="preprocessing.html#examples">Examples</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="reweight.html">Reweighting algorithms</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="reweight.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="speedup.html">Fast predictions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="speedup.html#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="splot.html">sPlot</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="splot.html#example">Example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks.html">Code Examples</a></li>
@@ -151,6 +163,7 @@
  | <a href="#P"><strong>P</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
  | <a href="#U"><strong>U</strong></a>
  
 </div>
@@ -207,6 +220,10 @@
   <dt><a href="reweight.html#hep_ml.reweight.BinsReweighter">BinsReweighter (class in hep_ml.reweight)</a>
   </dt>
 
+      
+  <dt><a href="preprocessing.html#hep_ml.preprocessing.BinTransformer">BinTransformer (class in hep_ml.preprocessing)</a>
+  </dt>
+
   </dl></td>
 </tr></table>
 
@@ -225,8 +242,6 @@
   <dt><a href="nnet.html#hep_ml.nnet.AbstractNeuralNetworkClassifier.compute_loss">compute_loss() (hep_ml.nnet.AbstractNeuralNetworkClassifier method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="losses.html#hep_ml.losses.AbstractLossFunction.compute_optimal_step">compute_optimal_step() (hep_ml.losses.AbstractLossFunction method)</a>
   </dt>
@@ -241,8 +256,22 @@
   </dt>
 
       </dl></dd>
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="losses.html#hep_ml.losses.KnnAdaLossFunction.compute_parameters">compute_parameters() (hep_ml.losses.KnnAdaLossFunction method)</a>
+  </dt>
+
+      
+  <dt><a href="splot.html#hep_ml.splot.compute_sweights">compute_sweights() (in module hep_ml.splot)</a>
+  </dt>
+
+      
+  <dt><a href="speedup.html#hep_ml.speedup.LookupClassifier.convert_bins_to_lookup_index">convert_bins_to_lookup_index() (hep_ml.speedup.LookupClassifier method)</a>
+  </dt>
+
+      
+  <dt><a href="speedup.html#hep_ml.speedup.LookupClassifier.convert_lookup_index_to_bins">convert_lookup_index_to_bins() (hep_ml.speedup.LookupClassifier method)</a>
   </dt>
 
   </dl></td>
@@ -321,7 +350,19 @@
   </dt>
 
         
+  <dt><a href="losses.html#hep_ml.losses.ReweightLossFunction.fit">(hep_ml.losses.ReweightLossFunction method)</a>
+  </dt>
+
+        
   <dt><a href="nnet.html#hep_ml.nnet.AbstractNeuralNetworkClassifier.fit">(hep_ml.nnet.AbstractNeuralNetworkClassifier method)</a>
+  </dt>
+
+        
+  <dt><a href="preprocessing.html#hep_ml.preprocessing.BinTransformer.fit">(hep_ml.preprocessing.BinTransformer method)</a>
+  </dt>
+
+        
+  <dt><a href="preprocessing.html#hep_ml.preprocessing.IronTransformer.fit">(hep_ml.preprocessing.IronTransformer method)</a>
   </dt>
 
         
@@ -330,6 +371,10 @@
 
         
   <dt><a href="reweight.html#hep_ml.reweight.GBReweighter.fit">(hep_ml.reweight.GBReweighter method)</a>
+  </dt>
+
+        
+  <dt><a href="speedup.html#hep_ml.speedup.LookupClassifier.fit">(hep_ml.speedup.LookupClassifier method)</a>
   </dt>
 
         
@@ -373,10 +418,22 @@
   <dt><a href="nnet.html#module-hep_ml.nnet">hep_ml.nnet (module)</a>
   </dt>
 
+      
+  <dt><a href="preprocessing.html#module-hep_ml.preprocessing">hep_ml.preprocessing (module)</a>
+  </dt>
+
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="reweight.html#module-hep_ml.reweight">hep_ml.reweight (module)</a>
+  </dt>
+
+      
+  <dt><a href="speedup.html#module-hep_ml.speedup">hep_ml.speedup (module)</a>
+  </dt>
+
+      
+  <dt><a href="splot.html#module-hep_ml.splot">hep_ml.splot (module)</a>
   </dt>
 
       
@@ -412,15 +469,19 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="nnet.html#hep_ml.nnet.irprop_minus_trainer">irprop_minus_trainer() (in module hep_ml.nnet)</a>
+  <dt><a href="preprocessing.html#hep_ml.preprocessing.IronTransformer">IronTransformer (class in hep_ml.preprocessing)</a>
   </dt>
 
       
-  <dt><a href="nnet.html#hep_ml.nnet.irprop_plus_trainer">irprop_plus_trainer() (in module hep_ml.nnet)</a>
+  <dt><a href="nnet.html#hep_ml.nnet.irprop_minus_trainer">irprop_minus_trainer() (in module hep_ml.nnet)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="nnet.html#hep_ml.nnet.irprop_plus_trainer">irprop_plus_trainer() (in module hep_ml.nnet)</a>
+  </dt>
+
       
   <dt><a href="nnet.html#hep_ml.nnet.irprop_star_trainer">irprop_star_trainer() (in module hep_ml.nnet)</a>
   </dt>
@@ -463,10 +524,14 @@
   <dt><a href="nnet.html#hep_ml.nnet.log_loss">log_loss() (in module hep_ml.nnet)</a>
   </dt>
 
+      
+  <dt><a href="losses.html#hep_ml.losses.LogLossFunction">LogLossFunction (class in hep_ml.losses)</a>
+  </dt>
+
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="losses.html#hep_ml.losses.LogLossFunction">LogLossFunction (class in hep_ml.losses)</a>
+  <dt><a href="speedup.html#hep_ml.speedup.LookupClassifier">LookupClassifier (class in hep_ml.speedup)</a>
   </dt>
 
   </dl></td>
@@ -524,6 +589,10 @@
   <dt><a href="losses.html#hep_ml.losses.RankBoostLossFunction.negative_gradient">(hep_ml.losses.RankBoostLossFunction method)</a>
   </dt>
 
+        
+  <dt><a href="losses.html#hep_ml.losses.ReweightLossFunction.negative_gradient">(hep_ml.losses.ReweightLossFunction method)</a>
+  </dt>
+
       </dl></dd>
   </dl></td>
 </tr></table>
@@ -553,6 +622,10 @@
   </dt>
 
         
+  <dt><a href="speedup.html#hep_ml.speedup.LookupClassifier.predict">(hep_ml.speedup.LookupClassifier method)</a>
+  </dt>
+
+        
   <dt><a href="uboost.html#hep_ml.uboost.uBoostBDT.predict">(hep_ml.uboost.uBoostBDT method)</a>
   </dt>
 
@@ -568,6 +641,10 @@
       <dd><dl>
         
   <dt><a href="nnet.html#hep_ml.nnet.AbstractNeuralNetworkClassifier.predict_proba">(hep_ml.nnet.AbstractNeuralNetworkClassifier method)</a>
+  </dt>
+
+        
+  <dt><a href="speedup.html#hep_ml.speedup.LookupClassifier.predict_proba">(hep_ml.speedup.LookupClassifier method)</a>
   </dt>
 
         
@@ -634,6 +711,10 @@
   <dt><a href="losses.html#hep_ml.losses.RankBoostLossFunction.prepare_new_leaves_values">(hep_ml.losses.RankBoostLossFunction method)</a>
   </dt>
 
+        
+  <dt><a href="losses.html#hep_ml.losses.ReweightLossFunction.prepare_new_leaves_values">(hep_ml.losses.ReweightLossFunction method)</a>
+  </dt>
+
       </dl></dd>
       
   <dt><a href="losses.html#hep_ml.losses.AbstractLossFunction.prepare_tree_params">prepare_tree_params() (hep_ml.losses.AbstractLossFunction method)</a>
@@ -656,6 +737,10 @@
   <dt><a href="losses.html#hep_ml.losses.MSELossFunction.prepare_tree_params">(hep_ml.losses.MSELossFunction method)</a>
   </dt>
 
+        
+  <dt><a href="losses.html#hep_ml.losses.ReweightLossFunction.prepare_tree_params">(hep_ml.losses.ReweightLossFunction method)</a>
+  </dt>
+
       </dl></dd>
   </dl></td>
 </tr></table>
@@ -667,10 +752,14 @@
   <dt><a href="losses.html#hep_ml.losses.RankBoostLossFunction">RankBoostLossFunction (class in hep_ml.losses)</a>
   </dt>
 
+      
+  <dt><a href="nnet.html#hep_ml.nnet.RBFNeuralNetwork">RBFNeuralNetwork (class in hep_ml.nnet)</a>
+  </dt>
+
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="nnet.html#hep_ml.nnet.RBFNeuralNetwork">RBFNeuralNetwork (class in hep_ml.nnet)</a>
+  <dt><a href="losses.html#hep_ml.losses.ReweightLossFunction">ReweightLossFunction (class in hep_ml.losses)</a>
   </dt>
 
   </dl></td>
@@ -716,6 +805,26 @@
 
         
   <dt><a href="uboost.html#hep_ml.uboost.uBoostClassifier.staged_predict_proba">(hep_ml.uboost.uBoostClassifier method)</a>
+  </dt>
+
+      </dl></dd>
+  </dl></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="preprocessing.html#hep_ml.preprocessing.BinTransformer.transform">transform() (hep_ml.preprocessing.BinTransformer method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="preprocessing.html#hep_ml.preprocessing.IronTransformer.transform">(hep_ml.preprocessing.IronTransformer method)</a>
+  </dt>
+
+        
+  <dt><a href="speedup.html#hep_ml.speedup.LookupClassifier.transform">(hep_ml.speedup.LookupClassifier method)</a>
   </dt>
 
       </dl></dd>
@@ -777,7 +886,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.3.0',
+            VERSION:'0.4.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
