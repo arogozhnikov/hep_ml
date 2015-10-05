@@ -10,3 +10,4 @@ Currently there are examples:
 * Boosting to Uniformity (classifiers and metric functions)
 * Neural Networks (and fitting expressions)
 * Reweighting of Distributions
+* Splotting distributions
