@@ -3,7 +3,7 @@
 Initial information used is the probabilities obtained after fitting.
 
 **hep_ml.splot** contains standalone python implementation of this technique.
-(this implementation is brilliantly simple and clear - just as it should be).
+This implementation is brilliantly simple and clear - just as it should be.
 
 Example
 -------
@@ -31,8 +31,8 @@ def compute_sweights(probabilities, sample_weight=None):
     """Computes sWeights based on probabilities obtained from distribution fit.
 
     :param probabilities: pandas.DataFrame with probabilities of shape [n_samples, n_classes].
-    These probabilities are obtained after fit (typically, mass fit).
-    Pay attention, that for each sample sum of probabilities should be equal to 1.
+        These probabilities are obtained after fit (typically, mass fit).
+        Pay attention, that for each sample sum of probabilities should be equal to 1.
     :param sample_weight: optionally you can pass weights of events, numpy.array of shape [n_samples]
     :return: pandas.DataFrame with sWeights of shape [n_samples, n_classes]
     """

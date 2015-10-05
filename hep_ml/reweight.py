@@ -36,7 +36,6 @@ The same example for `GBReweighter`:
 >>> reweighter.fit(original=MC_data, target=RealData, target_weight=sWeights)
 >>> MC_weights = reweighter.predict_weights(MC_data)
 
-
 """
 from __future__ import division, print_function, absolute_import
 
@@ -128,6 +127,7 @@ class BinsReweighter(BaseEstimator, ReweighterMixin):
     def compute_bin_indices(self, data):
         """
         Compute id of bin along each axis.
+
         :param data: data, array-like of shape [n_samples, n_features]
             with the same order of features as in training
         :return: numpy.array of shape [n_samples, n_features] with integers, each from [0, n_bins - 1]
