@@ -12,6 +12,8 @@
 * **hep_ml.nnet** - theano-based flexible neural networks 
 * **hep_ml.reweight** - reweighting multidimensional distributions <br />
   (_multi_ here means 2, 3, 5 and more dimensions - see GBReweighter!)
+* **hep_ml.splot** - minimalistic splotting 
+* **hep_ml.speedup** - building models for fast classification (Bonsai BDT)
 * **sklearn**-compatibility of estimators.
 
 ### Installation

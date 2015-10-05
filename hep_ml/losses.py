@@ -169,8 +169,10 @@ class HessianLossFunction(AbstractLossFunction):
     def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred):
         """ This expression comes from optimization of second-order approximation of loss function."""
         min_length = len(leaf_values)
-        nominators = numpy.bincount(terminal_regions, weights=self.negative_gradient(y_pred), minlength=min_length)
-        denominators = numpy.bincount(terminal_regions, weights=self.hessian(y_pred), minlength=min_length)
+        gradients = self.negative_gradient(y_pred)
+        hessians = self.hessian(y_pred)
+        nominators = numpy.bincount(terminal_regions, weights=gradients, minlength=min_length)
+        denominators = numpy.bincount(terminal_regions, weights=hessians, minlength=min_length)
         return nominators / (denominators + self.regularization_)
 
     def compute_optimal_step(self, y_pred):
@@ -186,7 +188,6 @@ class HessianLossFunction(AbstractLossFunction):
             step_ = self.prepare_new_leaves_values(terminal_regions, leaf_values=leaf_values, y_pred=y_pred + step)[0]
             step += 0.5 * step_
         return step
-
 
 
 # region Classification losses
