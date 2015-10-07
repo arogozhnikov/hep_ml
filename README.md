@@ -32,7 +32,7 @@ sudo pip install .
 ### Links
 
 * [documentation](https://arogozhnikov.github.io/hep_ml/)
-* [notebook examples](https://github.com/arogozhnikov/hep_ml/tree/master/notebooks)
+* [notebooks, code examples](https://github.com/arogozhnikov/hep_ml/tree/master/notebooks)
 * [repository](https://github.com/arogozhnikov/hep_ml)
 * [issue tracker](https://github.com/arogozhnikov/hep_ml/issues)
 * [old repository](https://github.com/anaderi/lhcb_trigger_ml)
