@@ -1,5 +1,4 @@
 environment:
-  build: false
 
   matrix:
     - MINICONDA: "C:\\Miniconda"
@@ -14,6 +13,7 @@ environment:
     - MINICONDA: "C:\\Miniconda3-x64"
       PYTHON_VERSION: 3.4
 
+build: false
 install:
   - "SET PATH=%MINICONDA%;%MINICONDA%\\Scripts;%PATH%;"
 
@@ -26,5 +26,4 @@ install:
   - pip install . --no-dependencies
 
 test_script:
-  # run testsuite and upload test results to AppVeyor; return exit code of testsuite
   - nosetests tests
