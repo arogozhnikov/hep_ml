@@ -18,9 +18,13 @@
 
 ### Installation
 
+Basic installation:
+
 ```bash
 pip install hep_ml
 ```
+
+If you're new to python and don't never used `pip`, first install scikit-learn [with these instructions](http://scikit-learn.org/stable/install.html).
 
 To use latest development version, clone it and install with `pip`:
 ```bash
