@@ -17,11 +17,12 @@ build: false
 install:
   - "SET PATH=%MINICONDA%;%MINICONDA%\\Scripts;%PATH%;"
 
-  - conda update --yes conda
+  - conda config --set always_yes true
+  - conda update -q conda
   - "conda create -q -n test-environment python=%PYTHON_VERSION%"
   - activate test-environment
-  - conda install --yes pip numpy scipy six pandas
-  - conda install --yes theano scikit-learn nose
+  - conda install -q pip numpy scipy six pandas
+  - conda install -q theano scikit-learn nose
   # installing self
   - pip install . --no-dependencies
 
