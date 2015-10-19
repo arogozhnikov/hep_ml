@@ -21,8 +21,10 @@ install:
   - conda update -q conda
   - "conda create -q -n test-environment python=%PYTHON_VERSION%"
   - activate test-environment
+  - conda install -q mingw libpython
   - conda install -q pip numpy scipy six pandas
-  - conda install -q theano scikit-learn nose
+  - conda install -q scikit-learn nose
+  - pip install theano
   # installing self
   - pip install . --no-dependencies
 
