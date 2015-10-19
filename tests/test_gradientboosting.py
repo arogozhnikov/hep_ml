@@ -95,7 +95,7 @@ def test_constant_fitting(n_samples=1000, n_features=5):
     Testing if initial constant fitted properly
     """
     X, y = generate_sample(n_samples=n_samples, n_features=n_features)
-    y += 1000.
+    y = y.astype(numpy.float) + 1000.
     for loss in [MSELossFunction(), MAELossFunction()]:
         gb = UGradientBoostingRegressor(loss=loss, n_estimators=10)
         gb.fit(X, y)
