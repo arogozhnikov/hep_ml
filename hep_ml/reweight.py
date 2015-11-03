@@ -183,6 +183,7 @@ class GBReweighter(BaseEstimator, ReweighterMixin):
                  learning_rate=0.2,
                  max_depth=3,
                  min_samples_leaf=200,
+                 loss_regularization=5.,
                  gb_args=None):
         """
         Gradient Boosted Reweighter - a reweighter algorithm based on ensemble of regression trees.
@@ -197,7 +198,9 @@ class GBReweighter(BaseEstimator, ReweighterMixin):
         :param learning_rate: float from [0, 1]. Lesser learning rate requires more trees,
             but makes reweighting rule more stable.
         :param max_depth: maximal depth of trees
-        :param min_samples_leaf: minimal number of events in the leaf. If many
+        :param min_samples_leaf: minimal number of events in the leaf.
+        :param loss_regularization: float, approximately equal to number of events
+         that algorithm puts in each leaf.
         :param gb_args: other parameters passed to gradient boosting.
             See :class:`hep_ml.gradientboosting.UGradientBoostingClassifier`
         """
@@ -206,6 +209,7 @@ class GBReweighter(BaseEstimator, ReweighterMixin):
         self.max_depth = max_depth
         self.min_samples_leaf = min_samples_leaf
         self.gb_args = gb_args
+        self.loss_regularization = loss_regularization
 
     def fit(self, original, target, original_weight=None, target_weight=None):
         """
@@ -223,7 +227,8 @@ class GBReweighter(BaseEstimator, ReweighterMixin):
         original, original_weight = self._normalize_input(original, original_weight)
         target, target_weight = self._normalize_input(target, target_weight)
 
-        self.gb = gb.UGradientBoostingClassifier(loss=losses.ReweightLossFunction(),
+        loss = losses.ReweightLossFunction(regularization=self.loss_regularization)
+        self.gb = gb.UGradientBoostingClassifier(loss=loss,
                                                  n_estimators=self.n_estimators,
                                                  max_depth=self.max_depth,
                                                  min_samples_leaf=self.min_samples_leaf,
