@@ -12,7 +12,7 @@
 * **hep_ml.nnet** - theano-based flexible neural networks 
 * **hep_ml.reweight** - reweighting multidimensional distributions <br />
   (_multi_ here means 2, 3, 5 and more dimensions - see GBReweighter!)
-* **hep_ml.splot** - minimalistic splotting 
+* **hep_ml.splot** - minimalistic sPlot-ting 
 * **hep_ml.speedup** - building models for fast classification (Bonsai BDT)
 * **sklearn**-compatibility of estimators.
 
@@ -46,7 +46,7 @@ Libraries you'll require to make your life easier.
 
 * [IPython Notebook](http://ipython.org/notebook.html) &mdash; web-shell for python
 * [scikit-learn](http://scikit-learn.org/)  &mdash; general-purpose library for machine learning in python
-* [REP](https://github.com/yandex/REP)  &mdash; python wrappers around different machine learning libraries 
+* [yandex/REP](https://github.com/yandex/REP)  &mdash; python wrappers around different machine learning libraries 
     (including TMVA) + goodies, required to plot learning curves and reports after classification. Required to execute *howto*s from this repository
 * [numpy](http://www.numpy.org/)  &mdash; 'MATLAB in python', vector operation in python. 
     Use it you need to perform any number crunching. 
