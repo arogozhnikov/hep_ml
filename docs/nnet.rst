@@ -35,6 +35,4 @@ Their aim is to optimize the target loss function as some black box.
 
 .. autofunction:: hep_ml.nnet.irprop_plus_trainer
 
-.. autofunction:: hep_ml.nnet.irprop_star_trainer
-
 .. autofunction:: hep_ml.nnet.adadelta_trainer

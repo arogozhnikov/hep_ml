@@ -15,7 +15,7 @@ Also **hep_ml.nnet** allows optimization of parameters in any differentiable dec
 
 Being written in theano, these neural networks are able to make use of your GPU.
 
-See also libraries: theanets, keras.
+See also libraries: theanets, keras, lasagne.
 
 Examples
 ________
@@ -177,39 +177,6 @@ def irprop_minus_trainer(x, y, w, parameters, loss, random_stream,
     return shareds, updates
 
 
-def irprop_star_trainer(x, y, w, parameters, loss, random_stream,
-                        positive_step=1.2, negative_step=0.5, max_step=1., min_step=1e-6):
-    """ IRPROP* trainer (own experimental modification of IRPROP-, not recommended for usage) """
-    shareds = []
-    updates = []
-    loss_value = loss(x, y, w)
-
-    for name, param in parameters.items():
-        param_shape = param.get_value().shape
-        n = int(numpy.prod(param_shape))
-        new_derivative_ = T.grad(loss_value, param).flatten()
-        lnewder, rnewder = new_derivative_.reshape([n, 1]), new_derivative_.reshape([1, n])
-        new_derivative_plus = lnewder + rnewder
-        new_derivative_minus = lnewder - rnewder
-        new_param = param
-        for new_derivative in [new_derivative_plus, new_derivative_minus]:
-            delta = theano.shared(numpy.zeros([n, n], dtype=floatX) + 1e-3)
-            old_derivative = theano.shared(numpy.zeros([n, n], dtype=floatX))
-
-            new_delta = T.where(new_derivative * old_derivative > 0, delta * positive_step, delta * negative_step)
-            new_delta = T.clip(new_delta, min_step, max_step)
-
-            updates.append([delta, new_delta])
-            new_old_derivative = T.where(new_derivative * old_derivative < 0, 0, new_derivative)
-            updates.append([old_derivative, new_old_derivative])
-            new_param = new_param - (new_delta * T.sgn(new_derivative)).sum(axis=1).reshape(param.shape)
-            shareds.extend([old_derivative, delta])
-
-        updates.append([param, new_param])
-
-    return shareds, updates
-
-
 def irprop_plus_trainer(x, y, w, parameters, loss, random_stream,
                         positive_step=1.2, negative_step=0.5, max_step=1., min_step=1e-6):
     """IRPROP+ is batch trainer, for details see http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.21.3428
@@ -279,7 +246,6 @@ def adadelta_trainer(x, y, w, parameters, loss, random_stream,
 trainers = {'sgd': sgd_trainer,
             'irprop-': irprop_minus_trainer,
             'irprop+': irprop_plus_trainer,
-            'irprop*': irprop_star_trainer,
             'adadelta': adadelta_trainer,
             }
 
@@ -297,7 +263,7 @@ def _prepare_scaler(transform):
     elif transform == 'minmax':
         return preprocessing.MinMaxScaler()
     elif transform == 'iron':
-        return IronTransformer()
+        return IronTransformer(symmetrize=True)
     else:
         assert isinstance(transform, TransformerMixin), 'provided transformer should be derived from TransformerMixin'
         return clone(transform)
@@ -406,6 +372,7 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
         X = self._transform(X, y, fit=True)
         self.classes_ = numpy.array([0, 1])
         assert (numpy.unique(y) == self.classes_).all(), 'only two-class classification supported, labels are 0 and 1'
+        y = numpy.array(y, dtype=int)
         return X, y, sample_weight
 
     def fit(self, X, y, sample_weight=None, trainer=None, epochs=None, **trainer_parameters):
@@ -417,7 +384,8 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
         :param sample_weight: numpy.array of shape [n_samples], leave None for array of 1's
         :param trainer: str, method used to minimize loss, overrides one in the ctor
         :param trainer_parameters: parameters for this method, override ones in ctor
-        :return: self """
+        :return: self
+        """
         X, y, sample_weight = self._prepare_inputs(X, y, sample_weight=sample_weight)
 
         loss_lambda = self._prepare(X.shape[1])
