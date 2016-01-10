@@ -33,6 +33,7 @@ def test_bin_transform(n_features=10, n_samples=10000):
     assert numpy.all(result < n_bins)
     assert numpy.all(result >= 0)
     assert numpy.allclose(numpy.max(result, axis=0), n_bins - 1)
+    assert numpy.allclose(numpy.min(result, axis=0), 0)
     assure_monotonic(data, result)
 
     # check reproducibility
@@ -46,21 +47,35 @@ def test_bin_transform(n_features=10, n_samples=10000):
 
 def test_iron_transformer(n_features=10, n_samples=10000):
     """
-    Testing FlatTransformer
+    Testing IronTransformer
     """
-    data = numpy.random.random([n_samples, n_features])
+    import pandas
+    data1 = numpy.random.random([n_samples, n_features])
+    data2 = pandas.DataFrame(data=numpy.random.random([n_samples, n_features]),
+                             index=numpy.random.choice(n_samples * 2, size=n_samples, replace=False))
 
-    transformer = IronTransformer().fit(data)
-    result = transformer.transform(data)
+    for max_points in [n_samples // 2, n_samples * 2]:
+        for data in [data1, data2]:
+            data_copy = data.copy()
 
-    assert numpy.all(result <= 1.)
-    assert numpy.all(result >= 0.)
-    assure_monotonic(data, result)
+            transformer = IronTransformer(max_points=max_points).fit(data)
+            result = transformer.transform(data)
 
-    # check reproducibility
-    assert numpy.all(transformer.transform(data) == transformer.transform(data))
+            assert numpy.all(data == data_copy), 'data was augmented!'
 
-    # checking dtype is integer
-    numpy_result = numpy.array(result)
-    assert numpy_result.dtype == float
+            assert numpy.all(numpy.isfinite(result))  # , numpy.isfinite(result).all()
+            assert numpy.all(result <= 1.)
+            assert numpy.all(result >= 0.)
+            assure_monotonic(data, result)
+
+            # check reproducibility
+            assert numpy.all(transformer.transform(data) == transformer.transform(data))
+
+            # checking dtype is integer
+            numpy_result = numpy.array(result)
+            assert numpy_result.dtype == float
+            for name, (feature_values, feature_percentiles) in transformer.feature_maps.iteritems():
+                assert len(feature_values) <= max_points
+
+
 

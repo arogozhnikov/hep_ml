@@ -36,7 +36,7 @@ from collections import OrderedDict
 import numpy
 import pandas
 from sklearn.base import BaseEstimator, TransformerMixin
-from .commonutils import check_sample_weight, to_pandas_dataframe
+from .commonutils import check_sample_weight, to_pandas_dataframe, weighted_quantile
 
 __author__ = 'Alex Rogozhnikov'
 __all__ = ['BinTransformer', 'IronTransformer']
@@ -66,7 +66,7 @@ class BinTransformer(BaseEstimator, TransformerMixin):
         X = to_pandas_dataframe(X)
         self.percentiles = OrderedDict()
         for column in X.columns:
-            values = X[column]
+            values = numpy.array(X[column])
             if len(numpy.unique(values)) < self.max_bins:
                 self.percentiles[column] = numpy.unique(values)[:-1]
             else:
@@ -74,22 +74,25 @@ class BinTransformer(BaseEstimator, TransformerMixin):
                 self.percentiles[column] = numpy.percentile(values, targets)
         return self
 
-    def transform(self, X):
+    def transform(self, X, extend_to=1):
         """
         :param X: pandas.DataFrame or numpy.array with data
-        :returns: pandas.DataFrame with transformed features (names of columns are preserved),
-            dtype is 'int8' for space economy
+        :param int extend_to: extends number of samples to be divisible by extend_to
+        :return: numpy.array with transformed features (names of columns are not preserved),
+            dtype is 'int8' for space efficiency.
         """
         X = to_pandas_dataframe(X)
         assert list(X.columns) == list(self.percentiles.keys()), 'Wrong names of columns'
-        bin_indices = numpy.zeros(X.shape, dtype='uint8')
+        n_samples = len(X)
+        extended_length = ((n_samples + extend_to - 1) // extend_to) * extend_to
+        bin_indices = numpy.zeros([extended_length, X.shape[1]], dtype='uint8', order='F')
         for i, column in enumerate(X.columns):
-            bin_indices[:, i] = numpy.searchsorted(self.percentiles[column], X[column])
-        return pandas.DataFrame(bin_indices, columns=X.columns)
+            bin_indices[:n_samples, i] = numpy.searchsorted(self.percentiles[column], numpy.array(X[column]))
+        return bin_indices
 
 
 class IronTransformer(BaseEstimator, TransformerMixin):
-    def __init__(self, max_points=10000):
+    def __init__(self, max_points=10000, symmetrize=False):
         """
         IronTransformer fits one-dimensional transformation for each feature.
 
@@ -101,8 +104,10 @@ class IronTransformer(BaseEstimator, TransformerMixin):
 
         Recommended to apply with neural networks and other algorithms sensitive to scale of features.
 
+        :param symmetrize: if True, resulting distribution is in [-1, 1]
         :param int max_points: leave so many points in monotonic transformation.
         """
+        self.symmetrize = symmetrize
         self.max_points = max_points
 
     def fit(self, X, y=None, sample_weight=None):
@@ -117,18 +122,21 @@ class IronTransformer(BaseEstimator, TransformerMixin):
         sample_weight = check_sample_weight(X, sample_weight=sample_weight)
         sample_weight = sample_weight / sample_weight.sum()
 
-        self.feature_values = numpy.zeros(X.shape, dtype=float)
-        self.feature_percentiles = numpy.zeros(X.shape, dtype=float)
-
         self.feature_maps = OrderedDict()
-        random_state = numpy.random.RandomState(seed=42)
         for column in X.columns:
-            # adding little noise for symmetrical gaps around concentrations.
-            data = X[column] + random_state.normal(0, scale=1e-10, size=len(X))
-            order = numpy.argsort(data)
-            feature_percentiles = numpy.cumsum(sample_weight[order])
-            feature_values = data[order]
-            self.feature_maps[column] = (feature_values, feature_percentiles)
+            # TODO add support for NaNs
+            data = numpy.array(X[column], dtype=float)
+            data_unique, indices = numpy.unique(data, return_inverse=True)
+            weights_unique = numpy.bincount(indices, weights=sample_weight)
+
+            assert len(weights_unique) == len(data_unique)
+            if len(data_unique) < self.max_points:
+                feature_quantiles = numpy.cumsum(weights_unique) - weights_unique * 0.5
+                self.feature_maps[column] = (data_unique, feature_quantiles)
+            else:
+                feature_quantiles = numpy.linspace(0, 1, self.max_points)
+                feature_values = weighted_quantile(data, quantiles=feature_quantiles, sample_weight=sample_weight)
+                self.feature_maps[column] = (feature_quantiles, feature_values)
 
         return self
 
@@ -144,6 +152,10 @@ class IronTransformer(BaseEstimator, TransformerMixin):
 
         result = pandas.DataFrame(numpy.zeros(X.shape, dtype=float), columns=X.columns)
         for column, (feature_values, feature_percentiles) in self.feature_maps.items():
-            result[column] = numpy.interp(X[column], feature_values, feature_percentiles)
+            data = numpy.array(X[column], dtype=float)
+            result[column] = numpy.interp(data, feature_values, feature_percentiles)
+
+        if self.symmetrize:
+            result = 2 * result - 1
 
         return result
