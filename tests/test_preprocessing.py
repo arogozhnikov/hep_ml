@@ -23,7 +23,7 @@ def test_bin_transform(n_features=10, n_samples=10000):
     """
     Testing BinTransformer
     """
-    data = numpy.random.random([n_samples, n_features])
+    data = numpy.random.normal(size=[n_samples, n_features])
 
     n_bins = 41
 
@@ -45,37 +45,42 @@ def test_bin_transform(n_features=10, n_samples=10000):
     assert numpy_result.dtype == 'uint8'
 
 
-def test_iron_transformer(n_features=10, n_samples=10000):
+def test_iron_transformer(n_features=10, n_samples=5000):
     """
     Testing IronTransformer
     """
     import pandas
-    data1 = numpy.random.random([n_samples, n_features])
-    data2 = pandas.DataFrame(data=numpy.random.random([n_samples, n_features]),
+    data1 = numpy.random.normal(size=[n_samples, n_features])
+    data2 = pandas.DataFrame(data=numpy.random.normal(size=[n_samples, n_features]),
                              index=numpy.random.choice(n_samples * 2, size=n_samples, replace=False))
+    data3 = numpy.clip(data1, -0.2, 0.2)
 
-    for max_points in [n_samples // 2, n_samples * 2]:
-        for data in [data1, data2]:
-            data_copy = data.copy()
+    for symmetrize in [True, False]:
+        for max_points in [n_samples // 2, n_samples * 2]:
+            for data in [data1, data2, data3]:
+                data_copy = data.copy()
 
-            transformer = IronTransformer(max_points=max_points).fit(data)
-            result = transformer.transform(data)
+                transformer = IronTransformer(max_points=max_points, symmetrize=symmetrize).fit(data)
+                result = transformer.transform(data)
 
-            assert numpy.all(data == data_copy), 'data was augmented!'
+                assert numpy.all(data == data_copy), 'data was augmented!'
 
-            assert numpy.all(numpy.isfinite(result))  # , numpy.isfinite(result).all()
-            assert numpy.all(result <= 1.)
-            assert numpy.all(result >= 0.)
-            assure_monotonic(data, result)
+                assert numpy.all(numpy.isfinite(result))  # , numpy.isfinite(result).all()
+                assert numpy.all(result <= 1.)
+                if symmetrize:
+                    assert numpy.all(result >= -1)
+                else:
+                    assert numpy.all(result >= 0.)
+                assure_monotonic(data, result)
 
-            # check reproducibility
-            assert numpy.all(transformer.transform(data) == transformer.transform(data))
+                # check reproducibility
+                assert numpy.all(transformer.transform(data) == transformer.transform(data))
 
-            # checking dtype is integer
-            numpy_result = numpy.array(result)
-            assert numpy_result.dtype == float
-            for name, (feature_values, feature_percentiles) in transformer.feature_maps.iteritems():
-                assert len(feature_values) <= max_points
+                # checking dtype is integer
+                numpy_result = numpy.array(result)
+                assert numpy_result.dtype == float
+                for name, (feature_values, feature_percentiles) in transformer.feature_maps.items():
+                    assert len(feature_values) <= max_points
 
 
 
