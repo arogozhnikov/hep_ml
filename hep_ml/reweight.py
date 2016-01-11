@@ -62,7 +62,7 @@ def _bincount_nd(x, weights, shape):
     assert len(weights) == len(x), 'length of weight is different: {} {}'.format(len(x), len(weights))
     assert x.shape[1] == len(shape), 'wrong length of shape: {} {}'.format(x.shape[1], len(shape))
     maximals = numpy.max(x, axis=0)
-    assert numpy.all(maximals < shape), 'smaller shape: {} {}'.format(maximals, shape)
+    assert numpy.all(maximals < shape), 'small shape passed: {} {}'.format(maximals, shape)
 
     result = numpy.zeros(shape, dtype=float)
     numpy.add.at(result, tuple(x.T), weights)
@@ -200,7 +200,7 @@ class GBReweighter(BaseEstimator, ReweighterMixin):
         :param max_depth: maximal depth of trees
         :param min_samples_leaf: minimal number of events in the leaf.
         :param loss_regularization: float, approximately equal to number of events
-         that algorithm puts in each leaf.
+         that algorithm 'puts' in each leaf to prevent exploding.
         :param gb_args: other parameters passed to gradient boosting.
             See :class:`hep_ml.gradientboosting.UGradientBoostingClassifier`
         """
