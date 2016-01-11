@@ -136,7 +136,9 @@ class IronTransformer(BaseEstimator, TransformerMixin):
             else:
                 feature_quantiles = numpy.linspace(0, 1, self.max_points)
                 feature_values = weighted_quantile(data, quantiles=feature_quantiles, sample_weight=sample_weight)
-                self.feature_maps[column] = (feature_quantiles, feature_values)
+                feature_values, indices = numpy.unique(feature_values, return_index=True)
+                feature_quantiles = feature_quantiles[indices]
+                self.feature_maps[column] = (feature_values, feature_quantiles)
 
         return self
 
