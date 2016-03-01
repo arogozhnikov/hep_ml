@@ -34,6 +34,8 @@ def test_loss_functions(size=50, epsilon=1e-3):
         losses.MAELossFunction(),
     ]
     pred = numpy.random.normal(size=size)
+    # zero is a special point in i.e. MAELossFunction
+    pred[abs(pred) < epsilon] = 2 * epsilon
 
     for loss in tested_losses:
         loss.fit(X, y, sample_weight=sample_weight)
