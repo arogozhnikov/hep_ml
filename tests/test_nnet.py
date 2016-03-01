@@ -5,8 +5,8 @@ from __future__ import division, print_function
 
 import numpy
 from sklearn.linear_model.logistic import LogisticRegression
-from sklearn.datasets import make_blobs
 from sklearn.metrics import roc_auc_score
+from sklearn.base import clone
 
 from hep_ml import nnet
 from hep_ml.commonutils import generate_sample
@@ -15,11 +15,28 @@ from hep_ml.preprocessing import BinTransformer, IronTransformer
 __author__ = 'Alex Rogozhnikov'
 
 
+def check_single_network(neural_network, n_samples=200, n_features=7, distance=0.8, retry_attempts=3):
+    X, y = generate_sample(n_samples=n_samples, n_features=n_features, distance=distance)
+    for retry_attempt in range(retry_attempts):
+        # to initial state
+        neural_network = clone(neural_network)
+        neural_network.set_params(random_state=42 + retry_attempt)
+        print(neural_network)
+        neural_network.fit(X, y, epochs=200)
+        quality = roc_auc_score(y, neural_network.predict_proba(X)[:, 1])
+        computed_loss = neural_network.compute_loss(X, y, sample_weight=y * 0 + 1)
+        if quality > 0.8:
+            break
+        else:
+            print('attempt {} : {}'.format(retry_attempt, quality))
+            if retry_attempt == retry_attempts - 1:
+                raise RuntimeError('quality of model is too low: {} {}'.format(quality, neural_network))
+
+
 def test_nnet(n_samples=200, n_features=7, distance=0.8, complete=False):
     """
-    :param complete: if True, all possible combinations will be checked, and quality is printed
+    :param complete: if True, all possible combinations will be checked, quality is printed
     """
-    X, y = generate_sample(n_samples=n_samples, n_features=n_features, distance=distance)
 
     nn_types = [
         nnet.SimpleNeuralNetwork,
@@ -31,6 +48,7 @@ def test_nnet(n_samples=200, n_features=7, distance=0.8, complete=False):
     ]
 
     if complete:
+        X, y = generate_sample(n_samples=n_samples, n_features=n_features, distance=distance)
         # checking all possible combinations
         for loss in nnet.losses:
             for NNType in nn_types:
@@ -41,8 +59,6 @@ def test_nnet(n_samples=200, n_features=7, distance=0.8, complete=False):
 
         lr = LogisticRegression().fit(X, y)
         print(lr, roc_auc_score(y, lr.predict_proba(X)[:, 1]))
-
-        assert 0 == 1, "Let's see and compare results"
     else:
         # checking combinations of losses, nn_types, trainers, most of them are used once during tests.
         attempts = max(len(nnet.losses), len(nnet.trainers), len(nn_types))
@@ -50,27 +66,16 @@ def test_nnet(n_samples=200, n_features=7, distance=0.8, complete=False):
         trainers_shift = numpy.random.randint(10)
         for attempt in range(attempts):
             # each combination is tried 3 times. before raising exception
-            retry_attempts = 3
-            for retry_attempt in range(retry_attempts):
-                loss = list(nnet.losses.keys())[(attempt + losses_shift) % len(nnet.losses)]
-                trainer = list(nnet.trainers.keys())[(attempt + trainers_shift) % len(nnet.trainers)]
 
-                nn_type = nn_types[attempt % len(nn_types)]
+            loss = list(nnet.losses.keys())[(attempt + losses_shift) % len(nnet.losses)]
+            trainer = list(nnet.trainers.keys())[(attempt + trainers_shift) % len(nnet.trainers)]
 
-                nn = nn_type(layers=[5], loss=loss, trainer=trainer, random_state=42 + retry_attempt)
-                print(nn)
-                nn.fit(X, y, epochs=200)
-                quality = roc_auc_score(y, nn.predict_proba(X)[:, 1])
-                computed_loss = nn.compute_loss(X, y)
-                if quality > 0.8:
-                    break
-                else:
-                    print('attempt {} : {}'.format(retry_attempt, quality))
-                    if retry_attempt == retry_attempts - 1:
-                        raise RuntimeError('quality of model is too low: {} {}'.format(quality, nn))
+            nn_type = nn_types[attempt % len(nn_types)]
+            neural_network = nn_type(layers=[5], loss=loss, trainer=trainer)
+            yield check_single_network, neural_network
 
 
-def test_with_scaler(n_samples=200, n_features=15, distance=0.5):
+def test_network_with_scaler(n_samples=200, n_features=15, distance=0.5):
     X, y = generate_sample(n_samples=n_samples, n_features=n_features, distance=distance)
     for scaler in [BinTransformer(max_bins=16), IronTransformer()]:
         clf = nnet.SimpleNeuralNetwork(scaler=scaler)

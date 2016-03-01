@@ -196,7 +196,7 @@ def irprop_plus_trainer(x, y, w, parameters, loss, random_stream,
         new_derivative = T.grad(loss_value, param)
 
         shift_if_bad_step = T.where(new_derivative * old_derivative < 0, delta * T.sgn(old_derivative), 0)
-        # THIS doesn't work!
+        # TODO THIS doesn't work!
         shift = ifelse(loss_value > prev_loss_value, shift_if_bad_step, 0. * param)
         # unfortunately we can't do it this way: param += shift
 
@@ -548,18 +548,20 @@ class PairwiseNeuralNetwork(AbstractNeuralNetworkClassifier):
 
 
 class PairwiseSoftplusNeuralNetwork(AbstractNeuralNetworkClassifier):
-    """The result is computed as :math:`h = softplus(Ax)`, :math:`output = \sum_{ij} B_{ij} h_i (1 - h_j)` """
+    """The result is computed as :math:`h1 = softplus(A_1 x)`, :math:`h2 = sigmoid(A_2 x)`,
+        :math:`output = \sum_{ij} B_{ij} h1_i h2_j)`
+    """
 
     def prepare(self):
         n1, n2, n3 = self.layers_
-        W1 = self._create_matrix_parameter('W1', n1, n2)
-        W2 = self._create_matrix_parameter('W2', n2, n2)
+        A1 = self._create_matrix_parameter('A1', n1, n2)
+        A2 = self._create_matrix_parameter('A2', n1, n2)
+        B = self._create_matrix_parameter('B', n2, n2)
 
         def activation(input):
-            z = T.dot(input, W1)
-            first1 = T.nnet.softplus(z)
-            first2 = T.nnet.softplus(-z)
-            return T.batched_dot(T.dot(first1, W2), first2)
+            first1 = T.nnet.softplus(T.dot(input, A1))
+            first2 = T.nnet.sigmoid(T.dot(input, A2))
+            return T.batched_dot(T.dot(first1, B), first2)
 
         return activation
 

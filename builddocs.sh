@@ -7,7 +7,7 @@ cd docs
 make SPHINXOPTS="-E" html
 cd ..
 # TODO delete there everything for the except of git folder
-# currently we simply copy, while leaving everythong there
+# currently we simply copy, while leaving everything there
 rsync -avh docs/_build/html/* ../hep_mldoc
 
 cd ../hep_mldoc

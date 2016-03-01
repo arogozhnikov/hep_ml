@@ -322,6 +322,7 @@ class MAELossFunction(AbstractLossFunction):
 
     def fit(self, X, y, sample_weight):
         self.y = y
+        self.sample_weight_is_constant = sample_weight is None
         self.sample_weight = check_sample_weight(y, sample_weight=sample_weight, normalize=True)
         return self
 
@@ -335,7 +336,10 @@ class MAELossFunction(AbstractLossFunction):
         return numpy.sign(self.y - y_pred), self.sample_weight
 
     def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred):
-        # TODO use weighted median
+        if not self.sample_weight_is_constant:
+            # computing weighted median is slow in python
+            # and cannot be done in numpy without sorting
+            return leaf_values
         new_leaf_values = numpy.zeros(len(leaf_values), dtype='float')
         target = (self.y - y_pred)
         for terminal_region in range(len(leaf_values)):
@@ -521,7 +525,6 @@ class AbstractMatrixLossFunction(HessianLossFunction):
     def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred):
         exponents = numpy.exp(- self.A.dot(self.y_signed * y_pred))
         # current approach uses Newton-Raphson step
-        # TODO compare with iterative suboptimal choice of value, based on exp(a x) ~ a exp(x)
         regions_matrix = sparse.csc_matrix((self.y_signed, [numpy.arange(len(self.y_signed)), terminal_regions]),
                                            shape=[len(self.y_signed), len(leaf_values)])
         # Z is matrix of shape [n_exponents, n_terminal_regions]
