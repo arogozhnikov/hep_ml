@@ -17,15 +17,21 @@
 * **hep_ml.nnet** - theano-based flexible neural networks 
 * **hep_ml.reweight** - reweighting multidimensional distributions <br />
   (_multi_ here means 2, 3, 5 and more dimensions - see GBReweighter!)
+* **hep_ml.splot** - minimalistic sPlot-ting 
+* **hep_ml.speedup** - building models for fast classification (Bonsai BDT)
 * **sklearn**-compatibility of estimators.
 
 ### Installation
+
+Basic installation:
 
 ```bash
 pip install hep_ml
 ```
 
-To use latest version, clone it and install with `pip`:
+If you're new to python and don't never used `pip`, first install scikit-learn [with these instructions](http://scikit-learn.org/stable/install.html).
+
+To use latest development version, clone it and install with `pip`:
 ```bash
 git clone https://github.com/arogozhnikov/hep_ml.git
 cd hep_ml
@@ -35,7 +41,7 @@ sudo pip install .
 ### Links
 
 * [documentation](https://arogozhnikov.github.io/hep_ml/)
-* [notebook examples](https://github.com/arogozhnikov/hep_ml/tree/master/notebooks)
+* [notebooks, code examples](https://github.com/arogozhnikov/hep_ml/tree/master/notebooks)
 * [repository](https://github.com/arogozhnikov/hep_ml)
 * [issue tracker](https://github.com/arogozhnikov/hep_ml/issues)
 * [old repository](https://github.com/anaderi/lhcb_trigger_ml)

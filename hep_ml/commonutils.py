@@ -1,19 +1,18 @@
 """
-`commonutils` contains some helpful functions and classes
+**hep_ml.commonutils** contains some helpful functions and classes
 which are often used (by other modules)
 """
 
 from __future__ import print_function, division, absolute_import
 
-import math
 from multiprocessing.pool import ThreadPool
 import numbers
+import itertools
+
 import numpy
 import pandas
-from numpy.random.mtrand import RandomState
 from scipy.special import expit
 import sklearn.cross_validation
-import itertools
 from sklearn.neighbors.unsupervised import NearestNeighbors
 
 __author__ = "Alex Rogozhnikov"
@@ -82,7 +81,8 @@ def generate_sample(n_samples, n_features, distance=2.0):
 
 
 def check_uniform_label(uniform_label):
-    """ Convert to numpy.array
+    """Convert uniform label to numpy.array
+
     :param uniform_label: label or list of labels (examples: 0, 1, [0], [1], [0, 1])
     :return: numpy.array (with [0], [1] or [0, 1])
     """
@@ -95,6 +95,7 @@ def check_uniform_label(uniform_label):
 def train_test_split(*arrays, **kw_args):
     """Does the same thing as train_test_split, but preserves columns in DataFrames.
     Uses the same parameters: test_size, train_size, random_state, and has the same interface
+
     :type list[numpy.array|pandas.DataFrame] arrays: arrays to split
     """
     assert len(arrays) > 0, "at least one array should be passed"
@@ -149,7 +150,7 @@ def build_normalizer(signal, sample_weight=None):
     >>>pylab.hist(normalizer(background))
     >>># this one should be uniform in [0,1]
     >>>pylab.hist(normalizer(signal))
-    Parameters:
+
     :param numpy.array signal: shape = [n_samples] with floats
     :param numpy.array sample_weight: shape = [n_samples], non-negative weights associated to events.
     """
@@ -170,6 +171,7 @@ def compute_cut_for_efficiency(efficiency, mask, y_pred, sample_weight=None):
     Example:
     >>> p = classifier.predict_proba(X)
     >>> threshold = compute_cut_for_efficiency(0.5, mask=y == 1, y_pred=p[:, 1])
+
     :type efficiency: float or numpy.array with target efficiencies, shape = [n_effs]
     :type mask: array-like, shape = [n_samples], True for needed samples
     :type y_pred: array-like, shape = [n_samples], predictions or scores (float)
@@ -188,8 +190,8 @@ def compute_cut_for_efficiency(efficiency, mask, y_pred, sample_weight=None):
 
 
 def compute_knn_indices_of_signal(X, is_signal, n_neighbours=50):
-    """
-    For each event returns the knn closest signal(!) events. No matter of what class the event is.
+    """For each event returns the knn closest signal(!) events. No matter of what class the event is.
+
     :type X: numpy.array, shape = [n_samples, n_features] the distance is measured over these variables
     :type is_signal: numpy.array, shape = [n_samples] with booleans
     :rtype numpy.array, shape [len(dataframe), knn], each row contains indices of closest signal events
@@ -220,24 +222,6 @@ def compute_knn_indices_of_same_class(X, y, n_neighbours=50):
 
 # endregion
 
-
-def smear_dataset(X, smeared_features=None, smearing_factor=0.1):
-    """For the selected features 'smears' them in dataset,
-    pay attention, that only float features can be smeared.
-    If passed smeared_variables=None, all the features are smeared"""
-    assert isinstance(X, pandas.DataFrame), "the passed object is not of type pandas.DataFrame"
-    X = pandas.DataFrame.copy(X)
-    if smeared_features is None:
-        smeared_features = X.columns
-    for var in smeared_features:
-        assert var in X.columns, "The variable %s was not found in dataframe"
-    result = pandas.DataFrame.copy(X)
-    for var in smeared_features:
-        sigma = math.sqrt(numpy.var(result[var]))
-        result[var] += RandomState().normal(0, smearing_factor * sigma, size=len(result))
-    return result
-
-
 def indices_of_values(array):
     """For each value in array returns indices with this value
     :param array: numpy.array with 1-dimensional initial data
@@ -249,18 +233,6 @@ def indices_of_values(array):
     limits = [0] + list(diff + 1) + [len(array)]
     for i in range(len(limits) - 1):
         yield sorted_array[limits[i]], indices[limits[i]: limits[i + 1]]
-
-
-def print_header(text, level=3):
-    """
-    Function to be used in notebooks to display headers not just plain text
-
-    :param text: str or object to print its __repr__
-    :param level: int, from 1 to 6 (1st, 2nd, 3rd order header)
-    """
-    from IPython.display import display_html
-
-    display_html("<h{level}>{header}</h{level}>".format(header=text, level=level), raw=True)
 
 
 def take_features(X, features):
@@ -313,8 +285,8 @@ def check_sample_weight(y_true, sample_weight, normalize=False, normalize_by_cla
 
 
 def check_xyw(X, y, sample_weight=None, classification=False, allow_multiple_outputs=False):
-    """
-    Checks parameters of classifier / loss / metrics.
+    """Checks parameters of classifier / loss / metrics.
+
     :param X: array-like of shape [n_samples, n_features] (numpy.array or pandas.DataFrame)
     :param y: array-like of shape [n_samples]
     :param sample_weight: None or array-like of shape [n_samples]
@@ -339,9 +311,9 @@ def check_xyw(X, y, sample_weight=None, classification=False, allow_multiple_out
 
 
 def score_to_proba(score):
-    """
-    Compute class probability estimates from decision scores.
-    Uses sigmoid function
+    """Compute class probability estimates from decision scores.
+    Uses logistic function.
+
     :param score: numpy.array of shape [n_samples]
     :return: probabilities, numpy.array of shape [n_samples, 2]
     """
@@ -365,6 +337,9 @@ def take_last(sequence):
 
 
 def to_pandas_dataframe(X):
+    """
+    Convert 2-dimensional array to DataFrame. If input was a DataFrame, returns itself.
+    """
     if isinstance(X, pandas.DataFrame):
         return X
     else:

@@ -6,7 +6,7 @@ cd docs
 # Forcing to ignore caches
 make SPHINXOPTS="-E" html
 cd ..
-# TODO delete there evrything for the except of git folder
+# TODO delete there everything for the except of git folder
 # currently we simply copy, while leaving everythong there
 rsync -avh docs/_build/html/* ../hep_mldoc
 

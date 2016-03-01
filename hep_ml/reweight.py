@@ -4,6 +4,11 @@
 Reweighting is procedure of finding such weights for original distribution,
 that make distribution of one or several variables identical in original distribution and target distribution.
 
+Typical application of this technique in HEP is reweighting of Monte-Carlo simulation results to minimize
+disagreement between simulated data and real data.
+Frequently the reweighting rule is trained on one part of data (normalization channel)
+and applied to different (signal channel).
+
 Remark: if each variable has identical distribution in two samples,
 this doesn't imply that multidimensional distributions are equal (almost surely they aren't).
 Aim of reweighters is to get identical multidimensional distributions.
@@ -27,29 +32,26 @@ The most common use case is reweighting of Monte-Carlo simulations results to sP
 
 The same example for `GBReweighter`:
 
->>> reweighter = GBReweighter(max_depth=2, other_args={'subsample': 0.5})
+>>> reweighter = GBReweighter(max_depth=2, gb_args={'subsample': 0.5})
 >>> reweighter.fit(original=MC_data, target=RealData, target_weight=sWeights)
 >>> MC_weights = reweighter.predict_weights(MC_data)
-
 
 """
 from __future__ import division, print_function, absolute_import
 
 from sklearn.base import BaseEstimator
 from scipy.ndimage import gaussian_filter
-from hep_ml.commonutils import check_sample_weight, weighted_quantile
-from hep_ml import gradientboosting as gb
-from hep_ml import losses
-from warnings import warn
 import numpy
+
+from .commonutils import check_sample_weight, weighted_quantile
+from . import gradientboosting as gb
+from . import losses
 
 __author__ = 'Alex Rogozhnikov'
 __all__ = ['BinsReweighter', 'GBReweighter']
 
-warn("Module hep_ml.reweight is unstable, it's API may be changed in near future.")
 
-
-def bincount_nd(x, weights, shape):
+def _bincount_nd(x, weights, shape):
     """
     Does the same thing as numpy.bincount, but allows binning in several integer variables.
     :param x: numpy.array of shape [n_samples, n_features] with non-negative integers
@@ -60,7 +62,7 @@ def bincount_nd(x, weights, shape):
     assert len(weights) == len(x), 'length of weight is different: {} {}'.format(len(x), len(weights))
     assert x.shape[1] == len(shape), 'wrong length of shape: {} {}'.format(x.shape[1], len(shape))
     maximals = numpy.max(x, axis=0)
-    assert numpy.all(maximals < shape), 'smaller shape: {} {}'.format(maximals, shape)
+    assert numpy.all(maximals < shape), 'small shape passed: {} {}'.format(maximals, shape)
 
     result = numpy.zeros(shape, dtype=float)
     numpy.add.at(result, tuple(x.T), weights)
@@ -104,15 +106,18 @@ class BinsReweighter(BaseEstimator, ReweighterMixin):
         (which is better than bins of even size).
 
         This method works fine for 1d/2d histograms,
-        while being quite unstable or inaccurate for higher dimensions.
+        while being unstable or inaccurate for higher dimensions.
+
+        To make computed rule more smooth and stable, after computing weights in bins,
+        gaussian filter is applied (so reweighting coefficient also includes information from neighbouring bins).
 
         :param int n_bins: how many bins to use for each input variable.
-        :param int n_neighs: size of gaussian filter (in bins).
+        :param float n_neighs: size of gaussian filter (in bins).
             This parameter is responsible for tradeoff between stability of rule and accuracy of predictions.
-            With increase of n_neighs the
+            With increase of n_neighs the reweighting rule becomes more stable.
 
         """
-        self.n_percentiles = n_bins
+        self.n_bins = n_bins
         self.n_neighs = n_neighs
         # if number of events in bins is less than this value, number of events is clipped.
         self.min_in_the_bin = 1.
@@ -120,6 +125,7 @@ class BinsReweighter(BaseEstimator, ReweighterMixin):
     def compute_bin_indices(self, data):
         """
         Compute id of bin along each axis.
+
         :param data: data, array-like of shape [n_samples, n_features]
             with the same order of features as in training
         :return: numpy.array of shape [n_samples, n_features] with integers, each from [0, n_bins - 1]
@@ -142,7 +148,7 @@ class BinsReweighter(BaseEstimator, ReweighterMixin):
         self.n_features_ = None
         original, original_weight = self._normalize_input(original, original_weight)
         target, target_weight = self._normalize_input(target, target_weight)
-        target_perc = numpy.linspace(0, 1, self.n_percentiles + 1)[1:-1]
+        target_perc = numpy.linspace(0, 1, self.n_bins + 1)[1:-1]
         self.edges = []
         for axis in range(self.n_features_):
             self.edges.append(weighted_quantile(target[:, axis], quantiles=target_perc, sample_weight=target_weight))
@@ -150,7 +156,7 @@ class BinsReweighter(BaseEstimator, ReweighterMixin):
         bins_weights = []
         for data, weights in [(original, original_weight), (target, target_weight)]:
             bin_indices = self.compute_bin_indices(data)
-            bin_w = bincount_nd(bin_indices, weights=weights, shape=[self.n_percentiles] * self.n_features_)
+            bin_w = _bincount_nd(bin_indices, weights=weights, shape=[self.n_bins] * self.n_features_)
             smeared_weights = gaussian_filter(bin_w, sigma=self.n_neighs, truncate=2.5)
             bins_weights.append(smeared_weights.clip(self.min_in_the_bin))
         bin_orig_weights, bin_targ_weights = bins_weights
@@ -177,6 +183,7 @@ class GBReweighter(BaseEstimator, ReweighterMixin):
                  learning_rate=0.2,
                  max_depth=3,
                  min_samples_leaf=200,
+                 loss_regularization=5.,
                  gb_args=None):
         """
         Gradient Boosted Reweighter - a reweighter algorithm based on ensemble of regression trees.
@@ -191,7 +198,9 @@ class GBReweighter(BaseEstimator, ReweighterMixin):
         :param learning_rate: float from [0, 1]. Lesser learning rate requires more trees,
             but makes reweighting rule more stable.
         :param max_depth: maximal depth of trees
-        :param min_samples_leaf: minimal number of events in the leaf. If many
+        :param min_samples_leaf: minimal number of events in the leaf.
+        :param loss_regularization: float, approximately equal to number of events
+         that algorithm 'puts' in each leaf to prevent exploding.
         :param gb_args: other parameters passed to gradient boosting.
             See :class:`hep_ml.gradientboosting.UGradientBoostingClassifier`
         """
@@ -200,6 +209,7 @@ class GBReweighter(BaseEstimator, ReweighterMixin):
         self.max_depth = max_depth
         self.min_samples_leaf = min_samples_leaf
         self.gb_args = gb_args
+        self.loss_regularization = loss_regularization
 
     def fit(self, original, target, original_weight=None, target_weight=None):
         """
@@ -217,7 +227,8 @@ class GBReweighter(BaseEstimator, ReweighterMixin):
         original, original_weight = self._normalize_input(original, original_weight)
         target, target_weight = self._normalize_input(target, target_weight)
 
-        self.gb = gb.UGradientBoostingClassifier(loss=losses.ReweightLossFunction(),
+        loss = losses.ReweightLossFunction(regularization=self.loss_regularization)
+        self.gb = gb.UGradientBoostingClassifier(loss=loss,
                                                  n_estimators=self.n_estimators,
                                                  max_depth=self.max_depth,
                                                  min_samples_leaf=self.min_samples_leaf,

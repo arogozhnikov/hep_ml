@@ -66,7 +66,8 @@ __all__ = [
     'BinFlatnessLossFunction',
     'KnnFlatnessLossFunction',
     'KnnAdaLossFunction',
-    'RankBoostLossFunction'
+    'RankBoostLossFunction',
+    'ReweightLossFunction'
 ]
 
 
@@ -105,8 +106,10 @@ class AbstractLossFunction(BaseEstimator):
         raise NotImplementedError()
 
     def __call__(self, y_pred):
-        """The y_pred should contain all the events passed to `fit` method,
-        moreover, the order should be the same"""
+        """Compute loss function
+
+        :param y_pred: contains predictions for all the events passed to `fit` method,
+         moreover, the order should be the same"""
         raise NotImplementedError()
 
     def prepare_tree_params(self, y_pred):
@@ -119,8 +122,7 @@ class AbstractLossFunction(BaseEstimator):
         return self.negative_gradient(y_pred), numpy.ones(len(y_pred))
 
     def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred):
-        """
-        Method for pruning. Loss function can prepare better values for leaves
+        """Loss function can prepare better values for leaves by overriding this function
 
         :param terminal_regions: indices of terminal regions of each event.
         :param leaf_values: numpy.array, current mapping of leaf indices to prediction values.
@@ -140,7 +142,8 @@ class AbstractLossFunction(BaseEstimator):
 
 
 class HessianLossFunction(AbstractLossFunction):
-    """Loss function with diagonal hessian, provides uses Newton-Raphson step to update trees. """
+    """Loss function with diagonal hessian (or hessian, which can be approximated by diagonal),
+    uses Newton-Raphson step to update trees. """
 
     def __init__(self, regularization=5.):
         """
@@ -167,10 +170,19 @@ class HessianLossFunction(AbstractLossFunction):
 
     def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred):
         """ This expression comes from optimization of second-order approximation of loss function."""
+        gradients = self.negative_gradient(y_pred)
+        hessians = self.hessian(y_pred)
+        return HessianLossFunction._prepare_hessian_leaves_values(
+            terminal_regions=terminal_regions, leaf_values=leaf_values,
+            gradients=gradients, hessians=hessians, regularization_=self.regularization_
+        )
+
+    @staticmethod
+    def _prepare_hessian_leaves_values(terminal_regions, leaf_values, gradients, hessians, regularization_):
         min_length = len(leaf_values)
-        nominators = numpy.bincount(terminal_regions, weights=self.negative_gradient(y_pred), minlength=min_length)
-        denominators = numpy.bincount(terminal_regions, weights=self.hessian(y_pred), minlength=min_length)
-        return nominators / (denominators + self.regularization_)
+        nominators = numpy.bincount(terminal_regions, weights=gradients, minlength=min_length)
+        denominators = numpy.bincount(terminal_regions, weights=hessians, minlength=min_length)
+        return nominators / (denominators + regularization_)
 
     def compute_optimal_step(self, y_pred):
         """
@@ -187,7 +199,6 @@ class HessianLossFunction(AbstractLossFunction):
         return step
 
 
-
 # region Classification losses
 
 class AdaLossFunction(HessianLossFunction):
@@ -196,7 +207,7 @@ class AdaLossFunction(HessianLossFunction):
     def fit(self, X, y, sample_weight):
         self.sample_weight = check_sample_weight(y, sample_weight=sample_weight,
                                                  normalize=True, normalize_by_class=True)
-        self.y_signed = 2 * y - 1
+        self.y_signed = numpy.array(2 * y - 1, dtype='float32')
         HessianLossFunction.fit(self, X, y, sample_weight=self.sample_weight)
         return self
 
@@ -222,21 +233,23 @@ class LogLossFunction(HessianLossFunction):
         self.sample_weight = check_sample_weight(y, sample_weight=sample_weight,
                                                  normalize=True, normalize_by_class=True)
         self.y_signed = 2 * y - 1
+        self.minus_y_signed = - self.y_signed
+        self.y_signed_times_weights = self.y_signed * self.sample_weight
         HessianLossFunction.fit(self, X, y, sample_weight=self.sample_weight)
         return self
 
     def __call__(self, y_pred):
-        return numpy.sum(self.sample_weight * numpy.logaddexp(0, - self.y_signed * y_pred))
+        return numpy.sum(self.sample_weight * numpy.logaddexp(0, self.minus_y_signed * y_pred))
 
     def negative_gradient(self, y_pred):
-        return self.y_signed * self.sample_weight * expit(- self.y_signed * y_pred)
+        return self.y_signed_times_weights * expit(self.minus_y_signed * y_pred)
 
     def hessian(self, y_pred):
-        expits = expit(self.y_signed * y_pred)
+        expits = expit(y_pred)
         return self.sample_weight * expits * (1 - expits)
 
     def prepare_tree_params(self, y_pred):
-        return self.y_signed * expit(- self.y_signed * y_pred), self.sample_weight
+        return self.y_signed * expit(self.minus_y_signed * y_pred), self.sample_weight
 
 
 class CompositeLossFunction(HessianLossFunction):
@@ -267,7 +280,7 @@ class CompositeLossFunction(HessianLossFunction):
         return result
 
     def hessian(self, y_pred):
-        expits = expit(- y_pred)
+        expits = expit(y_pred)
         return self.sig_w * expits * (1 - expits) + self.bck_w * 0.25 * numpy.exp(0.5 * y_pred)
 
 
@@ -313,7 +326,7 @@ class MAELossFunction(AbstractLossFunction):
         return self
 
     def __call__(self, y_pred):
-        return 0.5 * numpy.sum(self.sample_weight * numpy.abs(self.y - y_pred))
+        return numpy.sum(self.sample_weight * numpy.abs(self.y - y_pred))
 
     def negative_gradient(self, y_pred):
         return self.sample_weight * numpy.sign(self.y - y_pred)
@@ -355,11 +368,11 @@ class RankBoostLossFunction(HessianLossFunction):
         :param str request_column: name of column with search query ids. The higher attention is payed
           to samples with same query.
         :param float penalty_power: describes dependence of penalty on the difference between target labels.
-        :param int update_iterations: number of minimization steps to provide optimal values.
+        :param int update_iterations: number of minimization steps to provide optimal values in leaves.
 
         .. [RB] Y. Freund et al. An Efficient Boosting Algorithm for Combining Preferences
         """
-        self.update_terations = update_iterations
+        self.update_iterations = update_iterations
         self.penalty_power = penalty_power
         self.request_column = request_column
         HessianLossFunction.__init__(self, regularization=0.1)
@@ -423,10 +436,10 @@ class RankBoostLossFunction(HessianLossFunction):
 
     def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred):
         leaves_values = numpy.zeros(len(leaf_values))
-        for _ in range(self.update_terations):
+        for _ in range(self.update_iterations):
             y_test = y_pred + leaves_values[terminal_regions]
             new_leaves_values = self._prepare_new_leaves_values(terminal_regions, leaves_values, y_test)
-            leaves_values = 0.5 * new_leaves_values + leaves_values
+            leaves_values += 0.5 * new_leaves_values
         return leaves_values
 
     def _prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred):
@@ -447,9 +460,9 @@ class RankBoostLossFunction(HessianLossFunction):
             w_plus += penalty_matrix.dot(neg_stats)[lookup]
             w_minus += penalty_matrix.T.dot(pos_stats)[lookup]
 
-        w_plus_leaf = numpy.bincount(terminal_regions, weights=w_plus * pos_exponent) + self.regularization
-        w_minus_leaf = numpy.bincount(terminal_regions, weights=w_minus * neg_exponent) + self.regularization
-        return 0.5 * numpy.log(w_minus_leaf / w_plus_leaf)
+        w_plus_leaf = numpy.bincount(terminal_regions, weights=w_plus * pos_exponent, minlength=len(leaf_values))
+        w_minus_leaf = numpy.bincount(terminal_regions, weights=w_minus * neg_exponent, minlength=len(leaf_values))
+        return 0.5 * numpy.log((w_minus_leaf + self.regularization) / (w_plus_leaf + self.regularization))
 
 
 # region MatrixLossFunction
@@ -509,7 +522,8 @@ class AbstractMatrixLossFunction(HessianLossFunction):
         exponents = numpy.exp(- self.A.dot(self.y_signed * y_pred))
         # current approach uses Newton-Raphson step
         # TODO compare with iterative suboptimal choice of value, based on exp(a x) ~ a exp(x)
-        regions_matrix = sparse.csc_matrix((self.y_signed, [numpy.arange(len(self.y_signed)), terminal_regions]))
+        regions_matrix = sparse.csc_matrix((self.y_signed, [numpy.arange(len(self.y_signed)), terminal_regions]),
+                                           shape=[len(self.y_signed), len(leaf_values)])
         # Z is matrix of shape [n_exponents, n_terminal_regions]
         # with contributions of each terminal region to each exponent
         Z = self.A.dot(regions_matrix)
@@ -584,21 +598,24 @@ class KnnAdaLossFunction(AbstractMatrixLossFunction):
 
 # Mathematically at each stage we
 # 0. recompute weights
-# 1. normalize ratio between distributions (negatives are in opposite distribution)
+# 1. normalize global ratio between distributions (negatives are in opposite distribution)
 # 2. chi2 - changing only sign, weights are the same
-# 3. optimal value: simply log as usual (negatives are in the same distribution with sign -)
+# 3. optimal value: simply log (negatives are in the same distribution with sign -)
 
 class ReweightLossFunction(AbstractLossFunction):
     def __init__(self, regularization=5.):
         """
-        Loss function used to reweight events. Conventions:
-         y=0 - target distribution, y=1 - original distribution.
-        Weights after look like:
-         w = w_0 for target distribution
-         w = w_0 * exp(pred) for events from original distribution
-         (so pred for target distribution is ignored)
+        Loss function used to reweight destributions. Works inside :class:`hep_ml.reweight.GBReweighter`
 
-        :param regularization: roughly, it's number of events added in each leaf to prevent overfitting.
+        Conventions: :math:`y=0` - target distribution, :math:`y=1` - original distribution.
+
+        Weights after look like:
+
+        * :math:`w = w_0` for target distribution
+        * :math:`w = w_0 * exp(pred)` for events from original distribution
+          (so predictions for target distribution is ignored)
+
+        :param float regularization: roughly, it's number of events added in each leaf to prevent overfitting.
         """
         self.regularization = regularization
 
@@ -675,12 +692,15 @@ class AbstractFlatnessLossFunction(AbstractLossFunction):
         assert len(X) == len(y), 'lengths are different'
         X = pandas.DataFrame(X)
 
+        self.regularization_ = numpy.mean(sample_weight) * 5.
         self.group_indices = dict()
         self.group_matrices = dict()
         self.group_weights = dict()
+        self.label_masks = dict()
 
         occurences = numpy.zeros(len(X))
         for label in self.uniform_label:
+            self.label_masks[label] = y == label
             self.group_indices[label] = self._compute_groups_indices(X, y, label=label)
             self.group_matrices[label] = group_indices_to_groups_matrix(self.group_indices[label], len(X))
             self.group_weights[label] = compute_group_weights(self.group_matrices[label], sample_weight=sample_weight)
@@ -711,7 +731,7 @@ class AbstractFlatnessLossFunction(AbstractLossFunction):
         neg_gradient = numpy.zeros(len(self.y), dtype=numpy.float)
 
         for label in self.uniform_label:
-            label_mask = self.y == label
+            label_mask = self.label_masks[label]
             global_positions = numpy.zeros(len(y_pred), dtype=float)
             global_positions[label_mask] = \
                 _compute_positions(y_pred[label_mask], sample_weight=self.sample_weight[label_mask])
@@ -739,6 +759,12 @@ class AbstractFlatnessLossFunction(AbstractLossFunction):
             neg_gradient = y_signed * numpy.clip(y_signed * neg_gradient, 0, 1e5)
 
         return neg_gradient
+
+    def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred):
+        grad = self.negative_gradient(y_pred)
+
+        temp = numpy.bincount(terminal_regions, weights=grad, minlength=len(leaf_values))
+        return temp / numpy.bincount(terminal_regions, minlength=len(leaf_values))
 
 
 class BinFlatnessLossFunction(AbstractFlatnessLossFunction):

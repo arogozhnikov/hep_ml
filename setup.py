@@ -7,7 +7,7 @@ with codecs.open('README.rst', encoding='utf-8') as readme_file:
 
 setup(
     name="hep_ml",
-    version='0.3.0',
+    version='0.4.0',
     description="Machine Learning for High Energy Physics",
     long_description=long_description,
 
@@ -19,8 +19,8 @@ setup(
 
     # Choose your license
     license='Apache 2.0',
-    packages=['hep_ml'],
-    package_dir={'hep_ml': 'hep_ml'},
+    packages=['hep_ml', 'hep_ml.experiments'],
+
     classifiers=[
         # Indicate who your project is intended for
         'Intended Audience :: Science/Research',

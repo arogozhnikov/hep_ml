@@ -1,5 +1,5 @@
 """
-**hep_ml.nnet** is minimalistic version of feed-forward neural networks on theano.
+**hep_ml.nnet** is minimalistic version of feed-forward neural networks on **theano**.
 The neural networks from this library provide sklearn classifier's interface.
 
 Definitions for loss functions, trainers of neural networks are defined in this file too.
@@ -15,7 +15,7 @@ Also **hep_ml.nnet** allows optimization of parameters in any differentiable dec
 
 Being written in theano, these neural networks are able to make use of your GPU.
 
-See also libraries: theanets, keras.
+See also libraries: theanets, keras, lasagne.
 
 Examples
 ________
@@ -26,7 +26,7 @@ Training a neural network with two hidden layers using IRPROP- algorithm
 >>> network.fit(X, y)
 >>> probability = network.predict_proba(X)
 
-Training an AdaBoost over neural network, adadelta trainer was used and trainer specific parameter was used
+Training an AdaBoost over neural network with adadelta trainer. Trainer specific parameter was used
 (size of minibatch)
 
 >>> from sklearn.ensemble import AdaBoostClassifier
@@ -39,7 +39,7 @@ Using custom pretransformer and ExponentialLoss:
 >>> from sklearn.preprocessing import PolynomialFeatures
 >>> network = MLPClassifier(layers=[10], scaler=PolynomialFeatures(), loss='exp_loss')
 
-To create custom neural network, see code of SimpleNeuralNetwork.
+To create custom neural network, see code of SimpleNeuralNetwork, which is good place to start.
 
 """
 from __future__ import print_function, division, absolute_import
@@ -55,8 +55,8 @@ from sklearn.utils.validation import check_random_state
 from sklearn.base import BaseEstimator, ClassifierMixin, TransformerMixin, clone
 from sklearn import preprocessing
 from .commonutils import check_xyw, check_sample_weight
+from .preprocessing import IronTransformer
 from scipy.special import expit
-
 
 floatX = theano.config.floatX
 __author__ = 'Alex Rogozhnikov'
@@ -68,6 +68,7 @@ __all__ = ['AbstractNeuralNetworkClassifier',
            'PairwiseNeuralNetwork',
            'PairwiseSoftplusNeuralNetwork',
            ]
+
 
 # region Loss functions
 
@@ -113,6 +114,7 @@ losses = {'mse_loss': mse_loss,
           'squared_loss': squared_loss,
           'smooth_huber_loss': smooth_huber_loss,
           }
+
 
 # endregion
 
@@ -175,39 +177,6 @@ def irprop_minus_trainer(x, y, w, parameters, loss, random_stream,
     return shareds, updates
 
 
-def irprop_star_trainer(x, y, w, parameters, loss, random_stream,
-                        positive_step=1.2, negative_step=0.5, max_step=1., min_step=1e-6):
-    """ IRPROP* trainer (own experimental modification of IRPROP-, not recommended for usage) """
-    shareds = []
-    updates = []
-    loss_value = loss(x, y, w)
-
-    for name, param in parameters.items():
-        param_shape = param.get_value().shape
-        n = int(numpy.prod(param_shape))
-        new_derivative_ = T.grad(loss_value, param).flatten()
-        lnewder, rnewder = new_derivative_.reshape([n, 1]), new_derivative_.reshape([1, n])
-        new_derivative_plus = lnewder + rnewder
-        new_derivative_minus = lnewder - rnewder
-        new_param = param
-        for new_derivative in [new_derivative_plus, new_derivative_minus]:
-            delta = theano.shared(numpy.zeros([n, n], dtype=floatX) + 1e-3)
-            old_derivative = theano.shared(numpy.zeros([n, n], dtype=floatX))
-
-            new_delta = T.where(new_derivative * old_derivative > 0, delta * positive_step, delta * negative_step)
-            new_delta = T.clip(new_delta, min_step, max_step)
-
-            updates.append([delta, new_delta])
-            new_old_derivative = T.where(new_derivative * old_derivative < 0, 0, new_derivative)
-            updates.append([old_derivative, new_old_derivative])
-            new_param = new_param - (new_delta * T.sgn(new_derivative)).sum(axis=1).reshape(param.shape)
-            shareds.extend([old_derivative, delta])
-
-        updates.append([param, new_param])
-
-    return shareds, updates
-
-
 def irprop_plus_trainer(x, y, w, parameters, loss, random_stream,
                         positive_step=1.2, negative_step=0.5, max_step=1., min_step=1e-6):
     """IRPROP+ is batch trainer, for details see http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.21.3428
@@ -221,7 +190,7 @@ def irprop_plus_trainer(x, y, w, parameters, loss, random_stream,
     prev_loss_value = theano.shared(1e10)
     shareds = []
     updates = []
-    for name, param in parameters.iteritems():
+    for name, param in parameters.items():
         old_derivative = theano.shared(param.get_value() * 0.)
         delta = theano.shared(param.get_value() * 0. + 1e-3)
         new_derivative = T.grad(loss_value, param)
@@ -246,7 +215,7 @@ def irprop_plus_trainer(x, y, w, parameters, loss, random_stream,
 
 
 def adadelta_trainer(x, y, w, parameters, loss, random_stream,
-                     decay_rate=0.95, epsilon=1e-5, learning_rate=1., batch=1000):
+                     decay_rate=0.95, epsilon=1e-4, learning_rate=0.1, batch=1000):
     """AdaDelta is trainer with adaptive learning rate.
 
     :param decay_rate: momentum-like parameter
@@ -264,9 +233,10 @@ def adadelta_trainer(x, y, w, parameters, loss, random_stream,
         cumulative_step = theano.shared(param.get_value() * 0.)
         shareds.extend([cumulative_derivative, cumulative_step])
 
-        updates.append([cumulative_derivative, cumulative_derivative * decay_rate + (1 - decay_rate) * derivative ** 2])
-        step = - derivative * T.sqrt((cumulative_step + epsilon) / (cumulative_derivative + epsilon))
+        new_cumulative_derivative = cumulative_derivative * decay_rate + (1 - decay_rate) * derivative ** 2
+        step = - derivative * T.sqrt((cumulative_step + epsilon) / (new_cumulative_derivative + epsilon))
 
+        updates.append([cumulative_derivative, new_cumulative_derivative])
         updates.append([cumulative_step, cumulative_step * decay_rate + (1 - decay_rate) * step ** 2])
         updates.append([param, param + learning_rate * step])
 
@@ -276,9 +246,10 @@ def adadelta_trainer(x, y, w, parameters, loss, random_stream,
 trainers = {'sgd': sgd_trainer,
             'irprop-': irprop_minus_trainer,
             'irprop+': irprop_plus_trainer,
-            'irprop*': irprop_star_trainer,
             'adadelta': adadelta_trainer,
             }
+
+
 # endregion
 
 
@@ -291,6 +262,8 @@ def _prepare_scaler(transform):
         return preprocessing.StandardScaler()
     elif transform == 'minmax':
         return preprocessing.MinMaxScaler()
+    elif transform == 'iron':
+        return IronTransformer(symmetrize=True)
     else:
         assert isinstance(transform, TransformerMixin), 'provided transformer should be derived from TransformerMixin'
         return clone(transform)
@@ -348,6 +321,7 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
             X of shape [n_events, n_outputs], p of shape [n_events].
             For classification, p is arbitrary real, the greater p, the more event
             looks like signal event (label 1).
+            Probabilities are computed by applying logistic function to output of activation.
         """
         raise NotImplementedError()
 
@@ -380,12 +354,12 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
         :param bool fit: if True, will
         :return: transformed data, numpy.array of shape [n_samples, n_output_features]
         """
+        # Fighting copy-bug of sklearn's transformers
+        X = numpy.array(X, dtype=float)
+
         if fit:
             self.scaler_ = _prepare_scaler(self.scaler)
             self.scaler_.fit(X, y)
-
-        # Fighting copy-bug of sklearn's transformers
-        X = numpy.array(X, dtype=float)
 
         result = self.scaler_.transform(X)
         result = numpy.hstack([result, numpy.ones([len(X), 1])])
@@ -398,8 +372,8 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
         X = self._transform(X, y, fit=True)
         self.classes_ = numpy.array([0, 1])
         assert (numpy.unique(y) == self.classes_).all(), 'only two-class classification supported, labels are 0 and 1'
+        y = numpy.array(y, dtype=int)
         return X, y, sample_weight
-
 
     def fit(self, X, y, sample_weight=None, trainer=None, epochs=None, **trainer_parameters):
         """ Prepare the model by optimizing selected loss function with some trainer.
@@ -410,7 +384,8 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
         :param sample_weight: numpy.array of shape [n_samples], leave None for array of 1's
         :param trainer: str, method used to minimize loss, overrides one in the ctor
         :param trainer_parameters: parameters for this method, override ones in ctor
-        :return: self """
+        :return: self
+        """
         X, y, sample_weight = self._prepare_inputs(X, y, sample_weight=sample_weight)
 
         loss_lambda = self._prepare(X.shape[1])
@@ -430,7 +405,7 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
 
         # TODO epochs are computed wrongly at the moment if 'batch' parameter not passed.
         n_batches = 1
-        if parameters_.has_key('batch'):
+        if 'batch' in parameters_:
             batch = parameters_['batch']
             n_batches = len(X) // batch + 1
 
@@ -477,7 +452,7 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
         :param sample_weight: optional, numpy.array of shape [n_samples].
         :return float, the loss vales computed"""
         sample_weight = check_sample_weight(y, sample_weight, normalize=False)
-        X = self.transform(X, fit=False)
+        X = self._transform(X, fit=False)
         return self.Loss(X, y, sample_weight)
 
 
@@ -510,7 +485,7 @@ class MLPClassifier(AbstractNeuralNetworkClassifier):
         for i, layer in list(enumerate(self.layers_))[1:]:
             W = self._create_matrix_parameter('W' + str(i), self.layers_[i - 1], self.layers_[i])
             # act=activation and W_=W are tricks to avoid lambda-capturing
-            if i == 0:
+            if i == 1:
                 activation = lambda x, act=activation, W_=W: T.dot(act(x), W_)
             else:
                 activation = lambda x, act=activation, W_=W: T.dot(T.tanh(act(x)), W_)

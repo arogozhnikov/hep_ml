@@ -23,9 +23,10 @@ source_parsers = {
     '.md': CommonMarkParser,
 }
 
+# to show docstrings from __init__(self)
 autoclass_content = 'both'
 
-html_style = 'css/my_style.css'
+# html_style = 'css/my_style.css'
 
 
 # If extensions (or modules to document with autodoc) are in another directory,

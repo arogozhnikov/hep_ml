@@ -9,34 +9,16 @@ from .commonutils import check_sample_weight, sigmoid_function
 __author__ = 'Alex Rogozhnikov'
 
 
-def check_metrics_arguments(y_true, y_pred, sample_weight, two_class=True, binary_pred=True):
-    """
-    Checks the arguments passed to metrics
-    :param y_true: labels of classes
-    :param y_pred: predictions
-    :param sample_weight: weights of samples
-    :param two_class: if True, will check that y_true contains only zeros and ones
-    :param binary_pred: if True, will check that y_pred contains only zeros and ones
-    :return: the same arguments as tuple
-    """
-    sample_weight = check_sample_weight(y_true, sample_weight=sample_weight)
-    y_true = column_or_1d(y_true)
-    y_pred = column_or_1d(y_pred)
-    assert len(y_true) == len(y_pred), \
-        'The lengths of y_true and y_pred are different: %i and %i' % (len(y_true), len(y_pred))
-    if two_class:
-        assert numpy.in1d(y_true, [0, 1]).all(), 'The y_true array should contain only two labels: 0 and 1, ' \
-                                                 'it contains:' + str(numpy.unique(y_true))
-    if binary_pred:
-        assert numpy.in1d(y_pred, [0, 1]).all(), 'The y_pred array should contain only two labels: 0 and 1, ' \
-                                                 'it contains:' + str(numpy.unique(y_pred))
-    return y_true, y_pred, sample_weight
-
-
 def prepare_distribution(data, weights):
     """Prepares the distribution to be used later in KS and CvM,
     merges equal data, computes (summed) weights and cumulative distribution.
-    All output arrays are of same length and correspond to each other."""
+    All output arrays are of same length and correspond to each other.
+
+    :param data: array of shape [n_samples]
+    :param weights: array of shape [n_samples]
+    :return: tuple with (prepared_data, prepared_weights, prepared_cdf),
+        components are three parallel arrays of shape [n_unique_values]
+    """
     weights = weights / numpy.sum(weights)
     prepared_data, indices = numpy.unique(data, return_inverse=True)
     prepared_weights = numpy.bincount(indices, weights=weights)
@@ -74,8 +56,9 @@ def compute_bin_indices(X_part, bin_limits=None, n_bins=20):
     """For arbitrary number of variables computes the indices of data,
     the indices are unique numbers of bin from zero to \prod_j (len(bin_limits[j])+1)
 
-    If bin_limits is not provided, they are computed using data.
     :param X_part: columns along which binning is done
+    :param bin_limits: array of edges between bins.
+        If bin_limits is not provided, they are computed using data.
     :type X_part: numpy.ndarray
     """
     if bin_limits is None:
@@ -108,9 +91,10 @@ def bin_to_group_indices(bin_indices, mask):
 
 def group_indices_to_groups_matrix(group_indices, n_events):
     """
-    :param group_indices:
+    :param group_indices: array, each component corresponds to group
+        (element = list with indices of events belonging to group)
     :return: sparse matrix of shape [n_groups, n_samples],
-        one if particular event belongs to particular category.
+        one if particular event belongs to particular category, 0 otherwise
     """
     from scipy import sparse
 
@@ -127,7 +111,9 @@ def group_indices_to_groups_matrix(group_indices, n_events):
 
 def compute_cdf(ordered_weights):
     """Computes cumulative distribution function (CDF) by ordered weights,
-    be sure that sum(ordered_weights) == 1
+    be sure that sum(ordered_weights) == 1.
+    Minor difference: using symmetrized version
+    F(x) = 1/2 (F(x-0) + F(x+0))
     """
     return numpy.cumsum(ordered_weights) - 0.5 * ordered_weights
 
@@ -236,10 +222,18 @@ def _ks_2samp_fast(prepared_data1, data2, prepared_weights1, weights2, cdf1):
 
 
 def ks_2samp_weighted(data1, data2, weights1, weights2):
-    """ almost the same as ks2samp from scipy.stats, but this also supports weights """
+    """Kolmogorov-Smirnov distance, almost the same as ks2samp from scipy.stats, but this version supports weights.
+
+    :param data1: array-like of shape [n_samples1]
+    :param data2: array-like of shape [n_samples2]
+    :param weights1: None or array-like of shape [n_samples1]
+    :param weights2: None or array-like of shape [n_samples2]
+
+    :return: float, Kolmogorov-Smirnov distance.
+    """
     x = numpy.unique(numpy.concatenate([data1, data2]))
-    weights1 /= numpy.sum(weights1) * 1.
-    weights2 /= numpy.sum(weights2) * 1.
+    weights1 = weights1 / numpy.sum(weights1) * 1.
+    weights2 = weights2 / numpy.sum(weights2) * 1.
     inds1 = numpy.searchsorted(x, data1)
     inds2 = numpy.searchsorted(x, data2)
     w1 = numpy.bincount(inds1, weights=weights1, minlength=len(x))

@@ -15,7 +15,6 @@ from tests._metrics_oldimplementation import compute_sde_on_bins, compute_sde_on
     compute_theil_on_groups, bin_based_ks, groups_based_ks, cvm_2samp, bin_based_cvm, group_based_cvm, sde, \
     cvm_flatness, theil_flatness
 
-
 __author__ = 'Alex Rogozhnikov'
 
 random = RandomState()
@@ -100,6 +99,56 @@ def test_ks(n_samples=1000, n_bins=10):
     a = bin_based_ks(pred[:, 1], mask=mask, sample_weight=weights, bin_indices=bins)
     b = groups_based_ks(pred[:, 1], mask=mask, sample_weight=weights, groups_indices=groups)
     assert numpy.allclose(a, b)
+
+
+def test_ks2samp(n_samples1=100, n_samples2=100):
+    """
+    checking that KS can be computed with ROC curve
+    """
+    data1 = numpy.random.normal(size=n_samples1)
+    weights1 = numpy.random.random(size=n_samples1)
+    data2 = numpy.random.normal(size=n_samples2)
+    weights2 = numpy.random.random(size=n_samples2)
+
+    print(weights1.sum(), 'SUM')
+
+    KS = ks_2samp_weighted(data1, data2, weights1=weights1, weights2=weights2)
+
+    # alternative way to check
+    labels = [0] * len(data1) + [1] * len(data2)
+    data = numpy.concatenate([data1, data2])
+    weights = numpy.concatenate([weights1, weights2])
+    from sklearn.metrics import roc_curve
+    fpr, tpr, _ = roc_curve(labels, data, sample_weight=weights)
+    KS2 = numpy.max(numpy.abs(symmetrize(fpr) - symmetrize(tpr)))
+    print(KS, KS2)
+    print(weights1.sum(), 'SUM')
+    assert numpy.allclose(KS, KS2), 'different values of KS'
+
+
+def symmetrize(F):
+    return 0.5 * (F + numpy.insert(F[:-1], 0, [0]))
+
+
+def test_cvm2samp(n_samples1=100, n_samples2=100):
+    data1 = numpy.random.normal(size=n_samples1)
+    weights1 = numpy.random.random(size=n_samples1)
+    data2 = numpy.random.normal(size=n_samples2)
+    weights2 = numpy.random.random(size=n_samples2)
+
+    CVM = cvm_2samp(data1, data2, weights1=weights1, weights2=weights2)
+
+    # alternative way to check
+    labels = [0] * len(data1) + [1] * len(data2)
+    data = numpy.concatenate([data1, data2])
+    weights = numpy.concatenate([weights1, weights2])
+    from sklearn.metrics import roc_curve
+    fpr, tpr, _ = roc_curve(labels, data, sample_weight=weights)
+    # data1 corresponds to
+    weights1 = numpy.diff(numpy.insert(fpr, 0, [0]))
+    CVM2 = numpy.sum(weights1 * (symmetrize(fpr) - symmetrize(tpr)) ** 2)
+    print(CVM, CVM2)
+    assert numpy.allclose(CVM, CVM2), 'different values of CVM'
 
 
 def test_fast_cvm(n_samples=1000):
@@ -235,5 +284,3 @@ def test_workability(n_samples=2000, knn=50, uniform_label=0, n_bins=10):
         metric = class_(n_bins=n_bins, uniform_features=features, uniform_label=uniform_label, )
         metric.fit(X, y, sample_weight=sample_weight)
         flatness_val_ = metric(y, predictions, sample_weight)
-
-
