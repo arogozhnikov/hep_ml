@@ -97,13 +97,13 @@ def test_step_optimality(n_samples=100):
         # Test simple way to get optimal step
         leaf_value = numpy.random.normal()
         # Some basic optimization goes here:
+        n_iterations = 10 if isinstance(loss, losses.MAELossFunction) else 4
         step = 0.
-        for _ in range(4):
+        for _ in range(n_iterations):
             ministep, = loss.prepare_new_leaves_values(terminal_regions=numpy.zeros(n_samples, dtype=int),
                                                        leaf_values=[leaf_value], y_pred=pred + step)
             step += ministep
 
-        print(step)
         loss_values = []
         coeffs = [0.9, 1.0, 1.1]
         for coeff in coeffs:
