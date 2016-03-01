@@ -3,30 +3,14 @@ language: generic
 matrix:
     include:
         - os: linux
-          #sudo: false
-          #python: 2.7
           env: TRAVIS_PYTHON_VERSION=2.7
         - os: linux
-          #sudo: false
-          #python: 3.5
           env: TRAVIS_PYTHON_VERSION=3.5
         - os: osx
-          #language: generic
           env: TRAVIS_PYTHON_VERSION=2.7
         - os: osx
-          #language: generic
           env: TRAVIS_PYTHON_VERSION=3.5
 
-#addons:
-#  apt:
-#    packages:
-#    - libatlas-dev
-#    - libatlas-base-dev
-#    - liblapack-dev
-#    - gfortran
-#python:
-#  - "2.7"
-#  - "3.4"
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
       wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh;
@@ -44,8 +28,7 @@ before_install:
 install:
   - travis_retry pip install . --no-dependencies
 script: nosetests tests
-#cache:
-#  - apt
-#  - directories:
-#    - $HOME/.cache/pip
-#    - $HOME/.theano
+cache:
+  - directories:
+    - $HOME/.cache/pip
+    - $HOME/.theano

@@ -1,7 +1,7 @@
 # hep_ml
 **hep_ml** provides specific machine learning tools for purposes of high energy physics (written in python).
 
-![travis status](https://travis-ci.org/arogozhnikov/hep_ml.svg?branch=develop)
+![travis status](https://travis-ci.org/arogozhnikov/hep_ml.svg?branch=master)
 [![Build status](https://ci.appveyor.com/api/projects/status/kxatlw869t9ibbo3?svg=true)](https://ci.appveyor.com/project/arogozhnikov/hep-ml)
 [![PyPI version](https://badge.fury.io/py/hep_ml.svg)](http://badge.fury.io/py/hep_ml)
 
@@ -62,3 +62,6 @@ Libraries you'll require to make your life easier.
 
 ### License
 Apache 2.0, library is open-source.
+
+### Platforms 
+Linux, Mac OS X and Windows are supported.
