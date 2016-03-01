@@ -38,8 +38,9 @@ before_install:
   - export PATH=$HOME/miniconda/bin:$PATH
   - conda update --yes conda
   - travis_retry conda install --yes python=$TRAVIS_PYTHON_VERSION
-  - travis_retry conda install --yes pip numpy scipy six pandas
-  - travis_retry conda install --yes theano scikit-learn nose
+  - travis_retry conda install --yes nomkl pip numpy scipy six pandas
+  - travis_retry conda install --yes scikit-learn nose
+  - travis_retry pip install theano -q
 install:
   - travis_retry pip install . --no-dependencies
 script: nosetests tests

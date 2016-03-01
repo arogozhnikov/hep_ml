@@ -1,4 +1,5 @@
 from __future__ import division, print_function, absolute_import
+import copy
 import numpy
 from sklearn.metrics import mean_squared_error, roc_auc_score
 from sklearn.base import clone
@@ -6,10 +7,13 @@ from hep_ml.commonutils import generate_sample
 from hep_ml.losses import LogLossFunction, MSELossFunction, AdaLossFunction
 from hep_ml import losses
 from hep_ml.gradientboosting import UGradientBoostingClassifier, UGradientBoostingRegressor
-import copy
 
 
 def test_gb_with_ada_and_log(n_samples=1000, n_features=10, distance=0.6):
+    """
+    Testing with two main classification losses.
+    Also testing copying
+    """
     testX, testY = generate_sample(n_samples, n_features, distance=distance)
     trainX, trainY = generate_sample(n_samples, n_features, distance=distance)
     for loss in [LogLossFunction(), AdaLossFunction()]:
@@ -26,15 +30,14 @@ def test_gb_with_ada_and_log(n_samples=1000, n_features=10, distance=0.6):
         # checking clonability
         _ = clone(clf)
         clf_copy = copy.deepcopy(clf)
-        assert (clf.predict_proba(trainX) == clf_copy.predict_proba(trainX)).all(), 'copied classifier is different'
+        assert numpy.all(clf.predict_proba(trainX) == clf_copy.predict_proba(trainX)), 'copied classifier is different'
 
 
-def test_gradient_boosting(n_samples=1000):
+def test_gradient_boosting(n_samples=1000, distance = 0.6):
     """
     Testing workability of GradientBoosting with different loss function
     """
     # Generating some samples correlated with first variable
-    distance = 0.6
     testX, testY = generate_sample(n_samples, 10, distance)
     trainX, trainY = generate_sample(n_samples, 10, distance)
     # We will try to get uniform distribution along this variable
@@ -43,17 +46,17 @@ def test_gradient_boosting(n_samples=1000):
     loss1 = LogLossFunction()
     loss2 = AdaLossFunction()
     loss3 = losses.CompositeLossFunction()
-    loss4 = losses.KnnAdaLossFunction(uniform_features=uniform_features, uniform_label=1)
-    loss5 = losses.KnnAdaLossFunction(uniform_features=uniform_features, uniform_label=[0, 1])
-    loss6bin = losses.BinFlatnessLossFunction(uniform_features, fl_coefficient=2., uniform_label=0)
-    loss7bin = losses.BinFlatnessLossFunction(uniform_features, fl_coefficient=2., uniform_label=[0, 1])
-    loss6knn = losses.KnnFlatnessLossFunction(uniform_features, fl_coefficient=2., uniform_label=1)
-    loss7knn = losses.KnnFlatnessLossFunction(uniform_features, fl_coefficient=2., uniform_label=[0, 1])
+    loss4 = losses.KnnAdaLossFunction(uniform_features=uniform_features, knn=5, uniform_label=1)
+    loss5 = losses.KnnAdaLossFunction(uniform_features=uniform_features, knn=5, uniform_label=[0, 1])
+    loss6bin = losses.BinFlatnessLossFunction(uniform_features, fl_coefficient=1., uniform_label=0)
+    loss7bin = losses.BinFlatnessLossFunction(uniform_features, fl_coefficient=1., uniform_label=[0, 1])
+    loss6knn = losses.KnnFlatnessLossFunction(uniform_features, fl_coefficient=1., uniform_label=1)
+    loss7knn = losses.KnnFlatnessLossFunction(uniform_features, fl_coefficient=1., uniform_label=[0, 1])
 
     for loss in [loss1, loss2, loss3, loss4, loss5, loss6bin, loss7bin, loss6knn, loss7knn]:
         clf = UGradientBoostingClassifier(loss=loss, min_samples_split=20, max_depth=5, learning_rate=0.2,
-                                          subsample=0.7, n_estimators=25, train_features=None) \
-            .fit(trainX[:n_samples], trainY[:n_samples])
+                                          subsample=0.7, n_estimators=25, train_features=None)
+        clf.fit(trainX[:n_samples], trainY[:n_samples])
         result = clf.score(testX, testY)
         assert result >= 0.7, "The quality is too poor: {} with loss: {}".format(result, loss)
 
@@ -80,6 +83,9 @@ def test_gb_regression(n_samples=1000):
 
 
 def test_gb_ranking(n_samples=1000):
+    """
+    Testing RankingLossFunction
+    """
     distance = 0.6
     testX, testY = generate_sample(n_samples, 10, distance)
     trainX, trainY = generate_sample(n_samples, 10, distance)
