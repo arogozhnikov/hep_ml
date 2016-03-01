@@ -45,17 +45,27 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
 
-        
-          <a href="index.html" class="icon icon-home"> hep_ml
-        
+          
+            <a href="index.html" class="icon icon-home"> hep_ml
+          
 
-        
-        </a>
+          
+          </a>
 
-        
+          
+            
+            
+              <div class="version">
+                0.4.0
+              </div>
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -64,57 +74,34 @@
   </form>
 </div>
 
-        
-      </div>
+          
+        </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
-          
-              <ul class="current">
+            
+            
+                <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="index.html">hep_ml documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gb.html">Gradient boosting</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Losses for Gradient Boosting</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="uboost.html">uBoost</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="uboost.html#examples">Examples</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metric functions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="metrics.html#examples">Examples</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="nnet.html">Neural networks</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="nnet.html#examples">Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="nnet.html#loss-functions">Loss functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="nnet.html#trainers">Trainers</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing data</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="preprocessing.html#examples">Examples</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="reweight.html">Reweighting algorithms</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="reweight.html#examples">Examples</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="speedup.html">Fast predictions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="speedup.html#example">Example</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="splot.html">sPlot</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="splot.html#example">Example</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="uboost.html">uBoost</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metric functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nnet.html">Neural networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reweight.html">Reweighting algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="speedup.html">Fast predictions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="splot.html">sPlot</a></li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks.html">Code Examples</a></li>
 </ul>
 
+            
           
-        
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -129,7 +116,13 @@
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
@@ -144,7 +137,8 @@
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="module-hep_ml.losses">
 <span id="losses-for-gradient-boosting"></span><h1>Losses for Gradient Boosting<a class="headerlink" href="#module-hep_ml.losses" title="Permalink to this headline">¶</a></h1>
@@ -216,7 +210,7 @@ moreover, the order should be the same</p>
 <dl class="method">
 <dt id="hep_ml.losses.AbstractLossFunction.prepare_new_leaves_values">
 <code class="descname">prepare_new_leaves_values</code><span class="sig-paren">(</span><em>terminal_regions</em>, <em>leaf_values</em>, <em>y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#AbstractLossFunction.prepare_new_leaves_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.AbstractLossFunction.prepare_new_leaves_values" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method for pruning. Loss function can prepare better values for leaves</p>
+<dd><p>Loss function can prepare better values for leaves by overriding this function</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -601,7 +595,8 @@ to samples with same query.</li>
 <dt id="hep_ml.losses.ReweightLossFunction">
 <em class="property">class </em><code class="descclassname">hep_ml.losses.</code><code class="descname">ReweightLossFunction</code><span class="sig-paren">(</span><em>regularization=5.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#ReweightLossFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.ReweightLossFunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#hep_ml.losses.AbstractLossFunction" title="hep_ml.losses.AbstractLossFunction"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.losses.AbstractLossFunction</span></code></a></p>
-<p>Loss function used to reweight destributions. Works inside <a class="reference internal" href="reweight.html#hep_ml.reweight.GBReweighter" title="hep_ml.reweight.GBReweighter"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.reweight.GBReweighter</span></code></a></p>
+<p>Loss function used to reweight distributions. Works inside <a class="reference internal" href="reweight.html#hep_ml.reweight.GBReweighter" title="hep_ml.reweight.GBReweighter"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.reweight.GBReweighter</span></code></a>
+See <a class="reference internal" href="#rew" id="id6">[Rew]</a> for details.</p>
 <p>Conventions: <span class="math">\(y=0\)</span> - target distribution, <span class="math">\(y=1\)</span> - original distribution.</p>
 <p>Weights after look like:</p>
 <ul class="simple">
@@ -615,6 +610,12 @@ to samples with same query.</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>regularization</strong> (<em>float</em>) &#8211; roughly, it&#8217;s number of events added in each leaf to prevent overfitting.</td>
 </tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="rew" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[Rew]</a></td><td><a class="reference external" href="http://arogozhnikov.github.io/2015/10/09/gradient-boosted-reweighter.html">http://arogozhnikov.github.io/2015/10/09/gradient-boosted-reweighter.html</a></td></tr>
 </tbody>
 </table>
 <dl class="method">
@@ -643,6 +644,7 @@ to samples with same query.</li>
 </div>
 
 
+           </div>
           </div>
           <footer>
   
@@ -661,9 +663,10 @@ to samples with same query.</li>
   <div role="contentinfo">
     <p>
         &copy; Copyright 2015, Yandex; Alex Rogozhnikov and contributors.
+
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 

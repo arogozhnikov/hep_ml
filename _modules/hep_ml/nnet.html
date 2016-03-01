@@ -34,7 +34,7 @@
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
-  <script src="_static/js/modernizr.min.js"></script>
+  <script src="../../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -44,17 +44,27 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
 
-        
-          <a href="../../index.html" class="icon icon-home"> hep_ml
-        
+          
+            <a href="../../index.html" class="icon icon-home"> hep_ml
+          
 
-        
-        </a>
+          
+          </a>
 
-        
+          
+            
+            
+              <div class="version">
+                0.4.0
+              </div>
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -63,57 +73,31 @@
   </form>
 </div>
 
-        
-      </div>
+          
+        </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
-          
-              <ul>
+            
+            
+                <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">hep_ml documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../gb.html">Gradient boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../losses.html">Losses for Gradient Boosting</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../losses.html#examples">Examples</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../uboost.html">uBoost</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../uboost.html#examples">Examples</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../metrics.html">Metric functions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../metrics.html#examples">Examples</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../nnet.html">Neural networks</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../nnet.html#examples">Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nnet.html#loss-functions">Loss functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nnet.html#trainers">Trainers</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../preprocessing.html">Preprocessing data</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../preprocessing.html#examples">Examples</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../reweight.html">Reweighting algorithms</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../reweight.html#examples">Examples</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../speedup.html">Fast predictions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../speedup.html#example">Example</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../splot.html">sPlot</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../splot.html#example">Example</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../../losses.html">Losses for Gradient Boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../uboost.html">uBoost</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../metrics.html">Metric functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../nnet.html">Neural networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../preprocessing.html">Preprocessing data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reweight.html">Reweighting algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../speedup.html">Fast predictions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../splot.html">sPlot</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Code Examples</a></li>
 </ul>
 
+            
           
-        
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -128,7 +112,13 @@
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../../index.html">Docs</a> &raquo;</li>
       
@@ -143,7 +133,8 @@
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <h1>Source code for hep_ml.nnet</h1><div class="highlight"><pre>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -163,7 +154,7 @@
 
 <span class="sd">Being written in theano, these neural networks are able to make use of your GPU.</span>
 
-<span class="sd">See also libraries: theanets, keras.</span>
+<span class="sd">See also libraries: theanets, keras, lasagne.</span>
 
 <span class="sd">Examples</span>
 <span class="sd">________</span>
@@ -325,39 +316,6 @@
     <span class="k">return</span> <span class="n">shareds</span><span class="p">,</span> <span class="n">updates</span>
 
 </div>
-<div class="viewcode-block" id="irprop_star_trainer"><a class="viewcode-back" href="../../nnet.html#hep_ml.nnet.irprop_star_trainer">[docs]</a><span class="k">def</span> <span class="nf">irprop_star_trainer</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">loss</span><span class="p">,</span> <span class="n">random_stream</span><span class="p">,</span>
-                        <span class="n">positive_step</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">negative_step</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">max_step</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">min_step</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; IRPROP* trainer (own experimental modification of IRPROP-, not recommended for usage) &quot;&quot;&quot;</span>
-    <span class="n">shareds</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">updates</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">loss_value</span> <span class="o">=</span> <span class="n">loss</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">parameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">param_shape</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">param_shape</span><span class="p">))</span>
-        <span class="n">new_derivative_</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">loss_value</span><span class="p">,</span> <span class="n">param</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
-        <span class="n">lnewder</span><span class="p">,</span> <span class="n">rnewder</span> <span class="o">=</span> <span class="n">new_derivative_</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">new_derivative_</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">])</span>
-        <span class="n">new_derivative_plus</span> <span class="o">=</span> <span class="n">lnewder</span> <span class="o">+</span> <span class="n">rnewder</span>
-        <span class="n">new_derivative_minus</span> <span class="o">=</span> <span class="n">lnewder</span> <span class="o">-</span> <span class="n">rnewder</span>
-        <span class="n">new_param</span> <span class="o">=</span> <span class="n">param</span>
-        <span class="k">for</span> <span class="n">new_derivative</span> <span class="ow">in</span> <span class="p">[</span><span class="n">new_derivative_plus</span><span class="p">,</span> <span class="n">new_derivative_minus</span><span class="p">]:</span>
-            <span class="n">delta</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">shared</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">floatX</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1e-3</span><span class="p">)</span>
-            <span class="n">old_derivative</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">shared</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">floatX</span><span class="p">))</span>
-
-            <span class="n">new_delta</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">new_derivative</span> <span class="o">*</span> <span class="n">old_derivative</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">delta</span> <span class="o">*</span> <span class="n">positive_step</span><span class="p">,</span> <span class="n">delta</span> <span class="o">*</span> <span class="n">negative_step</span><span class="p">)</span>
-            <span class="n">new_delta</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">new_delta</span><span class="p">,</span> <span class="n">min_step</span><span class="p">,</span> <span class="n">max_step</span><span class="p">)</span>
-
-            <span class="n">updates</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">delta</span><span class="p">,</span> <span class="n">new_delta</span><span class="p">])</span>
-            <span class="n">new_old_derivative</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">new_derivative</span> <span class="o">*</span> <span class="n">old_derivative</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">new_derivative</span><span class="p">)</span>
-            <span class="n">updates</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">old_derivative</span><span class="p">,</span> <span class="n">new_old_derivative</span><span class="p">])</span>
-            <span class="n">new_param</span> <span class="o">=</span> <span class="n">new_param</span> <span class="o">-</span> <span class="p">(</span><span class="n">new_delta</span> <span class="o">*</span> <span class="n">T</span><span class="o">.</span><span class="n">sgn</span><span class="p">(</span><span class="n">new_derivative</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-            <span class="n">shareds</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">old_derivative</span><span class="p">,</span> <span class="n">delta</span><span class="p">])</span>
-
-        <span class="n">updates</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">param</span><span class="p">,</span> <span class="n">new_param</span><span class="p">])</span>
-
-    <span class="k">return</span> <span class="n">shareds</span><span class="p">,</span> <span class="n">updates</span>
-
-</div>
 <div class="viewcode-block" id="irprop_plus_trainer"><a class="viewcode-back" href="../../nnet.html#hep_ml.nnet.irprop_plus_trainer">[docs]</a><span class="k">def</span> <span class="nf">irprop_plus_trainer</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">loss</span><span class="p">,</span> <span class="n">random_stream</span><span class="p">,</span>
                         <span class="n">positive_step</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">negative_step</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">max_step</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">min_step</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;IRPROP+ is batch trainer, for details see http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.21.3428</span>
@@ -377,7 +335,7 @@
         <span class="n">new_derivative</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">loss_value</span><span class="p">,</span> <span class="n">param</span><span class="p">)</span>
 
         <span class="n">shift_if_bad_step</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">new_derivative</span> <span class="o">*</span> <span class="n">old_derivative</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">delta</span> <span class="o">*</span> <span class="n">T</span><span class="o">.</span><span class="n">sgn</span><span class="p">(</span><span class="n">old_derivative</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="c"># THIS doesn&#39;t work!</span>
+        <span class="c"># TODO THIS doesn&#39;t work!</span>
         <span class="n">shift</span> <span class="o">=</span> <span class="n">ifelse</span><span class="p">(</span><span class="n">loss_value</span> <span class="o">&gt;</span> <span class="n">prev_loss_value</span><span class="p">,</span> <span class="n">shift_if_bad_step</span><span class="p">,</span> <span class="mf">0.</span> <span class="o">*</span> <span class="n">param</span><span class="p">)</span>
         <span class="c"># unfortunately we can&#39;t do it this way: param += shift</span>
 
@@ -427,7 +385,6 @@
 <span class="n">trainers</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;sgd&#39;</span><span class="p">:</span> <span class="n">sgd_trainer</span><span class="p">,</span>
             <span class="s">&#39;irprop-&#39;</span><span class="p">:</span> <span class="n">irprop_minus_trainer</span><span class="p">,</span>
             <span class="s">&#39;irprop+&#39;</span><span class="p">:</span> <span class="n">irprop_plus_trainer</span><span class="p">,</span>
-            <span class="s">&#39;irprop*&#39;</span><span class="p">:</span> <span class="n">irprop_star_trainer</span><span class="p">,</span>
             <span class="s">&#39;adadelta&#39;</span><span class="p">:</span> <span class="n">adadelta_trainer</span><span class="p">,</span>
             <span class="p">}</span>
 
@@ -445,7 +402,7 @@
     <span class="k">elif</span> <span class="n">transform</span> <span class="o">==</span> <span class="s">&#39;minmax&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">MinMaxScaler</span><span class="p">()</span>
     <span class="k">elif</span> <span class="n">transform</span> <span class="o">==</span> <span class="s">&#39;iron&#39;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">IronTransformer</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">IronTransformer</span><span class="p">(</span><span class="n">symmetrize</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">transform</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">),</span> <span class="s">&#39;provided transformer should be derived from TransformerMixin&#39;</span>
         <span class="k">return</span> <span class="n">clone</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span>
@@ -554,6 +511,7 @@
         <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">fit</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
         <span class="k">assert</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="s">&#39;only two-class classification supported, labels are 0 and 1&#39;</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span>
 
 <div class="viewcode-block" id="AbstractNeuralNetworkClassifier.fit"><a class="viewcode-back" href="../../nnet.html#hep_ml.nnet.AbstractNeuralNetworkClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">trainer</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">trainer_parameters</span><span class="p">):</span>
@@ -565,7 +523,8 @@
 <span class="sd">        :param sample_weight: numpy.array of shape [n_samples], leave None for array of 1&#39;s</span>
 <span class="sd">        :param trainer: str, method used to minimize loss, overrides one in the ctor</span>
 <span class="sd">        :param trainer_parameters: parameters for this method, override ones in ctor</span>
-<span class="sd">        :return: self &quot;&quot;&quot;</span>
+<span class="sd">        :return: self</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_inputs</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
 
         <span class="n">loss_lambda</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -728,24 +687,27 @@
 
 </div></div>
 <div class="viewcode-block" id="PairwiseSoftplusNeuralNetwork"><a class="viewcode-back" href="../../nnet.html#hep_ml.nnet.PairwiseSoftplusNeuralNetwork">[docs]</a><span class="k">class</span> <span class="nc">PairwiseSoftplusNeuralNetwork</span><span class="p">(</span><span class="n">AbstractNeuralNetworkClassifier</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The result is computed as :math:`h = softplus(Ax)`, :math:`output = \sum_{ij} B_{ij} h_i (1 - h_j)` &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;The result is computed as :math:`h1 = softplus(A_1 x)`, :math:`h2 = sigmoid(A_2 x)`,</span>
+<span class="sd">        :math:`output = \sum_{ij} B_{ij} h1_i h2_j)`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="PairwiseSoftplusNeuralNetwork.prepare"><a class="viewcode-back" href="../../nnet.html#hep_ml.nnet.PairwiseSoftplusNeuralNetwork.prepare">[docs]</a>    <span class="k">def</span> <span class="nf">prepare</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers_</span>
-        <span class="n">W1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_matrix_parameter</span><span class="p">(</span><span class="s">&#39;W1&#39;</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
-        <span class="n">W2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_matrix_parameter</span><span class="p">(</span><span class="s">&#39;W2&#39;</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
+        <span class="n">A1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_matrix_parameter</span><span class="p">(</span><span class="s">&#39;A1&#39;</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
+        <span class="n">A2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_matrix_parameter</span><span class="p">(</span><span class="s">&#39;A2&#39;</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_matrix_parameter</span><span class="p">(</span><span class="s">&#39;B&#39;</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">activation</span><span class="p">(</span><span class="nb">input</span><span class="p">):</span>
-            <span class="n">z</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">W1</span><span class="p">)</span>
-            <span class="n">first1</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">nnet</span><span class="o">.</span><span class="n">softplus</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
-            <span class="n">first2</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">nnet</span><span class="o">.</span><span class="n">softplus</span><span class="p">(</span><span class="o">-</span><span class="n">z</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">T</span><span class="o">.</span><span class="n">batched_dot</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">first1</span><span class="p">,</span> <span class="n">W2</span><span class="p">),</span> <span class="n">first2</span><span class="p">)</span>
+            <span class="n">first1</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">nnet</span><span class="o">.</span><span class="n">softplus</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">A1</span><span class="p">))</span>
+            <span class="n">first2</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">nnet</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">A2</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">T</span><span class="o">.</span><span class="n">batched_dot</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">first1</span><span class="p">,</span> <span class="n">B</span><span class="p">),</span> <span class="n">first2</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">activation</span>
 
 <span class="c"># endregion</span></div></div>
 </pre></div>
 
+           </div>
           </div>
           <footer>
   
@@ -755,9 +717,10 @@
   <div role="contentinfo">
     <p>
         &copy; Copyright 2015, Yandex; Alex Rogozhnikov and contributors.
+
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 

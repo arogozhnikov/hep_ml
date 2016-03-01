@@ -34,7 +34,7 @@
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
-  <script src="_static/js/modernizr.min.js"></script>
+  <script src="../../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -44,17 +44,27 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
 
-        
-          <a href="../../index.html" class="icon icon-home"> hep_ml
-        
+          
+            <a href="../../index.html" class="icon icon-home"> hep_ml
+          
 
-        
-        </a>
+          
+          </a>
 
-        
+          
+            
+            
+              <div class="version">
+                0.4.0
+              </div>
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -63,57 +73,31 @@
   </form>
 </div>
 
-        
-      </div>
+          
+        </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
-          
-              <ul>
+            
+            
+                <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">hep_ml documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../gb.html">Gradient boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../losses.html">Losses for Gradient Boosting</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../losses.html#examples">Examples</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../uboost.html">uBoost</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../uboost.html#examples">Examples</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../metrics.html">Metric functions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../metrics.html#examples">Examples</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../nnet.html">Neural networks</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../nnet.html#examples">Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nnet.html#loss-functions">Loss functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nnet.html#trainers">Trainers</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../preprocessing.html">Preprocessing data</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../preprocessing.html#examples">Examples</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../reweight.html">Reweighting algorithms</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../reweight.html#examples">Examples</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../speedup.html">Fast predictions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../speedup.html#example">Example</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../splot.html">sPlot</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../splot.html#example">Example</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../../losses.html">Losses for Gradient Boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../uboost.html">uBoost</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../metrics.html">Metric functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../nnet.html">Neural networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../preprocessing.html">Preprocessing data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reweight.html">Reweighting algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../speedup.html">Fast predictions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../splot.html">sPlot</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Code Examples</a></li>
 </ul>
 
+            
           
-        
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -128,7 +112,13 @@
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../../index.html">Docs</a> &raquo;</li>
       
@@ -143,7 +133,8 @@
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <h1>Source code for hep_ml.reweight</h1><div class="highlight"><pre>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -210,7 +201,7 @@
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s">&#39;length of weight is different: {} {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">))</span>
     <span class="k">assert</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">),</span> <span class="s">&#39;wrong length of shape: {} {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">))</span>
     <span class="n">maximals</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">maximals</span> <span class="o">&lt;</span> <span class="n">shape</span><span class="p">),</span> <span class="s">&#39;smaller shape: {} {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">maximals</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">maximals</span> <span class="o">&lt;</span> <span class="n">shape</span><span class="p">),</span> <span class="s">&#39;small shape passed: {} {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">maximals</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
 
     <span class="n">result</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="n">numpy</span><span class="o">.</span><span class="n">add</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">T</span><span class="p">),</span> <span class="n">weights</span><span class="p">)</span>
@@ -331,6 +322,7 @@
                  <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
                  <span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
                  <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+                 <span class="n">loss_regularization</span><span class="o">=</span><span class="mf">5.</span><span class="p">,</span>
                  <span class="n">gb_args</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gradient Boosted Reweighter - a reweighter algorithm based on ensemble of regression trees.</span>
@@ -345,7 +337,9 @@
 <span class="sd">        :param learning_rate: float from [0, 1]. Lesser learning rate requires more trees,</span>
 <span class="sd">            but makes reweighting rule more stable.</span>
 <span class="sd">        :param max_depth: maximal depth of trees</span>
-<span class="sd">        :param min_samples_leaf: minimal number of events in the leaf. If many</span>
+<span class="sd">        :param min_samples_leaf: minimal number of events in the leaf.</span>
+<span class="sd">        :param loss_regularization: float, approximately equal to number of events</span>
+<span class="sd">         that algorithm &#39;puts&#39; in each leaf to prevent exploding.</span>
 <span class="sd">        :param gb_args: other parameters passed to gradient boosting.</span>
 <span class="sd">            See :class:`hep_ml.gradientboosting.UGradientBoostingClassifier`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -354,6 +348,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span> <span class="o">=</span> <span class="n">max_depth</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_samples_leaf</span> <span class="o">=</span> <span class="n">min_samples_leaf</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gb_args</span> <span class="o">=</span> <span class="n">gb_args</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_regularization</span> <span class="o">=</span> <span class="n">loss_regularization</span>
 
 <div class="viewcode-block" id="GBReweighter.fit"><a class="viewcode-back" href="../../reweight.html#hep_ml.reweight.GBReweighter.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">original</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">original_weight</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">target_weight</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -371,7 +366,8 @@
         <span class="n">original</span><span class="p">,</span> <span class="n">original_weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_input</span><span class="p">(</span><span class="n">original</span><span class="p">,</span> <span class="n">original_weight</span><span class="p">)</span>
         <span class="n">target</span><span class="p">,</span> <span class="n">target_weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_input</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">target_weight</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">gb</span> <span class="o">=</span> <span class="n">gb</span><span class="o">.</span><span class="n">UGradientBoostingClassifier</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">losses</span><span class="o">.</span><span class="n">ReweightLossFunction</span><span class="p">(),</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">losses</span><span class="o">.</span><span class="n">ReweightLossFunction</span><span class="p">(</span><span class="n">regularization</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">loss_regularization</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gb</span> <span class="o">=</span> <span class="n">gb</span><span class="o">.</span><span class="n">UGradientBoostingClassifier</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">,</span>
                                                  <span class="n">n_estimators</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_estimators</span><span class="p">,</span>
                                                  <span class="n">max_depth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span><span class="p">,</span>
                                                  <span class="n">min_samples_leaf</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">min_samples_leaf</span><span class="p">,</span>
@@ -396,6 +392,7 @@
         <span class="k">return</span> <span class="n">multipliers</span> <span class="o">*</span> <span class="n">original_weight</span></div></div>
 </pre></div>
 
+           </div>
           </div>
           <footer>
   
@@ -405,9 +402,10 @@
   <div role="contentinfo">
     <p>
         &copy; Copyright 2015, Yandex; Alex Rogozhnikov and contributors.
+
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
