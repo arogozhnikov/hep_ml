@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# simple script to upload new versions to PyPI
+
 pip install wheel
 rm dist/*
 python setup.py sdist

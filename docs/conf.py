@@ -17,11 +17,6 @@ import os
 import shlex
 import sphinx_rtd_theme
 import hep_ml
-from recommonmark.parser import CommonMarkParser
-
-source_parsers = {
-    '.md': CommonMarkParser,
-}
 
 # to show docstrings from __init__(self)
 autoclass_content = 'both'
