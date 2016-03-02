@@ -1,5 +1,5 @@
 """
-**hep_ml.nnet** is minimalistic version of feed-forward neural networks on **theano**.
+**hep_ml.nnet** is minimalistic **theano**-powered version of feed-forward neural networks.
 The neural networks from this library provide sklearn classifier's interface.
 
 Definitions for loss functions, trainers of neural networks are defined in this file too.
@@ -52,13 +52,14 @@ from theano.ifelse import ifelse
 from theano.tensor.shared_randomstreams import RandomStreams
 
 from sklearn.utils.validation import check_random_state
-from sklearn.base import BaseEstimator, ClassifierMixin, TransformerMixin, clone
+from sklearn.base import BaseEstimator, ClassifierMixin, RegressorMixin, TransformerMixin, clone
 from sklearn import preprocessing
-from .commonutils import check_xyw, check_sample_weight
+from .commonutils import check_xyw, check_sample_weight, score_to_proba
 from .preprocessing import IronTransformer
-from scipy.special import expit
 
 floatX = theano.config.floatX
+DEFAULT_MINIBATCH = 10
+
 __author__ = 'Alex Rogozhnikov'
 __all__ = ['AbstractNeuralNetworkClassifier',
            'MLPClassifier',
@@ -120,15 +121,15 @@ losses = {'mse_loss': mse_loss,
 
 
 # region Trainers
-def get_batch(x, y, w, random_stream, batch_size=10):
+def get_batch(x, y, w, random_stream, batch_size=DEFAULT_MINIBATCH):
     """ Generates subset of training dataset, of size batch"""
     indices = random_stream.choice(a=T.shape(x)[0], size=(batch_size,))
     return x[indices], y[indices], w[indices]
 
 
-def sgd_trainer(x, y, w, parameters, loss, random_stream, batch=10, learning_rate=0.1,
-                l2_penalty=0.001, momentum=0.9, ):
-    """Stochastic gradient descent with momentum,
+def sgd_trainer(x, y, w, parameters, loss, random_stream, batch=DEFAULT_MINIBATCH,
+                learning_rate=0.1, l2_penalty=0.001, momentum=0.9, ):
+    """Stochastic gradient descent with momentum, trivial but very popular.
 
     :param int batch: size of minibatch, each time averaging gradient over minibatch.
     :param float learning_rate: size of step
@@ -149,7 +150,7 @@ def sgd_trainer(x, y, w, parameters, loss, random_stream, batch=10, learning_rat
 
 def irprop_minus_trainer(x, y, w, parameters, loss, random_stream,
                          positive_step=1.2, negative_step=0.5, max_step=1., min_step=1e-6):
-    """IRPROP- is batch trainer, for details see http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.21.3428
+    """IRPROP- is batch trainer, for details see http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.21.3428 .
     This is default trainer, very stable for classification.
 
     :param positive_step: factor, by which the step is increased when continuing going in the direction
@@ -196,7 +197,6 @@ def irprop_plus_trainer(x, y, w, parameters, loss, random_stream,
         new_derivative = T.grad(loss_value, param)
 
         shift_if_bad_step = T.where(new_derivative * old_derivative < 0, delta * T.sgn(old_derivative), 0)
-        # TODO THIS doesn't work!
         shift = ifelse(loss_value > prev_loss_value, shift_if_bad_step, 0. * param)
         # unfortunately we can't do it this way: param += shift
 
@@ -214,17 +214,18 @@ def irprop_plus_trainer(x, y, w, parameters, loss, random_stream,
     return shareds, updates
 
 
-def adadelta_trainer(x, y, w, parameters, loss, random_stream,
-                     decay_rate=0.95, epsilon=1e-4, learning_rate=0.1, batch=1000):
+def adadelta_trainer(x, y, w, parameters, loss, random_stream, batch=DEFAULT_MINIBATCH,
+                     learning_rate=0.1, half_life=3000, epsilon=1e-4, ):
     """AdaDelta is trainer with adaptive learning rate.
 
-    :param decay_rate: momentum-like parameter
+    :param half_life: momentum-like parameter. The estimated parameters are decrease after so many events.
     :param learning_rate: size of step
     :param batch: size of minibatch
     :param epsilon: regularization
     """
     shareds = []
     updates = []
+    decay_rate = pow(0.5, batch / float(half_life))
 
     xp, yp, wp = get_batch(x, y, w, batch_size=batch, random_stream=random_stream)
     for name, param in parameters.items():
@@ -269,14 +270,8 @@ def _prepare_scaler(transform):
         return clone(transform)
 
 
-class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
-    """
-    Base class for classification neural networks.
-    Supports only binary classification, supports weights, which makes it usable in boosting.
-
-    Works in sklearn fit-predict way: X is [n_samples, n_features], y is [n_samples], sample_weight is [n_samples].
-    Works as usual sklearn classifier, can be used in boosting, for instance, pickled, etc.
-    """
+class AbstractNeuralNetworkBase(BaseEstimator):
+    """Base class for neural networks"""
 
     def __init__(self, layers=(10,), scaler='standard', loss='log_loss', trainer='irprop-', epochs=100,
                  trainer_parameters=None, random_state=None):
@@ -298,29 +293,26 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
         self.trainer = trainer
         self.trainer_parameters = deepcopy(trainer_parameters)
         self.random_state = random_state
-        self.classes_ = numpy.array([0, 1])
 
     def _create_matrix_parameter(self, name, n1, n2):
-        """Creates a parameter of neural network, which is typically a matrix"""
+        """Creates and registers matrix parameter of neural network"""
         matrix = theano.shared(value=self.random_state_.normal(size=[n1, n2]).astype(floatX) * 0.01, name=name)
         self.parameters[name] = matrix
         return matrix
 
-    def _create_scalar_parameters(self, *names):
-        """Creates a parameter of neural network, which is typically a matrix"""
-        for name in names:
-            param = theano.shared(value=self.random_state_.normal() * 0.01, name=name)
-            self.parameters[name] = param
-            yield param
+    def _create_scalar_parameters(self, name):
+        """Creates and registers scalar parameter of neural network"""
+        scalar_param = theano.shared(value=self.random_state_.normal() * 0.01, name=name)
+        self.parameters[name] = scalar_param
+        yield scalar_param
 
     def prepare(self):
         """This method should provide activation function and set parameters.
         Each network overrides this function.
 
-        :return: Activation function, f: X -> p,
-            X of shape [n_events, n_outputs], p of shape [n_events].
-            For classification, p is arbitrary real, the greater p, the more event
-            looks like signal event (label 1).
+        :return: Activation function, f: X -> df,
+            X of shape [n_events, n_outputs], df (df = decision function) of shape [n_events].
+            For classification, df is arbitrary real, the greater df, the more signal-like the event.
             Probabilities are computed by applying logistic function to output of activation.
         """
         raise NotImplementedError()
@@ -368,16 +360,11 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
 
     def _prepare_inputs(self, X, y, sample_weight):
         X, y, sample_weight = check_xyw(X, y, sample_weight)
-        sample_weight = check_sample_weight(y, sample_weight, normalize=True)
         X = self._transform(X, y, fit=True)
-        self.classes_ = numpy.array([0, 1])
-        assert (numpy.unique(y) == self.classes_).all(), 'only two-class classification supported, labels are 0 and 1'
-        y = numpy.array(y, dtype=int)
         return X, y, sample_weight
 
     def fit(self, X, y, sample_weight=None, trainer=None, epochs=None, **trainer_parameters):
         """ Prepare the model by optimizing selected loss function with some trainer.
-        This method doesn't support additional fitting, use `partial_fit`.
 
         :param X: numpy.array of shape [n_samples, n_features]
         :param y: numpy.array of shape [n_samples]
@@ -390,12 +377,13 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
 
         loss_lambda = self._prepare(X.shape[1])
 
-        trainer = trainers[self.trainer if trainer is None else trainer]
+        trainer_name = self.trainer if trainer is None else trainer
+        trainer = trainers[trainer_name]
         parameters_ = {} if self.trainer_parameters is None else self.trainer_parameters.copy()
         parameters_.update(trainer_parameters)
 
-        x = theano.shared(X)
-        y = theano.shared(y)
+        x = theano.shared(X.astype(floatX))
+        y = theano.shared(y.astype(floatX))
         w = theano.shared(numpy.array(sample_weight, dtype=floatX))
 
         shareds, updates = trainer(x, y, w, self.parameters, loss_lambda,
@@ -403,11 +391,13 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
 
         make_one_step = theano.function([], [], updates=updates)
 
-        # TODO epochs are computed wrongly at the moment if 'batch' parameter not passed.
-        n_batches = 1
+        # computing correct number of iterations in epoch is not simple:
         if 'batch' in parameters_:
-            batch = parameters_['batch']
-            n_batches = len(X) // batch + 1
+            n_batches = len(X) // parameters_['batch'] + 1
+        elif trainer_name in ['adadelta', 'sgd']:
+            n_batches = len(X) // DEFAULT_MINIBATCH + 1
+        else:
+            n_batches = 1
 
         for i in range(epochs or self.epochs):
             for _ in range(n_batches):
@@ -415,7 +405,7 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
 
         return self
 
-    def activate(self, X):
+    def decision_function(self, X):
         """
         Activates NN on particular dataset
 
@@ -425,24 +415,6 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
         X = self._transform(X, fit=False)
         return self.Activation(X)
 
-    def predict_proba(self, X):
-        """Computes probability of each event to belong to each class
-
-        :param numpy.array X: of shape [n_samples, n_features]
-        :return: numpy.array of shape [n_samples, n_classes]
-        """
-        result = numpy.zeros([len(X), 2])
-        result[:, 1] = expit(self.activate(X))
-        result[:, 0] = 1 - result[:, 1]
-        return result
-
-    def predict(self, X):
-        """ Predict the classes for new events.
-
-        :param numpy.array X: of shape [n_samples, n_features]
-        :return: numpy.array of shape [n_samples] with labels of predicted classes """
-        return self.predict_proba(X).argmax(axis=1)
-
     def compute_loss(self, X, y, sample_weight=None):
         """Computes loss (that was used in training) on labeled dataset
 
@@ -451,9 +423,57 @@ class AbstractNeuralNetworkClassifier(BaseEstimator, ClassifierMixin):
             in two-class classification 0 and 1 labels should be used
         :param sample_weight: optional, numpy.array of shape [n_samples].
         :return float, the loss vales computed"""
-        sample_weight = check_sample_weight(y, sample_weight, normalize=False)
+        sample_weight = check_sample_weight(y, sample_weight)
         X = self._transform(X, fit=False)
         return self.Loss(X, y, sample_weight)
+
+
+class AbstractNeuralNetworkClassifier(AbstractNeuralNetworkBase, ClassifierMixin):
+    """
+    Base class for classification neural networks.
+    Supports only binary classification, supports weights, which makes it usable in boosting.
+
+    Works as usual sklearn classifier, can be used in pipelines, ensembles, pickled, etc.
+    """
+
+    def _prepare_inputs(self, X, y, sample_weight):
+        X, y, sample_weight = check_xyw(X, y, sample_weight)
+        sample_weight = check_sample_weight(y, sample_weight, normalize=True)
+        X = self._transform(X, y, fit=True)
+        self.classes_ = numpy.array([0, 1])
+        assert (numpy.unique(y) == self.classes_).all(), 'only two-class classification supported, labels are 0 and 1'
+        y = numpy.array(y, dtype=int)
+        return X, y, sample_weight
+
+    def predict_proba(self, X):
+        """Computes probability of each event to belong to each class
+
+        :param numpy.array X: of shape [n_samples, n_features]
+        :return: numpy.array of shape [n_samples, n_classes]
+        """
+        return score_to_proba(self.decision_function(X))
+
+    def predict(self, X):
+        """ Predict the classes for new events (not recommended, use `predict_proba`).
+
+        :param numpy.array X: of shape [n_samples, n_features]
+        :return: numpy.array of shape [n_samples] with labels of predicted classes """
+        return self.predict_proba(X).argmax(axis=1)
+
+
+class AbstractNeuralNetworkRegressor(AbstractNeuralNetworkBase, RegressorMixin):
+    """
+    Base class for regression neural networks. Supports weights.
+
+    Works as usual sklearn classifier, can be used in pipelines, ensembles, pickled, etc.
+    """
+
+    def predict(self, X):
+        """ Compute predictions for new events.
+
+        :param numpy.array X: of shape [n_samples, n_features]
+        :return: numpy.array of shape [n_samples] with labels of predicted classes """
+        return self.decision_function(X)
 
 
 # region Neural networks
@@ -477,9 +497,7 @@ class SimpleNeuralNetwork(AbstractNeuralNetworkClassifier):
         return activation
 
 
-class MLPClassifier(AbstractNeuralNetworkClassifier):
-    """MLP (MultiLayerPerceptron) supports arbitrary number of layers (sigmoid activation each)."""
-
+class MLPBase(object):
     def prepare(self):
         activation = lambda x: x
         for i, layer in list(enumerate(self.layers_))[1:]:
@@ -491,6 +509,22 @@ class MLPClassifier(AbstractNeuralNetworkClassifier):
                 activation = lambda x, act=activation, W_=W: T.dot(T.tanh(act(x)), W_)
 
         return activation
+
+
+class MLPClassifier(MLPBase, AbstractNeuralNetworkClassifier):
+    """
+    MLP (MultiLayerPerceptron) classifier.
+    Supports arbitrary number of layers (tanh is used as activation).
+    """
+    pass
+
+
+class MLPRegressor(MLPBase, AbstractNeuralNetworkRegressor):
+    """
+    MLP (MultiLayerPerceptron) regressor.
+    Supports arbitrary number of layers (tanh is used as activation).
+    """
+    pass
 
 
 class RBFNeuralNetwork(AbstractNeuralNetworkClassifier):
@@ -532,8 +566,9 @@ class SoftmaxNeuralNetwork(AbstractNeuralNetworkClassifier):
 
 class PairwiseNeuralNetwork(AbstractNeuralNetworkClassifier):
     """The result is computed as :math:`h = sigmoid(Ax)`, :math:`output = \sum_{ij} B_{ij} h_i (1 - h_j)`,
-     this is a brilliant example when easier to define activation
-     function rather than trying to implement this inside some framework."""
+    this is a brilliant example when easier to define activation
+    function rather than trying to implement this inside some framework.
+    """
 
     def prepare(self):
         n1, n2, n3 = self.layers_
