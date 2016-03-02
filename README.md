@@ -12,7 +12,7 @@
 
 
 ### Main points
-* uniform classifiers - the classifiers with low correlation of predictions and mass (or some other variable(s))
+* uniform classifiers - the classifiers with low correlation of predictions and mass (or some other variable, or even set of variables)
   * __uBoost__ optimized implementation inside
   * __UGradientBoosting__ (with different losses, specially __FlatnessLoss__ is very interesting)
 * measures of uniformity (see **hep_ml.metrics**)
@@ -32,9 +32,9 @@ Basic installation:
 pip install hep_ml
 ```
 
-If you're new to python and don't never used `pip`, first install scikit-learn [with these instructions](http://scikit-learn.org/stable/install.html).
+If you're new to python and never used `pip`, first install scikit-learn [with these instructions](http://scikit-learn.org/stable/install.html).
 
-To use latest development version, clone it and install with `pip`:
+To use **latest development version**, clone it and install with `pip`:
 ```bash
 git clone https://github.com/arogozhnikov/hep_ml.git
 cd hep_ml
