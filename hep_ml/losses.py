@@ -97,7 +97,8 @@ class AbstractLossFunction(BaseEstimator):
     """
 
     def fit(self, X, y, sample_weight):
-        """ This method is optional, it is called before all the others."""
+        """ This method is optional, it is called before all the others.
+        Heavy preprocessing should be done here."""
         return self
 
     def negative_gradient(self, y_pred):
@@ -135,6 +136,7 @@ class AbstractLossFunction(BaseEstimator):
         """
         Compute optimal global step. This method is typically used to make optimal step
         before fitting trees to reduce variance.
+
         :param y_pred: initial predictions, numpy.array of shape [n_samples]
         :return: float
         """

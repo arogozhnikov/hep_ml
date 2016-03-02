@@ -17,7 +17,7 @@ Let's show how one can use some really heavy classifier and still have fast pred
 >>> classifier.fit(X, y, sample_weight=sample_weight)
 
 Though training takes much time, all predictions are precomputed and saved to lookup table,
-so you are able to predict millions of events per second using single CPU.
+so you are able to predict millions of events per second using single CPU:
 
 >>> classifier.predict_proba(testX)
 
@@ -40,6 +40,7 @@ class LookupClassifier(BaseEstimator, ClassifierMixin):
         To predict class for new observation, results of base_estimator are kept for all possible combinations of bins,
         and saved together
 
+        :param base_estimator: classifier used to build predictions
         :param n_bins:
 
             * int: how many bins to use for each axis

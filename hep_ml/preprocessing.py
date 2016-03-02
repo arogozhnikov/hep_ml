@@ -96,7 +96,7 @@ class IronTransformer(BaseEstimator, TransformerMixin):
         """
         IronTransformer fits one-dimensional transformation for each feature.
 
-        After applying this transformations distribution of each feature turns into uniform in [0, 1].
+        After applying this transformations distribution of each feature turns into uniform.
         This is very handy to work with features with different scale and complex distributions.
 
         The name of transformer comes from https://en.wikipedia.org/wiki/Clothes_iron,
@@ -104,7 +104,7 @@ class IronTransformer(BaseEstimator, TransformerMixin):
 
         Recommended to apply with neural networks and other algorithms sensitive to scale of features.
 
-        :param symmetrize: if True, resulting distribution is in [-1, 1]
+        :param symmetrize: if True, resulting distribution is uniform in [-1, 1], otherwise in [0, 1]
         :param int max_points: leave so many points in monotonic transformation.
         """
         self.symmetrize = symmetrize
