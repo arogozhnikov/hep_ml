@@ -2,8 +2,9 @@ from __future__ import division, print_function
 
 import numpy
 from sklearn.linear_model.logistic import LogisticRegression
-from sklearn.metrics import roc_auc_score, mean_squared_error
+from sklearn.metrics import roc_auc_score, mean_squared_error, log_loss
 from sklearn.base import clone
+from sklearn.datasets import make_blobs
 
 from hep_ml import nnet
 from hep_ml.commonutils import generate_sample
@@ -21,6 +22,8 @@ nn_types = [
     nnet.PairwiseSoftplusNeuralNetwork,
 ]
 
+
+# TODO test pipelines, bagging and boosting
 
 def check_single_classification_network(neural_network, n_samples=200, n_features=7, distance=0.8, retry_attempts=3):
     X, y = generate_sample(n_samples=n_samples, n_features=n_features, distance=distance)
@@ -120,3 +123,17 @@ def test_reproducibility(n_samples=200, n_features=15, distance=0.5):
         clf1 = nnet.MLPClassifier(trainer=trainer, random_state=42).fit(X, y)
         clf2 = nnet.MLPClassifier(trainer=trainer, random_state=42).fit(X, y)
         assert numpy.allclose(clf1.predict_proba(X), clf2.predict_proba(X))
+
+
+def test_multiclassification(n_samples=200, n_features=10):
+    for n_classes in [2, 3, 4]:
+        X, y = make_blobs(n_samples=n_samples, centers=n_classes, n_features=n_features)
+        losses = []
+        for n_epochs in [1, 10, 100]:
+            clf = nnet.MLPMultiClassifier(epochs=n_epochs).fit(X, y)
+            loss1 = log_loss(y, clf.predict_proba(X))
+            loss2 = clf.compute_loss(X, y)
+            assert numpy.allclose(loss1, loss2), 'computed losses are different'
+            losses.append(loss1)
+
+        assert losses[0] > losses[-1], 'loss is not decreasing'

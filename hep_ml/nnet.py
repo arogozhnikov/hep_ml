@@ -65,7 +65,7 @@ Multilayer Perceptron is well-known popular algorithm working well in most appli
 
 .. autoclass :: MLPRegressor
 
-
+.. autoclass :: MLPMultiClassifier
 
 Custom networks
 _______________
@@ -472,7 +472,7 @@ class AbstractNeuralNetworkBase(BaseEstimator):
         parameters_ = self.trainer_parameters or {}
 
         x = theano.shared(X.astype(floatX))
-        y = theano.shared(y.astype(floatX))
+        y = theano.shared(y)
         w = theano.shared(sample_weight.astype(floatX))
 
         shareds, updates = trainer_function(x, y, w, self.parameters, loss_lambda,
@@ -566,6 +566,7 @@ class AbstractNeuralNetworkRegressor(AbstractNeuralNetworkBase, RegressorMixin):
 
     Works as usual sklearn classifier, can be used in pipelines, ensembles, pickled, etc.
     """
+
     def __init__(self, layers=(10,), scaler='standard', loss='mse_loss', trainer='irprop-', epochs=100,
                  trainer_parameters=None, random_state=None):
         AbstractNeuralNetworkBase.__init__(self, layers=layers, scaler=scaler, loss=loss,
@@ -625,7 +626,7 @@ class MLPBase(object):
 
 class MLPClassifier(MLPBase, AbstractNeuralNetworkClassifier):
     """
-    MLP (MultiLayerPerceptron) classifier.
+    MLP (MultiLayerPerceptron) for binary classification.
     Supports arbitrary number of layers (tanh is used as activation).
     """
     pass
@@ -637,6 +638,59 @@ class MLPRegressor(MLPBase, AbstractNeuralNetworkRegressor):
     Supports arbitrary number of layers (tanh is used as activation).
     """
     pass
+
+
+class MLPMultiClassifier(MLPBase, AbstractNeuralNetworkClassifier):
+    """
+    MLP (MultiLayerPerceptron) for multi-class classification.
+    Supports arbitrary number of layers (tanh is used as activation).
+    """
+
+    def __init__(self, layers=(10,), scaler='standard', trainer='irprop-', epochs=100,
+                 trainer_parameters=None, random_state=None):
+        AbstractNeuralNetworkBase.__init__(self, layers=layers, scaler=scaler, loss=False,
+                                           trainer=trainer, epochs=epochs, trainer_parameters=trainer_parameters,
+                                           random_state=random_state)
+
+    def _prepare(self, n_input_features):
+        """This function is called once, it creates the activation function, it's gradient
+        and initializes the weights
+
+        :return: loss function as lambda (x, y, w) -> loss
+        """
+        self.random_state_ = check_random_state(self.random_state)
+        self.layers_ = [n_input_features] + list(self.layers) + [len(self.classes_)]
+        self.parameters = {}
+
+        x = T.matrix('X')
+        y = T.vector('y', dtype='int64')
+        w = T.vector('w')
+        activation_raw = self.prepare()
+        self.Activation = theano.function([x], activation_raw(x))
+        loss_ = lambda x, y, w: -T.mean(w * T.log(T.nnet.softmax(activation_raw(x))[T.arange(y.shape[0]), y]))
+        self.Loss = theano.function([x, y, w], loss_(x, y, w))
+        return loss_
+
+    def _prepare_inputs(self, X, y, sample_weight):
+        X, y, sample_weight = check_xyw(X, y, sample_weight)
+        sample_weight = check_sample_weight(y, sample_weight, normalize=True)
+        X = self._transform(X, y, fit=True)
+        self.classes_, y = numpy.unique(y, return_inverse=True)
+        y = y.astype('int32')
+        assert numpy.allclose(self.classes_, range(len(self.classes_))), 'Classes should be 0, 1... n_classes - 1'
+        return X, y, sample_weight
+
+    def predict_proba(self, X):
+        """Computes probability of each event to belong to each class
+
+        :param numpy.array X: of shape [n_samples, n_features]
+        :return: numpy.array of shape [n_samples, n_classes]
+        """
+        activations = self.decision_function(X)
+        # taking softmax
+        activations -= numpy.max(activations, axis=1, keepdims=True)
+        probabilities = numpy.exp(activations)
+        return probabilities / numpy.sum(probabilities, axis=1, keepdims=True)
 
 
 class RBFNeuralNetwork(AbstractNeuralNetworkClassifier):
