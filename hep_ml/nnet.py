@@ -10,6 +10,9 @@ In this file we have **examples** of neural networks,
 user is encouraged to write his own specific architecture,
 which can be much more complex than those used usually.
 
+If you don't want to dive into details, use
+:class:`hep_ml.nnet.MLPClassifier`, :class:`hep_ml.nnet.MLPRegressor`
+
 This library should be preferred for different experiments with architectures.
 Also **hep_ml.nnet** allows optimization of parameters in any differentiable decision function.
 
@@ -41,6 +44,83 @@ Using custom pretransformer and ExponentialLoss:
 
 To create custom neural network, see code of SimpleNeuralNetwork, which is good place to start.
 
+Interface
+_________
+
+Below an interface for classifier and regressor is demonstrated.
+
+.. autoclass :: AbstractNeuralNetworkClassifier
+    :members: fit, predict, predict_proba
+
+.. autoclass :: AbstractNeuralNetworkRegressor
+    :members: fit, predict
+
+
+Recommended networks
+____________________
+
+Multilayer Perceptron is well-known popular algorithm working well in most applications.
+
+.. autoclass :: MLPClassifier
+
+.. autoclass :: MLPRegressor
+
+
+
+Custom networks
+_______________
+
+Below some examples of custom networks are given.
+Those are initial point for constructing own architectures.
+
+.. autoclass :: SimpleNeuralNetwork
+
+.. autoclass :: SoftmaxNeuralNetwork
+
+.. autoclass :: RBFNeuralNetwork
+
+.. autoclass :: PairwiseNeuralNetwork
+
+.. autoclass :: PairwiseSoftplusNeuralNetwork
+
+
+Loss functions
+______________
+
+The following loss functions are available for **classification**:
+
+
+.. autofunction:: hep_ml.nnet.log_loss
+
+.. autofunction:: hep_ml.nnet.exp_loss
+
+.. autofunction:: hep_ml.nnet.exp_log_loss
+
+.. autofunction:: hep_ml.nnet.squared_loss
+
+The following loss functions are available for **regression**:
+
+.. autofunction:: hep_ml.nnet.mse_loss
+
+.. autofunction:: hep_ml.nnet.smooth_huber_loss
+
+
+Trainers
+________
+
+The trainers are optimization algorithms used to minimize target loss function in neural networks.
+The trainers are implemented as functions with some standard parameters and some optional.
+
+
+.. autofunction:: hep_ml.nnet.sgd_trainer
+
+.. autofunction:: hep_ml.nnet.irprop_minus_trainer
+
+.. autofunction:: hep_ml.nnet.irprop_plus_trainer
+
+.. autofunction:: hep_ml.nnet.adadelta_trainer
+
+
 """
 from __future__ import print_function, division, absolute_import
 from copy import deepcopy
@@ -58,11 +138,11 @@ from .commonutils import check_xyw, check_sample_weight, score_to_proba
 from .preprocessing import IronTransformer
 
 floatX = theano.config.floatX
-DEFAULT_MINIBATCH = 10
+DEFAULT_MINIBATCH = 30
 
 __author__ = 'Alex Rogozhnikov'
-__all__ = ['AbstractNeuralNetworkClassifier',
-           'MLPClassifier',
+__all__ = ['MLPClassifier',
+           'MLPRegressor',
            'SimpleNeuralNetwork',
            'SoftmaxNeuralNetwork',
            'RBFNeuralNetwork',
@@ -97,24 +177,33 @@ def exp_log_loss(y, pred, w):
     return 2 * log_loss(y, pred, w=w * y) + exp_loss(y, pred, w=w * (1 - y))
 
 
-# regression loss
 def mse_loss(y, pred, w):
     """ Regression loss function, mean squared error. """
     return T.mean(w * (y - pred) ** 2)
 
 
 def smooth_huber_loss(y, pred, w):
-    """Regression loss function, smooth version of Huber loss function. """
-    return T.mean(w * T.log(T.cosh(y - pred)))
+    """ Regression loss function, smooth version of Huber loss function. """
+    difference = abs(y - pred)
+    # error = logaddexp(-difference, difference), but this is not implemented in theano.
+    error = difference + T.log(1 + T.exp(-2 * difference))
+    return T.mean(w * error)
 
 
-losses = {'mse_loss': mse_loss,
-          'exp_loss': exp_loss,
-          'log_loss': log_loss,
-          'exp_log_loss': exp_log_loss,
-          'squared_loss': squared_loss,
-          'smooth_huber_loss': smooth_huber_loss,
-          }
+classification_losses = {
+    'exp_loss': exp_loss,
+    'log_loss': log_loss,
+    'exp_log_loss': exp_log_loss,
+    'squared_loss': squared_loss,
+}
+
+regression_losses = {
+    'mse_loss': mse_loss,
+    'smooth_huber_loss': smooth_huber_loss,
+}
+
+losses = classification_losses.copy()
+losses.update(regression_losses)
 
 
 # endregion
@@ -189,7 +278,7 @@ def irprop_plus_trainer(x, y, w, parameters, loss, random_stream,
     """
     loss_value = loss(x, y, w)
     prev_loss_value = theano.shared(1e10)
-    shareds = []
+    shareds = [prev_loss_value]
     updates = []
     for name, param in parameters.items():
         old_derivative = theano.shared(param.get_value() * 0.)
@@ -208,17 +297,18 @@ def irprop_plus_trainer(x, y, w, parameters, loss, random_stream,
 
         new_old_derivative = T.where(new_derivative * old_derivative < 0, 0, new_derivative)
         updates.append([old_derivative, new_old_derivative])
-        shareds.extend([old_derivative, delta, prev_loss_value])
+        shareds.extend([old_derivative, delta])
 
     updates.append([prev_loss_value, loss_value])
     return shareds, updates
 
 
 def adadelta_trainer(x, y, w, parameters, loss, random_stream, batch=DEFAULT_MINIBATCH,
-                     learning_rate=0.1, half_life=3000, epsilon=1e-4, ):
+                     learning_rate=0.1, half_life=1000, epsilon=1e-4, ):
     """AdaDelta is trainer with adaptive learning rate.
 
-    :param half_life: momentum-like parameter. The estimated parameters are decrease after so many events.
+    :param half_life: momentum-like parameter. The estimated parameters are decreased by 2 after so many events.
+        It is recommended for small datasets to put halflife = number of samples in dataset.
     :param learning_rate: size of step
     :param batch: size of minibatch
     :param epsilon: regularization
@@ -273,21 +363,23 @@ def _prepare_scaler(transform):
 class AbstractNeuralNetworkBase(BaseEstimator):
     """Base class for neural networks"""
 
-    def __init__(self, layers=(10,), scaler='standard', loss='log_loss', trainer='irprop-', epochs=100,
-                 trainer_parameters=None, random_state=None):
+    def __init__(self, layers, scaler, loss, trainer, epochs, trainer_parameters, random_state):
         """
         :param layers: list of int, e.g [9, 7] - the number of units in each *hidden* layer
-        :param scaler: 'standard' or 'minmax' or some other Transformer used to pretransform features.
-            Default is 'standard', which will apply StandardScaler from sklearn.
-        :param loss: loss function used (log_loss by default), str or function(y, pred, w) -> float
-        :param trainer: string, name of optimization method used
-        :param epochs: number of times each takes part in training
+        :param scaler: 'standard', 'minmax', 'iron' or some other Transformer used to transform features.
+            Default is 'standard', which will apply StandardScaler.
+            'Iron' is for heavy tails distributions.
+        :param loss: loss function used.
+            Options: {loss_options}
+        :param trainer: string, name of optimization method used.
+            Options: {trainer_options}
+        :param epochs: number of times each sample takes part in training
         :param dict trainer_parameters: parameters passed to trainer function (learning_rate, etc., trainer-specific).
+            See parameters in documentation.
         """
         self.scaler = scaler
         self.layers = layers
         self.loss = loss
-        self.prepared = False
         self.epochs = epochs
         self.parameters = {}
         self.trainer = trainer
@@ -300,7 +392,7 @@ class AbstractNeuralNetworkBase(BaseEstimator):
         self.parameters[name] = matrix
         return matrix
 
-    def _create_scalar_parameters(self, name):
+    def _create_scalar_parameter(self, name):
         """Creates and registers scalar parameter of neural network"""
         scalar_param = theano.shared(value=self.random_state_.normal() * 0.01, name=name)
         self.parameters[name] = scalar_param
@@ -320,12 +412,12 @@ class AbstractNeuralNetworkBase(BaseEstimator):
     def _prepare(self, n_input_features):
         """This function is called once, it creates the activation function, it's gradient
         and initializes the weights
-        :return: loss function as lambda (x, y, w) -> loss"""
+
+        :return: loss function as lambda (x, y, w) -> loss
+        """
         self.random_state_ = check_random_state(self.random_state)
         self.layers_ = [n_input_features] + list(self.layers) + [1]
         self.parameters = {}
-        self.prepared = True
-
         loss_function = losses.get(self.loss, self.loss)
 
         x = T.matrix('X')
@@ -337,13 +429,13 @@ class AbstractNeuralNetworkBase(BaseEstimator):
         self.Loss = theano.function([x, y, w], loss_(x, y, w))
         return loss_
 
-    def _transform(self, X, y=None, fit=True):
+    def _transform(self, X, y=None, fit=False):
         """Apply selected scaler or transformer to dataset
         (also this method adds a column filled with ones).
 
         :param numpy.array X: of shape [n_samples, n_features], data
         :param numpy.array y: of shape [n_samples], labels
-        :param bool fit: if True, will
+        :param bool fit: if True, fits transformer
         :return: transformed data, numpy.array of shape [n_samples, n_output_features]
         """
         # Fighting copy-bug of sklearn's transformers
@@ -363,43 +455,40 @@ class AbstractNeuralNetworkBase(BaseEstimator):
         X = self._transform(X, y, fit=True)
         return X, y, sample_weight
 
-    def fit(self, X, y, sample_weight=None, trainer=None, epochs=None, **trainer_parameters):
+    def fit(self, X, y, sample_weight=None):
         """ Prepare the model by optimizing selected loss function with some trainer.
 
         :param X: numpy.array of shape [n_samples, n_features]
         :param y: numpy.array of shape [n_samples]
         :param sample_weight: numpy.array of shape [n_samples], leave None for array of 1's
-        :param trainer: str, method used to minimize loss, overrides one in the ctor
-        :param trainer_parameters: parameters for this method, override ones in ctor
+
         :return: self
         """
         X, y, sample_weight = self._prepare_inputs(X, y, sample_weight=sample_weight)
 
         loss_lambda = self._prepare(X.shape[1])
 
-        trainer_name = self.trainer if trainer is None else trainer
-        trainer = trainers[trainer_name]
-        parameters_ = {} if self.trainer_parameters is None else self.trainer_parameters.copy()
-        parameters_.update(trainer_parameters)
+        trainer_function = trainers[self.trainer]
+        parameters_ = self.trainer_parameters or {}
 
         x = theano.shared(X.astype(floatX))
         y = theano.shared(y.astype(floatX))
-        w = theano.shared(numpy.array(sample_weight, dtype=floatX))
+        w = theano.shared(sample_weight.astype(floatX))
 
-        shareds, updates = trainer(x, y, w, self.parameters, loss_lambda,
-                                   RandomStreams(seed=self.random_state_.randint(0, 1000)), **parameters_)
+        shareds, updates = trainer_function(x, y, w, self.parameters, loss_lambda,
+                                            RandomStreams(seed=self.random_state_.randint(0, 1000)), **parameters_)
 
         make_one_step = theano.function([], [], updates=updates)
 
         # computing correct number of iterations in epoch is not simple:
         if 'batch' in parameters_:
             n_batches = len(X) // parameters_['batch'] + 1
-        elif trainer_name in ['adadelta', 'sgd']:
+        elif self.trainer in ['adadelta', 'sgd']:
             n_batches = len(X) // DEFAULT_MINIBATCH + 1
         else:
             n_batches = 1
 
-        for i in range(epochs or self.epochs):
+        for i in range(self.epochs):
             for _ in range(n_batches):
                 make_one_step()
 
@@ -436,6 +525,15 @@ class AbstractNeuralNetworkClassifier(AbstractNeuralNetworkBase, ClassifierMixin
     Works as usual sklearn classifier, can be used in pipelines, ensembles, pickled, etc.
     """
 
+    def __init__(self, layers=(10,), scaler='standard', loss='log_loss', trainer='irprop-', epochs=100,
+                 trainer_parameters=None, random_state=None):
+        AbstractNeuralNetworkBase.__init__(self, layers=layers, scaler=scaler, loss=loss,
+                                           trainer=trainer, epochs=epochs, trainer_parameters=trainer_parameters,
+                                           random_state=random_state)
+
+    __init__.__doc__ = AbstractNeuralNetworkBase.__init__.__doc__.format(
+        loss_options=classification_losses.keys(), trainer_options=trainers.keys())
+
     def _prepare_inputs(self, X, y, sample_weight):
         X, y, sample_weight = check_xyw(X, y, sample_weight)
         sample_weight = check_sample_weight(y, sample_weight, normalize=True)
@@ -457,7 +555,8 @@ class AbstractNeuralNetworkClassifier(AbstractNeuralNetworkBase, ClassifierMixin
         """ Predict the classes for new events (not recommended, use `predict_proba`).
 
         :param numpy.array X: of shape [n_samples, n_features]
-        :return: numpy.array of shape [n_samples] with labels of predicted classes """
+        :return: numpy.array of shape [n_samples] with labels of predicted classes.
+        """
         return self.predict_proba(X).argmax(axis=1)
 
 
@@ -467,6 +566,14 @@ class AbstractNeuralNetworkRegressor(AbstractNeuralNetworkBase, RegressorMixin):
 
     Works as usual sklearn classifier, can be used in pipelines, ensembles, pickled, etc.
     """
+    def __init__(self, layers=(10,), scaler='standard', loss='mse_loss', trainer='irprop-', epochs=100,
+                 trainer_parameters=None, random_state=None):
+        AbstractNeuralNetworkBase.__init__(self, layers=layers, scaler=scaler, loss=loss,
+                                           trainer=trainer, epochs=epochs, trainer_parameters=trainer_parameters,
+                                           random_state=random_state)
+
+    __init__.__doc__ = AbstractNeuralNetworkBase.__init__.__doc__.format(
+        loss_options=regression_losses.keys(), trainer_options=trainers.keys())
 
     def predict(self, X):
         """ Compute predictions for new events.
@@ -483,7 +590,8 @@ class SimpleNeuralNetwork(AbstractNeuralNetworkClassifier):
     """The most simple NN with one hidden layer (sigmoid activation), for example purposes.
     Supports only one hidden layer.
 
-    See source code as example."""
+    See source code as an example of custom NN.
+    """
 
     def prepare(self):
         n1, n2, n3 = self.layers_
@@ -498,6 +606,10 @@ class SimpleNeuralNetwork(AbstractNeuralNetworkClassifier):
 
 
 class MLPBase(object):
+    """
+    MLPRegressor and MLPClassifier have identical implementation, but should be derived from different base classes.
+    """
+
     def prepare(self):
         activation = lambda x: x
         for i, layer in list(enumerate(self.layers_))[1:]:

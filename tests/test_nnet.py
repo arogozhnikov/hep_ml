@@ -31,7 +31,7 @@ def check_single_classification_network(neural_network, n_samples=200, n_feature
         neural_network = clone(neural_network)
         neural_network.set_params(random_state=42 + retry_attempt)
         print(neural_network)
-        neural_network.fit(X, y, epochs=200)
+        neural_network.fit(X, y)
         quality = roc_auc_score(y, neural_network.predict_proba(X)[:, 1])
         # checking that computations don't fail
         computed_loss = neural_network.compute_loss(X, y, sample_weight=y * 0 + 1)
@@ -55,20 +55,31 @@ def test_classification_nnets():
         trainer = list(nnet.trainers.keys())[(combination + trainers_shift) % len(nnet.trainers)]
 
         nn_type = nn_types[combination % len(nn_types)]
-        neural_network = nn_type(layers=[5], loss=loss, trainer=trainer)
+        neural_network = nn_type(layers=[5], loss=loss, trainer=trainer, epochs=200)
         yield check_single_classification_network, neural_network
 
 
 def test_regression_nnets():
     from sklearn.datasets import make_regression
-    X, y = make_regression(n_samples=500, n_features=20, n_informative=10, bias=5)
+    X, y = make_regression(n_samples=300, n_features=20, n_informative=10, bias=5)
     print(y[:20])
+
+    original_mse = mean_squared_error(y, y * 0 + y.mean())
     for loss in ['mse_loss', 'smooth_huber_loss']:
         reg = MLPRegressor(layers=(5,), loss=loss)
         reg.fit(X, y)
-        mse = mean_squared_error(y, reg.predict(X))
-        print(mse, reg)
-    print('original', mean_squared_error(y, y * 0 + y.mean()))
+        p = reg.predict(X)
+        print(numpy.sort(abs(p))[-10:])
+        mse = mean_squared_error(y, p)
+        assert mse < original_mse * 0.3
+
+    # fitting a constant
+    y[:] = 100.
+    for loss in ['mse_loss', 'smooth_huber_loss']:
+        reg = MLPRegressor(layers=(1,), loss=loss, epochs=300)
+        reg.fit(X, y)
+        print(mean_squared_error(y, reg.predict(X)))
+        assert mean_squared_error(y, reg.predict(X)) < 5., "doesn't fit constant"
 
 
 def compare_nnets_quality(n_samples=200, n_features=7, distance=0.8):
@@ -77,8 +88,8 @@ def compare_nnets_quality(n_samples=200, n_features=7, distance=0.8):
     for loss in ['log_loss']:  # nnet.losses:
         for NNType in nn_types:
             for trainer in nnet.trainers:
-                nn = NNType(layers=[5], loss=loss, trainer=trainer, random_state=42)
-                nn.fit(X, y, epochs=100)
+                nn = NNType(layers=[5], loss=loss, trainer=trainer, epochs=100, random_state=42)
+                nn.fit(X, y)
                 print(roc_auc_score(y, nn.predict_proba(X)[:, 1]), nn)
 
     lr = LogisticRegression().fit(X, y)
@@ -88,11 +99,19 @@ def compare_nnets_quality(n_samples=200, n_features=7, distance=0.8):
 def test_network_with_scaler(n_samples=200, n_features=15, distance=0.5):
     X, y = generate_sample(n_samples=n_samples, n_features=n_features, distance=distance)
     for scaler in [BinTransformer(max_bins=16), IronTransformer()]:
-        clf = nnet.SimpleNeuralNetwork(scaler=scaler)
-        clf.fit(X, y, epochs=300)
+        clf = nnet.SimpleNeuralNetwork(scaler=scaler, epochs=300)
+        clf.fit(X, y)
 
         p = clf.predict_proba(X)
         assert roc_auc_score(y, p[:, 1]) > 0.8, 'quality is too low for model: {}'.format(clf)
+
+
+def test_adaptive_methods(n_samples=200, n_features=15, distance=0.5):
+    X, y = generate_sample(n_samples=n_samples, n_features=n_features, distance=distance)
+    for trainer in ['sgd', 'adadelta']:
+        clf = nnet.SimpleNeuralNetwork(trainer=trainer, trainer_parameters={'batch': 1})
+        clf.fit(X, y)
+        assert roc_auc_score(y, clf.predict_proba(X)[:, 1]) > 0.8, 'quality is too low for model: {}'.format(clf)
 
 
 def test_reproducibility(n_samples=200, n_features=15, distance=0.5):
