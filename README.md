@@ -68,4 +68,4 @@ Apache 2.0, library is open-source.
 ### Platforms 
 Linux, Mac OS X and Windows are supported.
 
-`hep_ml` works supports both python 2 and python 3.
+**hep_ml** supports both python 2 and python 3.
