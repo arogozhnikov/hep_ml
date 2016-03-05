@@ -31,4 +31,3 @@ script: nosetests tests
 cache:
   - directories:
     - $HOME/.cache/pip
-    - $HOME/.theano
