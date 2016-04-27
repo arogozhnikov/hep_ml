@@ -424,7 +424,7 @@ class AbstractNeuralNetworkBase(BaseEstimator):
         y = T.vector('y')
         w = T.vector('w')
         activation_raw = self.prepare()
-        self.Activation = theano.function([x], activation_raw(x).flatten())
+        self.Activation = theano.function([x], activation_raw(x).flatten(), allow_input_downcast=True)
         loss_ = lambda x, y, w: loss_function(y, activation_raw(x).flatten(), w)
         self.Loss = theano.function([x, y, w], loss_(x, y, w))
         return loss_
@@ -446,7 +446,7 @@ class AbstractNeuralNetworkBase(BaseEstimator):
             self.scaler_.fit(X, y)
 
         result = self.scaler_.transform(X)
-        result = numpy.hstack([result, numpy.ones([len(X), 1])])
+        result = numpy.hstack([result, numpy.ones([len(X), 1])]).astype('float32')
 
         return result
 
@@ -478,7 +478,7 @@ class AbstractNeuralNetworkBase(BaseEstimator):
         shareds, updates = trainer_function(x, y, w, self.parameters, loss_lambda,
                                             RandomStreams(seed=self.random_state_.randint(0, 1000)), **parameters_)
 
-        make_one_step = theano.function([], [], updates=updates)
+        make_one_step = theano.function([], [], updates=updates, allow_input_downcast=True)
 
         # computing correct number of iterations in epoch is not simple:
         if 'batch' in parameters_:
@@ -666,7 +666,7 @@ class MLPMultiClassifier(MLPBase, AbstractNeuralNetworkClassifier):
         y = T.vector('y', dtype='int64')
         w = T.vector('w')
         activation_raw = self.prepare()
-        self.Activation = theano.function([x], activation_raw(x))
+        self.Activation = theano.function([x], activation_raw(x), allow_input_downcast=True)
         loss_ = lambda x, y, w: -T.mean(w * T.log(T.nnet.softmax(activation_raw(x))[T.arange(y.shape[0]), y]))
         self.Loss = theano.function([x, y, w], loss_(x, y, w))
         return loss_
