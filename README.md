@@ -43,8 +43,8 @@ sudo pip install .
 * [documentation](https://arogozhnikov.github.io/hep_ml/)
 * [notebooks, code examples](https://github.com/arogozhnikov/hep_ml/tree/master/notebooks)
 * [repository](https://github.com/arogozhnikov/hep_ml)
-* [issue tracker](https://github.com/arogozhnikov/hep_ml/issues)
-* [old repository](https://github.com/anaderi/lhcb_trigger_ml)
+* [issue tracker](https://github.com/arogozhnikov/hep_ml/issues) (discussion is also there)
+* if you have a question, please open a ticket in this repository
 
 ### Related projects 
 Libraries you'll require to make your life easier.
