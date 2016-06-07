@@ -101,11 +101,6 @@ class AbstractLossFunction(BaseEstimator):
         Heavy preprocessing should be done here."""
         return self
 
-    def negative_gradient(self, y_pred):
-        """The y_pred should contain all the events passed to `fit` method,
-        moreover, the order should be the same"""
-        raise NotImplementedError()
-
     def __call__(self, y_pred):
         """Compute loss function
 
