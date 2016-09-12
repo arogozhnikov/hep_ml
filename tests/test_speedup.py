@@ -3,16 +3,18 @@ tests for hep_ml.speedup module
 """
 from __future__ import division, print_function, absolute_import
 
-__author__ = 'Alex Rogozhnikov'
-
 import numpy
 import pandas
+import time
 from hep_ml.speedup import LookupClassifier
 from hep_ml.commonutils import generate_sample
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import roc_auc_score
 from collections import OrderedDict
-import time
+from nose.tools import raises
+
+__author__ = 'Alex Rogozhnikov'
+
 
 
 def test_lookup(n_samples=10000, n_features=7, n_bins=8):
@@ -65,3 +67,20 @@ def test_sizes(n_samples=10000, n_features=4, n_bins=8):
     assert numpy.allclose(numpy.min(bin_indices, axis=0), 0)
 
 
+@raises(ValueError)
+def test_raising_exception():
+    X, y = generate_sample(n_samples=100, n_features=10)
+    LookupClassifier(GradientBoostingClassifier(), n_bins=16).fit(X, y)
+
+
+def test_classifier_with_dataframe():
+    try:
+        from rep.estimators import SklearnClassifier
+        clf = SklearnClassifier(GradientBoostingClassifier(n_estimators=1))
+        X, y = generate_sample(n_samples=100, n_features=4)
+        for X_ in [X, pandas.DataFrame(X)]:
+            lookup = LookupClassifier(clf, n_bins=16).fit(X_, y)
+            lookup.predict_proba(X)
+    except ImportError:
+        # allow failing if rep not installed
+        pass

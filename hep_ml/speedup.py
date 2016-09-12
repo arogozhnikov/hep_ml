@@ -63,6 +63,12 @@ class LookupClassifier(BaseEstimator, ClassifierMixin):
         self.max_cells = max_cells
         self.keep_trained_estimator = keep_trained_estimator
 
+    def check_dimensions(self, bin_edges):
+        cumulative_size = numpy.cumprod([len(bin_edge) + 1 for name, bin_edge in bin_edges.items()])
+        if numpy.any(cumulative_size > self.max_cells):
+            raise ValueError('the total size of lookup table exceeds {}, '
+                             'reduce n_bins or number of features in use'.format(self.max_cells))
+
     def fit(self, X, y, sample_weight=None):
         """Train a classifier and collect predictions for all possible combinations.
 
@@ -77,10 +83,9 @@ class LookupClassifier(BaseEstimator, ClassifierMixin):
         normed_weights = check_sample_weight(y, sample_weight=normed_weights, normalize_by_class=True, normalize=True)
 
         self.bin_edges = self._compute_bin_edges(X, normed_weights=normed_weights)
+        self.check_dimensions(self.bin_edges)
+
         n_parameter_combinations = numpy.prod([len(bin_edge) + 1 for name, bin_edge in self.bin_edges.items()])
-        assert n_parameter_combinations <= self.max_cells, \
-            'the total size of lookup table exceeds {}, ' \
-            'reduce n_bins or number of features in use'.format(self.max_cells)
 
         transformed_data = self.transform(X)
         trained_estimator = clone(self.base_estimator)
@@ -150,7 +155,7 @@ class LookupClassifier(BaseEstimator, ClassifierMixin):
         """Convert data to bin indices.
 
         :param X: pandas.DataFrame or numpy.array with data
-        :return: pandas.DataFrame, where each column is replaced with index of bin
+        :return: numpy.array, where each column is replaced with index of bin
         """
         X = to_pandas_dataframe(X)
         assert list(X.columns) == list(self.bin_edges.keys()), 'passed dataset with wrong columns'
@@ -159,7 +164,7 @@ class LookupClassifier(BaseEstimator, ClassifierMixin):
             edges = self.bin_edges[column]
             result[:, i] = numpy.searchsorted(edges, X[column])
 
-        return pandas.DataFrame(result, columns=X.columns)
+        return result
 
     def predict(self, X):
         """Predict class for each event
