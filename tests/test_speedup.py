@@ -16,7 +16,6 @@ from nose.tools import raises
 __author__ = 'Alex Rogozhnikov'
 
 
-
 def test_lookup(n_samples=10000, n_features=7, n_bins=8):
     X, y = generate_sample(n_samples=n_samples, n_features=n_features, distance=0.6)
 
@@ -82,5 +81,4 @@ def test_classifier_with_dataframe():
             lookup = LookupClassifier(clf, n_bins=16).fit(X_, y)
             lookup.predict_proba(X)
     except ImportError:
-        # allow failing if rep not installed
-        pass
+        print('expected fail: yandex/rep not installed')
