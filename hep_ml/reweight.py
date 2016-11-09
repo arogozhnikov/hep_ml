@@ -17,6 +17,9 @@ Algorithms are implemented as estimators, fitting and reweighting stages are spl
 Fitted reweighter can be applied many times to different data, pickled and so on.
 
 
+Folding over reweighter is also availabel. This provides an easy way to run k-Folding cross-validation.
+Also it is a nice way to combine weights predictions of trained reweighters.
+
 Examples
 ________
 
@@ -36,6 +39,16 @@ The same example for `GBReweighter`:
 >>> reweighter.fit(original=MC_data, target=RealData, target_weight=sWeights)
 >>> MC_weights = reweighter.predict_weights(MC_data)
 
+Folding over reweighter:
+
+>>> reweighter_base = GBReweighter(max_depth=2, gb_args={'subsample': 0.5})
+>>> reweighter = FoldingReweighter(reweighter_base, n_folds=3)
+>>> reweighter.fit(original=MC_data, target=RealData, target_weight=sWeights)
+
+If the same data used in the training process are predicted by folding reweighter
+weights predictions will be unbiased: each reweighter predicts only those part of data which is not used during its training
+
+>>> MC_weights = reweighter.predict_weights(MC_data)
 """
 from __future__ import division, print_function, absolute_import
 
