@@ -2,7 +2,7 @@ from __future__ import division, print_function, absolute_import
 
 import numpy
 
-from hep_ml.reweight import BinsReweighter, GBReweighter
+from hep_ml.reweight import BinsReweighter, GBReweighter, FoldingReweighter
 from hep_ml.metrics_utils import ks_2samp_weighted
 
 __author__ = 'Alex Rogozhnikov'
@@ -16,7 +16,7 @@ def weighted_covar(data, weights):
     return numpy.einsum('ij, ik, i -> jk', data, data, weights)
 
 
-def check_reweighter(n_dimensions, n_samples, reweighter):
+def check_reweighter(n_dimensions, n_samples, reweighter, folding=False):
     mean_original = numpy.random.normal(size=n_dimensions)
     cov_original = numpy.diag([1.] * n_dimensions)
 
@@ -30,26 +30,36 @@ def check_reweighter(n_dimensions, n_samples, reweighter):
     target_weight = numpy.ones(n_samples)
 
     reweighter.fit(original, target, original_weight=original_weight, target_weight=target_weight)
-    new_weights = reweighter.predict_weights(original, original_weight=original_weight)
+    new_weights_array = []
+    new_weights_array.append(reweighter.predict_weights(original, original_weight=original_weight))
+    if folding:
+        def mean_vote(x):
+            return numpy.mean(x, axis=0)
 
-    av_orig = numpy.average(original, weights=original_weight, axis=0)
-    print('WAS', av_orig)
-    av_now = numpy.average(original, weights=new_weights, axis=0)
-    print('NOW:', av_now)
-    av_ideal = numpy.average(target, weights=target_weight, axis=0)
-    print('IDEAL:', av_ideal)
+        new_weights_array.append(reweighter.predict_weights(original, original_weight=original_weight,
+                                                            vote_function=mean_vote))
 
-    print('COVARIATION')
-    print('WAS', weighted_covar(original, original_weight))
-    print('NOW', weighted_covar(original, new_weights))
-    print('IDEAL', weighted_covar(target, target_weight))
+    for new_weights in new_weights_array:
+        av_orig = numpy.average(original, weights=original_weight, axis=0)
+        print('WAS', av_orig)
+        av_now = numpy.average(original, weights=new_weights, axis=0)
+        print('NOW:', av_now)
+        av_ideal = numpy.average(target, weights=target_weight, axis=0)
+        print('IDEAL:', av_ideal)
 
-    assert numpy.all(abs(av_now - av_ideal) < abs(av_orig - av_ideal)), 'deviation is wrong'
-    for dim in range(n_dimensions):
-        diff1 = ks_2samp_weighted(original[:, dim], target[:, dim], original_weight, target_weight)
-        diff2 = ks_2samp_weighted(original[:, dim], target[:, dim], new_weights, target_weight)
-        print('KS', diff1, diff2)
-        assert diff2 < diff1, 'Differences {} {}'.format(diff1, diff2)
+        print('COVARIATION')
+        print('WAS', weighted_covar(original, original_weight))
+        print('NOW', weighted_covar(original, new_weights))
+        print('IDEAL', weighted_covar(target, target_weight))
+
+        assert numpy.all(abs(av_now - av_ideal) < abs(av_orig - av_ideal)), 'deviation is wrong'
+        for dim in range(n_dimensions):
+            diff1 = ks_2samp_weighted(original[:, dim], target[:, dim], original_weight, target_weight)
+            diff2 = ks_2samp_weighted(original[:, dim], target[:, dim], new_weights, target_weight)
+            print('KS', diff1, diff2)
+            assert diff2 < diff1, 'Differences {} {}'.format(diff1, diff2)
+
+
 
 
 def test_reweighter_1d():
@@ -74,3 +84,13 @@ def test_gb_reweighter_2d():
 def test_gb_reweighter_2d_new():
     reweighter = GBReweighter(max_depth=3, n_estimators=30, learning_rate=0.3, gb_args=dict(subsample=0.3))
     check_reweighter(n_dimensions=2, n_samples=200000, reweighter=reweighter)
+
+
+def test_folding_gb_reweighter():
+    reweighter = FoldingReweighter(GBReweighter(n_estimators=100, max_depth=2), n_folds=3)
+    check_reweighter(n_dimensions=2, n_samples=200000, reweighter=reweighter, folding=True)
+
+
+def test_folding_bins_reweighter():
+    reweighter = FoldingReweighter(BinsReweighter(n_bins=20, n_neighs=2), n_folds=3)
+    check_reweighter(n_dimensions=2, n_samples=1000000, reweighter=reweighter, folding=True)
