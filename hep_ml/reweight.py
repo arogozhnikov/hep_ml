@@ -64,7 +64,7 @@ from . import gradientboosting as gb
 from . import losses
 
 __author__ = 'Alex Rogozhnikov, Tatiana Likhomanenko'
-__all__ = ['BinsReweighter', 'GBReweighter']
+__all__ = ['BinsReweighter', 'GBReweighter', 'FoldingReweighter']
 
 
 def _bincount_nd(x, weights, shape):
