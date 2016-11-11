@@ -90,7 +90,7 @@ class ReweighterMixin(object):
      Reweighters should be derived from this class."""
     n_features_ = None
 
-    def _normalize_input(self, data, weights):
+    def _normalize_input(self, data, weights, normalize=True):
         """ Normalize input of reweighter
         :param data: array like of shape [n_samples] or [n_samples, n_features]
         :param weights: array-like of shape [n_samples] or None
@@ -98,7 +98,7 @@ class ReweighterMixin(object):
             data - numpy.array of shape [n_samples, n_features]
             weights - numpy.array of shape [n_samples] with mean = 1.
         """
-        weights = check_sample_weight(data, sample_weight=weights, normalize=True)
+        weights = check_sample_weight(data, sample_weight=weights, normalize=normalize)
         data = numpy.array(data)
         if len(data.shape) == 1:
             data = data[:, numpy.newaxis]
@@ -311,7 +311,7 @@ class FoldingReweighter(BaseEstimator, ReweighterMixin):
             folds_column[folds_indices] = fold_number
         return folds_column
 
-    def fit(self, original, target, original_weight, target_weight):
+    def fit(self, original, target, original_weight=None, target_weight=None):
         """
         Prepare reweighting formula by training sequence of trees.
 
@@ -321,6 +321,9 @@ class FoldingReweighter(BaseEstimator, ReweighterMixin):
         :param target_weight: weights for samples of original distributions
         :return: self
         """
+        original, original_weight = self._normalize_input(original, original_weight, normalize=False)
+        target, target_weight = self._normalize_input(target, target_weight, normalize=False)
+
         folds_original = self._get_folds_column(len(original))
         folds_target = self._get_folds_column(len(target))
         for _ in range(self.n_folds):
@@ -328,6 +331,7 @@ class FoldingReweighter(BaseEstimator, ReweighterMixin):
 
         original = numpy.array(original)
         target = numpy.array(target)
+
         for i in range(self.n_folds):
             self.reweighters[i].fit(original[folds_original == i, :], target[folds_target == i, :],
                                     original_weight[folds_original == i], target_weight[folds_target == i])
@@ -345,6 +349,7 @@ class FoldingReweighter(BaseEstimator, ReweighterMixin):
             For instance: lambda x: numpy.mean(x, axis=0), which means averaging result over all folds.
             Another useful option is lambda x: numpy.median(x, axis=0)
         """
+        original, original_weight = self._normalize_input(original, original_weight, normalize=False)
         if vote_function is not None:
             print('KFold prediction with voting function')
             results = []
