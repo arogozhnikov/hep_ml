@@ -1,13 +1,23 @@
 #!/usr/bin/env bash
-# assuming that in ../hepml_doc there is another clone of repository
+# script should be running from its directory
+# assumed that in ../hepml_doc there is another clone of repository
+# with gh-pages branch active
 
 
 cd docs
 # Forcing to ignore caches
 make SPHINXOPTS="-E" html
 cd ..
-# TODO delete there everything for the except of git folder
-# currently we simply copy, while leaving everythong there
+
+# deleting everythong for the exception
+# of .git/ and .gitignore
+mv ../hep_mldoc/.git/ /tmp/githepmldoc
+mv ../hep_mldoc/.gitignore /tmp/gitignorehepmldoc
+rm -r ../hep_mldoc/*
+mv /tmp/githepmldoc ../hep_mldoc/.git/
+mv /tmp/gitignorehepmldoc ../hep_mldoc/.gitignore
+
+# copying new files to hep_mldoc
 rsync -avh docs/_build/html/* ../hep_mldoc
 
 cd ../hep_mldoc
@@ -17,5 +27,5 @@ git add .
 git commit -am 'autoupdate of documentation'
 git push origin gh-pages
 
-# return back
+# return
 cd ../hep_ml
