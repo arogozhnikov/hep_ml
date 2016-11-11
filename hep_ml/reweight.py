@@ -270,7 +270,7 @@ class GBReweighter(BaseEstimator, ReweighterMixin):
 
 
 class FoldingReweighter(BaseEstimator, ReweighterMixin):
-    def __init__(self, base_reweighter, n_folds=2, random_state=None):
+    def __init__(self, base_reweighter, n_folds=2, random_state=None, verbose=True):
         """
         This meta-regressor implements folding algorithm over reweighter:
 
@@ -291,9 +291,11 @@ class FoldingReweighter(BaseEstimator, ReweighterMixin):
         :param n_folds: number of folds
         :param random_state: random state for reproducibility
         :type random_state: None or int or RandomState
+        :param bool verbose:
         """
         self.n_folds = n_folds
         self.random_state = random_state
+        self.verbose = verbose
         self.base_reweighter = base_reweighter
         self.reweighters = []
         self._random_number = None
@@ -333,8 +335,8 @@ class FoldingReweighter(BaseEstimator, ReweighterMixin):
         target = numpy.array(target)
 
         for i in range(self.n_folds):
-            self.reweighters[i].fit(original[folds_original == i, :], target[folds_target == i, :],
-                                    original_weight[folds_original == i], target_weight[folds_target == i])
+            self.reweighters[i].fit(original[folds_original != i, :], target[folds_target != i, :],
+                                    original_weight[folds_original != i], target_weight[folds_target != i])
         self.train_length = len(original)
         return self
 
@@ -351,7 +353,8 @@ class FoldingReweighter(BaseEstimator, ReweighterMixin):
         """
         original, original_weight = self._normalize_input(original, original_weight, normalize=False)
         if vote_function is not None:
-            print('KFold prediction with voting function')
+            if self.verbose:
+                print('KFold prediction with voting function')
             results = []
             for reweighter in self.reweighters:
                 results.append(reweighter.predict_weights(original, original_weight=original_weight))
@@ -359,10 +362,11 @@ class FoldingReweighter(BaseEstimator, ReweighterMixin):
             results = numpy.array(results)
             return vote_function(results)
         else:
-            if len(original) != self.train_length:
-                print('KFold prediction using random reweighter (length of data passed not equal to length of train)')
-            else:
-                print('KFold prediction using folds column')
+            if self.verbose:
+                if len(original) != self.train_length:
+                    print('KFold prediction using random reweighter (length of data passed not equal to length of train)')
+                else:
+                    print('KFold prediction using folds column')
             folds_original = self._get_folds_column(len(original))
             new_original_weight = numpy.zeros(len(original))
             original = numpy.array(original)
