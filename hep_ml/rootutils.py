@@ -1,3 +1,8 @@
+"""
+**hep_ml.rootutils** contains some helpful functions to predict data from root files
+and add predictions into them. This functions needs ROOT, rootpy, root_numpy installation.
+"""
+
 from __future__ import print_function, division, absolute_import
 
 import numpy
@@ -53,6 +58,7 @@ def compute_indices_of_intersection(ids_sorted, searched_ids):
 
     :param ids_sorted: sorted full ids vector
     :param searched_ids: searched ids (for them positions in the ids_sorted ara considered)
+
     :return: positions
     """
     positions = numpy.searchsorted(ids_sorted, searched_ids)
@@ -82,9 +88,8 @@ def predict_rootfile_by_estimator(filename, treename, filelength, estimator,
     :param str id_column_name: id column name
     :param str id_column_dtype: dtype of id column
     :param bool id_column_exist: exist or not id column. If not then it will be added.
-    :param estimator_column_name:
-    :param estimator_column_dtype:
-    :return:
+    :param str estimator_column_name: column name for estimator predictions
+    :param str estimator_column_dtype: dtype of predictions
     """
     import root_numpy
 
