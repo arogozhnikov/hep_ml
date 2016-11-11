@@ -1,6 +1,50 @@
 """
 **hep_ml.rootutils** contains some helpful functions to predict data from root files
 and add predictions into them. This functions needs ROOT, rootpy, root_numpy installation.
+
+Examples
+________
+
+One want to predict root file by obtained estimator (classifier, regressor or reweighter).
+This can be done using the following code:
+
+The classifier was trained
+
+>>> from sklearn.ensemble import GradientBoostingClassifier
+>>> classifier = GradientBoostingClassifier()
+>>> classifier.fit(training_data, training_labels)
+
+Now we want to predict test samples (there are 10000 samples in file) and add predictions to the file
+
+>>> n_samples = 10000
+>>> predict_rootfile_by_estimator(filename="samples.root", treename="tree", filelength=n_samples, estimator=classifier,
+>>>                               branches=training_data.columns, training_selection=None,
+>>>                               chunk=100, id_column_name='ID_VAR', id_column_dtype='i8', id_column_exist=False,
+>>>                               estimator_column_name='BDT', estimator_column_dtype='f8')
+
+As a result in the file there will be two additional columns: ID_VAR - ids and BDT - classifier's predictions.
+
+More advanced case: we used selection from file to obtain training samples and our model should predict separately training samples and other samples.
+This is necessary for estimator whose predictions depend on samples, for example, in case of folding training.
+The goal is to predict initial file in a correct way:
+
+>>> import root_numpy
+>>> training_selection = 'pt > 1000'
+>>> features = ['pt', 'time', 'mass']
+>>> training_data = root_numpy.root2array("samples.root", treename="tree", branches=features, selection=training_selection)
+>>> training_labels = root_numpy.root2array("samples.root", treename="tree", branches=['labels'], selection=training_selection)['labels']
+
+>>> classifier = GradientBoostingClassifier()
+>>> classifier.fit(training_data, training_labels)
+
+>>> n_samples = 10000 # all number of samples in the file
+>>> predict_rootfile_by_estimator(filename="samples.root", treename="tree", filelength=n_samples, estimator=classifier,
+>>>                               branches=training_data.columns, training_selection=training_selection,
+>>>                               chunk=100, id_column_name='ID_VAR', id_column_dtype='i8', id_column_exist=False,
+>>>                               estimator_column_name='BDT', estimator_column_dtype='f8')
+
+In this case training sample and other samples will be predict separately and predictions for the whole file will be added.
+
 """
 
 from __future__ import print_function, division, absolute_import
