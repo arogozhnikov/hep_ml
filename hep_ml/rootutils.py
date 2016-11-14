@@ -86,12 +86,12 @@ def predict_by_estimator(data, estimator):
     :return: predictions
     """
     prediction = None
-    if isinstance(estimator, ClassifierMixin):
+    if isinstance(estimator, ReweighterMixin):
+        prediction = estimator.predict_weights(data)
+    elif isinstance(estimator, ClassifierMixin):
         prediction = estimator.predict_proba(data)[:, 1]
     elif isinstance(estimator, RegressorMixin):
         prediction = estimator.predict(data)
-    elif isinstance(estimator, ReweighterMixin):
-        prediction = estimator.predict_weights(data)
     assert prediction is not None, 'estimator cannot predict samples'
     return prediction
 
