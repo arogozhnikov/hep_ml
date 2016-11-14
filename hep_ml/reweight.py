@@ -17,7 +17,7 @@ Algorithms are implemented as estimators, fitting and reweighting stages are spl
 Fitted reweighter can be applied many times to different data, pickled and so on.
 
 
-Folding over reweighter is also availabel. This provides an easy way to run k-Folding cross-validation.
+Folding over reweighter is also available. This provides an easy way to run k-Folding cross-validation.
 Also it is a nice way to combine weights predictions of trained reweighters.
 
 Examples
@@ -49,6 +49,8 @@ If the same data used in the training process are predicted by folding reweighte
 weights predictions will be unbiased: each reweighter predicts only those part of data which is not used during its training
 
 >>> MC_weights = reweighter.predict_weights(MC_data)
+
+You can use **hep_ml.rootutils** to add weights prediction to the root file in a correct way also for folding scheme.
 """
 from __future__ import division, print_function, absolute_import
 

@@ -60,7 +60,7 @@ def add_column_to_rootfile(column, filename, treename, dtype, column_name):
     Add column to the existence root file.
     **This function works only if ROOT, rootpy, root_numpy are installed.**
 
-    :param array column: column values
+    :param ndarray column: column values
     :param str filename: root file name
     :param str treename: tree name
     :param str dtype: type
