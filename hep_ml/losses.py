@@ -97,13 +97,9 @@ class AbstractLossFunction(BaseEstimator):
     """
 
     def fit(self, X, y, sample_weight):
-        """ This method is optional, it is called before all the others."""
+        """ This method is optional, it is called before all the others.
+        Heavy preprocessing should be done here."""
         return self
-
-    def negative_gradient(self, y_pred):
-        """The y_pred should contain all the events passed to `fit` method,
-        moreover, the order should be the same"""
-        raise NotImplementedError()
 
     def __call__(self, y_pred):
         """Compute loss function
@@ -135,6 +131,7 @@ class AbstractLossFunction(BaseEstimator):
         """
         Compute optimal global step. This method is typically used to make optimal step
         before fitting trees to reduce variance.
+
         :param y_pred: initial predictions, numpy.array of shape [n_samples]
         :return: float
         """
@@ -323,6 +320,7 @@ class MAELossFunction(AbstractLossFunction):
     def fit(self, X, y, sample_weight):
         self.y = y
         self.sample_weight = check_sample_weight(y, sample_weight=sample_weight, normalize=True)
+        self._regularization = numpy.mean(self.sample_weight)
         return self
 
     def __call__(self, y_pred):
@@ -335,14 +333,12 @@ class MAELossFunction(AbstractLossFunction):
         return numpy.sign(self.y - y_pred), self.sample_weight
 
     def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred):
-        # TODO use weighted median
-        new_leaf_values = numpy.zeros(len(leaf_values), dtype='float')
-        target = (self.y - y_pred)
-        for terminal_region in range(len(leaf_values)):
-            values = target[terminal_regions == terminal_region]
-            values = numpy.insert(values, [0], [0])
-            new_leaf_values[terminal_region] = numpy.median(values)
-        return new_leaf_values
+        # computing weighted median is slow in python
+        # and cannot be done in numpy without sorting
+        nominators = numpy.bincount(terminal_regions, weights=self.negative_gradient(y_pred=y_pred),
+                                    minlength=len(leaf_values))
+        denominators = numpy.bincount(terminal_regions, weights=self.sample_weight, minlength=len(leaf_values))
+        return 0.5 * nominators / (denominators + self._regularization)
 
     def compute_optimal_step(self, y_pred):
         return weighted_quantile(self.y - y_pred, quantiles=[0.5], sample_weight=self.sample_weight)[0]
@@ -521,7 +517,6 @@ class AbstractMatrixLossFunction(HessianLossFunction):
     def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred):
         exponents = numpy.exp(- self.A.dot(self.y_signed * y_pred))
         # current approach uses Newton-Raphson step
-        # TODO compare with iterative suboptimal choice of value, based on exp(a x) ~ a exp(x)
         regions_matrix = sparse.csc_matrix((self.y_signed, [numpy.arange(len(self.y_signed)), terminal_regions]),
                                            shape=[len(self.y_signed), len(leaf_values)])
         # Z is matrix of shape [n_exponents, n_terminal_regions]
@@ -599,13 +594,14 @@ class KnnAdaLossFunction(AbstractMatrixLossFunction):
 # Mathematically at each stage we
 # 0. recompute weights
 # 1. normalize global ratio between distributions (negatives are in opposite distribution)
-# 2. chi2 - changing only sign, weights are the same
-# 3. optimal value: simply log (negatives are in the same distribution with sign -)
+# 2. optimize chi2- changing only sign, weights are the same
+# 3. computing optimal values for leaves: simply log (negatives are in the same distribution with sign -)
 
 class ReweightLossFunction(AbstractLossFunction):
     def __init__(self, regularization=5.):
         """
-        Loss function used to reweight destributions. Works inside :class:`hep_ml.reweight.GBReweighter`
+        Loss function used to reweight distributions. Works inside :class:`hep_ml.reweight.GBReweighter`
+        See [Rew]_ for details.
 
         Conventions: :math:`y=0` - target distribution, :math:`y=1` - original distribution.
 
@@ -616,6 +612,9 @@ class ReweightLossFunction(AbstractLossFunction):
           (so predictions for target distribution is ignored)
 
         :param float regularization: roughly, it's number of events added in each leaf to prevent overfitting.
+
+        .. [Rew] http://arogozhnikov.github.io/2015/10/09/gradient-boosted-reweighter.html
+
         """
         self.regularization = regularization
 
@@ -723,7 +722,7 @@ class AbstractFlatnessLossFunction(AbstractLossFunction):
 
     def __call__(self, pred):
         # the actual value does not play any role in boosting
-        # optimizing here
+        # computations are very costly
         return 0
 
     def _compute_fl_derivatives(self, y_pred):

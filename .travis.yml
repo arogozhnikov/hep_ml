@@ -1,29 +1,33 @@
-language: python
-sudo: false
-addons:
-  apt:
-    packages:
-    - libatlas-dev
-    - libatlas-base-dev
-    - liblapack-dev
-    - gfortran
-python:
-  - "2.7"
-  - "3.4"
+language: generic
+
+matrix:
+    include:
+        - os: linux
+          env: TRAVIS_PYTHON_VERSION=2.7
+        - os: linux
+          env: TRAVIS_PYTHON_VERSION=3.5
+        - os: osx
+          env: TRAVIS_PYTHON_VERSION=2.7
+        - os: osx
+          env: TRAVIS_PYTHON_VERSION=3.5
+
 before_install:
-  - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+      wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh;
+    else
+      wget https://repo.continuum.io/miniconda/Miniconda-latest-MacOSX-x86_64.sh -O miniconda.sh;
+    fi
   - chmod +x miniconda.sh
   - ./miniconda.sh -b -p $HOME/miniconda
   - export PATH=$HOME/miniconda/bin:$PATH
   - conda update --yes conda
   - travis_retry conda install --yes python=$TRAVIS_PYTHON_VERSION
-  - travis_retry conda install --yes pip numpy scipy six pandas
-  - travis_retry conda install --yes theano scikit-learn nose
+  - travis_retry conda install --yes nomkl pip numpy scipy six pandas
+  - travis_retry conda install --yes scikit-learn nose
+  - travis_retry pip install theano -q
 install:
   - travis_retry pip install . --no-dependencies
 script: nosetests tests
 cache:
-  - apt
   - directories:
     - $HOME/.cache/pip
-    - $HOME/.theano

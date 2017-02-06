@@ -1,6 +1,7 @@
 from __future__ import division, print_function, absolute_import
 import numpy
 from hep_ml.preprocessing import IronTransformer, BinTransformer
+from hep_ml.commonutils import generate_sample
 
 __author__ = 'Alex Rogozhnikov'
 
@@ -83,4 +84,20 @@ def test_iron_transformer(n_features=10, n_samples=5000):
                     assert len(feature_values) <= max_points
 
 
+def test_bin_transformer_limits(n_features=10, n_bins=123):
+    X, y = generate_sample(n_samples=1999, n_features=n_features)
+    X = BinTransformer(max_bins=n_bins).fit_transform(X)
+    assert numpy.allclose(X.max(axis=0), n_bins - 1)
 
+    X_orig, y = generate_sample(n_samples=20, n_features=n_features)
+    X = BinTransformer(max_bins=n_bins).fit_transform(X_orig)
+    assert numpy.allclose(X.min(axis=0), 0)
+
+
+def test_bin_transformer_extend_to(n_features=10, n_bins=123):
+    extended_length = 19
+    X, y = generate_sample(n_samples=20, n_features=n_features)
+    X1 = BinTransformer(max_bins=n_bins).fit(X).transform(X)
+    X2 = BinTransformer(max_bins=n_bins).fit(X).transform(X, extend_to=extended_length)
+    assert len(X2) % extended_length == 0, 'wrong shape!'
+    assert numpy.allclose(X2[:len(X1)], X1), 'extending does not work as expected!'
