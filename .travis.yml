@@ -1,30 +1,19 @@
-language: generic
+language: python
 
 matrix:
     include:
         - os: linux
-          env: TRAVIS_PYTHON_VERSION=2.7
+          python: '2.7'
         - os: linux
-          env: TRAVIS_PYTHON_VERSION=3.5
+          python: '3.4'
         - os: osx
-          env: TRAVIS_PYTHON_VERSION=2.7
+          python: '2.7'
         - os: osx
-          env: TRAVIS_PYTHON_VERSION=3.5
+          python: '3.4'
 
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-      wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh;
-    else
-      wget https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh -O miniconda.sh;
-    fi
-  - chmod +x miniconda.sh
-  - ./miniconda.sh -b -p $HOME/miniconda
-  - export PATH=$HOME/miniconda/bin:$PATH
-  - conda update --yes conda
-  - pip uninstall enum34 --yes
-  - travis_retry conda install --yes python=$TRAVIS_PYTHON_VERSION
-  - travis_retry conda install --yes nomkl pip numpy scipy six pandas
-  - travis_retry conda install --yes scikit-learn nose
+  - travis_retry pip install numpy scipy six pandas -q
+  - travis_retry pip install scikit-learn nose -q
   - travis_retry pip install theano -q
 install:
   - travis_retry pip install . --no-dependencies
