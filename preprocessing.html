@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Preprocessing data &mdash; hep_ml 0.4.0 documentation</title>
+  <title>Preprocessing data &mdash; hep_ml 0.5.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="hep_ml 0.4.0 documentation" href="index.html"/>
+    <link rel="top" title="hep_ml 0.5.0 documentation" href="index.html"/>
         <link rel="next" title="Reweighting algorithms" href="reweight.html"/>
         <link rel="prev" title="Neural networks" href="nnet.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.4.0
+                0.5.0
               </div>
             
           
@@ -234,15 +234,20 @@ to small integers.</p>
 
 <dl class="method">
 <dt id="hep_ml.preprocessing.BinTransformer.transform">
-<code class="descname">transform</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/preprocessing.html#BinTransformer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.preprocessing.BinTransformer.transform" title="Permalink to this definition">¶</a></dt>
+<code class="descname">transform</code><span class="sig-paren">(</span><em>X</em>, <em>extend_to=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/preprocessing.html#BinTransformer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.preprocessing.BinTransformer.transform" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> – pandas.DataFrame or numpy.array with data</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> – pandas.DataFrame or numpy.array with data</li>
+<li><strong>extend_to</strong> (<em>int</em>) – extends number of samples to be divisible by extend_to</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">pandas.DataFrame with transformed features (names of columns are preserved),
-dtype is ‘int8’ for space economy</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">numpy.array with transformed features (names of columns are not preserved),
+dtype is ‘int8’ for space efficiency.</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -252,10 +257,10 @@ dtype is ‘int8’ for space economy</td>
 
 <dl class="class">
 <dt id="hep_ml.preprocessing.IronTransformer">
-<em class="property">class </em><code class="descclassname">hep_ml.preprocessing.</code><code class="descname">IronTransformer</code><span class="sig-paren">(</span><em>max_points=10000</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/preprocessing.html#IronTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.preprocessing.IronTransformer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">hep_ml.preprocessing.</code><code class="descname">IronTransformer</code><span class="sig-paren">(</span><em>max_points=10000</em>, <em>symmetrize=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/preprocessing.html#IronTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.preprocessing.IronTransformer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.BaseEstimator</span></code>, <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.TransformerMixin</span></code></p>
 <p>IronTransformer fits one-dimensional transformation for each feature.</p>
-<p>After applying this transformations distribution of each feature turns into uniform in [0, 1].
+<p>After applying this transformations distribution of each feature turns into uniform.
 This is very handy to work with features with different scale and complex distributions.</p>
 <p>The name of transformer comes from <a class="reference external" href="https://en.wikipedia.org/wiki/Clothes_iron">https://en.wikipedia.org/wiki/Clothes_iron</a>,
 which makes anything flat, being applied with enough pressure :)</p>
@@ -264,7 +269,11 @@ which makes anything flat, being applied with enough pressure :)</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>max_points</strong> (<em>int</em>) – leave so many points in monotonic transformation.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>symmetrize</strong> – if True, resulting distribution is uniform in [-1, 1], otherwise in [0, 1]</li>
+<li><strong>max_points</strong> (<em>int</em>) – leave so many points in monotonic transformation.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -333,7 +342,7 @@ which makes anything flat, being applied with enough pressure :)</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015, Yandex; Alex Rogozhnikov and contributors.
+        &copy; Copyright 2015-2017, Yandex; Alex Rogozhnikov and contributors.
 
     </p>
   </div>
@@ -355,7 +364,7 @@ which makes anything flat, being applied with enough pressure :)</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.4.0',
+            VERSION:'0.5.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Losses for Gradient Boosting &mdash; hep_ml 0.4.0 documentation</title>
+  <title>Losses for Gradient Boosting &mdash; hep_ml 0.5.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="hep_ml 0.4.0 documentation" href="index.html"/>
+    <link rel="top" title="hep_ml 0.5.0 documentation" href="index.html"/>
         <link rel="next" title="uBoost" href="uboost.html"/>
         <link rel="prev" title="Gradient boosting" href="gb.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.4.0
+                0.5.0
               </div>
             
           
@@ -217,28 +217,30 @@ Main differences compared to <cite>scikit-learn</cite> loss functions:</p>
 <dt id="hep_ml.losses.AbstractLossFunction.compute_optimal_step">
 <code class="descname">compute_optimal_step</code><span class="sig-paren">(</span><em>y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#AbstractLossFunction.compute_optimal_step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.AbstractLossFunction.compute_optimal_step" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute optimal global step. This method is typically used to make optimal step
-before fitting trees to reduce variance.
-:param y_pred: initial predictions, numpy.array of shape [n_samples]
-:return: float</p>
+before fitting trees to reduce variance.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>y_pred</strong> – initial predictions, numpy.array of shape [n_samples]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="hep_ml.losses.AbstractLossFunction.fit">
 <code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y</em>, <em>sample_weight</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#AbstractLossFunction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.AbstractLossFunction.fit" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method is optional, it is called before all the others.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="hep_ml.losses.AbstractLossFunction.negative_gradient">
-<code class="descname">negative_gradient</code><span class="sig-paren">(</span><em>y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#AbstractLossFunction.negative_gradient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.AbstractLossFunction.negative_gradient" title="Permalink to this definition">¶</a></dt>
-<dd><p>The y_pred should contain all the events passed to <cite>fit</cite> method,
-moreover, the order should be the same</p>
+<dd><p>This method is optional, it is called before all the others.
+Heavy preprocessing should be done here.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="hep_ml.losses.AbstractLossFunction.prepare_new_leaves_values">
 <code class="descname">prepare_new_leaves_values</code><span class="sig-paren">(</span><em>terminal_regions</em>, <em>leaf_values</em>, <em>y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#AbstractLossFunction.prepare_new_leaves_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.AbstractLossFunction.prepare_new_leaves_values" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method for pruning. Loss function can prepare better values for leaves</p>
+<dd><p>Loss function can prepare better values for leaves by overriding this function</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -623,7 +625,8 @@ to samples with same query.</li>
 <dt id="hep_ml.losses.ReweightLossFunction">
 <em class="property">class </em><code class="descclassname">hep_ml.losses.</code><code class="descname">ReweightLossFunction</code><span class="sig-paren">(</span><em>regularization=5.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#ReweightLossFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.ReweightLossFunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#hep_ml.losses.AbstractLossFunction" title="hep_ml.losses.AbstractLossFunction"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.losses.AbstractLossFunction</span></code></a></p>
-<p>Loss function used to reweight destributions. Works inside <a class="reference internal" href="reweight.html#hep_ml.reweight.GBReweighter" title="hep_ml.reweight.GBReweighter"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.reweight.GBReweighter</span></code></a></p>
+<p>Loss function used to reweight distributions. Works inside <a class="reference internal" href="reweight.html#hep_ml.reweight.GBReweighter" title="hep_ml.reweight.GBReweighter"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.reweight.GBReweighter</span></code></a>
+See <a class="reference internal" href="#rew" id="id6">[Rew]</a> for details.</p>
 <p>Conventions: <span class="math">\(y=0\)</span> - target distribution, <span class="math">\(y=1\)</span> - original distribution.</p>
 <p>Weights after look like:</p>
 <ul class="simple">
@@ -637,6 +640,12 @@ to samples with same query.</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>regularization</strong> (<em>float</em>) – roughly, it’s number of events added in each leaf to prevent overfitting.</td>
 </tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="rew" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[Rew]</a></td><td><a class="reference external" href="http://arogozhnikov.github.io/2015/10/09/gradient-boosted-reweighter.html">http://arogozhnikov.github.io/2015/10/09/gradient-boosted-reweighter.html</a></td></tr>
 </tbody>
 </table>
 <dl class="method">
@@ -686,7 +695,7 @@ to samples with same query.</li>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015, Yandex; Alex Rogozhnikov and contributors.
+        &copy; Copyright 2015-2017, Yandex; Alex Rogozhnikov and contributors.
 
     </p>
   </div>
@@ -708,7 +717,7 @@ to samples with same query.</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.4.0',
+            VERSION:'0.5.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

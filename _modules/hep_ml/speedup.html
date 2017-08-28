@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>hep_ml.speedup &mdash; hep_ml 0.4.0 documentation</title>
+  <title>hep_ml.speedup &mdash; hep_ml 0.5.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="hep_ml 0.4.0 documentation" href="../../index.html"/>
+    <link rel="top" title="hep_ml 0.5.0 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.4.0
+                0.5.0
               </div>
             
           
@@ -184,7 +184,7 @@
 <span class="sd">&gt;&gt;&gt; classifier.fit(X, y, sample_weight=sample_weight)</span>
 
 <span class="sd">Though training takes much time, all predictions are precomputed and saved to lookup table,</span>
-<span class="sd">so you are able to predict millions of events per second using single CPU.</span>
+<span class="sd">so you are able to predict millions of events per second using single CPU:</span>
 
 <span class="sd">&gt;&gt;&gt; classifier.predict_proba(testX)</span>
 
@@ -207,6 +207,7 @@
 <span class="sd">        To predict class for new observation, results of base_estimator are kept for all possible combinations of bins,</span>
 <span class="sd">        and saved together</span>
 
+<span class="sd">        :param base_estimator: classifier used to build predictions</span>
 <span class="sd">        :param n_bins:</span>
 
 <span class="sd">            * int: how many bins to use for each axis</span>
@@ -229,6 +230,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">max_cells</span> <span class="o">=</span> <span class="n">max_cells</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">keep_trained_estimator</span> <span class="o">=</span> <span class="n">keep_trained_estimator</span>
 
+<div class="viewcode-block" id="LookupClassifier.check_dimensions"><a class="viewcode-back" href="../../speedup.html#hep_ml.speedup.LookupClassifier.check_dimensions">[docs]</a>    <span class="k">def</span> <span class="nf">check_dimensions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bin_edges</span><span class="p">):</span>
+        <span class="n">cumulative_size</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cumprod</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">bin_edge</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">bin_edge</span> <span class="ow">in</span> <span class="n">bin_edges</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span>
+        <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">cumulative_size</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_cells</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;the total size of lookup table exceeds </span><span class="si">{}</span><span class="s1">, &#39;</span>
+                             <span class="s1">&#39;reduce n_bins or number of features in use&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_cells</span><span class="p">))</span></div>
+
 <div class="viewcode-block" id="LookupClassifier.fit"><a class="viewcode-back" href="../../speedup.html#hep_ml.speedup.LookupClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Train a classifier and collect predictions for all possible combinations.</span>
 
@@ -243,10 +250,9 @@
         <span class="n">normed_weights</span> <span class="o">=</span> <span class="n">check_sample_weight</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">normed_weights</span><span class="p">,</span> <span class="n">normalize_by_class</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">bin_edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_bin_edges</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">normed_weights</span><span class="o">=</span><span class="n">normed_weights</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_dimensions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bin_edges</span><span class="p">)</span>
+
         <span class="n">n_parameter_combinations</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">prod</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">bin_edge</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">bin_edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bin_edges</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span>
-        <span class="k">assert</span> <span class="n">n_parameter_combinations</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_cells</span><span class="p">,</span> \
-            <span class="s1">&#39;the total size of lookup table exceeds </span><span class="si">{}</span><span class="s1">, &#39;</span> \
-            <span class="s1">&#39;reduce n_bins or number of features in use&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_cells</span><span class="p">)</span>
 
         <span class="n">transformed_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
         <span class="n">trained_estimator</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="p">)</span>
@@ -316,7 +322,7 @@
         <span class="sd">&quot;&quot;&quot;Convert data to bin indices.</span>
 
 <span class="sd">        :param X: pandas.DataFrame or numpy.array with data</span>
-<span class="sd">        :return: pandas.DataFrame, where each column is replaced with index of bin</span>
+<span class="sd">        :return: numpy.array, where each column is replaced with index of bin</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">X</span> <span class="o">=</span> <span class="n">to_pandas_dataframe</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
         <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bin_edges</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="s1">&#39;passed dataset with wrong columns&#39;</span>
@@ -325,7 +331,7 @@
             <span class="n">edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bin_edges</span><span class="p">[</span><span class="n">column</span><span class="p">]</span>
             <span class="n">result</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="n">column</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">result</span></div>
 
 <div class="viewcode-block" id="LookupClassifier.predict"><a class="viewcode-back" href="../../speedup.html#hep_ml.speedup.LookupClassifier.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Predict class for each event</span>
@@ -358,7 +364,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015, Yandex; Alex Rogozhnikov and contributors.
+        &copy; Copyright 2015-2017, Yandex; Alex Rogozhnikov and contributors.
 
     </p>
   </div>
@@ -380,7 +386,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.4.0',
+            VERSION:'0.5.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
