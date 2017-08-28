@@ -59,7 +59,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'hep_ml'
-copyright = u'2015, Yandex; Alex Rogozhnikov and contributors'
+copyright = u'2015-2017, Yandex; Alex Rogozhnikov and contributors'
 author = u'Alex Rogozhnikov and contributors'
 
 # The version info for the project you're documenting, acts as replacement for

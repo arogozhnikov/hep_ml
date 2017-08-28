@@ -7,18 +7,24 @@ matrix:
         - os: linux
           python: '3.4'
         - os: osx
-          python: '2.7'
+          language: generic
+          before_install:
+            - brew update
+            - brew install python2
+            - virtualenv env -p python2
+            - source env/bin/activate
         - os: osx
-          python: '3.4'
+          language: generic
+          before_install:
+            - brew update
+            - brew install python3
+            - virtualenv env -p python3
+            - source env/bin/activate
 
-before_install:
+install:
   - pip install pip --upgrade -q
   - travis_retry pip install numpy scipy six pandas -q
   - travis_retry pip install scikit-learn nose -q
   - travis_retry pip install theano -q
-install:
   - travis_retry pip install . --no-dependencies
 script: nosetests tests
-cache:
-  - directories:
-    - $HOME/.cache/pip
