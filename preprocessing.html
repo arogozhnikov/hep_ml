@@ -13,6 +13,8 @@
 
   
   
+  
+  
 
   
 
@@ -30,6 +32,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="hep_ml 0.4.0 documentation" href="index.html"/>
         <link rel="next" title="Reweighting algorithms" href="reweight.html"/>
         <link rel="prev" title="Neural networks" href="nnet.html"/> 
@@ -41,6 +46,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -81,14 +87,17 @@
           
             
             
-                <ul class="current">
+              
+            
+            
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="index.html">hep_ml documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gb.html">Gradient boosting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="losses.html">Losses for Gradient Boosting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="uboost.html">uBoost</a></li>
 <li class="toctree-l1"><a class="reference internal" href="metrics.html">Metric functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="nnet.html">Neural networks</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">Preprocessing data</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Preprocessing data</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
 </ul>
 </li>
@@ -108,8 +117,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">hep_ml</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">hep_ml</a>
+        
       </nav>
 
 
@@ -122,19 +133,36 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Docs</a> &raquo;</li>
-      
-    <li>Preprocessing data</li>
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Preprocessing data</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="_sources/preprocessing.txt" rel="nofollow"> View page source</a>
+            
+            <a href="_sources/preprocessing.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -150,21 +178,21 @@ Algorithms implemented here follow sklearn conventions for transformers and inhe
 <div class="section" id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <p>Transformers may be used as any other transformer, manually training and applying:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hep_ml.preprocessing</span> <span class="kn">import</span> <span class="n">IronTransformer</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hep_ml.preprocessing</span> <span class="k">import</span> <span class="n">IronTransformer</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">transformer</span> <span class="o">=</span> <span class="n">IronTransformer</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">trainX</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">new_trainX</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">trainX</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">new_testX</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">testX</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Apart from this, transformers may be plugged as part of sklearn.Pipeline:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hep_ml.nnet</span> <span class="kn">import</span> <span class="n">SimpleNeuralNetwork</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span><span class="s">&#39;pre&#39;</span><span class="p">,</span> <span class="n">IronTransformer</span><span class="p">(),</span>
-<span class="gp">&gt;&gt;&gt; </span>                <span class="s">&#39;nnet&#39;</span><span class="p">,</span> <span class="n">SimpleNeuralNetwork</span><span class="p">()])</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="k">import</span> <span class="n">Pipeline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hep_ml.nnet</span> <span class="k">import</span> <span class="n">SimpleNeuralNetwork</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span><span class="s1">&#39;pre&#39;</span><span class="p">,</span> <span class="n">IronTransformer</span><span class="p">(),</span>
+<span class="gp">&gt;&gt;&gt; </span>                <span class="s1">&#39;nnet&#39;</span><span class="p">,</span> <span class="n">SimpleNeuralNetwork</span><span class="p">()])</span>
 </pre></div>
 </div>
-<p>Also, neural networks support special argument &#8216;scaler&#8217;. You can pass any transformer there:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span> <span class="o">=</span> <span class="n">SimpleNeuralNetwork</span><span class="p">(</span><span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="n">scaler</span><span class="o">=</span><span class="n">IronTransformer</span><span class="p">())</span>
+<p>Also, neural networks support special argument ‘scaler’. You can pass any transformer there:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span> <span class="o">=</span> <span class="n">SimpleNeuralNetwork</span><span class="p">(</span><span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="n">scaler</span><span class="o">=</span><span class="n">IronTransformer</span><span class="p">())</span>
 </pre></div>
 </div>
 <dl class="class">
@@ -178,7 +206,7 @@ to small integers.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>max_bins</strong> (<em>int</em>) &#8211; maximal number of bins along each axis.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>max_bins</strong> (<em>int</em>) – maximal number of bins along each axis.</td>
 </tr>
 </tbody>
 </table>
@@ -191,9 +219,9 @@ to small integers.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>X</strong> &#8211; pandas.DataFrame or numpy.array with data</li>
-<li><strong>y</strong> &#8211; labels, ignored</li>
-<li><strong>sample_weight</strong> &#8211; weights, ignored</li>
+<li><strong>X</strong> – pandas.DataFrame or numpy.array with data</li>
+<li><strong>y</strong> – labels, ignored</li>
+<li><strong>sample_weight</strong> – weights, ignored</li>
 </ul>
 </td>
 </tr>
@@ -206,20 +234,15 @@ to small integers.</p>
 
 <dl class="method">
 <dt id="hep_ml.preprocessing.BinTransformer.transform">
-<code class="descname">transform</code><span class="sig-paren">(</span><em>X</em>, <em>extend_to=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/preprocessing.html#BinTransformer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.preprocessing.BinTransformer.transform" title="Permalink to this definition">¶</a></dt>
+<code class="descname">transform</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/preprocessing.html#BinTransformer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.preprocessing.BinTransformer.transform" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>X</strong> &#8211; pandas.DataFrame or numpy.array with data</li>
-<li><strong>extend_to</strong> (<em>int</em>) &#8211; extends number of samples to be divisible by extend_to</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> – pandas.DataFrame or numpy.array with data</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">numpy.array with transformed features (names of columns are not preserved),
-dtype is &#8216;int8&#8217; for space efficiency.</p>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">pandas.DataFrame with transformed features (names of columns are preserved),
+dtype is ‘int8’ for space economy</td>
 </tr>
 </tbody>
 </table>
@@ -229,7 +252,7 @@ dtype is &#8216;int8&#8217; for space efficiency.</p>
 
 <dl class="class">
 <dt id="hep_ml.preprocessing.IronTransformer">
-<em class="property">class </em><code class="descclassname">hep_ml.preprocessing.</code><code class="descname">IronTransformer</code><span class="sig-paren">(</span><em>max_points=10000</em>, <em>symmetrize=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/preprocessing.html#IronTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.preprocessing.IronTransformer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">hep_ml.preprocessing.</code><code class="descname">IronTransformer</code><span class="sig-paren">(</span><em>max_points=10000</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/preprocessing.html#IronTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.preprocessing.IronTransformer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.BaseEstimator</span></code>, <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.TransformerMixin</span></code></p>
 <p>IronTransformer fits one-dimensional transformation for each feature.</p>
 <p>After applying this transformations distribution of each feature turns into uniform in [0, 1].
@@ -241,11 +264,7 @@ which makes anything flat, being applied with enough pressure :)</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>symmetrize</strong> &#8211; if True, resulting distribution is in [-1, 1]</li>
-<li><strong>max_points</strong> (<em>int</em>) &#8211; leave so many points in monotonic transformation.</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>max_points</strong> (<em>int</em>) – leave so many points in monotonic transformation.</td>
 </tr>
 </tbody>
 </table>
@@ -258,9 +277,9 @@ which makes anything flat, being applied with enough pressure :)</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>X</strong> &#8211; pandas.DataFrame with data</li>
-<li><strong>y</strong> &#8211; ignored</li>
-<li><strong>sample_weight</strong> &#8211; ignored</li>
+<li><strong>X</strong> – pandas.DataFrame with data</li>
+<li><strong>y</strong> – ignored</li>
+<li><strong>sample_weight</strong> – ignored</li>
 </ul>
 </td>
 </tr>
@@ -279,7 +298,7 @@ which makes anything flat, being applied with enough pressure :)</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> &#8211; pandas.DataFrame with data</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> – pandas.DataFrame with data</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">pandas.DataFrame with transformed features</td>
 </tr>
@@ -294,15 +313,18 @@ which makes anything flat, being applied with enough pressure :)</p>
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="reweight.html" class="btn btn-neutral float-right" title="Reweighting algorithms" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="reweight.html" class="btn btn-neutral float-right" title="Reweighting algorithms" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="nnet.html" class="btn btn-neutral" title="Neural networks" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="nnet.html" class="btn btn-neutral" title="Neural networks" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -336,13 +358,14 @@ which makes anything flat, being applied with enough pressure :)</p>
             VERSION:'0.4.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

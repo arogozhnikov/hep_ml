@@ -13,6 +13,8 @@
 
   
   
+  
+  
 
   
 
@@ -30,6 +32,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="hep_ml 0.4.0 documentation" href="index.html"/>
         <link rel="next" title="uBoost" href="uboost.html"/>
         <link rel="prev" title="Gradient boosting" href="gb.html"/> 
@@ -41,6 +46,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -81,10 +87,13 @@
           
             
             
-                <ul class="current">
+              
+            
+            
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="index.html">hep_ml documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gb.html">Gradient boosting</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">Losses for Gradient Boosting</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Losses for Gradient Boosting</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
 </ul>
 </li>
@@ -108,8 +117,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">hep_ml</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">hep_ml</a>
+        
       </nav>
 
 
@@ -122,19 +133,36 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Docs</a> &raquo;</li>
-      
-    <li>Losses for Gradient Boosting</li>
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Losses for Gradient Boosting</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="_sources/losses.txt" rel="nofollow"> View page source</a>
+            
+            <a href="_sources/losses.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -153,23 +181,23 @@ which is done automatically inside gradient boosting.</p>
 <div class="section" id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <p>Training gradient boosting, optimizing LogLoss and using all features</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hep_ml.gradientboosting</span> <span class="kn">import</span> <span class="n">UGradientBoostingClassifier</span><span class="p">,</span> <span class="n">LogLossFunction</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hep_ml.gradientboosting</span> <span class="k">import</span> <span class="n">UGradientBoostingClassifier</span><span class="p">,</span> <span class="n">LogLossFunction</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span> <span class="o">=</span> <span class="n">UGradientBoostingClassifier</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">LogLossFunction</span><span class="p">(),</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Using composite loss function and subsampling:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">loss</span> <span class="o">=</span> <span class="n">CompositeLossFunction</span><span class="p">()</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">loss</span> <span class="o">=</span> <span class="n">CompositeLossFunction</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span> <span class="o">=</span> <span class="n">UGradientBoostingClassifier</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">,</span> <span class="n">subsample</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>To get uniform predictions in mass in background (note that mass should not present in features):</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">loss</span> <span class="o">=</span> <span class="n">BinFlatnessLossFunction</span><span class="p">(</span><span class="n">uniform_features</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;mass&#39;</span><span class="p">],</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">train_features</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;pt&#39;</span><span class="p">,</span> <span class="s">&#39;flight_time&#39;</span><span class="p">])</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">loss</span> <span class="o">=</span> <span class="n">BinFlatnessLossFunction</span><span class="p">(</span><span class="n">uniform_features</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mass&#39;</span><span class="p">],</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">train_features</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pt&#39;</span><span class="p">,</span> <span class="s1">&#39;flight_time&#39;</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span> <span class="o">=</span> <span class="n">UGradientBoostingClassifier</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>To get uniform predictions in both signal and background:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">loss</span> <span class="o">=</span> <span class="n">BinFlatnessLossFunction</span><span class="p">(</span><span class="n">uniform_features</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;mass&#39;</span><span class="p">],</span> <span class="n">uniform_label</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">train_features</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;pt&#39;</span><span class="p">,</span> <span class="s">&#39;flight_time&#39;</span><span class="p">])</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">loss</span> <span class="o">=</span> <span class="n">BinFlatnessLossFunction</span><span class="p">(</span><span class="n">uniform_features</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mass&#39;</span><span class="p">],</span> <span class="n">uniform_label</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">train_features</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pt&#39;</span><span class="p">,</span> <span class="s1">&#39;flight_time&#39;</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span> <span class="o">=</span> <span class="n">UGradientBoostingClassifier</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -210,15 +238,15 @@ moreover, the order should be the same</p>
 <dl class="method">
 <dt id="hep_ml.losses.AbstractLossFunction.prepare_new_leaves_values">
 <code class="descname">prepare_new_leaves_values</code><span class="sig-paren">(</span><em>terminal_regions</em>, <em>leaf_values</em>, <em>y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#AbstractLossFunction.prepare_new_leaves_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.AbstractLossFunction.prepare_new_leaves_values" title="Permalink to this definition">¶</a></dt>
-<dd><p>Loss function can prepare better values for leaves by overriding this function</p>
+<dd><p>Method for pruning. Loss function can prepare better values for leaves</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>terminal_regions</strong> &#8211; indices of terminal regions of each event.</li>
-<li><strong>leaf_values</strong> &#8211; numpy.array, current mapping of leaf indices to prediction values.</li>
-<li><strong>y_pred</strong> &#8211; predictions before adding new tree.</li>
+<li><strong>terminal_regions</strong> – indices of terminal regions of each event.</li>
+<li><strong>leaf_values</strong> – numpy.array, current mapping of leaf indices to prediction values.</li>
+<li><strong>y_pred</strong> – predictions before adding new tree.</li>
 </ul>
 </td>
 </tr>
@@ -237,7 +265,7 @@ moreover, the order should be the same</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>y_pred</strong> &#8211; contains predictions for all the events passed to <cite>fit</cite> method,
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>y_pred</strong> – contains predictions for all the events passed to <cite>fit</cite> method,
 moreover, the order should be the same</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">tuple (tree_target, tree_weight) with target and weight to be used in decision tree</td>
@@ -258,7 +286,7 @@ moreover, the order should be the same</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>regularization</strong> &#8211; float, penalty for leaves with few events,
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>regularization</strong> – float, penalty for leaves with few events,
 corresponds roughly to the number of added events of both classes to each leaf.</td>
 </tr>
 </tbody>
@@ -333,7 +361,7 @@ aka log-likelihood loss.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>regularization</strong> &#8211; float, penalty for leaves with few events,
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>regularization</strong> – float, penalty for leaves with few events,
 corresponds roughly to the number of added events of both classes to each leaf.</td>
 </tr>
 </tbody>
@@ -369,7 +397,7 @@ corresponds roughly to the number of added events of both classes to each leaf.<
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>regularization</strong> &#8211; float, penalty for leaves with few events,
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>regularization</strong> – float, penalty for leaves with few events,
 corresponds roughly to the number of added events of both classes to each leaf.</td>
 </tr>
 </tbody>
@@ -406,7 +434,7 @@ corresponds roughly to the number of added events of both classes to each leaf.<
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>regularization</strong> &#8211; float, penalty for leaves with few events,
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>regularization</strong> – float, penalty for leaves with few events,
 corresponds roughly to the number of added events of both classes to each leaf.</td>
 </tr>
 </tbody>
@@ -441,12 +469,12 @@ See <a class="reference internal" href="#id3" id="id1">[FL]</a> for details.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>uniform_features</strong> (<em>list[str]</em>) &#8211; names of features, along which we want to obtain uniformity of predictions</li>
-<li><strong>uniform_label</strong> (<em>int|list[int]</em>) &#8211; the label(s) of classes for which uniformity is desired</li>
-<li><strong>n_bins</strong> (<em>int</em>) &#8211; number of bins along each variable</li>
-<li><strong>power</strong> (<em>float</em>) &#8211; the loss contains the difference <span class="math">\(| F - F_bin |^p\)</span>, where p is power</li>
-<li><strong>fl_coefficient</strong> (<em>float</em>) &#8211; multiplier for flatness_loss. Controls the tradeoff of quality vs uniformity.</li>
-<li><strong>allow_wrong_signs</strong> (<em>bool</em>) &#8211; defines whether gradient may different sign from the &#8220;sign of class&#8221;
+<li><strong>uniform_features</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – names of features, along which we want to obtain uniformity of predictions</li>
+<li><strong>uniform_label</strong> (<em>int|list</em><em>[</em><em>int</em><em>]</em>) – the label(s) of classes for which uniformity is desired</li>
+<li><strong>n_bins</strong> (<em>int</em>) – number of bins along each variable</li>
+<li><strong>power</strong> (<em>float</em>) – the loss contains the difference <span class="math">\(| F - F_bin |^p\)</span>, where p is power</li>
+<li><strong>fl_coefficient</strong> (<em>float</em>) – multiplier for flatness_loss. Controls the tradeoff of quality vs uniformity.</li>
+<li><strong>allow_wrong_signs</strong> (<em>bool</em>) – defines whether gradient may different sign from the “sign of class”
 (i.e. may have negative gradient on signal). If False, values will be clipped to zero.</li>
 </ul>
 </td>
@@ -475,14 +503,14 @@ See <a class="reference internal" href="#id3" id="id2">[FL]</a> for details.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>uniform_features</strong> (<em>list[str]</em>) &#8211; names of features, along which we want to obtain uniformity of predictions</li>
-<li><strong>uniform_label</strong> (<em>int|list[int]</em>) &#8211; the label(s) of classes for which uniformity is desired</li>
-<li><strong>n_neighbours</strong> (<em>int</em>) &#8211; number of neighbors used in flatness loss</li>
-<li><strong>power</strong> (<em>float</em>) &#8211; the loss contains the difference <span class="math">\(| F - F_bin |^p\)</span>, where p is power</li>
-<li><strong>fl_coefficient</strong> (<em>float</em>) &#8211; multiplier for flatness_loss. Controls the tradeoff of quality vs uniformity.</li>
-<li><strong>allow_wrong_signs</strong> (<em>bool</em>) &#8211; defines whether gradient may different sign from the &#8220;sign of class&#8221;
+<li><strong>uniform_features</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – names of features, along which we want to obtain uniformity of predictions</li>
+<li><strong>uniform_label</strong> (<em>int|list</em><em>[</em><em>int</em><em>]</em>) – the label(s) of classes for which uniformity is desired</li>
+<li><strong>n_neighbours</strong> (<em>int</em>) – number of neighbors used in flatness loss</li>
+<li><strong>power</strong> (<em>float</em>) – the loss contains the difference <span class="math">\(| F - F_bin |^p\)</span>, where p is power</li>
+<li><strong>fl_coefficient</strong> (<em>float</em>) – multiplier for flatness_loss. Controls the tradeoff of quality vs uniformity.</li>
+<li><strong>allow_wrong_signs</strong> (<em>bool</em>) – defines whether gradient may different sign from the “sign of class”
 (i.e. may have negative gradient on signal). If False, values will be clipped to zero.</li>
-<li><strong>max_groups</strong> (<em>int</em>) &#8211; to limit memory consumption when training sample is large,
+<li><strong>max_groups</strong> (<em>int</em>) – to limit memory consumption when training sample is large,
 we randomly pick this number of points with their members.</li>
 </ul>
 </td>
@@ -512,9 +540,9 @@ See <a class="reference internal" href="#bu" id="id4">[BU]</a> for details.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>uniform_features</strong> (<em>list[str]</em>) &#8211; the features, along which uniformity is desired</li>
-<li><strong>uniform_label</strong> (<em>int|list[int]</em>) &#8211; the label (labels) of &#8216;uniform classes&#8217;</li>
-<li><strong>knn</strong> (<em>int</em>) &#8211; the number of nonzero elements in the row, corresponding to event in &#8216;uniform class&#8217;</li>
+<li><strong>uniform_features</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – the features, along which uniformity is desired</li>
+<li><strong>uniform_label</strong> (<em>int|list</em><em>[</em><em>int</em><em>]</em>) – the label (labels) of ‘uniform classes’</li>
+<li><strong>knn</strong> (<em>int</em>) – the number of nonzero elements in the row, corresponding to event in ‘uniform class’</li>
 </ul>
 </td>
 </tr>
@@ -551,10 +579,10 @@ which is very effective, when labels are from some very limited set (usually it 
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>request_column</strong> (<em>str</em>) &#8211; name of column with search query ids. The higher attention is payed
+<li><strong>request_column</strong> (<em>str</em>) – name of column with search query ids. The higher attention is payed
 to samples with same query.</li>
-<li><strong>penalty_power</strong> (<em>float</em>) &#8211; describes dependence of penalty on the difference between target labels.</li>
-<li><strong>update_iterations</strong> (<em>int</em>) &#8211; number of minimization steps to provide optimal values in leaves.</li>
+<li><strong>penalty_power</strong> (<em>float</em>) – describes dependence of penalty on the difference between target labels.</li>
+<li><strong>update_iterations</strong> (<em>int</em>) – number of minimization steps to provide optimal values in leaves.</li>
 </ul>
 </td>
 </tr>
@@ -595,8 +623,7 @@ to samples with same query.</li>
 <dt id="hep_ml.losses.ReweightLossFunction">
 <em class="property">class </em><code class="descclassname">hep_ml.losses.</code><code class="descname">ReweightLossFunction</code><span class="sig-paren">(</span><em>regularization=5.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#ReweightLossFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.ReweightLossFunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#hep_ml.losses.AbstractLossFunction" title="hep_ml.losses.AbstractLossFunction"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.losses.AbstractLossFunction</span></code></a></p>
-<p>Loss function used to reweight distributions. Works inside <a class="reference internal" href="reweight.html#hep_ml.reweight.GBReweighter" title="hep_ml.reweight.GBReweighter"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.reweight.GBReweighter</span></code></a>
-See <a class="reference internal" href="#rew" id="id6">[Rew]</a> for details.</p>
+<p>Loss function used to reweight destributions. Works inside <a class="reference internal" href="reweight.html#hep_ml.reweight.GBReweighter" title="hep_ml.reweight.GBReweighter"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.reweight.GBReweighter</span></code></a></p>
 <p>Conventions: <span class="math">\(y=0\)</span> - target distribution, <span class="math">\(y=1\)</span> - original distribution.</p>
 <p>Weights after look like:</p>
 <ul class="simple">
@@ -608,14 +635,8 @@ See <a class="reference internal" href="#rew" id="id6">[Rew]</a> for details.</p
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>regularization</strong> (<em>float</em>) &#8211; roughly, it&#8217;s number of events added in each leaf to prevent overfitting.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>regularization</strong> (<em>float</em>) – roughly, it’s number of events added in each leaf to prevent overfitting.</td>
 </tr>
-</tbody>
-</table>
-<table class="docutils citation" frame="void" id="rew" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id6">[Rew]</a></td><td><a class="reference external" href="http://arogozhnikov.github.io/2015/10/09/gradient-boosted-reweighter.html">http://arogozhnikov.github.io/2015/10/09/gradient-boosted-reweighter.html</a></td></tr>
 </tbody>
 </table>
 <dl class="method">
@@ -645,15 +666,18 @@ See <a class="reference internal" href="#rew" id="id6">[Rew]</a> for details.</p
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="uboost.html" class="btn btn-neutral float-right" title="uBoost" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="uboost.html" class="btn btn-neutral float-right" title="uBoost" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="gb.html" class="btn btn-neutral" title="Gradient boosting" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="gb.html" class="btn btn-neutral" title="Gradient boosting" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -687,13 +711,14 @@ See <a class="reference internal" href="#rew" id="id6">[Rew]</a> for details.</p
             VERSION:'0.4.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

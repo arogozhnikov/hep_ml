@@ -13,6 +13,8 @@
 
   
   
+  
+  
 
   
 
@@ -30,6 +32,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="hep_ml 0.4.0 documentation" href="index.html"/>
         <link rel="next" title="Losses for Gradient Boosting" href="losses.html"/>
         <link rel="prev" title="hep_ml documentation" href="index.html"/> 
@@ -41,6 +46,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -81,9 +87,12 @@
           
             
             
-                <ul class="current">
+              
+            
+            
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="index.html">hep_ml documentation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">Gradient boosting</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Gradient boosting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="losses.html">Losses for Gradient Boosting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="uboost.html">uBoost</a></li>
 <li class="toctree-l1"><a class="reference internal" href="metrics.html">Metric functions</a></li>
@@ -105,8 +114,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">hep_ml</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">hep_ml</a>
+        
       </nav>
 
 
@@ -119,19 +130,36 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Docs</a> &raquo;</li>
-      
-    <li>Gradient boosting</li>
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Gradient boosting</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="_sources/gb.txt" rel="nofollow"> View page source</a>
+            
+            <a href="_sources/gb.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -150,7 +178,7 @@ See  <a class="reference internal" href="losses.html#module-hep_ml.losses" title
 <table class="docutils citation" frame="void" id="gb" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[GB]</a></td><td>J.H. Friedman &#8216;Greedy function approximation: A gradient boosting machine.&#8217;, 2001.</td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id1">[GB]</a></td><td>J.H. Friedman ‘Greedy function approximation: A gradient boosting machine.’, 2001.</td></tr>
 </tbody>
 </table>
 <dl class="class">
@@ -166,13 +194,13 @@ of regression tree, which is used as base estimator.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>loss</strong> (<a class="reference internal" href="losses.html#hep_ml.losses.AbstractLossFunction" title="hep_ml.losses.AbstractLossFunction"><em>AbstractLossFunction</em></a>) &#8211; any descendant of AbstractLossFunction, those are very various.
+<li><strong>loss</strong> (<a class="reference internal" href="losses.html#hep_ml.losses.AbstractLossFunction" title="hep_ml.losses.AbstractLossFunction"><em>AbstractLossFunction</em></a>) – any descendant of AbstractLossFunction, those are very various.
 See <a class="reference internal" href="losses.html#module-hep_ml.losses" title="hep_ml.losses"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.losses</span></code></a> for available losses.</li>
-<li><strong>n_estimators</strong> (<em>int</em>) &#8211; number of trained trees.</li>
-<li><strong>subsample</strong> (<em>float</em>) &#8211; fraction of data to use on each stage</li>
-<li><strong>learning_rate</strong> (<em>float</em>) &#8211; size of step.</li>
-<li><strong>update_tree</strong> (<em>bool</em>) &#8211; True by default. If False, &#8216;improvement&#8217; step after fitting tree will be skipped.</li>
-<li><strong>train_features</strong> &#8211; features used by tree.
+<li><strong>n_estimators</strong> (<em>int</em>) – number of trained trees.</li>
+<li><strong>subsample</strong> (<em>float</em>) – fraction of data to use on each stage</li>
+<li><strong>learning_rate</strong> (<em>float</em>) – size of step.</li>
+<li><strong>update_tree</strong> (<em>bool</em>) – True by default. If False, ‘improvement’ step after fitting tree will be skipped.</li>
+<li><strong>train_features</strong> – features used by tree.
 Note that algorithm may require also variables used by loss function, but not listed here.</li>
 </ul>
 </td>
@@ -189,9 +217,9 @@ Only two-class binary classification is supported with labels 0 and 1.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>X</strong> &#8211; dataset of shape [n_samples, n_features]</li>
-<li><strong>y</strong> &#8211; labels, array-like of shape [n_samples]</li>
-<li><strong>sample_weight</strong> &#8211; array-like of shape [n_samples] or None</li>
+<li><strong>X</strong> – dataset of shape [n_samples, n_features]</li>
+<li><strong>y</strong> – labels, array-like of shape [n_samples]</li>
+<li><strong>sample_weight</strong> – array-like of shape [n_samples] or None</li>
 </ul>
 </td>
 </tr>
@@ -210,7 +238,7 @@ Only two-class binary classification is supported with labels 0 and 1.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> &#8211; pandas.DataFrame with all train_features</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> – pandas.DataFrame with all train_features</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">numpy.array of shape [n_samples] with predicted classes.</td>
 </tr>
@@ -226,7 +254,7 @@ Only two-class binary classification is supported with labels 0 and 1.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> &#8211; pandas.DataFrame with all train_features</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> – pandas.DataFrame with all train_features</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">numpy.array of shape [n_samples, n_classes]</td>
 </tr>
@@ -242,7 +270,7 @@ Only two-class binary classification is supported with labels 0 and 1.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> &#8211; data</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> – data</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">sequence of numpy.array of shape [n_samples, n_classes]</td>
 </tr>
@@ -264,13 +292,13 @@ of regression tree, which is used as base estimator.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>loss</strong> (<a class="reference internal" href="losses.html#hep_ml.losses.AbstractLossFunction" title="hep_ml.losses.AbstractLossFunction"><em>AbstractLossFunction</em></a>) &#8211; any descendant of AbstractLossFunction, those are very various.
+<li><strong>loss</strong> (<a class="reference internal" href="losses.html#hep_ml.losses.AbstractLossFunction" title="hep_ml.losses.AbstractLossFunction"><em>AbstractLossFunction</em></a>) – any descendant of AbstractLossFunction, those are very various.
 See <a class="reference internal" href="losses.html#module-hep_ml.losses" title="hep_ml.losses"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.losses</span></code></a> for available losses.</li>
-<li><strong>n_estimators</strong> (<em>int</em>) &#8211; number of trained trees.</li>
-<li><strong>subsample</strong> (<em>float</em>) &#8211; fraction of data to use on each stage</li>
-<li><strong>learning_rate</strong> (<em>float</em>) &#8211; size of step.</li>
-<li><strong>update_tree</strong> (<em>bool</em>) &#8211; True by default. If False, &#8216;improvement&#8217; step after fitting tree will be skipped.</li>
-<li><strong>train_features</strong> &#8211; features used by tree.
+<li><strong>n_estimators</strong> (<em>int</em>) – number of trained trees.</li>
+<li><strong>subsample</strong> (<em>float</em>) – fraction of data to use on each stage</li>
+<li><strong>learning_rate</strong> (<em>float</em>) – size of step.</li>
+<li><strong>update_tree</strong> (<em>bool</em>) – True by default. If False, ‘improvement’ step after fitting tree will be skipped.</li>
+<li><strong>train_features</strong> – features used by tree.
 Note that algorithm may require also variables used by loss function, but not listed here.</li>
 </ul>
 </td>
@@ -286,9 +314,9 @@ Note that algorithm may require also variables used by loss function, but not li
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>X</strong> &#8211; dataset of shape [n_samples, n_features]</li>
-<li><strong>y</strong> &#8211; target values, array-like of shape [n_samples]</li>
-<li><strong>sample_weight</strong> &#8211; array-like of shape [n_samples] or None</li>
+<li><strong>X</strong> – dataset of shape [n_samples, n_features]</li>
+<li><strong>y</strong> – target values, array-like of shape [n_samples]</li>
+<li><strong>sample_weight</strong> – array-like of shape [n_samples] or None</li>
 </ul>
 </td>
 </tr>
@@ -307,7 +335,7 @@ Note that algorithm may require also variables used by loss function, but not li
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> &#8211; pandas.DataFrame with all train_features</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> – pandas.DataFrame with all train_features</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">numpy.array of shape [n_samples]</td>
 </tr>
@@ -323,7 +351,7 @@ Note that algorithm may require also variables used by loss function, but not li
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> &#8211; data</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> – data</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">sequence of numpy.array of shape [n_samples]</td>
 </tr>
@@ -337,15 +365,18 @@ Note that algorithm may require also variables used by loss function, but not li
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="losses.html" class="btn btn-neutral float-right" title="Losses for Gradient Boosting" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="losses.html" class="btn btn-neutral float-right" title="Losses for Gradient Boosting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral" title="hep_ml documentation" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral" title="hep_ml documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -379,13 +410,14 @@ Note that algorithm may require also variables used by loss function, but not li
             VERSION:'0.4.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

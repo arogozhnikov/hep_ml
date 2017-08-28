@@ -13,6 +13,8 @@
 
   
   
+  
+  
 
   
 
@@ -30,6 +32,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
     <link rel="top" title="hep_ml 0.4.0 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
@@ -40,6 +45,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -80,7 +86,10 @@
           
             
             
-                <ul>
+              
+            
+            
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">hep_ml documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../gb.html">Gradient boosting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../losses.html">Losses for Gradient Boosting</a></li>
@@ -104,8 +113,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../index.html">hep_ml</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">hep_ml</a>
+        
       </nav>
 
 
@@ -118,26 +129,43 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../index.html">Module code</a> &raquo;</li>
-      
-    <li>hep_ml.reweight</li>
+        
+      <li>hep_ml.reweight</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
   <h1>Source code for hep_ml.reweight</h1><div class="highlight"><pre>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">**hep_ml.reweight** contains reweighting algorithms.</span>
 
 <span class="sd">Reweighting is procedure of finding such weights for original distribution,</span>
@@ -176,18 +204,18 @@
 <span class="sd">&gt;&gt;&gt; MC_weights = reweighter.predict_weights(MC_data)</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span>
 
-<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span>
-<span class="kn">from</span> <span class="nn">scipy.ndimage</span> <span class="kn">import</span> <span class="n">gaussian_filter</span>
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="k">import</span> <span class="n">BaseEstimator</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage</span> <span class="k">import</span> <span class="n">gaussian_filter</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
 
-<span class="kn">from</span> <span class="nn">.commonutils</span> <span class="kn">import</span> <span class="n">check_sample_weight</span><span class="p">,</span> <span class="n">weighted_quantile</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">gradientboosting</span> <span class="k">as</span> <span class="n">gb</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">losses</span>
+<span class="kn">from</span> <span class="nn">.commonutils</span> <span class="k">import</span> <span class="n">check_sample_weight</span><span class="p">,</span> <span class="n">weighted_quantile</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">gradientboosting</span> <span class="k">as</span> <span class="n">gb</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">losses</span>
 
-<span class="n">__author__</span> <span class="o">=</span> <span class="s">&#39;Alex Rogozhnikov&#39;</span>
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;BinsReweighter&#39;</span><span class="p">,</span> <span class="s">&#39;GBReweighter&#39;</span><span class="p">]</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Alex Rogozhnikov&#39;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;BinsReweighter&#39;</span><span class="p">,</span> <span class="s1">&#39;GBReweighter&#39;</span><span class="p">]</span>
 
 
 <span class="k">def</span> <span class="nf">_bincount_nd</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
@@ -198,10 +226,10 @@
 <span class="sd">    :param shape: shape of result, should be greater, then maximal value</span>
 <span class="sd">    :return: weighted number of event in each bin, of shape=shape</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s">&#39;length of weight is different: {} {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">))</span>
-    <span class="k">assert</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">),</span> <span class="s">&#39;wrong length of shape: {} {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;length of weight is different: </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">),</span> <span class="s1">&#39;wrong length of shape: </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">))</span>
     <span class="n">maximals</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">maximals</span> <span class="o">&lt;</span> <span class="n">shape</span><span class="p">),</span> <span class="s">&#39;small shape passed: {} {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">maximals</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">maximals</span> <span class="o">&lt;</span> <span class="n">shape</span><span class="p">),</span> <span class="s1">&#39;smaller shape: </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">maximals</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
 
     <span class="n">result</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="n">numpy</span><span class="o">.</span><span class="n">add</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">T</span><span class="p">),</span> <span class="n">weights</span><span class="p">)</span>
@@ -211,7 +239,7 @@
 <span class="k">class</span> <span class="nc">ReweighterMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Supplementary class which shows the interface of reweighter.</span>
 <span class="sd">     Reweighters should be derived from this class.&quot;&quot;&quot;</span>
-    <span class="n">n_features_</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">n_features_</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">_normalize_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Normalize input of reweighter</span>
@@ -221,21 +249,21 @@
 <span class="sd">            data - numpy.array of shape [n_samples, n_features]</span>
 <span class="sd">            weights - numpy.array of shape [n_samples] with mean = 1.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">weights</span> <span class="o">=</span> <span class="n">check_sample_weight</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">weights</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">check_sample_weight</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">weights</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_features_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_features_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">n_features_</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_features_</span> <span class="o">==</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> \
-            <span class="s">&#39;number of features is wrong: {} {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_features_</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="s1">&#39;number of features is wrong: </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_features_</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">weights</span>
 
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">original</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">original_weight</span><span class="p">,</span> <span class="n">target_weight</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&#39;To be overriden in descendants&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;To be overriden in descendants&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">predict_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">original</span><span class="p">,</span> <span class="n">original_weight</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&#39;To be overriden in descendants&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">predict_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">original</span><span class="p">,</span> <span class="n">original_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;To be overriden in descendants&#39;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="BinsReweighter"><a class="viewcode-back" href="../../reweight.html#hep_ml.reweight.BinsReweighter">[docs]</a><span class="k">class</span> <span class="nc">BinsReweighter</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ReweighterMixin</span><span class="p">):</span>
@@ -258,7 +286,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span> <span class="o">=</span> <span class="n">n_bins</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_neighs</span> <span class="o">=</span> <span class="n">n_neighs</span>
-        <span class="c"># if number of events in bins is less than this value, number of events is clipped.</span>
+        <span class="c1"># if number of events in bins is less than this value, number of events is clipped.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_in_the_bin</span> <span class="o">=</span> <span class="mf">1.</span>
 
 <div class="viewcode-block" id="BinsReweighter.compute_bin_indices"><a class="viewcode-back" href="../../reweight.html#hep_ml.reweight.BinsReweighter.compute_bin_indices">[docs]</a>    <span class="k">def</span> <span class="nf">compute_bin_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
@@ -272,9 +300,9 @@
         <span class="n">bin_indices</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">axis</span><span class="p">,</span> <span class="n">axis_edges</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">):</span>
             <span class="n">bin_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">axis_edges</span><span class="p">,</span> <span class="n">data</span><span class="p">[:,</span> <span class="n">axis</span><span class="p">]))</span>
-        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">bin_indices</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
-</div>
-<div class="viewcode-block" id="BinsReweighter.fit"><a class="viewcode-back" href="../../reweight.html#hep_ml.reweight.BinsReweighter.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">original</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">original_weight</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">target_weight</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">bin_indices</span><span class="p">)</span><span class="o">.</span><span class="n">T</span></div>
+
+<div class="viewcode-block" id="BinsReweighter.fit"><a class="viewcode-back" href="../../reweight.html#hep_ml.reweight.BinsReweighter.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">original</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">original_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Prepare reweighting formula by computing histograms.</span>
 
@@ -284,7 +312,7 @@
 <span class="sd">        :param target_weight: weights for samples of original distributions</span>
 <span class="sd">        :return: self</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">n_features_</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_features_</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">original</span><span class="p">,</span> <span class="n">original_weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_input</span><span class="p">(</span><span class="n">original</span><span class="p">,</span> <span class="n">original_weight</span><span class="p">)</span>
         <span class="n">target</span><span class="p">,</span> <span class="n">target_weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_input</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">target_weight</span><span class="p">)</span>
         <span class="n">target_perc</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -300,9 +328,9 @@
             <span class="n">bins_weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">smeared_weights</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_in_the_bin</span><span class="p">))</span>
         <span class="n">bin_orig_weights</span><span class="p">,</span> <span class="n">bin_targ_weights</span> <span class="o">=</span> <span class="n">bins_weights</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transition</span> <span class="o">=</span> <span class="n">bin_targ_weights</span> <span class="o">/</span> <span class="n">bin_orig_weights</span>
-        <span class="k">return</span> <span class="bp">self</span>
-</div>
-<div class="viewcode-block" id="BinsReweighter.predict_weights"><a class="viewcode-back" href="../../reweight.html#hep_ml.reweight.BinsReweighter.predict_weights">[docs]</a>    <span class="k">def</span> <span class="nf">predict_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">original</span><span class="p">,</span> <span class="n">original_weight</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="BinsReweighter.predict_weights"><a class="viewcode-back" href="../../reweight.html#hep_ml.reweight.BinsReweighter.predict_weights">[docs]</a>    <span class="k">def</span> <span class="nf">predict_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">original</span><span class="p">,</span> <span class="n">original_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns corrected weights. Result is computed as original_weight * reweighter_multipliers.</span>
 
@@ -313,17 +341,16 @@
         <span class="n">original</span><span class="p">,</span> <span class="n">original_weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_input</span><span class="p">(</span><span class="n">original</span><span class="p">,</span> <span class="n">original_weight</span><span class="p">)</span>
         <span class="n">bin_indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_bin_indices</span><span class="p">(</span><span class="n">original</span><span class="p">)</span>
         <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transition</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">bin_indices</span><span class="o">.</span><span class="n">T</span><span class="p">)]</span> <span class="o">*</span> <span class="n">original_weight</span>
-        <span class="k">return</span> <span class="n">results</span>
+        <span class="k">return</span> <span class="n">results</span></div></div>
 
-</div></div>
+
 <div class="viewcode-block" id="GBReweighter"><a class="viewcode-back" href="../../reweight.html#hep_ml.reweight.GBReweighter">[docs]</a><span class="k">class</span> <span class="nc">GBReweighter</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ReweighterMixin</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">n_estimators</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
                  <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
                  <span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
                  <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
-                 <span class="n">loss_regularization</span><span class="o">=</span><span class="mf">5.</span><span class="p">,</span>
-                 <span class="n">gb_args</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+                 <span class="n">gb_args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gradient Boosted Reweighter - a reweighter algorithm based on ensemble of regression trees.</span>
 <span class="sd">        Parameters have the same role, as in gradient boosting.</span>
@@ -337,9 +364,7 @@
 <span class="sd">        :param learning_rate: float from [0, 1]. Lesser learning rate requires more trees,</span>
 <span class="sd">            but makes reweighting rule more stable.</span>
 <span class="sd">        :param max_depth: maximal depth of trees</span>
-<span class="sd">        :param min_samples_leaf: minimal number of events in the leaf.</span>
-<span class="sd">        :param loss_regularization: float, approximately equal to number of events</span>
-<span class="sd">         that algorithm &#39;puts&#39; in each leaf to prevent exploding.</span>
+<span class="sd">        :param min_samples_leaf: minimal number of events in the leaf. If many</span>
 <span class="sd">        :param gb_args: other parameters passed to gradient boosting.</span>
 <span class="sd">            See :class:`hep_ml.gradientboosting.UGradientBoostingClassifier`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -348,9 +373,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span> <span class="o">=</span> <span class="n">max_depth</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_samples_leaf</span> <span class="o">=</span> <span class="n">min_samples_leaf</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gb_args</span> <span class="o">=</span> <span class="n">gb_args</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">loss_regularization</span> <span class="o">=</span> <span class="n">loss_regularization</span>
 
-<div class="viewcode-block" id="GBReweighter.fit"><a class="viewcode-back" href="../../reweight.html#hep_ml.reweight.GBReweighter.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">original</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">original_weight</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">target_weight</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="GBReweighter.fit"><a class="viewcode-back" href="../../reweight.html#hep_ml.reweight.GBReweighter.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">original</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">original_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Prepare reweighting formula by training sequence of trees.</span>
 
@@ -360,14 +384,13 @@
 <span class="sd">        :param target_weight: weights for samples of original distributions</span>
 <span class="sd">        :return: self</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">n_features_</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gb_args</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_features_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gb_args</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">gb_args</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">original</span><span class="p">,</span> <span class="n">original_weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_input</span><span class="p">(</span><span class="n">original</span><span class="p">,</span> <span class="n">original_weight</span><span class="p">)</span>
         <span class="n">target</span><span class="p">,</span> <span class="n">target_weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_input</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">target_weight</span><span class="p">)</span>
 
-        <span class="n">loss</span> <span class="o">=</span> <span class="n">losses</span><span class="o">.</span><span class="n">ReweightLossFunction</span><span class="p">(</span><span class="n">regularization</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">loss_regularization</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gb</span> <span class="o">=</span> <span class="n">gb</span><span class="o">.</span><span class="n">UGradientBoostingClassifier</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gb</span> <span class="o">=</span> <span class="n">gb</span><span class="o">.</span><span class="n">UGradientBoostingClassifier</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">losses</span><span class="o">.</span><span class="n">ReweightLossFunction</span><span class="p">(),</span>
                                                  <span class="n">n_estimators</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_estimators</span><span class="p">,</span>
                                                  <span class="n">max_depth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span><span class="p">,</span>
                                                  <span class="n">min_samples_leaf</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">min_samples_leaf</span><span class="p">,</span>
@@ -377,9 +400,9 @@
         <span class="n">target</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">original</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">target</span><span class="p">))</span>
         <span class="n">weights</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">original_weight</span><span class="p">,</span> <span class="n">target_weight</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gb</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span>
-</div>
-<div class="viewcode-block" id="GBReweighter.predict_weights"><a class="viewcode-back" href="../../reweight.html#hep_ml.reweight.GBReweighter.predict_weights">[docs]</a>    <span class="k">def</span> <span class="nf">predict_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">original</span><span class="p">,</span> <span class="n">original_weight</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="GBReweighter.predict_weights"><a class="viewcode-back" href="../../reweight.html#hep_ml.reweight.GBReweighter.predict_weights">[docs]</a>    <span class="k">def</span> <span class="nf">predict_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">original</span><span class="p">,</span> <span class="n">original_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns corrected weights. Result is computed as original_weight * reweighter_multipliers.</span>
 
@@ -392,6 +415,9 @@
         <span class="k">return</span> <span class="n">multipliers</span> <span class="o">*</span> <span class="n">original_weight</span></div></div>
 </pre></div>
 
+           </div>
+           <div class="articleComments">
+            
            </div>
           </div>
           <footer>
@@ -426,13 +452,14 @@
             VERSION:'0.4.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../_static/jquery.js"></script>
       <script type="text/javascript" src="../../_static/underscore.js"></script>
       <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

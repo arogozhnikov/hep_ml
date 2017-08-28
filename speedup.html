@@ -13,6 +13,8 @@
 
   
   
+  
+  
 
   
 
@@ -30,6 +32,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="hep_ml 0.4.0 documentation" href="index.html"/>
         <link rel="next" title="sPlot" href="splot.html"/>
         <link rel="prev" title="Reweighting algorithms" href="reweight.html"/> 
@@ -41,6 +46,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -81,7 +87,10 @@
           
             
             
-                <ul class="current">
+              
+            
+            
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="index.html">hep_ml documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gb.html">Gradient boosting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="losses.html">Losses for Gradient Boosting</a></li>
@@ -90,7 +99,7 @@
 <li class="toctree-l1"><a class="reference internal" href="nnet.html">Neural networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reweight.html">Reweighting algorithms</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">Fast predictions</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Fast predictions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
 </ul>
 </li>
@@ -108,8 +117,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">hep_ml</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">hep_ml</a>
+        
       </nav>
 
 
@@ -122,19 +133,36 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Docs</a> &raquo;</li>
-      
-    <li>Fast predictions</li>
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Fast predictions</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="_sources/speedup.txt" rel="nofollow"> View page source</a>
+            
+            <a href="_sources/speedup.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -149,17 +177,17 @@ while keeping high quality of classification.</p>
 This module contains tools to prepare formulas, which can be applied with the speed comparable to cuts.</p>
 <div class="section" id="example">
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
-<p>Let&#8217;s show how one can use some really heavy classifier and still have fast predictions:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hep_ml.speedup</span> <span class="kn">import</span> <span class="n">LookupClassifier</span>
+<p>Let’s show how one can use some really heavy classifier and still have fast predictions:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="k">import</span> <span class="n">RandomForestClassifier</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hep_ml.speedup</span> <span class="k">import</span> <span class="n">LookupClassifier</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">base_classifier</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span> <span class="o">=</span> <span class="n">LookupClassifier</span><span class="p">(</span><span class="n">base_estimator</span><span class="o">=</span><span class="n">base_classifier</span><span class="p">,</span> <span class="n">keep_trained_estimator</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span> <span class="o">=</span> <span class="n">LookupClassifier</span><span class="p">(</span><span class="n">base_estimator</span><span class="o">=</span><span class="n">base_classifier</span><span class="p">,</span> <span class="n">keep_trained_estimator</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Though training takes much time, all predictions are precomputed and saved to lookup table,
 so you are able to predict millions of events per second using single CPU.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">testX</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">testX</span><span class="p">)</span>
 </pre></div>
 </div>
 <dl class="class">
@@ -174,21 +202,21 @@ and saved together</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>n_bins</strong> (<em>int | dict</em>) &#8211; <ul>
+<li><strong>n_bins</strong> (<em>int | dict</em>) – <ul>
 <li>int: how many bins to use for each axis</li>
 <li>dict: feature_name -&gt; int, specialize how many bins to use for each axis</li>
 <li>dict: feature_name -&gt; list of floats, set manually edges of bins</li>
 </ul>
 <p>By default, the (weighted) quantiles are used to compute bin edges.</p>
 </li>
-<li><strong>max_cells</strong> (<em>int</em>) &#8211; raise error if lookup table will have more items.</li>
-<li><strong>keep_trained_estimator</strong> (<em>bool</em>) &#8211; if True, trained estimator will be saved.</li>
+<li><strong>max_cells</strong> (<em>int</em>) – raise error if lookup table will have more items.</li>
+<li><strong>keep_trained_estimator</strong> (<em>bool</em>) – if True, trained estimator will be saved.</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p>See also: this idea is used inside LHCb triggers, see V. Gligorov, M. Williams, &#8216;Bonsai BDT&#8217;</p>
+<p>See also: this idea is used inside LHCb triggers, see V. Gligorov, M. Williams, ‘Bonsai BDT’</p>
 <p>Resulting formula is very simple and can be rewritten in other language or environment (C++, CUDA, etc).</p>
 <dl class="method">
 <dt id="hep_ml.speedup.LookupClassifier.convert_bins_to_lookup_index">
@@ -197,7 +225,7 @@ and saved together</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>bins_indices</strong> &#8211; numpy.array of shape [n_samples, n_columns], filled with indices of bins.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>bins_indices</strong> – numpy.array of shape [n_samples, n_columns], filled with indices of bins.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">numpy.array of shape [n_samples] with corresponding index in lookup table</td>
 </tr>
@@ -212,7 +240,7 @@ and saved together</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>lookup_indices</strong> &#8211; array of shape [n_samples] with positions at lookup table</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>lookup_indices</strong> – array of shape [n_samples] with positions at lookup table</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">array of shape [n_samples, n_features] with indices of bins.</td>
 </tr>
@@ -229,9 +257,9 @@ and saved together</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>X</strong> &#8211; pandas.DataFrame or numpy.array with data of shape [n_samples, n_features]</li>
-<li><strong>y</strong> &#8211; array with labels of shape [n_samples]</li>
-<li><strong>sample_weight</strong> &#8211; None or array of shape [n_samples] with weights of events</li>
+<li><strong>X</strong> – pandas.DataFrame or numpy.array with data of shape [n_samples, n_features]</li>
+<li><strong>y</strong> – array with labels of shape [n_samples]</li>
+<li><strong>sample_weight</strong> – None or array of shape [n_samples] with weights of events</li>
 </ul>
 </td>
 </tr>
@@ -250,7 +278,7 @@ and saved together</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> &#8211; pandas.DataFrame with data</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> – pandas.DataFrame with data</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">array of shape [n_samples] with predicted class labels.</td>
 </tr>
@@ -266,7 +294,7 @@ and saved together</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> &#8211; pandas.DataFrame with data</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> – pandas.DataFrame with data</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">probabilities, array of shape [n_samples, n_classes]</td>
 </tr>
@@ -282,7 +310,7 @@ and saved together</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> &#8211; pandas.DataFrame or numpy.array with data</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> – pandas.DataFrame or numpy.array with data</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">pandas.DataFrame, where each column is replaced with index of bin</td>
 </tr>
@@ -297,15 +325,18 @@ and saved together</p>
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="splot.html" class="btn btn-neutral float-right" title="sPlot" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="splot.html" class="btn btn-neutral float-right" title="sPlot" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="reweight.html" class="btn btn-neutral" title="Reweighting algorithms" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="reweight.html" class="btn btn-neutral" title="Reweighting algorithms" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -339,13 +370,14 @@ and saved together</p>
             VERSION:'0.4.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

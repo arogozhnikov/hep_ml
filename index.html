@@ -13,6 +13,8 @@
 
   
   
+  
+  
 
   
 
@@ -30,6 +32,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="hep_ml 0.4.0 documentation" href="#"/>
         <link rel="next" title="Gradient boosting" href="gb.html"/> 
 
@@ -40,6 +45,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -80,8 +86,11 @@
           
             
             
-                <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="">hep_ml documentation</a></li>
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">hep_ml documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gb.html">Gradient boosting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="losses.html">Losses for Gradient Boosting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="uboost.html">uBoost</a></li>
@@ -104,8 +113,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="#">hep_ml</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">hep_ml</a>
+        
       </nav>
 
 
@@ -118,19 +129,36 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="#">Docs</a> &raquo;</li>
-      
-    <li>hep_ml documentation</li>
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>hep_ml documentation</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="_sources/index.txt" rel="nofollow"> View page source</a>
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -147,15 +175,15 @@ Classifiers and transformers from <strong>hep_ml</strong> are <strong>sklearn</s
 </div><div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>To install <strong>hep_ml</strong>, use <strong>pip</strong>. Type in terminal:</p>
-<div class="code bash highlight-python"><div class="highlight"><pre>pip install hep_ml
+<div class="code bash highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">hep_ml</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="installation-for-developers">
 <h2>Installation for developers<a class="headerlink" href="#installation-for-developers" title="Permalink to this headline">¶</a></h2>
 <p>After cloning repository type in bash:</p>
-<div class="code bash highlight-python"><div class="highlight"><pre>cd hep_ml
-pip install -e . -r requirements.txt
+<div class="code bash highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">hep_ml</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
 </div>
@@ -163,7 +191,7 @@ pip install -e . -r requirements.txt
 <h2>Contents:<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="">hep_ml documentation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">hep_ml documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gb.html">Gradient boosting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="losses.html">Losses for Gradient Boosting</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="losses.html#examples">Examples</a></li>
@@ -179,8 +207,6 @@ pip install -e . -r requirements.txt
 </li>
 <li class="toctree-l1"><a class="reference internal" href="nnet.html">Neural networks</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="nnet.html#examples">Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="nnet.html#loss-functions">Loss functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="nnet.html#trainers">Trainers</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing data</a><ul>
@@ -215,7 +241,7 @@ examples</a></li>
 </div>
 <div class="section" id="related-projects">
 <h2>Related projects<a class="headerlink" href="#related-projects" title="Permalink to this headline">¶</a></h2>
-<p>Libraries you&#8217;ll require to make your life easier.</p>
+<p>Libraries you’ll require to make your life easier.</p>
 <ul class="simple">
 <li><a class="reference external" href="http://ipython.org/notebook.html">IPython Notebook</a> — web-shell
 for python</li>
@@ -224,7 +250,7 @@ for machine learning in python</li>
 <li><a class="reference external" href="https://github.com/yandex/REP">REP</a> — python wrappers around
 different machine learning libraries (including TMVA) + goodies,
 required to plot learning curves reports after classification</li>
-<li><a class="reference external" href="http://www.numpy.org/">numpy</a> — &#8216;MATLAB in python&#8217;, vector
+<li><a class="reference external" href="http://www.numpy.org/">numpy</a> — ‘MATLAB in python’, vector
 operation in python. Use it you need to perform any number crunching.</li>
 <li><a class="reference external" href="http://deeplearning.net/software/theano/">theano</a> — optimized
 vector analytical math engine in python</li>
@@ -238,12 +264,15 @@ library to deal with ROOT files (without pain)</li>
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="gb.html" class="btn btn-neutral float-right" title="Gradient boosting" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="gb.html" class="btn btn-neutral float-right" title="Gradient boosting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
     </div>
@@ -278,13 +307,14 @@ library to deal with ROOT files (without pain)</li>
             VERSION:'0.4.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

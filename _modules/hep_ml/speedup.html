@@ -13,6 +13,8 @@
 
   
   
+  
+  
 
   
 
@@ -30,6 +32,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
     <link rel="top" title="hep_ml 0.4.0 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
@@ -40,6 +45,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -80,7 +86,10 @@
           
             
             
-                <ul>
+              
+            
+            
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">hep_ml documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../gb.html">Gradient boosting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../losses.html">Losses for Gradient Boosting</a></li>
@@ -104,8 +113,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../index.html">hep_ml</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">hep_ml</a>
+        
       </nav>
 
 
@@ -118,26 +129,43 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../index.html">Module code</a> &raquo;</li>
-      
-    <li>hep_ml.speedup</li>
+        
+      <li>hep_ml.speedup</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
   <h1>Source code for hep_ml.speedup</h1><div class="highlight"><pre>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">**hep_ml.speedup** is module to obtain formulas with machine learning,</span>
 <span class="sd">which can be applied very fast (with a speed comparable to simple selections),</span>
 <span class="sd">while keeping high quality of classification.</span>
@@ -162,18 +190,18 @@
 
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">pandas</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
-<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">ClassifierMixin</span><span class="p">,</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">clone</span>
-<span class="kn">from</span> <span class="nn">.commonutils</span> <span class="kn">import</span> <span class="n">to_pandas_dataframe</span><span class="p">,</span> <span class="n">check_xyw</span><span class="p">,</span> <span class="n">check_sample_weight</span><span class="p">,</span> <span class="n">weighted_quantile</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="k">import</span> <span class="n">ClassifierMixin</span><span class="p">,</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">clone</span>
+<span class="kn">from</span> <span class="nn">.commonutils</span> <span class="k">import</span> <span class="n">to_pandas_dataframe</span><span class="p">,</span> <span class="n">check_xyw</span><span class="p">,</span> <span class="n">check_sample_weight</span><span class="p">,</span> <span class="n">weighted_quantile</span>
 
-<span class="n">__author__</span> <span class="o">=</span> <span class="s">&#39;Alex Rogozhnikov&#39;</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Alex Rogozhnikov&#39;</span>
 
 
 <div class="viewcode-block" id="LookupClassifier"><a class="viewcode-back" href="../../speedup.html#hep_ml.speedup.LookupClassifier">[docs]</a><span class="k">class</span> <span class="nc">LookupClassifier</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">max_cells</span><span class="o">=</span><span class="mi">500000000</span><span class="p">,</span> <span class="n">keep_trained_estimator</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">max_cells</span><span class="o">=</span><span class="mi">500000000</span><span class="p">,</span> <span class="n">keep_trained_estimator</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        LookupClassifier splits each of features into bins, trains a base_estimator to use this data.</span>
 <span class="sd">        To predict class for new observation, results of base_estimator are kept for all possible combinations of bins,</span>
@@ -201,7 +229,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">max_cells</span> <span class="o">=</span> <span class="n">max_cells</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">keep_trained_estimator</span> <span class="o">=</span> <span class="n">keep_trained_estimator</span>
 
-<div class="viewcode-block" id="LookupClassifier.fit"><a class="viewcode-back" href="../../speedup.html#hep_ml.speedup.LookupClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="LookupClassifier.fit"><a class="viewcode-back" href="../../speedup.html#hep_ml.speedup.LookupClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Train a classifier and collect predictions for all possible combinations.</span>
 
 <span class="sd">        :param X: pandas.DataFrame or numpy.array with data of shape [n_samples, n_features]</span>
@@ -210,21 +238,21 @@
 <span class="sd">        :return: self</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">normed_weights</span> <span class="o">=</span> <span class="n">check_xyw</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">,</span> <span class="n">classification</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">normed_weights</span> <span class="o">=</span> <span class="n">check_xyw</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">,</span> <span class="n">classification</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">X</span> <span class="o">=</span> <span class="n">to_pandas_dataframe</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-        <span class="n">normed_weights</span> <span class="o">=</span> <span class="n">check_sample_weight</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">normed_weights</span><span class="p">,</span> <span class="n">normalize_by_class</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">normed_weights</span> <span class="o">=</span> <span class="n">check_sample_weight</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">normed_weights</span><span class="p">,</span> <span class="n">normalize_by_class</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">bin_edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_bin_edges</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">normed_weights</span><span class="o">=</span><span class="n">normed_weights</span><span class="p">)</span>
         <span class="n">n_parameter_combinations</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">prod</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">bin_edge</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">bin_edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bin_edges</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span>
         <span class="k">assert</span> <span class="n">n_parameter_combinations</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_cells</span><span class="p">,</span> \
-            <span class="s">&#39;the total size of lookup table exceeds {}, &#39;</span> \
-            <span class="s">&#39;reduce n_bins or number of features in use&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_cells</span><span class="p">)</span>
+            <span class="s1">&#39;the total size of lookup table exceeds </span><span class="si">{}</span><span class="s1">, &#39;</span> \
+            <span class="s1">&#39;reduce n_bins or number of features in use&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_cells</span><span class="p">)</span>
 
         <span class="n">transformed_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
         <span class="n">trained_estimator</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="p">)</span>
         <span class="n">fit_params</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">if</span> <span class="n">sample_weight</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">fit_params</span><span class="p">[</span><span class="s">&#39;sample_weights&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sample_weight</span>
+        <span class="k">if</span> <span class="n">sample_weight</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fit_params</span><span class="p">[</span><span class="s1">&#39;sample_weights&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sample_weight</span>
         <span class="n">trained_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">transformed_data</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">)</span>
 
         <span class="n">all_lookup_indices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">n_parameter_combinations</span><span class="p">))</span>
@@ -234,8 +262,8 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep_trained_estimator</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">trained_estimator</span> <span class="o">=</span> <span class="n">trained_estimator</span>
 
-        <span class="k">return</span> <span class="bp">self</span>
-</div>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
     <span class="k">def</span> <span class="nf">_compute_bin_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">normed_weights</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute edges of bins, weighted quantiles are used,</span>
@@ -268,22 +296,22 @@
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">column_name</span><span class="p">,</span> <span class="n">bin_edges</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bin_edges</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
             <span class="n">lookup_indices</span> <span class="o">*=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bin_edges</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
             <span class="n">lookup_indices</span> <span class="o">+=</span> <span class="n">bins_indices</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">lookup_indices</span>
-</div>
+        <span class="k">return</span> <span class="n">lookup_indices</span></div>
+
 <div class="viewcode-block" id="LookupClassifier.convert_lookup_index_to_bins"><a class="viewcode-back" href="../../speedup.html#hep_ml.speedup.LookupClassifier.convert_lookup_index_to_bins">[docs]</a>    <span class="k">def</span> <span class="nf">convert_lookup_index_to_bins</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lookup_indices</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param lookup_indices: array of shape [n_samples] with positions at lookup table</span>
 <span class="sd">        :return: array of shape [n_samples, n_features] with indices of bins.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">result</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">lookup_indices</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bin_edges</span><span class="p">)],</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&#39;uint8&#39;</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">lookup_indices</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bin_edges</span><span class="p">)],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;uint8&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">column_name</span><span class="p">,</span> <span class="n">bin_edges</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bin_edges</span><span class="o">.</span><span class="n">items</span><span class="p">()))[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
             <span class="n">n_columns</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bin_edges</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
             <span class="n">result</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">lookup_indices</span> <span class="o">%</span> <span class="n">n_columns</span>
             <span class="n">lookup_indices</span> <span class="o">=</span> <span class="n">lookup_indices</span> <span class="o">//</span> <span class="n">n_columns</span>
 
-        <span class="k">return</span> <span class="n">result</span>
-</div>
+        <span class="k">return</span> <span class="n">result</span></div>
+
 <div class="viewcode-block" id="LookupClassifier.transform"><a class="viewcode-back" href="../../speedup.html#hep_ml.speedup.LookupClassifier.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convert data to bin indices.</span>
 
@@ -291,22 +319,22 @@
 <span class="sd">        :return: pandas.DataFrame, where each column is replaced with index of bin</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">X</span> <span class="o">=</span> <span class="n">to_pandas_dataframe</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bin_edges</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="s">&#39;passed dataset with wrong columns&#39;</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&#39;uint8&#39;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bin_edges</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="s1">&#39;passed dataset with wrong columns&#39;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;uint8&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">column</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
             <span class="n">edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bin_edges</span><span class="p">[</span><span class="n">column</span><span class="p">]</span>
             <span class="n">result</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="n">column</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
-</div>
+        <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="LookupClassifier.predict"><a class="viewcode-back" href="../../speedup.html#hep_ml.speedup.LookupClassifier.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Predict class for each event</span>
 
 <span class="sd">        :param X: pandas.DataFrame with data</span>
 <span class="sd">        :return: array of shape [n_samples] with predicted class labels.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
-</div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span></div>
+
 <div class="viewcode-block" id="LookupClassifier.predict_proba"><a class="viewcode-back" href="../../speedup.html#hep_ml.speedup.LookupClassifier.predict_proba">[docs]</a>    <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Predict probabilities for new observations</span>
 
@@ -318,6 +346,9 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lookup_table</span><span class="p">[</span><span class="n">lookup_indices</span><span class="p">]</span></div></div>
 </pre></div>
 
+           </div>
+           <div class="articleComments">
+            
            </div>
           </div>
           <footer>
@@ -352,13 +383,14 @@
             VERSION:'0.4.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../_static/jquery.js"></script>
       <script type="text/javascript" src="../../_static/underscore.js"></script>
       <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

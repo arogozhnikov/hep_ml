@@ -13,6 +13,8 @@
 
   
   
+  
+  
 
   
 
@@ -30,6 +32,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="hep_ml 0.4.0 documentation" href="index.html"/>
         <link rel="next" title="Code Examples" href="notebooks.html"/>
         <link rel="prev" title="Fast predictions" href="speedup.html"/> 
@@ -41,6 +46,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -81,7 +87,10 @@
           
             
             
-                <ul class="current">
+              
+            
+            
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="index.html">hep_ml documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gb.html">Gradient boosting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="losses.html">Losses for Gradient Boosting</a></li>
@@ -91,7 +100,7 @@
 <li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reweight.html">Reweighting algorithms</a></li>
 <li class="toctree-l1"><a class="reference internal" href="speedup.html">Fast predictions</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">sPlot</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">sPlot</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
 </ul>
 </li>
@@ -108,8 +117,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">hep_ml</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">hep_ml</a>
+        
       </nav>
 
 
@@ -122,19 +133,36 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Docs</a> &raquo;</li>
-      
-    <li>sPlot</li>
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>sPlot</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="_sources/splot.txt" rel="nofollow"> View page source</a>
+            
+            <a href="_sources/splot.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -148,10 +176,10 @@ Initial information used is the probabilities obtained after fitting.</p>
 This implementation is brilliantly simple and clear - just as it should be.</p>
 <div class="section" id="example">
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hep_ml.splot</span> <span class="kn">import</span> <span class="n">compute_sweights</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s">&#39;signal&#39;</span><span class="p">:</span> <span class="n">p_signal</span><span class="p">,</span> <span class="s">&#39;bkg&#39;</span><span class="p">,</span> <span class="n">b_bkg</span><span class="p">})</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hep_ml.splot</span> <span class="k">import</span> <span class="n">compute_sweights</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;signal&#39;</span><span class="p">:</span> <span class="n">p_signal</span><span class="p">,</span> <span class="s1">&#39;bkg&#39;</span><span class="p">,</span> <span class="n">b_bkg</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sWeights</span> <span class="o">=</span> <span class="n">compute_sweights</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c"># plotting reconstructed distribution of some other variable</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># plotting reconstructed distribution of some other variable</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">other_var</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">sWeights</span><span class="o">.</span><span class="n">signal</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">other_var</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">sWeights</span><span class="o">.</span><span class="n">bkg</span><span class="p">)</span>
 </pre></div>
@@ -166,10 +194,10 @@ This implementation is brilliantly simple and clear - just as it should be.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>probabilities</strong> &#8211; pandas.DataFrame with probabilities of shape [n_samples, n_classes].
+<li><strong>probabilities</strong> – pandas.DataFrame with probabilities of shape [n_samples, n_classes].
 These probabilities are obtained after fit (typically, mass fit).
 Pay attention, that for each sample sum of probabilities should be equal to 1.</li>
-<li><strong>sample_weight</strong> &#8211; optionally you can pass weights of events, numpy.array of shape [n_samples]</li>
+<li><strong>sample_weight</strong> – optionally you can pass weights of events, numpy.array of shape [n_samples]</li>
 </ul>
 </td>
 </tr>
@@ -185,15 +213,18 @@ Pay attention, that for each sample sum of probabilities should be equal to 1.</
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="notebooks.html" class="btn btn-neutral float-right" title="Code Examples" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="notebooks.html" class="btn btn-neutral float-right" title="Code Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="speedup.html" class="btn btn-neutral" title="Fast predictions" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="speedup.html" class="btn btn-neutral" title="Fast predictions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -227,13 +258,14 @@ Pay attention, that for each sample sum of probabilities should be equal to 1.</
             VERSION:'0.4.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

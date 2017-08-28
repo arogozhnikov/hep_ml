@@ -13,6 +13,8 @@
 
   
   
+  
+  
 
   
 
@@ -30,6 +32,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="hep_ml 0.4.0 documentation" href="index.html"/>
         <link rel="next" title="Neural networks" href="nnet.html"/>
         <link rel="prev" title="uBoost" href="uboost.html"/> 
@@ -41,6 +46,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -81,12 +87,15 @@
           
             
             
-                <ul class="current">
+              
+            
+            
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="index.html">hep_ml documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gb.html">Gradient boosting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="losses.html">Losses for Gradient Boosting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="uboost.html">uBoost</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">Metric functions</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Metric functions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
 </ul>
 </li>
@@ -108,8 +117,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">hep_ml</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">hep_ml</a>
+        
       </nav>
 
 
@@ -122,19 +133,36 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Docs</a> &raquo;</li>
-      
-    <li>Metric functions</li>
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Metric functions</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="_sources/metrics.txt" rel="nofollow"> View page source</a>
+            
+            <a href="_sources/metrics.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -167,25 +195,25 @@ can be found in <strong>REP</strong> package.</p>
 <div class="section" id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <p>we want to check if our predictions are uniform in mass for background events</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">metric</span> <span class="o">=</span> <span class="n">BinBasedCvM</span><span class="p">(</span><span class="n">uniform_features</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;mass&#39;</span><span class="p">],</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">metric</span> <span class="o">=</span> <span class="n">BinBasedCvM</span><span class="p">(</span><span class="n">uniform_features</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mass&#39;</span><span class="p">],</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">metric</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">metric</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">classifier</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>to check predictions over two variables in signal (for dimensions &gt; 2 always use kNN, not bins):</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">metric</span> <span class="o">=</span> <span class="n">KnnBasedCvM</span><span class="p">(</span><span class="n">uniform_features</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;mass12&#39;</span><span class="p">,</span> <span class="s">&#39;mass23&#39;</span><span class="p">],</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">metric</span> <span class="o">=</span> <span class="n">KnnBasedCvM</span><span class="p">(</span><span class="n">uniform_features</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mass12&#39;</span><span class="p">,</span> <span class="s1">&#39;mass23&#39;</span><span class="p">],</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">metric</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">metric</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">classifier</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>to check uniformity of signal predictions at global signal efficiency of 0.7:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">metric</span> <span class="o">=</span> <span class="n">KnnBasedSDE</span><span class="p">(</span><span class="n">uniform_features</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;mass12&#39;</span><span class="p">,</span> <span class="s">&#39;mass23&#39;</span><span class="p">],</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">target_rcp</span><span class="o">=</span><span class="p">[</span><span class="mf">0.7</span><span class="p">])</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">metric</span> <span class="o">=</span> <span class="n">KnnBasedSDE</span><span class="p">(</span><span class="n">uniform_features</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mass12&#39;</span><span class="p">,</span> <span class="s1">&#39;mass23&#39;</span><span class="p">],</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">target_rcp</span><span class="o">=</span><span class="p">[</span><span class="mf">0.7</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">metric</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">metric</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">classifier</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Generally kNN versions are slower, but more stable in higher dimensions.
-Don&#8217;t forget to scale features is those are of different nature.</p>
+Don’t forget to scale features is those are of different nature.</p>
 <dl class="class">
 <dt id="hep_ml.metrics.BinBasedSDE">
 <em class="property">class </em><code class="descclassname">hep_ml.metrics.</code><code class="descname">BinBasedSDE</code><span class="sig-paren">(</span><em>uniform_features</em>, <em>uniform_label</em>, <em>n_bins=10</em>, <em>target_rcp=None</em>, <em>power=2.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/metrics.html#BinBasedSDE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.metrics.BinBasedSDE" title="Permalink to this definition">¶</a></dt>
@@ -196,13 +224,13 @@ Don&#8217;t forget to scale features is those are of different nature.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>uniform_features</strong> (<em>list[str]</em>) &#8211; features, in which we compute non-uniformity.</li>
-<li><strong>uniform_label</strong> &#8211; label of class, in which uniformity is measured (0 for bck, 1 for signal)</li>
-<li><strong>n_bins</strong> (<em>int</em>) &#8211; number of bins used along each axis.</li>
-<li><strong>target_rcp</strong> (<em>list[float]</em>) &#8211; global right-classified-parts.
+<li><strong>uniform_features</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – features, in which we compute non-uniformity.</li>
+<li><strong>uniform_label</strong> – label of class, in which uniformity is measured (0 for bck, 1 for signal)</li>
+<li><strong>n_bins</strong> (<em>int</em>) – number of bins used along each axis.</li>
+<li><strong>target_rcp</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – global right-classified-parts.
 Thresholds are selected so this part of class was correctly classified.
 Default values are [0.5, 0.6, 0.7, 0.8, 0.9]</li>
-<li><strong>power</strong> (<em>float</em>) &#8211; power used in SDE formula (default is 2.)</li>
+<li><strong>power</strong> (<em>float</em>) – power used in SDE formula (default is 2.)</li>
 </ul>
 </td>
 </tr>
@@ -220,10 +248,10 @@ Default values are [0.5, 0.6, 0.7, 0.8, 0.9]</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>uniform_features</strong> (<em>list[str]</em>) &#8211; features, in which we compute non-uniformity.</li>
-<li><strong>uniform_label</strong> &#8211; label of class, in which uniformity is measured (0 for bck, 1 for signal)</li>
-<li><strong>n_bins</strong> (<em>int</em>) &#8211; number of bins used along each axis.</li>
-<li><strong>power</strong> (<em>float</em>) &#8211; power used in CvM formula (default is 2.)</li>
+<li><strong>uniform_features</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – features, in which we compute non-uniformity.</li>
+<li><strong>uniform_label</strong> – label of class, in which uniformity is measured (0 for bck, 1 for signal)</li>
+<li><strong>n_bins</strong> (<em>int</em>) – number of bins used along each axis.</li>
+<li><strong>power</strong> (<em>float</em>) – power used in CvM formula (default is 2.)</li>
 </ul>
 </td>
 </tr>
@@ -241,10 +269,10 @@ Default values are [0.5, 0.6, 0.7, 0.8, 0.9]</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>uniform_features</strong> (<em>list[str]</em>) &#8211; features, in which we compute non-uniformity.</li>
-<li><strong>uniform_label</strong> &#8211; label of class, in which uniformity is measured (0 for bck, 1 for signal)</li>
-<li><strong>n_bins</strong> (<em>int</em>) &#8211; number of bins used along each axis.</li>
-<li><strong>target_rcp</strong> (<em>list[float]</em>) &#8211; global right-classified-parts.
+<li><strong>uniform_features</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – features, in which we compute non-uniformity.</li>
+<li><strong>uniform_label</strong> – label of class, in which uniformity is measured (0 for bck, 1 for signal)</li>
+<li><strong>n_bins</strong> (<em>int</em>) – number of bins used along each axis.</li>
+<li><strong>target_rcp</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – global right-classified-parts.
 Thresholds are selected so this part of class was correctly classified.
 Default values are [0.5, 0.6, 0.7, 0.8, 0.9]</li>
 </ul>
@@ -264,13 +292,13 @@ Default values are [0.5, 0.6, 0.7, 0.8, 0.9]</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>uniform_features</strong> (<em>list[str]</em>) &#8211; features, in which we compute non-uniformity.</li>
-<li><strong>uniform_label</strong> &#8211; label of class, in which uniformity is measured (0 for bck, 1 for signal)</li>
-<li><strong>n_neighbours</strong> (<em>int</em>) &#8211; number of neighs</li>
-<li><strong>target_rcp</strong> (<em>list[float]</em>) &#8211; global right-classified-parts.
+<li><strong>uniform_features</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – features, in which we compute non-uniformity.</li>
+<li><strong>uniform_label</strong> – label of class, in which uniformity is measured (0 for bck, 1 for signal)</li>
+<li><strong>n_neighbours</strong> (<em>int</em>) – number of neighs</li>
+<li><strong>target_rcp</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – global right-classified-parts.
 Thresholds are selected so this part of class was correctly classified.
 Default values are [0.5, 0.6, 0.7, 0.8, 0.9]</li>
-<li><strong>power</strong> (<em>float</em>) &#8211; power used in SDE formula (default is 2.)</li>
+<li><strong>power</strong> (<em>float</em>) – power used in SDE formula (default is 2.)</li>
 </ul>
 </td>
 </tr>
@@ -288,10 +316,10 @@ Default values are [0.5, 0.6, 0.7, 0.8, 0.9]</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>uniform_features</strong> (<em>list[str]</em>) &#8211; features, in which we compute non-uniformity.</li>
-<li><strong>uniform_label</strong> &#8211; label of class, in which uniformity is measured (0 for bck, 1 for signal)</li>
-<li><strong>n_neighbours</strong> (<em>int</em>) &#8211; number of neighs</li>
-<li><strong>power</strong> (<em>float</em>) &#8211; power used in CvM formula (default is 2.)</li>
+<li><strong>uniform_features</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – features, in which we compute non-uniformity.</li>
+<li><strong>uniform_label</strong> – label of class, in which uniformity is measured (0 for bck, 1 for signal)</li>
+<li><strong>n_neighbours</strong> (<em>int</em>) – number of neighs</li>
+<li><strong>power</strong> (<em>float</em>) – power used in CvM formula (default is 2.)</li>
 </ul>
 </td>
 </tr>
@@ -309,10 +337,10 @@ Default values are [0.5, 0.6, 0.7, 0.8, 0.9]</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>uniform_features</strong> (<em>list[str]</em>) &#8211; features, in which we compute non-uniformity.</li>
-<li><strong>uniform_label</strong> &#8211; label of class, in which uniformity is measured (0 for bck, 1 for signal)</li>
-<li><strong>n_neighbours</strong> (<em>int</em>) &#8211; number of neighs</li>
-<li><strong>target_rcp</strong> (<em>list[float]</em>) &#8211; global right-classified-parts.
+<li><strong>uniform_features</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – features, in which we compute non-uniformity.</li>
+<li><strong>uniform_label</strong> – label of class, in which uniformity is measured (0 for bck, 1 for signal)</li>
+<li><strong>n_neighbours</strong> (<em>int</em>) – number of neighs</li>
+<li><strong>target_rcp</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – global right-classified-parts.
 Thresholds are selected so this part of class was correctly classified.
 Default values are [0.5, 0.6, 0.7, 0.8, 0.9]</li>
 </ul>
@@ -327,15 +355,18 @@ Default values are [0.5, 0.6, 0.7, 0.8, 0.9]</li>
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="nnet.html" class="btn btn-neutral float-right" title="Neural networks" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="nnet.html" class="btn btn-neutral float-right" title="Neural networks" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="uboost.html" class="btn btn-neutral" title="uBoost" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="uboost.html" class="btn btn-neutral" title="uBoost" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -369,13 +400,14 @@ Default values are [0.5, 0.6, 0.7, 0.8, 0.9]</li>
             VERSION:'0.4.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

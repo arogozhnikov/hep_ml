@@ -13,6 +13,8 @@
 
   
   
+  
+  
 
   
 
@@ -30,6 +32,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
     <link rel="top" title="hep_ml 0.4.0 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
@@ -40,6 +45,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -80,7 +86,10 @@
           
             
             
-                <ul>
+              
+            
+            
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">hep_ml documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../gb.html">Gradient boosting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../losses.html">Losses for Gradient Boosting</a></li>
@@ -104,8 +113,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../index.html">hep_ml</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">hep_ml</a>
+        
       </nav>
 
 
@@ -118,26 +129,43 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../index.html">Module code</a> &raquo;</li>
-      
-    <li>hep_ml.splot</li>
+        
+      <li>hep_ml.splot</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
   <h1>Source code for hep_ml.splot</h1><div class="highlight"><pre>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">**sPlot** is reweighting technique frequently used in HEP to reconstruct the distributions of features in mixture.</span>
 <span class="sd">Initial information used is the probabilities obtained after fitting.</span>
 
@@ -158,15 +186,15 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span>
 <span class="kn">import</span> <span class="nn">pandas</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">from</span> <span class="nn">.commonutils</span> <span class="kn">import</span> <span class="n">check_sample_weight</span>
+<span class="kn">from</span> <span class="nn">.commonutils</span> <span class="k">import</span> <span class="n">check_sample_weight</span>
 
-<span class="n">__author__</span> <span class="o">=</span> <span class="s">&#39;Alex Rogozhnikov&#39;</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Alex Rogozhnikov&#39;</span>
 
 
-<div class="viewcode-block" id="compute_sweights"><a class="viewcode-back" href="../../splot.html#hep_ml.splot.compute_sweights">[docs]</a><span class="k">def</span> <span class="nf">compute_sweights</span><span class="p">(</span><span class="n">probabilities</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="compute_sweights"><a class="viewcode-back" href="../../splot.html#hep_ml.splot.compute_sweights">[docs]</a><span class="k">def</span> <span class="nf">compute_sweights</span><span class="p">(</span><span class="n">probabilities</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Computes sWeights based on probabilities obtained from distribution fit.</span>
 
 <span class="sd">    :param probabilities: pandas.DataFrame with probabilities of shape [n_samples, n_classes].</span>
@@ -175,27 +203,30 @@
 <span class="sd">    :param sample_weight: optionally you can pass weights of events, numpy.array of shape [n_samples]</span>
 <span class="sd">    :return: pandas.DataFrame with sWeights of shape [n_samples, n_classes]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c"># converting to pandas.DataFrame</span>
+    <span class="c1"># converting to pandas.DataFrame</span>
     <span class="n">probabilities</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">probabilities</span><span class="p">)</span>
-    <span class="c"># checking sample_weight</span>
+    <span class="c1"># checking sample_weight</span>
     <span class="n">sample_weight</span> <span class="o">=</span> <span class="n">check_sample_weight</span><span class="p">(</span><span class="n">probabilities</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
-    <span class="c"># checking that all weights are positive</span>
-    <span class="k">assert</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">sample_weight</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">),</span> <span class="s">&#39;sample weight are expected to be non-negative&#39;</span>
+    <span class="c1"># checking that all weights are positive</span>
+    <span class="k">assert</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">sample_weight</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">),</span> <span class="s1">&#39;sample weight are expected to be non-negative&#39;</span>
 
     <span class="n">p</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">probabilities</span><span class="p">)</span>
-    <span class="c"># checking that probabilities sum up to 1.</span>
-    <span class="k">assert</span> <span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">),</span> <span class="s">&#39;sum of probabilities is not equal to 1.&#39;</span>
+    <span class="c1"># checking that probabilities sum up to 1.</span>
+    <span class="k">assert</span> <span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">),</span> <span class="s1">&#39;sum of probabilities is not equal to 1.&#39;</span>
 
-    <span class="c"># computations</span>
+    <span class="c1"># computations</span>
     <span class="n">initial_stats</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span> <span class="o">*</span> <span class="n">sample_weight</span><span class="p">[:,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">V_inv</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">p</span> <span class="o">*</span> <span class="n">sample_weight</span><span class="p">[:,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">])</span>
     <span class="n">V</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">V_inv</span><span class="p">)</span> <span class="o">*</span> <span class="n">initial_stats</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
 
-    <span class="c"># Final formula</span>
+    <span class="c1"># Final formula</span>
     <span class="n">sweights</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">V</span><span class="p">)</span> <span class="o">*</span> <span class="n">sample_weight</span><span class="p">[:,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">sweights</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">probabilities</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
 </pre></div>
 
+           </div>
+           <div class="articleComments">
+            
            </div>
           </div>
           <footer>
@@ -230,13 +261,14 @@
             VERSION:'0.4.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../_static/jquery.js"></script>
       <script type="text/javascript" src="../../_static/underscore.js"></script>
       <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 
