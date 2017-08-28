@@ -12,6 +12,7 @@ matrix:
           python: '3.4'
 
 before_install:
+  - pip install pip --upgrade -q
   - travis_retry pip install numpy scipy six pandas -q
   - travis_retry pip install scikit-learn nose -q
   - travis_retry pip install theano -q
