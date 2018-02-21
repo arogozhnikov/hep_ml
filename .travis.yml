@@ -24,6 +24,5 @@ install:
   - pip install pip --upgrade -q
   - travis_retry pip install numpy scipy six pandas -q
   - travis_retry pip install scikit-learn nose -q
-  - travis_retry pip install theano -q
-  - travis_retry pip install . --no-dependencies
+  - travis_retry pip install .
 script: nosetests tests
