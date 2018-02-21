@@ -454,7 +454,7 @@ class uBoostClassifier(BaseEstimator, ClassifierMixin):
         """
         self.uniform_features = uniform_features
         self.uniform_label = uniform_label
-        self.knn = n_neighbors
+        self.n_neighbors = n_neighbors
         self.efficiency_steps = efficiency_steps
         self.random_state = random_state
         self.n_estimators = n_estimators
@@ -495,7 +495,7 @@ class uBoostClassifier(BaseEstimator, ClassifierMixin):
             self.smoothing = 10. / self.efficiency_steps
 
         neighbours_matrix = compute_knn_indices_of_same_class(
-            X[self.uniform_features], y, n_neighbours=self.knn)
+            X[self.uniform_features], y, n_neighbours=self.n_neighbors)
         self.target_efficiencies = np.linspace(0, 1, self.efficiency_steps + 2)[1:-1]
         self.classifiers = []
 
@@ -504,7 +504,7 @@ class uBoostClassifier(BaseEstimator, ClassifierMixin):
                 uniform_features=self.uniform_features,
                 uniform_label=self.uniform_label,
                 train_features=None,
-                target_efficiency=efficiency, n_neighbors=self.knn,
+                target_efficiency=efficiency, n_neighbors=self.n_neighbors,
                 n_estimators=self.n_estimators,
                 base_estimator=self.base_estimator,
                 random_state=self.random_state, subsample=self.subsample,

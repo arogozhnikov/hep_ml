@@ -44,7 +44,7 @@ setup(
         'scipy >= 0.15.0',
         'pandas >= 0.14.0',
         'scikit-learn >= 0.15.2',
-        'theano >= 0.7',
+        'theano == 0.8.2',
         'six',
     ],
 )
