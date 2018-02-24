@@ -21,7 +21,7 @@ install:
   - conda install -q scikit-learn nose
   - pip install theano
   # installing self
-  - pip install . --no-dependencies
+  - pip install .
 
 test_script:
   - nosetests tests
