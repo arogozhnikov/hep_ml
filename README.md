@@ -5,6 +5,7 @@
 [![appveyor status](https://ci.appveyor.com/api/projects/status/kxatlw869t9ibbo3?svg=true)](https://ci.appveyor.com/project/arogozhnikov/hep-ml)
 [![PyPI version](https://badge.fury.io/py/hep_ml.svg)](http://badge.fury.io/py/hep_ml)
 [![Documentation](https://img.shields.io/badge/documentation-link-blue.svg)](https://arogozhnikov.github.io/hep_ml/)
+[![DOI](https://zenodo.org/badge/35104122.svg)](https://zenodo.org/badge/latestdoi/35104122)
 
 
 
