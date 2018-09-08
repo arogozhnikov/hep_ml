@@ -2,7 +2,7 @@ from setuptools import setup
 import codecs
 
 
-with codecs.open('README.rst', encoding='utf-8') as readme_file:
+with codecs.open('README.md', encoding='utf-8') as readme_file:
     long_description = readme_file.read()
 
 setup(
@@ -10,12 +10,12 @@ setup(
     version='0.5.0',
     description="Machine Learning for High Energy Physics",
     long_description=long_description,
+    long_description_content_type='text/markdown',
 
     url='https://github.com/arogozhnikov/hep_ml',
 
     # Author details
     author='Alex Rogozhnikov',
-    author_email='axelr@yandex-team.ru',
 
     # Choose your license
     license='Apache 2.0',
@@ -31,7 +31,9 @@ setup(
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
         'Programming Language :: Python :: 2.7 ',
-        'Programming Language :: Python :: 3.4 ',
+        'Programming Language :: Python :: 3.5 ',
+        'Programming Language :: Python :: 3.6 ',
+        'Programming Language :: Python :: 3.7 ',
     ],
 
     # What does your project relate to?
