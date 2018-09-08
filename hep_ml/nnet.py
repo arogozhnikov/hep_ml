@@ -396,7 +396,7 @@ class AbstractNeuralNetworkBase(BaseEstimator):
         """Creates and registers scalar parameter of neural network"""
         scalar_param = theano.shared(value=self.random_state_.normal() * 0.01, name=name)
         self.parameters[name] = scalar_param
-        yield scalar_param
+        return scalar_param
 
     def prepare(self):
         """This method should provide activation function and set parameters.
