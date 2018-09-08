@@ -1,6 +1,6 @@
 # hep_ml
 
-**hep_ml** provides specific machine learning tools for purposes of high energy physics (written in python).
+**hep_ml** provides specific machine learning tools for purposes of high energy physics.
 
 [![travis status](https://travis-ci.org/arogozhnikov/hep_ml.svg?branch=master)](https://travis-ci.org/arogozhnikov/hep_ml)
 [![appveyor status](https://ci.appveyor.com/api/projects/status/kxatlw869t9ibbo3?svg=true)](https://ci.appveyor.com/project/arogozhnikov/hep-ml)
