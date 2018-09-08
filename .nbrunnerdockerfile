@@ -1,3 +1,0 @@
-FROM yandex/rep:0.6.4
-
-RUN pip install hep_ml
