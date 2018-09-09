@@ -53,12 +53,12 @@ weights predictions will be unbiased: each reweighter predicts only those part o
 from __future__ import division, print_function, absolute_import
 
 from sklearn.base import BaseEstimator
-try:
-    from sklearn.model_selection import KFold, check_random_state
-except:
-    from sklearn.cross_validation import KFold, check_random_state
-
+from sklearn.utils import check_random_state
 from sklearn import clone
+try:
+    from sklearn.model_selection import KFold
+except:
+    from sklearn.cross_validation import KFold
 
 from scipy.ndimage import gaussian_filter
 import numpy
@@ -315,7 +315,7 @@ class FoldingReweighter(BaseEstimator, ReweighterMixin):
             self._random_number = check_random_state(self.random_state).randint(0, 100000)
         folds_column = numpy.zeros(length)
         for fold_number, (_, folds_indices) in enumerate(
-                KFold(length, self.n_folds, shuffle=True, random_state=self._random_number)):
+                KFold(self.n_folds, shuffle=True, random_state=self._random_number).split(range(length))):
             folds_column[folds_indices] = fold_number
         return folds_column
 
