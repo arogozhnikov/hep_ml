@@ -762,8 +762,9 @@ class AbstractFlatnessLossFunction(AbstractLossFunction):
     def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred):
         grad = self.negative_gradient(y_pred)
 
-        temp = numpy.bincount(terminal_regions, weights=grad, minlength=len(leaf_values))
-        return temp / numpy.bincount(terminal_regions, minlength=len(leaf_values))
+        nom = numpy.bincount(terminal_regions, weights=grad, minlength=len(leaf_values))
+        denom = numpy.bincount(terminal_regions, minlength=len(leaf_values))
+        return nom / denom.clip(1e-10)
 
 
 class BinFlatnessLossFunction(AbstractFlatnessLossFunction):

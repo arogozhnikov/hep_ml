@@ -47,11 +47,12 @@ sudo pip install .
 
 * [documentation](https://arogozhnikov.github.io/hep_ml/)
 * [notebooks, code examples](https://github.com/arogozhnikov/hep_ml/tree/master/notebooks)
+    - you may need to install `ROOT` and `root_numpy` to run those 
 * [repository](https://github.com/arogozhnikov/hep_ml)
 * [issue tracker](https://github.com/arogozhnikov/hep_ml/issues)
 
 ### Related projects 
-Libraries you'll require to make your life easier.
+Libraries you'll require to make your life easier and HEPpier.
 
 * [IPython Notebook](http://ipython.org/notebook.html) &mdash; web-shell for python
 * [scikit-learn](http://scikit-learn.org/)  &mdash; general-purpose library for machine learning in python
