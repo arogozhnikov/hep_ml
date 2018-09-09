@@ -53,7 +53,11 @@ weights predictions will be unbiased: each reweighter predicts only those part o
 from __future__ import division, print_function, absolute_import
 
 from sklearn.base import BaseEstimator
-from sklearn.cross_validation import KFold, check_random_state
+try:
+    from sklearn.model_selection import KFold, check_random_state
+except:
+    from sklearn.cross_validation import KFold, check_random_state
+
 from sklearn import clone
 
 from scipy.ndimage import gaussian_filter
@@ -361,7 +365,7 @@ class FoldingReweighter(BaseEstimator, ReweighterMixin):
             results = []
             for reweighter in self.reweighters:
                 results.append(reweighter.predict_weights(original, original_weight=original_weight))
-            # results: [n_classifiers, n_samples], reduction over 0th axis
+            # results: [n_classifiers, n_samples], reduction is expected over 0th axis
             results = numpy.array(results)
             return vote_function(results)
         else:

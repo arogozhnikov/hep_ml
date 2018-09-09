@@ -18,7 +18,7 @@ Also **hep_ml.nnet** allows optimization of parameters in any differentiable dec
 
 Being written in theano, these neural networks are able to make use of your GPU.
 
-See also libraries: theanets, keras, lasagne.
+See also libraries: keras, mxnet, pytorch.
 
 Examples
 ________

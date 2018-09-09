@@ -8,7 +8,7 @@ from hep_ml.metrics_utils import ks_2samp_weighted
 __author__ = 'Alex Rogozhnikov'
 
 
-def weighted_covar(data, weights):
+def weighted_covariance(data, weights):
     if len(data.shape) == 1:
         data = data[:, numpy.newaxis]
     data = data - numpy.mean(data, axis=0, keepdims=True)
@@ -47,12 +47,12 @@ def check_reweighter(n_dimensions, n_samples, reweighter, folding=False):
         av_ideal = numpy.average(target, weights=target_weight, axis=0)
         print('IDEAL:', av_ideal)
 
-        print('COVARIATION')
-        print('WAS', weighted_covar(original, original_weight))
-        print('NOW', weighted_covar(original, new_weights))
-        print('IDEAL', weighted_covar(target, target_weight))
+        print('COVARIANCE')
+        print('WAS', weighted_covariance(original, original_weight))
+        print('NOW', weighted_covariance(original, new_weights))
+        print('IDEAL', weighted_covariance(target, target_weight))
 
-        assert numpy.all(abs(av_now - av_ideal) < abs(av_orig - av_ideal)), 'deviation is wrong'
+        assert numpy.all(abs(av_now - av_ideal) < abs(av_orig - av_ideal)), 'averages are wrong'
         for dim in range(n_dimensions):
             diff1 = ks_2samp_weighted(original[:, dim], target[:, dim], original_weight, target_weight)
             diff2 = ks_2samp_weighted(original[:, dim], target[:, dim], new_weights, target_weight)
@@ -81,7 +81,7 @@ def test_gb_reweighter_2d():
 
 
 def test_folding_gb_reweighter():
-    reweighter = FoldingReweighter(GBReweighter(n_estimators=100, max_depth=2), n_folds=3)
+    reweighter = FoldingReweighter(GBReweighter(n_estimators=20, max_depth=2, learning_rate=0.1), n_folds=3)
     check_reweighter(n_dimensions=2, n_samples=200000, reweighter=reweighter, folding=True)
 
 
