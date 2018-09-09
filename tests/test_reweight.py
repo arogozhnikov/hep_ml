@@ -80,11 +80,6 @@ def test_gb_reweighter_2d():
     check_reweighter(n_dimensions=2, n_samples=200000, reweighter=reweighter)
 
 
-def test_gb_reweighter_2d_new():
-    reweighter = GBReweighter(max_depth=3, n_estimators=30, learning_rate=0.3, gb_args=dict(subsample=0.3))
-    check_reweighter(n_dimensions=2, n_samples=200000, reweighter=reweighter)
-
-
 def test_folding_gb_reweighter():
     reweighter = FoldingReweighter(GBReweighter(n_estimators=100, max_depth=2), n_folds=3)
     check_reweighter(n_dimensions=2, n_samples=200000, reweighter=reweighter, folding=True)

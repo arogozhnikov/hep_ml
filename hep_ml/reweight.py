@@ -317,7 +317,7 @@ class FoldingReweighter(BaseEstimator, ReweighterMixin):
 
     def fit(self, original, target, original_weight=None, target_weight=None):
         """
-        Prepare reweighting formula by training sequence of trees.
+        Prepare reweighting formula by training a sequence of trees.
 
         :param original: values from original distribution, array-like of shape [n_samples, n_features]
         :param target: values from target distribution, array-like of shape [n_samples, n_features]
@@ -338,7 +338,8 @@ class FoldingReweighter(BaseEstimator, ReweighterMixin):
 
         for i in range(self.n_folds):
             self.reweighters[i].fit(original[folds_original != i, :], target[folds_target != i, :],
-                                    original_weight[folds_original != i], target_weight[folds_target != i])
+                                    original_weight=original_weight[folds_original != i],
+                                    target_weight=target_weight[folds_target != i])
         self.train_length = len(original)
         return self
 
@@ -366,12 +367,13 @@ class FoldingReweighter(BaseEstimator, ReweighterMixin):
         else:
             if self.verbose:
                 if len(original) != self.train_length:
-                    print('KFold prediction using random reweighter (length of data passed not equal to length of train)')
+                    print('KFold prediction using random reweighter '
+                          '(length of data passed not equal to length of train)')
                 else:
                     print('KFold prediction using folds column')
             folds_original = self._get_folds_column(len(original))
             new_original_weight = numpy.zeros(len(original))
-            original = numpy.array(original)
+            original = numpy.asarray(original)
             for i in range(self.n_folds):
                 new_original_weight[folds_original == i] = self.reweighters[i].predict_weights(
                         original[folds_original == i, :], original_weight=original_weight[folds_original == i])
