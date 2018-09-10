@@ -7,7 +7,7 @@ with codecs.open('README.md', encoding='utf-8') as readme_file:
 
 setup(
     name="hep_ml",
-    version='0.5.0',
+    version='0.6.0',
     description="Machine Learning for High Energy Physics",
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -45,8 +45,8 @@ setup(
         'numpy >= 1.9',
         'scipy >= 0.15.0',
         'pandas >= 0.14.0',
-        'scikit-learn >= 0.15.2',
-        'theano == 0.8.2',
+        'scikit-learn >= 0.19',
+        'theano >= 1.0.2',
         'six',
     ],
 )
