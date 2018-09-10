@@ -17,9 +17,9 @@ install:
   - "conda create -q -n test-environment python=%PYTHON_VERSION%"
   - activate test-environment
   - conda install -q mingw libpython
-  - conda install -q pip numpy scipy mkl six pandas
+  - conda install -q pip numpy scipy mkl-service six pandas
   - conda install -q scikit-learn nose
-  - pip install theano
+  - conda install -q theano
   # installing self
   - pip install .
 
