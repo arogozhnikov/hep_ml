@@ -24,27 +24,19 @@
 
   
 
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="hep_ml 0.5.0 documentation" href="index.html"/>
-        <link rel="next" title="uBoost" href="uboost.html"/>
-        <link rel="prev" title="Gradient boosting" href="gb.html"/> 
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="uBoost" href="uboost.html" />
+    <link rel="prev" title="Gradient boosting" href="gb.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -116,7 +108,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">hep_ml</a>
@@ -124,9 +116,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -172,8 +165,8 @@
 <span id="losses-for-gradient-boosting"></span><h1>Losses for Gradient Boosting<a class="headerlink" href="#module-hep_ml.losses" title="Permalink to this headline">¶</a></h1>
 <p><strong>hep_ml.losses</strong> contains different loss functions to use in gradient boosting.</p>
 <p>Apart from standard classification losses, <strong>hep_ml</strong> contains losses for uniform classification
-(see <a class="reference internal" href="#hep_ml.losses.BinFlatnessLossFunction" title="hep_ml.losses.BinFlatnessLossFunction"><code class="xref py py-class docutils literal"><span class="pre">BinFlatnessLossFunction</span></code></a>, <a class="reference internal" href="#hep_ml.losses.KnnFlatnessLossFunction" title="hep_ml.losses.KnnFlatnessLossFunction"><code class="xref py py-class docutils literal"><span class="pre">KnnFlatnessLossFunction</span></code></a>, <a class="reference internal" href="#hep_ml.losses.KnnAdaLossFunction" title="hep_ml.losses.KnnAdaLossFunction"><code class="xref py py-class docutils literal"><span class="pre">KnnAdaLossFunction</span></code></a>)
-and for ranking (see <a class="reference internal" href="#hep_ml.losses.RankBoostLossFunction" title="hep_ml.losses.RankBoostLossFunction"><code class="xref py py-class docutils literal"><span class="pre">RankBoostLossFunction</span></code></a>)</p>
+(see <a class="reference internal" href="#hep_ml.losses.BinFlatnessLossFunction" title="hep_ml.losses.BinFlatnessLossFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">BinFlatnessLossFunction</span></code></a>, <a class="reference internal" href="#hep_ml.losses.KnnFlatnessLossFunction" title="hep_ml.losses.KnnFlatnessLossFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">KnnFlatnessLossFunction</span></code></a>, <a class="reference internal" href="#hep_ml.losses.KnnAdaLossFunction" title="hep_ml.losses.KnnAdaLossFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">KnnAdaLossFunction</span></code></a>)
+and for ranking (see <a class="reference internal" href="#hep_ml.losses.RankBoostLossFunction" title="hep_ml.losses.RankBoostLossFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">RankBoostLossFunction</span></code></a>)</p>
 <p><strong>Interface</strong></p>
 <p>Loss functions inside <strong>hep_ml</strong> are stateful estimators and require initial fitting,
 which is done automatically inside gradient boosting.</p>
@@ -181,30 +174,30 @@ which is done automatically inside gradient boosting.</p>
 <div class="section" id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <p>Training gradient boosting, optimizing LogLoss and using all features</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hep_ml.gradientboosting</span> <span class="k">import</span> <span class="n">UGradientBoostingClassifier</span><span class="p">,</span> <span class="n">LogLossFunction</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hep_ml.gradientboosting</span> <span class="k">import</span> <span class="n">UGradientBoostingClassifier</span><span class="p">,</span> <span class="n">LogLossFunction</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span> <span class="o">=</span> <span class="n">UGradientBoostingClassifier</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">LogLossFunction</span><span class="p">(),</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Using composite loss function and subsampling:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">loss</span> <span class="o">=</span> <span class="n">CompositeLossFunction</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">loss</span> <span class="o">=</span> <span class="n">CompositeLossFunction</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span> <span class="o">=</span> <span class="n">UGradientBoostingClassifier</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">,</span> <span class="n">subsample</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>To get uniform predictions in mass in background (note that mass should not present in features):</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">loss</span> <span class="o">=</span> <span class="n">BinFlatnessLossFunction</span><span class="p">(</span><span class="n">uniform_features</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mass&#39;</span><span class="p">],</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">train_features</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pt&#39;</span><span class="p">,</span> <span class="s1">&#39;flight_time&#39;</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">loss</span> <span class="o">=</span> <span class="n">BinFlatnessLossFunction</span><span class="p">(</span><span class="n">uniform_features</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mass&#39;</span><span class="p">],</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">train_features</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pt&#39;</span><span class="p">,</span> <span class="s1">&#39;flight_time&#39;</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span> <span class="o">=</span> <span class="n">UGradientBoostingClassifier</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>To get uniform predictions in both signal and background:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">loss</span> <span class="o">=</span> <span class="n">BinFlatnessLossFunction</span><span class="p">(</span><span class="n">uniform_features</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mass&#39;</span><span class="p">],</span> <span class="n">uniform_label</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">train_features</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pt&#39;</span><span class="p">,</span> <span class="s1">&#39;flight_time&#39;</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">loss</span> <span class="o">=</span> <span class="n">BinFlatnessLossFunction</span><span class="p">(</span><span class="n">uniform_features</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mass&#39;</span><span class="p">],</span> <span class="n">uniform_label</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">train_features</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pt&#39;</span><span class="p">,</span> <span class="s1">&#39;flight_time&#39;</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span> <span class="o">=</span> <span class="n">UGradientBoostingClassifier</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">)</span>
 </pre></div>
 </div>
 <dl class="class">
 <dt id="hep_ml.losses.AbstractLossFunction">
 <em class="property">class </em><code class="descclassname">hep_ml.losses.</code><code class="descname">AbstractLossFunction</code><a class="reference internal" href="_modules/hep_ml/losses.html#AbstractLossFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.AbstractLossFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.BaseEstimator</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.base.BaseEstimator</span></code></p>
 <p>This is base class for loss functions used in <cite>hep_ml</cite>.
 Main differences compared to <cite>scikit-learn</cite> loss functions:</p>
 <ol class="arabic simple">
@@ -281,9 +274,9 @@ moreover, the order should be the same</td>
 <dl class="class">
 <dt id="hep_ml.losses.MSELossFunction">
 <em class="property">class </em><code class="descclassname">hep_ml.losses.</code><code class="descname">MSELossFunction</code><span class="sig-paren">(</span><em>regularization=5.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MSELossFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.MSELossFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">hep_ml.losses.HessianLossFunction</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.losses.HessianLossFunction</span></code></p>
 <p>Mean squared error loss function, used for regression.
-<span class="math">\(\text{loss} = \sum_i (y_i - \hat{y}_i)^2\)</span></p>
+<span class="math notranslate nohighlight">\(\text{loss} = \sum_i (y_i - \hat{y}_i)^2\)</span></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -296,17 +289,25 @@ corresponds roughly to the number of added events of both classes to each leaf.<
 <dl class="method">
 <dt id="hep_ml.losses.MSELossFunction.compute_optimal_step">
 <code class="descname">compute_optimal_step</code><span class="sig-paren">(</span><em>y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MSELossFunction.compute_optimal_step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.MSELossFunction.compute_optimal_step" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Optimal step is computed using Newton-Raphson algorithm (10 iterations).
+:param y_pred: predictions (usually, zeros)
+:return: float</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="hep_ml.losses.MSELossFunction.fit">
 <code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y</em>, <em>sample_weight</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MSELossFunction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.MSELossFunction.fit" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>This method is optional, it is called before all the others.
+Heavy preprocessing should be done here.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="hep_ml.losses.MSELossFunction.hessian">
 <code class="descname">hessian</code><span class="sig-paren">(</span><em>y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MSELossFunction.hessian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.MSELossFunction.hessian" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns diagonal of hessian matrix.
+:param y_pred: numpy.array of shape [n_samples] with events passed in the same order as in <cite>fit</cite>.
+:return: numpy.array of shape [n_sampels] with second derivatives with respect to each prediction.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="hep_ml.losses.MSELossFunction.negative_gradient">
@@ -316,25 +317,51 @@ corresponds roughly to the number of added events of both classes to each leaf.<
 <dl class="method">
 <dt id="hep_ml.losses.MSELossFunction.prepare_tree_params">
 <code class="descname">prepare_tree_params</code><span class="sig-paren">(</span><em>y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MSELossFunction.prepare_tree_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.MSELossFunction.prepare_tree_params" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Prepares parameters for regression tree that minimizes MSE</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>y_pred</strong> – contains predictions for all the events passed to <cite>fit</cite> method,
+moreover, the order should be the same</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">tuple (tree_target, tree_weight) with target and weight to be used in decision tree</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="hep_ml.losses.MAELossFunction">
 <em class="property">class </em><code class="descclassname">hep_ml.losses.</code><code class="descname">MAELossFunction</code><a class="reference internal" href="_modules/hep_ml/losses.html#MAELossFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.MAELossFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#hep_ml.losses.AbstractLossFunction" title="hep_ml.losses.AbstractLossFunction"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.losses.AbstractLossFunction</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#hep_ml.losses.AbstractLossFunction" title="hep_ml.losses.AbstractLossFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.losses.AbstractLossFunction</span></code></a></p>
 <p>Mean absolute error loss function, used for regression.
-<span class="math">\(\text{loss} = \sum_i |y_i - \hat{y}_i|\)</span></p>
+<span class="math notranslate nohighlight">\(\text{loss} = \sum_i |y_i - \hat{y}_i|\)</span></p>
 <dl class="method">
 <dt id="hep_ml.losses.MAELossFunction.compute_optimal_step">
 <code class="descname">compute_optimal_step</code><span class="sig-paren">(</span><em>y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MAELossFunction.compute_optimal_step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.MAELossFunction.compute_optimal_step" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Compute optimal global step. This method is typically used to make optimal step
+before fitting trees to reduce variance.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>y_pred</strong> – initial predictions, numpy.array of shape [n_samples]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="hep_ml.losses.MAELossFunction.fit">
 <code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y</em>, <em>sample_weight</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MAELossFunction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.MAELossFunction.fit" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>This method is optional, it is called before all the others.
+Heavy preprocessing should be done here.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="hep_ml.losses.MAELossFunction.negative_gradient">
@@ -344,19 +371,48 @@ corresponds roughly to the number of added events of both classes to each leaf.<
 <dl class="method">
 <dt id="hep_ml.losses.MAELossFunction.prepare_new_leaves_values">
 <code class="descname">prepare_new_leaves_values</code><span class="sig-paren">(</span><em>terminal_regions</em>, <em>leaf_values</em>, <em>y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MAELossFunction.prepare_new_leaves_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.MAELossFunction.prepare_new_leaves_values" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Loss function can prepare better values for leaves by overriding this function</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>terminal_regions</strong> – indices of terminal regions of each event.</li>
+<li><strong>leaf_values</strong> – numpy.array, current mapping of leaf indices to prediction values.</li>
+<li><strong>y_pred</strong> – predictions before adding new tree.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">numpy.array with new prediction values for all leaves.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="hep_ml.losses.MAELossFunction.prepare_tree_params">
 <code class="descname">prepare_tree_params</code><span class="sig-paren">(</span><em>y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MAELossFunction.prepare_tree_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.MAELossFunction.prepare_tree_params" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Prepares parameters for regression tree that minimizes MSE</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>y_pred</strong> – contains predictions for all the events passed to <cite>fit</cite> method,
+moreover, the order should be the same</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">tuple (tree_target, tree_weight) with target and weight to be used in decision tree</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="hep_ml.losses.LogLossFunction">
 <em class="property">class </em><code class="descclassname">hep_ml.losses.</code><code class="descname">LogLossFunction</code><span class="sig-paren">(</span><em>regularization=5.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#LogLossFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.LogLossFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">hep_ml.losses.HessianLossFunction</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.losses.HessianLossFunction</span></code></p>
 <p>Logistic loss function (logloss), aka binomial deviance, aka cross-entropy,
 aka log-likelihood loss.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -371,12 +427,17 @@ corresponds roughly to the number of added events of both classes to each leaf.<
 <dl class="method">
 <dt id="hep_ml.losses.LogLossFunction.fit">
 <code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y</em>, <em>sample_weight</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#LogLossFunction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.LogLossFunction.fit" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>This method is optional, it is called before all the others.
+Heavy preprocessing should be done here.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="hep_ml.losses.LogLossFunction.hessian">
 <code class="descname">hessian</code><span class="sig-paren">(</span><em>y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#LogLossFunction.hessian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.LogLossFunction.hessian" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns diagonal of hessian matrix.
+:param y_pred: numpy.array of shape [n_samples] with events passed in the same order as in <cite>fit</cite>.
+:return: numpy.array of shape [n_sampels] with second derivatives with respect to each prediction.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="hep_ml.losses.LogLossFunction.negative_gradient">
@@ -386,14 +447,26 @@ corresponds roughly to the number of added events of both classes to each leaf.<
 <dl class="method">
 <dt id="hep_ml.losses.LogLossFunction.prepare_tree_params">
 <code class="descname">prepare_tree_params</code><span class="sig-paren">(</span><em>y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#LogLossFunction.prepare_tree_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.LogLossFunction.prepare_tree_params" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Prepares parameters for regression tree that minimizes MSE</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>y_pred</strong> – contains predictions for all the events passed to <cite>fit</cite> method,
+moreover, the order should be the same</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">tuple (tree_target, tree_weight) with target and weight to be used in decision tree</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="hep_ml.losses.AdaLossFunction">
 <em class="property">class </em><code class="descclassname">hep_ml.losses.</code><code class="descname">AdaLossFunction</code><span class="sig-paren">(</span><em>regularization=5.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#AdaLossFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.AdaLossFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">hep_ml.losses.HessianLossFunction</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.losses.HessianLossFunction</span></code></p>
 <p>AdaLossFunction is the same as Exponential Loss Function (aka exploss)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -407,12 +480,17 @@ corresponds roughly to the number of added events of both classes to each leaf.<
 <dl class="method">
 <dt id="hep_ml.losses.AdaLossFunction.fit">
 <code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y</em>, <em>sample_weight</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#AdaLossFunction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.AdaLossFunction.fit" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>This method is optional, it is called before all the others.
+Heavy preprocessing should be done here.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="hep_ml.losses.AdaLossFunction.hessian">
 <code class="descname">hessian</code><span class="sig-paren">(</span><em>y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#AdaLossFunction.hessian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.AdaLossFunction.hessian" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns diagonal of hessian matrix.
+:param y_pred: numpy.array of shape [n_samples] with events passed in the same order as in <cite>fit</cite>.
+:return: numpy.array of shape [n_sampels] with second derivatives with respect to each prediction.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="hep_ml.losses.AdaLossFunction.negative_gradient">
@@ -422,14 +500,26 @@ corresponds roughly to the number of added events of both classes to each leaf.<
 <dl class="method">
 <dt id="hep_ml.losses.AdaLossFunction.prepare_tree_params">
 <code class="descname">prepare_tree_params</code><span class="sig-paren">(</span><em>y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#AdaLossFunction.prepare_tree_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.AdaLossFunction.prepare_tree_params" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Prepares parameters for regression tree that minimizes MSE</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>y_pred</strong> – contains predictions for all the events passed to <cite>fit</cite> method,
+moreover, the order should be the same</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">tuple (tree_target, tree_weight) with target and weight to be used in decision tree</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="hep_ml.losses.CompositeLossFunction">
 <em class="property">class </em><code class="descclassname">hep_ml.losses.</code><code class="descname">CompositeLossFunction</code><span class="sig-paren">(</span><em>regularization=5.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#CompositeLossFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.CompositeLossFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">hep_ml.losses.HessianLossFunction</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.losses.HessianLossFunction</span></code></p>
 <p>Composite loss function is defined as exploss for backgorund events and logloss for signal with proper constants.</p>
 <p>Such kind of loss functions is very useful to optimize AMS or in situations where very clean signal is expected.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -444,12 +534,17 @@ corresponds roughly to the number of added events of both classes to each leaf.<
 <dl class="method">
 <dt id="hep_ml.losses.CompositeLossFunction.fit">
 <code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y</em>, <em>sample_weight</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#CompositeLossFunction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.CompositeLossFunction.fit" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>This method is optional, it is called before all the others.
+Heavy preprocessing should be done here.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="hep_ml.losses.CompositeLossFunction.hessian">
 <code class="descname">hessian</code><span class="sig-paren">(</span><em>y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#CompositeLossFunction.hessian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.CompositeLossFunction.hessian" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns diagonal of hessian matrix.
+:param y_pred: numpy.array of shape [n_samples] with events passed in the same order as in <cite>fit</cite>.
+:return: numpy.array of shape [n_sampels] with second derivatives with respect to each prediction.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="hep_ml.losses.CompositeLossFunction.negative_gradient">
@@ -461,10 +556,10 @@ corresponds roughly to the number of added events of both classes to each leaf.<
 <dl class="class">
 <dt id="hep_ml.losses.BinFlatnessLossFunction">
 <em class="property">class </em><code class="descclassname">hep_ml.losses.</code><code class="descname">BinFlatnessLossFunction</code><span class="sig-paren">(</span><em>uniform_features</em>, <em>uniform_label</em>, <em>n_bins=10</em>, <em>power=2.0</em>, <em>fl_coefficient=3.0</em>, <em>allow_wrong_signs=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#BinFlatnessLossFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.BinFlatnessLossFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">hep_ml.losses.AbstractFlatnessLossFunction</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.losses.AbstractFlatnessLossFunction</span></code></p>
 <p>This loss function contains separately penalty for non-flatness and for bad prediction quality.
 See <a class="reference internal" href="#id3" id="id1">[FL]</a> for details.</p>
-<p><span class="math">\(\text{loss} =\text{ExpLoss} + c \times \text{FlatnessLoss}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\text{loss} =\text{ExpLoss} + c \times \text{FlatnessLoss}\)</span></p>
 <p>FlatnessLoss computed using binning of uniform variables</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -474,7 +569,7 @@ See <a class="reference internal" href="#id3" id="id1">[FL]</a> for details.</p>
 <li><strong>uniform_features</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – names of features, along which we want to obtain uniformity of predictions</li>
 <li><strong>uniform_label</strong> (<em>int|list</em><em>[</em><em>int</em><em>]</em>) – the label(s) of classes for which uniformity is desired</li>
 <li><strong>n_bins</strong> (<em>int</em>) – number of bins along each variable</li>
-<li><strong>power</strong> (<em>float</em>) – the loss contains the difference <span class="math">\(| F - F_bin |^p\)</span>, where p is power</li>
+<li><strong>power</strong> (<em>float</em>) – the loss contains the difference <span class="math notranslate nohighlight">\(| F - F_bin |^p\)</span>, where p is power</li>
 <li><strong>fl_coefficient</strong> (<em>float</em>) – multiplier for flatness_loss. Controls the tradeoff of quality vs uniformity.</li>
 <li><strong>allow_wrong_signs</strong> (<em>bool</em>) – defines whether gradient may different sign from the “sign of class”
 (i.e. may have negative gradient on signal). If False, values will be clipped to zero.</li>
@@ -495,10 +590,10 @@ See <a class="reference internal" href="#id3" id="id1">[FL]</a> for details.</p>
 <dl class="class">
 <dt id="hep_ml.losses.KnnFlatnessLossFunction">
 <em class="property">class </em><code class="descclassname">hep_ml.losses.</code><code class="descname">KnnFlatnessLossFunction</code><span class="sig-paren">(</span><em>uniform_features</em>, <em>uniform_label</em>, <em>n_neighbours=100</em>, <em>power=2.0</em>, <em>fl_coefficient=3.0</em>, <em>max_groups=5000</em>, <em>allow_wrong_signs=True</em>, <em>random_state=42</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#KnnFlatnessLossFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.KnnFlatnessLossFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">hep_ml.losses.AbstractFlatnessLossFunction</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.losses.AbstractFlatnessLossFunction</span></code></p>
 <p>This loss function contains separately penalty for non-flatness and for bad prediction quality.
 See <a class="reference internal" href="#id3" id="id2">[FL]</a> for details.</p>
-<p><span class="math">\(\text{loss} = \text{ExpLoss} + c \times \text{FlatnessLoss}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\text{loss} = \text{ExpLoss} + c \times \text{FlatnessLoss}\)</span></p>
 <p>FlatnessLoss computed using nearest neighbors in space of uniform features</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -508,7 +603,7 @@ See <a class="reference internal" href="#id3" id="id2">[FL]</a> for details.</p>
 <li><strong>uniform_features</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – names of features, along which we want to obtain uniformity of predictions</li>
 <li><strong>uniform_label</strong> (<em>int|list</em><em>[</em><em>int</em><em>]</em>) – the label(s) of classes for which uniformity is desired</li>
 <li><strong>n_neighbours</strong> (<em>int</em>) – number of neighbors used in flatness loss</li>
-<li><strong>power</strong> (<em>float</em>) – the loss contains the difference <span class="math">\(| F - F_bin |^p\)</span>, where p is power</li>
+<li><strong>power</strong> (<em>float</em>) – the loss contains the difference <span class="math notranslate nohighlight">\(| F - F_bin |^p\)</span>, where p is power</li>
 <li><strong>fl_coefficient</strong> (<em>float</em>) – multiplier for flatness_loss. Controls the tradeoff of quality vs uniformity.</li>
 <li><strong>allow_wrong_signs</strong> (<em>bool</em>) – defines whether gradient may different sign from the “sign of class”
 (i.e. may have negative gradient on signal). If False, values will be clipped to zero.</li>
@@ -531,9 +626,9 @@ we randomly pick this number of points with their members.</li>
 <dl class="class">
 <dt id="hep_ml.losses.KnnAdaLossFunction">
 <em class="property">class </em><code class="descclassname">hep_ml.losses.</code><code class="descname">KnnAdaLossFunction</code><span class="sig-paren">(</span><em>uniform_features</em>, <em>uniform_label</em>, <em>knn=10</em>, <em>row_norm=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#KnnAdaLossFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.KnnAdaLossFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">hep_ml.losses.AbstractMatrixLossFunction</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.losses.AbstractMatrixLossFunction</span></code></p>
 <p>Modification of AdaLoss to achieve uniformity of predictions</p>
-<p><span class="math">\(\text{loss} = \sum_i w_i * exp(- \sum_j a_{ij} y_j score_j)\)</span></p>
+<p><span class="math notranslate nohighlight">\(\text{loss} = \sum_i w_i * exp(- \sum_j a_{ij} y_j score_j)\)</span></p>
 <p><cite>A</cite> matrix is square, each row corresponds to a single event in train dataset, in each row we put ones
 to the closest neighbours if this event from uniform class.
 See <a class="reference internal" href="#bu" id="id4">[BU]</a> for details.</p>
@@ -560,22 +655,23 @@ See <a class="reference internal" href="#bu" id="id4">[BU]</a> for details.</p>
 <dl class="method">
 <dt id="hep_ml.losses.KnnAdaLossFunction.compute_parameters">
 <code class="descname">compute_parameters</code><span class="sig-paren">(</span><em>trainX</em>, <em>trainY</em>, <em>trainW</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#KnnAdaLossFunction.compute_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.KnnAdaLossFunction.compute_parameters" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>This method should be overloaded in descendant, and should return A, w (matrix and vector)</p>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="hep_ml.losses.RankBoostLossFunction">
 <em class="property">class </em><code class="descclassname">hep_ml.losses.</code><code class="descname">RankBoostLossFunction</code><span class="sig-paren">(</span><em>request_column</em>, <em>penalty_power=1.0</em>, <em>update_iterations=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#RankBoostLossFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.RankBoostLossFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">hep_ml.losses.HessianLossFunction</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.losses.HessianLossFunction</span></code></p>
 <p>RankBoostLossFunction is target of optimization in RankBoost <a class="reference internal" href="#rb" id="id5">[RB]</a> algorithm,
 which was developed for ranking and introduces penalties for wrong order of predictions.</p>
 <p>However, this implementation goes further and there is selection of optimal leaf values based
 on iterative procedure. This implementation also uses matrix decomposition of loss function,
 which is very effective, when labels are from some very limited set (usually it is 0, 1, 2, 3, 4)</p>
-<p><span class="math">\(\text{loss} = \sum_{ij} w_{ij} exp(pred_i - pred_j)\)</span>,</p>
-<p><span class="math">\(w_{ij} = ( \alpha + \beta * [query_i = query_j]) R_{label_i, label_j}\)</span>, where
-<span class="math">\(R_{ij} = 0\)</span> if <span class="math">\(i \leq j\)</span>, else <span class="math">\(R_{ij} = (i - j)^{p}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\text{loss} = \sum_{ij} w_{ij} exp(pred_i - pred_j)\)</span>,</p>
+<p><span class="math notranslate nohighlight">\(w_{ij} = ( \alpha + \beta * [query_i = query_j]) R_{label_i, label_j}\)</span>, where
+<span class="math notranslate nohighlight">\(R_{ij} = 0\)</span> if <span class="math notranslate nohighlight">\(i \leq j\)</span>, else <span class="math notranslate nohighlight">\(R_{ij} = (i - j)^{p}\)</span></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -602,12 +698,17 @@ to samples with same query.</li>
 <dl class="method">
 <dt id="hep_ml.losses.RankBoostLossFunction.fit">
 <code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y</em>, <em>sample_weight</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#RankBoostLossFunction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.RankBoostLossFunction.fit" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>This method is optional, it is called before all the others.
+Heavy preprocessing should be done here.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="hep_ml.losses.RankBoostLossFunction.hessian">
 <code class="descname">hessian</code><span class="sig-paren">(</span><em>y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#RankBoostLossFunction.hessian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.RankBoostLossFunction.hessian" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns diagonal of hessian matrix.
+:param y_pred: numpy.array of shape [n_samples] with events passed in the same order as in <cite>fit</cite>.
+:return: numpy.array of shape [n_sampels] with second derivatives with respect to each prediction.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="hep_ml.losses.RankBoostLossFunction.negative_gradient">
@@ -617,21 +718,22 @@ to samples with same query.</li>
 <dl class="method">
 <dt id="hep_ml.losses.RankBoostLossFunction.prepare_new_leaves_values">
 <code class="descname">prepare_new_leaves_values</code><span class="sig-paren">(</span><em>terminal_regions</em>, <em>leaf_values</em>, <em>y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#RankBoostLossFunction.prepare_new_leaves_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.RankBoostLossFunction.prepare_new_leaves_values" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>This expression comes from optimization of second-order approximation of loss function.</p>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="hep_ml.losses.ReweightLossFunction">
 <em class="property">class </em><code class="descclassname">hep_ml.losses.</code><code class="descname">ReweightLossFunction</code><span class="sig-paren">(</span><em>regularization=5.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#ReweightLossFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.ReweightLossFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#hep_ml.losses.AbstractLossFunction" title="hep_ml.losses.AbstractLossFunction"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.losses.AbstractLossFunction</span></code></a></p>
-<p>Loss function used to reweight distributions. Works inside <a class="reference internal" href="reweight.html#hep_ml.reweight.GBReweighter" title="hep_ml.reweight.GBReweighter"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.reweight.GBReweighter</span></code></a>
+<dd><p>Bases: <a class="reference internal" href="#hep_ml.losses.AbstractLossFunction" title="hep_ml.losses.AbstractLossFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.losses.AbstractLossFunction</span></code></a></p>
+<p>Loss function used to reweight distributions. Works inside <a class="reference internal" href="reweight.html#hep_ml.reweight.GBReweighter" title="hep_ml.reweight.GBReweighter"><code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.reweight.GBReweighter</span></code></a>
 See <a class="reference internal" href="#rew" id="id6">[Rew]</a> for details.</p>
-<p>Conventions: <span class="math">\(y=0\)</span> - target distribution, <span class="math">\(y=1\)</span> - original distribution.</p>
+<p>Conventions: <span class="math notranslate nohighlight">\(y=0\)</span> - target distribution, <span class="math notranslate nohighlight">\(y=1\)</span> - original distribution.</p>
 <p>Weights after look like:</p>
 <ul class="simple">
-<li><span class="math">\(w = w_0\)</span> for target distribution</li>
-<li><span class="math">\(w = w_0 * exp(pred)\)</span> for events from original distribution
+<li><span class="math notranslate nohighlight">\(w = w_0\)</span> for target distribution</li>
+<li><span class="math notranslate nohighlight">\(w = w_0 * exp(pred)\)</span> for events from original distribution
 (so predictions for target distribution is ignored)</li>
 </ul>
 <table class="docutils field-list" frame="void" rules="none">
@@ -651,7 +753,9 @@ See <a class="reference internal" href="#rew" id="id6">[Rew]</a> for details.</p
 <dl class="method">
 <dt id="hep_ml.losses.ReweightLossFunction.fit">
 <code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y</em>, <em>sample_weight</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#ReweightLossFunction.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.ReweightLossFunction.fit" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>This method is optional, it is called before all the others.
+Heavy preprocessing should be done here.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="hep_ml.losses.ReweightLossFunction.negative_gradient">
@@ -661,12 +765,41 @@ See <a class="reference internal" href="#rew" id="id6">[Rew]</a> for details.</p
 <dl class="method">
 <dt id="hep_ml.losses.ReweightLossFunction.prepare_new_leaves_values">
 <code class="descname">prepare_new_leaves_values</code><span class="sig-paren">(</span><em>terminal_regions</em>, <em>leaf_values</em>, <em>y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#ReweightLossFunction.prepare_new_leaves_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.ReweightLossFunction.prepare_new_leaves_values" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Loss function can prepare better values for leaves by overriding this function</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>terminal_regions</strong> – indices of terminal regions of each event.</li>
+<li><strong>leaf_values</strong> – numpy.array, current mapping of leaf indices to prediction values.</li>
+<li><strong>y_pred</strong> – predictions before adding new tree.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">numpy.array with new prediction values for all leaves.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="hep_ml.losses.ReweightLossFunction.prepare_tree_params">
 <code class="descname">prepare_tree_params</code><span class="sig-paren">(</span><em>y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#ReweightLossFunction.prepare_tree_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.losses.ReweightLossFunction.prepare_tree_params" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Prepares parameters for regression tree that minimizes MSE</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>y_pred</strong> – contains predictions for all the events passed to <cite>fit</cite> method,
+moreover, the order should be the same</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">tuple (tree_target, tree_weight) with target and weight to be used in decision tree</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </dd></dl>
 
@@ -675,9 +808,7 @@ See <a class="reference internal" href="#rew" id="id6">[Rew]</a> for details.</p
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -699,7 +830,7 @@ See <a class="reference internal" href="#rew" id="id6">[Rew]</a> for details.</p
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -718,6 +849,7 @@ See <a class="reference internal" href="#rew" id="id6">[Rew]</a> for details.</p
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
             VERSION:'0.5.0',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -731,19 +863,13 @@ See <a class="reference internal" href="#rew" id="id6">[Rew]</a> for details.</p
 
   
 
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

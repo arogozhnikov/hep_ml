@@ -24,27 +24,19 @@
 
   
 
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="hep_ml 0.5.0 documentation" href="index.html"/>
-        <link rel="next" title="Preprocessing data" href="preprocessing.html"/>
-        <link rel="prev" title="Metric functions" href="metrics.html"/> 
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Preprocessing data" href="preprocessing.html" />
+    <link rel="prev" title="Metric functions" href="metrics.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -121,7 +113,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">hep_ml</a>
@@ -129,9 +121,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -184,29 +177,29 @@ This gives ability to define any activation expression (at the cost of unavailab
 user is encouraged to write his own specific architecture,
 which can be much more complex than those used usually.</p>
 <p>If you don’t want to dive into details, use
-<a class="reference internal" href="#hep_ml.nnet.MLPClassifier" title="hep_ml.nnet.MLPClassifier"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.nnet.MLPClassifier</span></code></a>, <a class="reference internal" href="#hep_ml.nnet.MLPRegressor" title="hep_ml.nnet.MLPRegressor"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.nnet.MLPRegressor</span></code></a></p>
+<a class="reference internal" href="#hep_ml.nnet.MLPClassifier" title="hep_ml.nnet.MLPClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.nnet.MLPClassifier</span></code></a>, <a class="reference internal" href="#hep_ml.nnet.MLPRegressor" title="hep_ml.nnet.MLPRegressor"><code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.nnet.MLPRegressor</span></code></a></p>
 <p>This library should be preferred for different experiments with architectures.
 Also <strong>hep_ml.nnet</strong> allows optimization of parameters in any differentiable decision function.</p>
 <p>Being written in theano, these neural networks are able to make use of your GPU.</p>
-<p>See also libraries: theanets, keras, lasagne.</p>
+<p>See also libraries: keras, mxnet, pytorch.</p>
 <div class="section" id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <p>Training a neural network with two hidden layers using IRPROP- algorithm</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span><span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span> <span class="n">loss</span><span class="o">=</span><span class="s1">&#39;log_loss&#39;</span><span class="p">,</span> <span class="n">trainer</span><span class="o">=</span><span class="s1">&#39;irprop-&#39;</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span><span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span> <span class="n">loss</span><span class="o">=</span><span class="s1">&#39;log_loss&#39;</span><span class="p">,</span> <span class="n">trainer</span><span class="o">=</span><span class="s1">&#39;irprop-&#39;</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">network</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">probability</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Training an AdaBoost over neural network with adadelta trainer. Trainer specific parameter was used
 (size of minibatch)</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="k">import</span> <span class="n">AdaBoostClassifier</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="k">import</span> <span class="n">AdaBoostClassifier</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">base_network</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span><span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">trainer</span><span class="o">=</span><span class="s1">&#39;adadelta&#39;</span><span class="p">,</span> <span class="n">trainer_parameters</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;batch&#39;</span><span class="p">:</span> <span class="mi">600</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span> <span class="o">=</span> <span class="n">AdaBoostClassifier</span><span class="p">(</span><span class="n">base_estimator</span><span class="o">=</span><span class="n">base_network</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Using custom pretransformer and ExponentialLoss:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">PolynomialFeatures</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">PolynomialFeatures</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">network</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span><span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">scaler</span><span class="o">=</span><span class="n">PolynomialFeatures</span><span class="p">(),</span> <span class="n">loss</span><span class="o">=</span><span class="s1">&#39;exp_loss&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -522,7 +515,7 @@ See parameters in documentation.</li>
 <dl class="class">
 <dt id="hep_ml.nnet.PairwiseNeuralNetwork">
 <em class="property">class </em><code class="descclassname">hep_ml.nnet.</code><code class="descname">PairwiseNeuralNetwork</code><span class="sig-paren">(</span><em>layers=(10</em>, <em>)</em>, <em>scaler='standard'</em>, <em>loss='log_loss'</em>, <em>trainer='irprop-'</em>, <em>epochs=100</em>, <em>trainer_parameters=None</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#PairwiseNeuralNetwork"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.PairwiseNeuralNetwork" title="Permalink to this definition">¶</a></dt>
-<dd><p>The result is computed as <span class="math">\(h = sigmoid(Ax)\)</span>, <span class="math">\(output = \sum_{ij} B_{ij} h_i (1 - h_j)\)</span>,
+<dd><p>The result is computed as <span class="math notranslate nohighlight">\(h = sigmoid(Ax)\)</span>, <span class="math notranslate nohighlight">\(output = \sum_{ij} B_{ij} h_i (1 - h_j)\)</span>,
 this is a brilliant example when easier to define activation
 function rather than trying to implement this inside some framework.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -551,8 +544,8 @@ See parameters in documentation.</li>
 <dl class="class">
 <dt id="hep_ml.nnet.PairwiseSoftplusNeuralNetwork">
 <em class="property">class </em><code class="descclassname">hep_ml.nnet.</code><code class="descname">PairwiseSoftplusNeuralNetwork</code><span class="sig-paren">(</span><em>layers=(10</em>, <em>)</em>, <em>scaler='standard'</em>, <em>loss='log_loss'</em>, <em>trainer='irprop-'</em>, <em>epochs=100</em>, <em>trainer_parameters=None</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/nnet.html#PairwiseSoftplusNeuralNetwork"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.nnet.PairwiseSoftplusNeuralNetwork" title="Permalink to this definition">¶</a></dt>
-<dd><p>The result is computed as <span class="math">\(h1 = softplus(A_1 x)\)</span>, <span class="math">\(h2 = sigmoid(A_2 x)\)</span>,
-<span class="math">\(output = \sum_{ij} B_{ij} h1_i h2_j)\)</span></p>
+<dd><p>The result is computed as <span class="math notranslate nohighlight">\(h1 = softplus(A_1 x)\)</span>, <span class="math notranslate nohighlight">\(h2 = sigmoid(A_2 x)\)</span>,
+<span class="math notranslate nohighlight">\(output = \sum_{ij} B_{ij} h1_i h2_j)\)</span></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -710,9 +703,7 @@ It is recommended for small datasets to put halflife = number of samples in data
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -734,7 +725,7 @@ It is recommended for small datasets to put halflife = number of samples in data
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -753,6 +744,7 @@ It is recommended for small datasets to put halflife = number of samples in data
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
             VERSION:'0.5.0',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -766,19 +758,13 @@ It is recommended for small datasets to put halflife = number of samples in data
 
   
 
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

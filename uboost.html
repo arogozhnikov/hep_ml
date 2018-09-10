@@ -24,27 +24,19 @@
 
   
 
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="hep_ml 0.5.0 documentation" href="index.html"/>
-        <link rel="next" title="Metric functions" href="metrics.html"/>
-        <link rel="prev" title="Losses for Gradient Boosting" href="losses.html"/> 
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Metric functions" href="metrics.html" />
+    <link rel="prev" title="Losses for Gradient Boosting" href="losses.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -116,7 +108,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">hep_ml</a>
@@ -124,9 +116,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -180,13 +173,13 @@ The main goal of <strong>uBoost</strong> is to fight correlation between predict
 contains smoothing and trains classifiers in threads, has <cite>learning_rate</cite> and <cite>uniforming_rate</cite> parameters,
 does automatic weights renormalization and supports SAMME.R modification to use predicted probabilities.</p>
 <p>Only binary classification is implemented.</p>
-<p>See also: <a class="reference internal" href="losses.html#hep_ml.losses.BinFlatnessLossFunction" title="hep_ml.losses.BinFlatnessLossFunction"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.losses.BinFlatnessLossFunction</span></code></a>, <a class="reference internal" href="losses.html#hep_ml.losses.KnnFlatnessLossFunction" title="hep_ml.losses.KnnFlatnessLossFunction"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.losses.KnnFlatnessLossFunction</span></code></a>,
-<a class="reference internal" href="losses.html#hep_ml.losses.KnnAdaLossFunction" title="hep_ml.losses.KnnAdaLossFunction"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.losses.KnnAdaLossFunction</span></code></a>
+<p>See also: <a class="reference internal" href="losses.html#hep_ml.losses.BinFlatnessLossFunction" title="hep_ml.losses.BinFlatnessLossFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.losses.BinFlatnessLossFunction</span></code></a>, <a class="reference internal" href="losses.html#hep_ml.losses.KnnFlatnessLossFunction" title="hep_ml.losses.KnnFlatnessLossFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.losses.KnnFlatnessLossFunction</span></code></a>,
+<a class="reference internal" href="losses.html#hep_ml.losses.KnnAdaLossFunction" title="hep_ml.losses.KnnAdaLossFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.losses.KnnAdaLossFunction</span></code></a>
 to fight correlation.</p>
 <div class="section" id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <p>To get uniform prediction in mass for background:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">base_tree</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">base_tree</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span> <span class="o">=</span> <span class="n">uBoostClassifier</span><span class="p">(</span><span class="n">uniform_features</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mass&#39;</span><span class="p">],</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="n">base_tree</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>                       <span class="n">train_features</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pt&#39;</span><span class="p">,</span> <span class="s1">&#39;flight_time&#39;</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="n">train_labels</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">train_weights</span><span class="p">)</span>
@@ -194,7 +187,7 @@ to fight correlation.</p>
 </pre></div>
 </div>
 <p>To get uniform prediction in Dalitz variables for signal</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span> <span class="o">=</span> <span class="n">uBoostClassifier</span><span class="p">(</span><span class="n">uniform_features</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mass_12&#39;</span><span class="p">,</span> <span class="s1">&#39;mass_23&#39;</span><span class="p">],</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="n">base_tree</span><span class="p">,</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span> <span class="o">=</span> <span class="n">uBoostClassifier</span><span class="p">(</span><span class="n">uniform_features</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mass_12&#39;</span><span class="p">,</span> <span class="s1">&#39;mass_23&#39;</span><span class="p">],</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="n">base_tree</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>                       <span class="n">train_features</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pt&#39;</span><span class="p">,</span> <span class="s1">&#39;flight_time&#39;</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="n">train_labels</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">train_weights</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">proba</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">test_data</span><span class="p">)</span>
@@ -203,7 +196,7 @@ to fight correlation.</p>
 <dl class="class">
 <dt id="hep_ml.uboost.uBoostBDT">
 <em class="property">class </em><code class="descclassname">hep_ml.uboost.</code><code class="descname">uBoostBDT</code><span class="sig-paren">(</span><em>uniform_features</em>, <em>uniform_label</em>, <em>target_efficiency=0.5</em>, <em>n_neighbors=50</em>, <em>subsample=1.0</em>, <em>base_estimator=None</em>, <em>n_estimators=50</em>, <em>learning_rate=1.0</em>, <em>uniforming_rate=1.0</em>, <em>train_features=None</em>, <em>smoothing=0.0</em>, <em>random_state=None</em>, <em>algorithm='SAMME'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostBDT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.uboost.uBoostBDT" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.BaseEstimator</span></code>, <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.ClassifierMixin</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.base.BaseEstimator</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.base.ClassifierMixin</span></code></p>
 <p>uBoostBDT is AdaBoostClassifier, which is modified to have flat
 efficiency of signal (class=1) along some variables.
 Efficiency is only guaranteed at the cut,
@@ -232,8 +225,8 @@ Support for sample weighting is required, as well as proper
 number of estimators used.</li>
 <li><strong>learning_rate</strong> – float, optional (default=1.)
 Learning rate shrinks the contribution of each classifier by
-<code class="docutils literal"><span class="pre">learning_rate</span></code>. There is a trade-off between <code class="docutils literal"><span class="pre">learning_rate</span></code>
-and <code class="docutils literal"><span class="pre">n_estimators</span></code>.</li>
+<code class="docutils literal notranslate"><span class="pre">learning_rate</span></code>. There is a trade-off between <code class="docutils literal notranslate"><span class="pre">learning_rate</span></code>
+and <code class="docutils literal notranslate"><span class="pre">n_estimators</span></code>.</li>
 <li><strong>uniforming_rate</strong> – float, optional (default=1.)
 how much do we take into account the uniformity of signal,
 there is a trade-off between uniforming_rate and the speed of
@@ -382,7 +375,7 @@ Float for each sample, the greater — the more signal like event is.</p>
 <dl class="class">
 <dt id="hep_ml.uboost.uBoostClassifier">
 <em class="property">class </em><code class="descclassname">hep_ml.uboost.</code><code class="descname">uBoostClassifier</code><span class="sig-paren">(</span><em>uniform_features</em>, <em>uniform_label</em>, <em>train_features=None</em>, <em>n_neighbors=50</em>, <em>efficiency_steps=20</em>, <em>n_estimators=40</em>, <em>base_estimator=None</em>, <em>subsample=1.0</em>, <em>algorithm='SAMME'</em>, <em>smoothing=None</em>, <em>n_threads=1</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostClassifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.uboost.uBoostClassifier" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.BaseEstimator</span></code>, <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.ClassifierMixin</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.base.BaseEstimator</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.base.ClassifierMixin</span></code></p>
 <p>uBoost classifier, an algorithm of boosting targeted to obtain
 flat efficiency in signal along some variables (e.g. mass).</p>
 <p>In principle, uBoost is ensemble of uBoostBDTs. See [1] for details.</p>
@@ -506,9 +499,7 @@ The target values (integers that correspond to classes).</li>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -530,7 +521,7 @@ The target values (integers that correspond to classes).</li>
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -549,6 +540,7 @@ The target values (integers that correspond to classes).</li>
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
             VERSION:'0.5.0',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -562,19 +554,13 @@ The target values (integers that correspond to classes).</li>
 
   
 
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

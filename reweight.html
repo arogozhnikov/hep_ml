@@ -24,27 +24,19 @@
 
   
 
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="hep_ml 0.5.0 documentation" href="index.html"/>
-        <link rel="next" title="Fast predictions" href="speedup.html"/>
-        <link rel="prev" title="Preprocessing data" href="preprocessing.html"/> 
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Fast predictions" href="speedup.html" />
+    <link rel="prev" title="Preprocessing data" href="preprocessing.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -116,7 +108,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">hep_ml</a>
@@ -124,9 +116,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -188,7 +181,7 @@ Also it is a nice way to combine weights predictions of trained reweighters.</p>
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <p>The most common use case is reweighting of Monte-Carlo simulations results to sPlotted real data.
 (original weights are all equal to 1 and could be skipped, but left here for example)</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hep_ml.reweight</span> <span class="k">import</span> <span class="n">BinsReweighter</span><span class="p">,</span> <span class="n">GBReweighter</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hep_ml.reweight</span> <span class="k">import</span> <span class="n">BinsReweighter</span><span class="p">,</span> <span class="n">GBReweighter</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">original_weights</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">MC_data</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">reweighter</span> <span class="o">=</span> <span class="n">BinsReweighter</span><span class="p">(</span><span class="n">n_bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_neighs</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">reweighter</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">original</span><span class="o">=</span><span class="n">MC_data</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">RealData</span><span class="p">,</span>
@@ -197,26 +190,26 @@ Also it is a nice way to combine weights predictions of trained reweighters.</p>
 </pre></div>
 </div>
 <p>The same example for <cite>GBReweighter</cite>:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">reweighter</span> <span class="o">=</span> <span class="n">GBReweighter</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">gb_args</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;subsample&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">})</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">reweighter</span> <span class="o">=</span> <span class="n">GBReweighter</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">gb_args</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;subsample&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">reweighter</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">original</span><span class="o">=</span><span class="n">MC_data</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">RealData</span><span class="p">,</span> <span class="n">target_weight</span><span class="o">=</span><span class="n">sWeights</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">MC_weights</span> <span class="o">=</span> <span class="n">reweighter</span><span class="o">.</span><span class="n">predict_weights</span><span class="p">(</span><span class="n">MC_data</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Folding over reweighter:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">reweighter_base</span> <span class="o">=</span> <span class="n">GBReweighter</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">gb_args</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;subsample&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">})</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">reweighter_base</span> <span class="o">=</span> <span class="n">GBReweighter</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">gb_args</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;subsample&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">reweighter</span> <span class="o">=</span> <span class="n">FoldingReweighter</span><span class="p">(</span><span class="n">reweighter_base</span><span class="p">,</span> <span class="n">n_folds</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">reweighter</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">original</span><span class="o">=</span><span class="n">MC_data</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">RealData</span><span class="p">,</span> <span class="n">target_weight</span><span class="o">=</span><span class="n">sWeights</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>If the same data used in the training process are predicted by folding reweighter
 weights predictions will be unbiased: each reweighter predicts only those part of data which is not used during its training</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">MC_weights</span> <span class="o">=</span> <span class="n">reweighter</span><span class="o">.</span><span class="n">predict_weights</span><span class="p">(</span><span class="n">MC_data</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">MC_weights</span> <span class="o">=</span> <span class="n">reweighter</span><span class="o">.</span><span class="n">predict_weights</span><span class="p">(</span><span class="n">MC_data</span><span class="p">)</span>
 </pre></div>
 </div>
 <dl class="class">
 <dt id="hep_ml.reweight.BinsReweighter">
 <em class="property">class </em><code class="descclassname">hep_ml.reweight.</code><code class="descname">BinsReweighter</code><span class="sig-paren">(</span><em>n_bins=200</em>, <em>n_neighs=3.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/reweight.html#BinsReweighter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.reweight.BinsReweighter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.BaseEstimator</span></code>, <code class="xref py py-class docutils literal"><span class="pre">hep_ml.reweight.ReweighterMixin</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.base.BaseEstimator</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.reweight.ReweighterMixin</span></code></p>
 <p>Use bins for reweighting. Bins’ edges are computed using quantiles along each axis
 (which is better than bins of even size).</p>
 <p>This method works fine for 1d/2d histograms,
@@ -303,7 +296,7 @@ with the same order of features as in training</td>
 <dl class="class">
 <dt id="hep_ml.reweight.GBReweighter">
 <em class="property">class </em><code class="descclassname">hep_ml.reweight.</code><code class="descname">GBReweighter</code><span class="sig-paren">(</span><em>n_estimators=40</em>, <em>learning_rate=0.2</em>, <em>max_depth=3</em>, <em>min_samples_leaf=200</em>, <em>loss_regularization=5.0</em>, <em>gb_args=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/reweight.html#GBReweighter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.reweight.GBReweighter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.BaseEstimator</span></code>, <code class="xref py py-class docutils literal"><span class="pre">hep_ml.reweight.ReweighterMixin</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.base.BaseEstimator</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.reweight.ReweighterMixin</span></code></p>
 <p>Gradient Boosted Reweighter - a reweighter algorithm based on ensemble of regression trees.
 Parameters have the same role, as in gradient boosting.
 Special loss function is used, trees are trained to maximize symmetrized binned chi-squared statistics.</p>
@@ -325,7 +318,7 @@ that algorithm ‘puts’ in each leaf to prevent exploding.</li>
 <li><strong>gb_args</strong> – other parameters passed to gradient boosting.
 Those are: subsample, min_samples_split, max_features, max_leaf_nodes
 For example: gb_args = {‘subsample’: 0.8, max_features=0.75}
-See <a class="reference internal" href="gb.html#hep_ml.gradientboosting.UGradientBoostingClassifier" title="hep_ml.gradientboosting.UGradientBoostingClassifier"><code class="xref py py-class docutils literal"><span class="pre">hep_ml.gradientboosting.UGradientBoostingClassifier</span></code></a>.</li>
+See <a class="reference internal" href="gb.html#hep_ml.gradientboosting.UGradientBoostingClassifier" title="hep_ml.gradientboosting.UGradientBoostingClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.gradientboosting.UGradientBoostingClassifier</span></code></a>.</li>
 </ul>
 </td>
 </tr>
@@ -380,7 +373,7 @@ See <a class="reference internal" href="gb.html#hep_ml.gradientboosting.UGradien
 <dl class="class">
 <dt id="hep_ml.reweight.FoldingReweighter">
 <em class="property">class </em><code class="descclassname">hep_ml.reweight.</code><code class="descname">FoldingReweighter</code><span class="sig-paren">(</span><em>base_reweighter</em>, <em>n_folds=2</em>, <em>random_state=None</em>, <em>verbose=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/reweight.html#FoldingReweighter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.reweight.FoldingReweighter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">sklearn.base.BaseEstimator</span></code>, <code class="xref py py-class docutils literal"><span class="pre">hep_ml.reweight.ReweighterMixin</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.base.BaseEstimator</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.reweight.ReweighterMixin</span></code></p>
 <p>This meta-regressor implements folding algorithm over reweighter:</p>
 <ul class="simple">
 <li>training data is splitted into n equal parts;</li>
@@ -410,7 +403,7 @@ provide appropriate voting function. Examples of voting function:
 <dl class="method">
 <dt id="hep_ml.reweight.FoldingReweighter.fit">
 <code class="descname">fit</code><span class="sig-paren">(</span><em>original</em>, <em>target</em>, <em>original_weight=None</em>, <em>target_weight=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/reweight.html#FoldingReweighter.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hep_ml.reweight.FoldingReweighter.fit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Prepare reweighting formula by training sequence of trees.</p>
+<dd><p>Prepare reweighting formula by training a sequence of trees.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -461,9 +454,7 @@ Another useful option is lambda x: numpy.median(x, axis=0)</li>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -485,7 +476,7 @@ Another useful option is lambda x: numpy.median(x, axis=0)</li>
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -504,6 +495,7 @@ Another useful option is lambda x: numpy.median(x, axis=0)</li>
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
             VERSION:'0.5.0',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -517,19 +509,13 @@ Another useful option is lambda x: numpy.median(x, axis=0)</li>
 
   
 
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>
