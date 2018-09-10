@@ -55,10 +55,6 @@ from __future__ import division, print_function, absolute_import
 from sklearn.base import BaseEstimator
 from sklearn.utils import check_random_state
 from sklearn import clone
-try:
-    from sklearn.model_selection import KFold
-except:
-    from sklearn.cross_validation import KFold
 
 from scipy.ndimage import gaussian_filter
 import numpy
@@ -313,10 +309,8 @@ class FoldingReweighter(BaseEstimator, ReweighterMixin):
         """
         if self._random_number is None:
             self._random_number = check_random_state(self.random_state).randint(0, 100000)
-        folds_column = numpy.zeros(length)
-        for fold_number, (_, folds_indices) in enumerate(
-                KFold(self.n_folds, shuffle=True, random_state=self._random_number).split(range(length))):
-            folds_column[folds_indices] = fold_number
+        folds_column = numpy.arange(length) % self.n_folds
+        folds_column = numpy.random.RandomState(self._random_number).permutation(folds_column)
         return folds_column
 
     def fit(self, original, target, original_weight=None, target_weight=None):
