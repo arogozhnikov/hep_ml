@@ -1,5 +1,5 @@
 environment:
-
+  MKL_THREADING_LAYER: GNU
   matrix:
 
     - MINICONDA: "C:\\Miniconda-x64"
