@@ -219,7 +219,7 @@ class GBReweighter(BaseEstimator, ReweighterMixin):
          that algorithm 'puts' in each leaf to prevent exploding.
         :param gb_args: other parameters passed to gradient boosting.
             Those are: subsample, min_samples_split, max_features, max_leaf_nodes
-            For example: gb_args = {'subsample': 0.8, max_features=0.75}
+            For example: gb_args = {'subsample': 0.8, 'max_features': 0.75}
             See :class:`hep_ml.gradientboosting.UGradientBoostingClassifier`.
         """
         self.learning_rate = learning_rate
