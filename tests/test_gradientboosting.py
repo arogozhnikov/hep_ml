@@ -61,6 +61,7 @@ def test_gradient_boosting(n_samples=1000, distance = 0.6):
         assert result >= 0.7, "The quality is too poor: {} with loss: {}".format(result, loss)
 
     trainX['fake_request'] = numpy.random.randint(0, 4, size=len(trainX))
+    testX['fake_request'] = numpy.random.randint(0, 4, size=len(testX))
     for loss in [losses.MSELossFunction(),
                  losses.MAELossFunction(),
                  losses.RankBoostLossFunction(request_column='fake_request')]:

@@ -244,7 +244,7 @@ def test_metrics_clear(n_samples=2000, knn=50, uniform_class=0):
     features = X.columns[:1]
 
     mask = (y == uniform_class)
-    X_clear = X.ix[mask, :]
+    X_clear = X[mask]
     y_clear = y[mask]
     sample_weight_clear = sample_weight[mask]
     predictions_clear = predictions[mask]

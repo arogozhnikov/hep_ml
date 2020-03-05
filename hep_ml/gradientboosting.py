@@ -149,6 +149,7 @@ class UGradientBoostingBase(BaseEstimator):
         if self.train_features is None:
             return X
         else:
+            assert all(f in X.columns for f in self.train_features), [X.columns, self.train_features]
             return X.loc[:, self.train_features]
 
     def staged_decision_function(self, X):
