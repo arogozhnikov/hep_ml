@@ -189,7 +189,7 @@ class uBoostBDT(BaseEstimator, ClassifierMixin):
             assert self.uniform_features is not None, \
                 "uniform_variables should be set"
             self.knn_indices = compute_knn_indices_of_same_class(
-                X.ix[:, self.uniform_features], y, self.n_neighbors)
+                X.loc[:, self.uniform_features], y, self.n_neighbors)
 
         sample_weight = commonutils.check_sample_weight(y, sample_weight=sample_weight, normalize=True)
         assert np.all(sample_weight >= 0.), 'the weights should be non-negative'

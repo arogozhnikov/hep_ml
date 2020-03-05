@@ -807,7 +807,7 @@ class BinFlatnessLossFunction(AbstractFlatnessLossFunction):
             bin_limits = []
             for axis_limits in extended_bin_limits:
                 bin_limits.append(axis_limits[1 + shift:-1:2])
-            bin_indices = compute_bin_indices(X.ix[:, self.uniform_features].values, bin_limits=bin_limits)
+            bin_indices = compute_bin_indices(X.loc[:, self.uniform_features].values, bin_limits=bin_limits)
             groups_indices += list(bin_to_group_indices(bin_indices, mask=label_mask))
         return groups_indices
 
