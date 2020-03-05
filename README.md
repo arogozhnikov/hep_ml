@@ -13,10 +13,11 @@
 ![hep_ml, python library for high energy physics](https://github.com/arogozhnikov/hep_ml/blob/data/data_to_download/hep_ml_image.png)
 
 
-### Main points
+### Main features
+
 * uniform classifiers - the classifiers with low correlation of predictions and mass (or some other variable, or even set of variables)
   * __uBoost__ optimized implementation inside
-  * __UGradientBoosting__ (with different losses, specially __FlatnessLoss__ is very interesting)
+  * __UGradientBoosting__ (with different losses, specially __FlatnessLoss__ is of high interest)
 * measures of uniformity (see **hep_ml.metrics**)
 * advanced losses for classification, regression and ranking for __UGradientBoosting__ (see **hep_ml.losses**).  
 * **hep_ml.nnet** - theano-based flexible neural networks 
@@ -41,6 +42,11 @@ To use **latest development version**, clone it and install with `pip`:
 git clone https://github.com/arogozhnikov/hep_ml.git
 cd hep_ml
 pip install .
+```
+
+Local testing: 
+```bash
+nosetests tests/
 ```
 
 ### Links
