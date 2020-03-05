@@ -3,7 +3,6 @@
 **hep_ml** provides specific machine learning tools for purposes of high energy physics.
 
 [![travis status](https://travis-ci.org/arogozhnikov/hep_ml.svg?branch=master)](https://travis-ci.org/arogozhnikov/hep_ml)
-<!-- [![appveyor status](https://ci.appveyor.com/api/projects/status/kxatlw869t9ibbo3?svg=true)](https://ci.appveyor.com/project/arogozhnikov/hep-ml) -->
 [![PyPI version](https://badge.fury.io/py/hep_ml.svg)](http://badge.fury.io/py/hep_ml)
 [![Documentation](https://img.shields.io/badge/documentation-link-blue.svg)](https://arogozhnikov.github.io/hep_ml/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1247391.svg)](https://doi.org/10.5281/zenodo.1247391)
