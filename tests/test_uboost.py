@@ -6,7 +6,12 @@ from six.moves import zip
 from sklearn.metrics import roc_auc_score, accuracy_score
 from sklearn.naive_bayes import GaussianNB
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble.weight_boosting import AdaBoostClassifier
+# sklearn 0.22 deprecated sklearn.ensemble.weight_boosting
+# remain backwards compatible
+try:
+    from sklearn.ensemble import AdaBoostClassifier
+except ImportError as e:
+    from sklearn.ensemble.weight_boosting import AdaBoostClassifier
 
 from hep_ml.commonutils import generate_sample
 from hep_ml.metrics import BinBasedCvM, KnnBasedCvM
