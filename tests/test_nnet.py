@@ -1,7 +1,12 @@
 from __future__ import division, print_function
 
 import numpy
-from sklearn.linear_model.logistic import LogisticRegression
+# sklearn 0.22 deprecated sklearn.linear_model.logistic
+# remain backwards compatible
+try:
+    from sklearn.linear_model import LogisticRegression
+except ImportError as e:
+    from sklearn.linear_model.logistic import LogisticRegression
 from sklearn.metrics import roc_auc_score, mean_squared_error, log_loss
 from sklearn.base import clone
 from sklearn.datasets import make_blobs
