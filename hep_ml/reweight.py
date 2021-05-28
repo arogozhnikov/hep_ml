@@ -187,7 +187,7 @@ class BinsReweighter(BaseEstimator, ReweighterMixin):
         :param original_weight: weights of samples before reweighting.
         :return: numpy.array of shape [n_samples] with new weights.
         """
-        original, original_weight = self._normalize_input(original, original_weight)
+        original, original_weight = self._normalize_input(original, original_weight, normalize=False)
         bin_indices = self.compute_bin_indices(original)
         results = self.transition[tuple(bin_indices.T)] * original_weight
         return results
@@ -266,7 +266,7 @@ class GBReweighter(BaseEstimator, ReweighterMixin):
         :param original_weight: weights of samples before reweighting.
         :return: numpy.array of shape [n_samples] with new weights.
         """
-        original, original_weight = self._normalize_input(original, original_weight)
+        original, original_weight = self._normalize_input(original, original_weight, normalize=False)
         multipliers = numpy.exp(self.gb.decision_function(original))
         return multipliers * original_weight
 
