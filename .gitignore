@@ -52,8 +52,8 @@ coverage.xml
 *.pot
 
 # Sphinx documentation
-docs/_build/
-docs/tmp*
+docsrc/_build/
+docsrc/tmp*
 
 # OS X garbage
 .DS_Store

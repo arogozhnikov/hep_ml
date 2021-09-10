@@ -4,9 +4,12 @@
 
 pip install sphinx_rtd_theme
 pip install -e .
-pushd docs
+pushd docsrc
 # Forcing to ignore caches
 make SPHINXOPTS="-E" html
-touch .nojekyll
 popd
 
+rm -r docs
+mkdir -p docs
+cp -a docsrc/_build/html/* docs
+touch docs/.nojekyll
