@@ -24,4 +24,4 @@ jobs:
                   TWINE_USERNAME: "__token__"
                   TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
               run: |
-                  source deploy_to_pypi.sh
+                  source publish_to_pypi.sh
