@@ -20,4 +20,4 @@ jobs:
         run: pip install numpy scipy six pandas scikit-learn nose -q
       - name: Run tests
         run: |
-          pip install . && python test.py
+          pip install . && nosetests tests
