@@ -6,7 +6,7 @@
 [![travis status](https://travis-ci.org/arogozhnikov/hep_ml.svg?branch=master)](https://travis-ci.org/arogozhnikov/hep_ml)
 [![PyPI version](https://badge.fury.io/py/hep-ml.svg)](https://badge.fury.io/py/hep-ml)
 [![Documentation](https://img.shields.io/badge/documentation-link-blue.svg)](https://arogozhnikov.github.io/hep_ml/)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1247379.svg)](https://doi.org/10.5281/zenodo.1247391)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1247379.svg)](https://doi.org/10.5281/zenodo.1247379)
 
 
 
