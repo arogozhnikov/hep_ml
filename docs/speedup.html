@@ -1,0 +1,367 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Fast predictions &mdash; hep_ml 0.7.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="sPlot" href="splot.html" />
+    <link rel="prev" title="Reweighting algorithms" href="reweight.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> hep_ml
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.7.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">hep_ml documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gb.html">Gradient boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="losses.html">Losses for Gradient Boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uboost.html">uBoost</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metric functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nnet.html">Neural networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reweight.html">Reweighting algorithms</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Fast predictions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="splot.html">sPlot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks.html">Code Examples</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">hep_ml</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Fast predictions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/speedup.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-hep_ml.speedup">
+<span id="fast-predictions"></span><h1>Fast predictions<a class="headerlink" href="#module-hep_ml.speedup" title="Permalink to this headline">¶</a></h1>
+<p><strong>hep_ml.speedup</strong> is module to obtain formulas with machine learning,
+which can be applied very fast (with a speed comparable to simple selections),
+while keeping high quality of classification.</p>
+<p>In many application (i.e. triggers in HEP) it is pressing to get really fast formula.
+This module contains tools to prepare formulas, which can be applied with the speed comparable to cuts.</p>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>Let’s show how one can use some really heavy classifier and still have fast predictions:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hep_ml.speedup</span> <span class="kn">import</span> <span class="n">LookupClassifier</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">base_classifier</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span> <span class="o">=</span> <span class="n">LookupClassifier</span><span class="p">(</span><span class="n">base_estimator</span><span class="o">=</span><span class="n">base_classifier</span><span class="p">,</span> <span class="n">keep_trained_estimator</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Though training takes much time, all predictions are precomputed and saved to lookup table,
+so you are able to predict millions of events per second using single CPU:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">testX</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="hep_ml.speedup.LookupClassifier">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hep_ml.speedup.</span></span><span class="sig-name descname"><span class="pre">LookupClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_estimator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_cells</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500000000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_trained_estimator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/speedup.html#LookupClassifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.speedup.LookupClassifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.base.BaseEstimator</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.base.ClassifierMixin</span></code></p>
+<p>LookupClassifier splits each of features into bins, trains a base_estimator to use this data.
+To predict class for new observation, results of base_estimator are kept for all possible combinations of bins,
+and saved together</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base_estimator</strong> – classifier used to build predictions</p></li>
+<li><p><strong>n_bins</strong> (<em>int | dict</em>) – <ul>
+<li><p>int: how many bins to use for each axis</p></li>
+<li><p>dict: feature_name -&gt; int, specialize how many bins to use for each axis</p></li>
+<li><p>dict: feature_name -&gt; list of floats, set manually edges of bins</p></li>
+</ul>
+<p>By default, the (weighted) quantiles are used to compute bin edges.</p>
+</p></li>
+<li><p><strong>max_cells</strong> (<em>int</em>) – raise error if lookup table will have more items.</p></li>
+<li><p><strong>keep_trained_estimator</strong> (<em>bool</em>) – if True, trained estimator will be saved.</p></li>
+</ul>
+</dd>
+</dl>
+<p>See also: this idea is used inside LHCb triggers, see V. Gligorov, M. Williams, ‘Bonsai BDT’</p>
+<p>Resulting formula is very simple and can be rewritten in other language or environment (C++, CUDA, etc).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hep_ml.speedup.LookupClassifier.check_dimensions">
+<span class="sig-name descname"><span class="pre">check_dimensions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bin_edges</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/speedup.html#LookupClassifier.check_dimensions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.speedup.LookupClassifier.check_dimensions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hep_ml.speedup.LookupClassifier.convert_bins_to_lookup_index">
+<span class="sig-name descname"><span class="pre">convert_bins_to_lookup_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bins_indices</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/speedup.html#LookupClassifier.convert_bins_to_lookup_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.speedup.LookupClassifier.convert_bins_to_lookup_index" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>bins_indices</strong> – numpy.array of shape [n_samples, n_columns], filled with indices of bins.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numpy.array of shape [n_samples] with corresponding index in lookup table</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hep_ml.speedup.LookupClassifier.convert_lookup_index_to_bins">
+<span class="sig-name descname"><span class="pre">convert_lookup_index_to_bins</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lookup_indices</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/speedup.html#LookupClassifier.convert_lookup_index_to_bins"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.speedup.LookupClassifier.convert_lookup_index_to_bins" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>lookup_indices</strong> – array of shape [n_samples] with positions at lookup table</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>array of shape [n_samples, n_features] with indices of bins.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hep_ml.speedup.LookupClassifier.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/speedup.html#LookupClassifier.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.speedup.LookupClassifier.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train a classifier and collect predictions for all possible combinations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> – pandas.DataFrame or numpy.array with data of shape [n_samples, n_features]</p></li>
+<li><p><strong>y</strong> – array with labels of shape [n_samples]</p></li>
+<li><p><strong>sample_weight</strong> – None or array of shape [n_samples] with weights of events</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hep_ml.speedup.LookupClassifier.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/speedup.html#LookupClassifier.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.speedup.LookupClassifier.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict class for each event</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> – pandas.DataFrame with data</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>array of shape [n_samples] with predicted class labels.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hep_ml.speedup.LookupClassifier.predict_proba">
+<span class="sig-name descname"><span class="pre">predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/speedup.html#LookupClassifier.predict_proba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.speedup.LookupClassifier.predict_proba" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict probabilities for new observations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> – pandas.DataFrame with data</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>probabilities, array of shape [n_samples, n_classes]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hep_ml.speedup.LookupClassifier.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/speedup.html#LookupClassifier.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.speedup.LookupClassifier.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert data to bin indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> – pandas.DataFrame or numpy.array with data</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numpy.array, where each column is replaced with index of bin</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="splot.html" class="btn btn-neutral float-right" title="sPlot" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="reweight.html" class="btn btn-neutral float-left" title="Reweighting algorithms" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2015-2017, Yandex; Alex Rogozhnikov and contributors.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

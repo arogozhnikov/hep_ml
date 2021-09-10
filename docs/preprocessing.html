@@ -1,0 +1,355 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Preprocessing data &mdash; hep_ml 0.7.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Reweighting algorithms" href="reweight.html" />
+    <link rel="prev" title="Neural networks" href="nnet.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> hep_ml
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.7.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">hep_ml documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gb.html">Gradient boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="losses.html">Losses for Gradient Boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uboost.html">uBoost</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metric functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nnet.html">Neural networks</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Preprocessing data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reweight.html">Reweighting algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="speedup.html">Fast predictions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="splot.html">sPlot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks.html">Code Examples</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">hep_ml</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Preprocessing data</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/preprocessing.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-hep_ml.preprocessing">
+<span id="preprocessing-data"></span><h1>Preprocessing data<a class="headerlink" href="#module-hep_ml.preprocessing" title="Permalink to this headline">¶</a></h1>
+<p><strong>hep_ml.preprocessing</strong> contains useful operations with data.
+Algorithms implemented here follow sklearn conventions for transformers and inherited from BaseEstimator and TransformerMixin.</p>
+<p>Minor difference compared to sklearn is that transformations preserve names of features in DataFrames
+(if it is possible).</p>
+<p>See also: sklearn.preprocessing for other useful data transformations.</p>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>Transformers may be used as any other transformer, manually training and applying:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hep_ml.preprocessing</span> <span class="kn">import</span> <span class="n">IronTransformer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">transformer</span> <span class="o">=</span> <span class="n">IronTransformer</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">trainX</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_trainX</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">trainX</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_testX</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">testX</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Apart from this, transformers may be plugged as part of sklearn.Pipeline:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hep_ml.nnet</span> <span class="kn">import</span> <span class="n">SimpleNeuralNetwork</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span><span class="s1">&#39;pre&#39;</span><span class="p">,</span> <span class="n">IronTransformer</span><span class="p">(),</span>
+<span class="gp">&gt;&gt;&gt; </span>                <span class="s1">&#39;nnet&#39;</span><span class="p">,</span> <span class="n">SimpleNeuralNetwork</span><span class="p">()])</span>
+</pre></div>
+</div>
+<p>Also, neural networks support special argument ‘scaler’. You can pass any transformer there:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span> <span class="o">=</span> <span class="n">SimpleNeuralNetwork</span><span class="p">(</span><span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="n">scaler</span><span class="o">=</span><span class="n">IronTransformer</span><span class="p">())</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="hep_ml.preprocessing.BinTransformer">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hep_ml.preprocessing.</span></span><span class="sig-name descname"><span class="pre">BinTransformer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">128</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/preprocessing.html#BinTransformer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.preprocessing.BinTransformer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.base.BaseEstimator</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.base.TransformerMixin</span></code></p>
+<p>Bin transformer transforms all features (which are expected to be numerical)
+to small integers.</p>
+<p>This simple transformation, while loosing part of information, can increase speed of some algorithms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>max_bins</strong> (<em>int</em>) – maximal number of bins along each axis.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="hep_ml.preprocessing.BinTransformer.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/preprocessing.html#BinTransformer.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.preprocessing.BinTransformer.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepare transformation rule, compute bin edges.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> – pandas.DataFrame or numpy.array with data</p></li>
+<li><p><strong>y</strong> – labels, ignored</p></li>
+<li><p><strong>sample_weight</strong> – weights, ignored</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hep_ml.preprocessing.BinTransformer.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extend_to</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/preprocessing.html#BinTransformer.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.preprocessing.BinTransformer.transform" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> – pandas.DataFrame or numpy.array with data</p></li>
+<li><p><strong>extend_to</strong> (<em>int</em>) – extends number of samples to be divisible by extend_to</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numpy.array with transformed features (names of columns are not preserved),
+dtype is ‘int8’ for space efficiency.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hep_ml.preprocessing.IronTransformer">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hep_ml.preprocessing.</span></span><span class="sig-name descname"><span class="pre">IronTransformer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symmetrize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/preprocessing.html#IronTransformer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.preprocessing.IronTransformer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.base.BaseEstimator</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.base.TransformerMixin</span></code></p>
+<p>IronTransformer fits one-dimensional transformation for each feature.</p>
+<p>After applying this transformations distribution of each feature turns into uniform.
+This is very handy to work with features with different scale and complex distributions.</p>
+<p>The name of transformer comes from <a class="reference external" href="https://en.wikipedia.org/wiki/Clothes_iron">https://en.wikipedia.org/wiki/Clothes_iron</a>,
+which makes anything flat, being applied with enough pressure :)</p>
+<p>Recommended to apply with neural networks and other algorithms sensitive to scale of features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>symmetrize</strong> – if True, resulting distribution is uniform in [-1, 1], otherwise in [0, 1]</p></li>
+<li><p><strong>max_points</strong> (<em>int</em>) – leave so many points in monotonic transformation.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="hep_ml.preprocessing.IronTransformer.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/preprocessing.html#IronTransformer.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.preprocessing.IronTransformer.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit formula. Compute set of 1-dimensional transformations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> – pandas.DataFrame with data</p></li>
+<li><p><strong>y</strong> – ignored</p></li>
+<li><p><strong>sample_weight</strong> – ignored</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hep_ml.preprocessing.IronTransformer.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/preprocessing.html#IronTransformer.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.preprocessing.IronTransformer.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> – pandas.DataFrame with data</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>pandas.DataFrame with transformed features</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="reweight.html" class="btn btn-neutral float-right" title="Reweighting algorithms" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="nnet.html" class="btn btn-neutral float-left" title="Neural networks" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2015-2017, Yandex; Alex Rogozhnikov and contributors.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

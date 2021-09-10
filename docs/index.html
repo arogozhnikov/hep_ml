@@ -1,0 +1,322 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>hep_ml documentation &mdash; hep_ml 0.7.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Gradient boosting" href="gb.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="#" class="icon icon-home"> hep_ml
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.7.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">hep_ml documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gb.html">Gradient boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="losses.html">Losses for Gradient Boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uboost.html">uBoost</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metric functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nnet.html">Neural networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reweight.html">Reweighting algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="speedup.html">Fast predictions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="splot.html">sPlot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks.html">Code Examples</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">hep_ml</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>hep_ml documentation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="hep-ml-documentation">
+<h1>hep_ml documentation<a class="headerlink" href="#hep-ml-documentation" title="Permalink to this headline">¶</a></h1>
+<p><strong>hep_ml</strong> is machine learning library filled with methods used in high energy physics.
+Classifiers and transformers from <strong>hep_ml</strong> are <strong>sklearn</strong>-compatible.</p>
+<div style='height: 36px;'>
+<iframe src="https://ghbtns.com/github-btn.html?user=arogozhnikov&repo=hep_ml&type=star&count=true" frameborder="0" scrolling="0" width="120px" height="27px"></iframe>
+<iframe src="https://ghbtns.com/github-btn.html?user=arogozhnikov&repo=hep_ml&type=watch&count=true&v=2" frameborder="0" scrolling="0" width="120px" height="27px"></iframe>
+<div style='clear: both' ></div>
+</div><div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>To install <strong>hep_ml</strong>, use <strong>pip</strong>. Type in terminal:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install hep_ml
+</pre></div>
+</div>
+</div>
+<div class="section" id="installation-for-developers">
+<h2>Installation for developers<a class="headerlink" href="#installation-for-developers" title="Permalink to this headline">¶</a></h2>
+<p>After cloning repository type in bash:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> hep_ml
+pip install -e . -r requirements.txt
+</pre></div>
+</div>
+</div>
+<div class="section" id="contents">
+<h2>Contents:<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">hep_ml documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gb.html">Gradient boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="losses.html">Losses for Gradient Boosting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="losses.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="uboost.html">uBoost</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="uboost.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metric functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nnet.html">Neural networks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nnet.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nnet.html#interface">Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nnet.html#recommended-networks">Recommended networks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nnet.html#custom-networks">Custom networks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nnet.html#loss-functions">Loss functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nnet.html#trainers">Trainers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="preprocessing.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reweight.html">Reweighting algorithms</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reweight.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="speedup.html">Fast predictions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="speedup.html#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="splot.html">sPlot</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="splot.html#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks.html">Code Examples</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="links">
+<h2>Links<a class="headerlink" href="#links" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://arogozhnikov.github.io/hep_ml/">documentation</a></p></li>
+<li><p><a class="reference external" href="https://github.com/arogozhnikov/hep_ml/tree/master/notebooks">notebook
+examples</a></p></li>
+<li><p><a class="reference external" href="https://github.com/arogozhnikov/hep_ml">repository</a></p></li>
+<li><p><a class="reference external" href="https://github.com/arogozhnikov/hep_ml/issues">issue tracker</a></p></li>
+</ul>
+</div>
+<div class="section" id="related-projects">
+<h2>Related projects<a class="headerlink" href="#related-projects" title="Permalink to this headline">¶</a></h2>
+<p>Libraries you’ll require to make your life easier.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="http://ipython.org/notebook.html">IPython Notebook</a> — web-shell
+for python</p></li>
+<li><p><a class="reference external" href="http://scikit-learn.org/">scikit-learn</a> — general-purpose library
+for machine learning in python</p></li>
+<li><p><a class="reference external" href="https://github.com/yandex/REP">REP</a> — python wrappers around
+different machine learning libraries (including TMVA) + goodies,
+required to plot learning curves reports after classification</p></li>
+<li><p><a class="reference external" href="http://www.numpy.org/">numpy</a> — ‘MATLAB in python’, vector
+operation in python. Use it you need to perform any number crunching.</p></li>
+<li><p><a class="reference external" href="http://deeplearning.net/software/theano/">theano</a> — optimized
+vector analytical math engine in python</p></li>
+<li><p><a class="reference external" href="https://root.cern.ch/">ROOT</a> — main data format in high energy
+physics</p></li>
+<li><p><a class="reference external" href="http://rootpy.github.io/root_numpy/">root_numpy</a> — python
+library to deal with ROOT files (without pain)</p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="gb.html" class="btn btn-neutral float-right" title="Gradient boosting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2015-2017, Yandex; Alex Rogozhnikov and contributors.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

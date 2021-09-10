@@ -1,0 +1,384 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Metric functions &mdash; hep_ml 0.7.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Neural networks" href="nnet.html" />
+    <link rel="prev" title="uBoost" href="uboost.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> hep_ml
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.7.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">hep_ml documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gb.html">Gradient boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="losses.html">Losses for Gradient Boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uboost.html">uBoost</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Metric functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nnet.html">Neural networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reweight.html">Reweighting algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="speedup.html">Fast predictions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="splot.html">sPlot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks.html">Code Examples</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">hep_ml</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Metric functions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/metrics.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-hep_ml.metrics">
+<span id="metric-functions"></span><h1>Metric functions<a class="headerlink" href="#module-hep_ml.metrics" title="Permalink to this headline">¶</a></h1>
+<p>Currently <strong>hep_ml.metrics</strong> module contains metric functions, which measure nonuniformity in predictions.</p>
+<p>These metrics are unfortunately more complicated than usual ones
+and require more information: not only predictions and classes,
+but also mass (or other variables along which we want to have uniformity)</p>
+<p>Available metrics of uniformity of predictions (for each of them bin version and knn version are available):</p>
+<ul class="simple">
+<li><p>SDE  - the standard deviation of efficiency</p></li>
+<li><p>Theil - Theil index of Efficiency (Theil index is used in economics)</p></li>
+<li><p>CVM  - based on Cramer-von Mises similarity between distributions</p></li>
+</ul>
+<dl class="simple">
+<dt>uniform_label:</dt><dd><ul class="simple">
+<li><p>1, if you want to measure non-uniformity in signal predictions</p></li>
+<li><p>0, if background.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Metrics are following <a class="reference external" href="https://github.com/yandex/rep">REP</a> conventions (first fit, then compute metrics on same dataset).
+For these metrics <cite>fit</cite> stage is crucial, since it precomputes information using dataset X,
+which is quite long and better to do this once. Different quality metrics with same interface
+can be found in <strong>REP</strong> package.</p>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>we want to check if our predictions are uniform in mass for background events</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">metric</span> <span class="o">=</span> <span class="n">BinBasedCvM</span><span class="p">(</span><span class="n">uniform_features</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mass&#39;</span><span class="p">],</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">metric</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">metric</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">classifier</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>to check predictions over two variables in signal (for dimensions &gt; 2 always use kNN, not bins):</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">metric</span> <span class="o">=</span> <span class="n">KnnBasedCvM</span><span class="p">(</span><span class="n">uniform_features</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mass12&#39;</span><span class="p">,</span> <span class="s1">&#39;mass23&#39;</span><span class="p">],</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">metric</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">metric</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">classifier</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>to check uniformity of signal predictions at global signal efficiency of 0.7:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">metric</span> <span class="o">=</span> <span class="n">KnnBasedSDE</span><span class="p">(</span><span class="n">uniform_features</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mass12&#39;</span><span class="p">,</span> <span class="s1">&#39;mass23&#39;</span><span class="p">],</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">target_rcp</span><span class="o">=</span><span class="p">[</span><span class="mf">0.7</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">metric</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">metric</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">classifier</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Generally kNN versions are slower, but more stable in higher dimensions.
+Don’t forget to scale features is those are of different nature.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="hep_ml.metrics.BinBasedCvM">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hep_ml.metrics.</span></span><span class="sig-name descname"><span class="pre">BinBasedCvM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uniform_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniform_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">power</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/metrics.html#BinBasedCvM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.metrics.BinBasedCvM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.metrics.AbstractBinMetric</span></code></p>
+<p>Nonuniformity metric based on Cramer-von Mises distance between distributions, computed on bins.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uniform_features</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – features, in which we compute non-uniformity.</p></li>
+<li><p><strong>uniform_label</strong> – label of class, in which uniformity is measured (0 for bck, 1 for signal)</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em>) – number of bins used along each axis.</p></li>
+<li><p><strong>power</strong> (<em>float</em>) – power used in CvM formula (default is 2.)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hep_ml.metrics.BinBasedSDE">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hep_ml.metrics.</span></span><span class="sig-name descname"><span class="pre">BinBasedSDE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uniform_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniform_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_rcp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">power</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/metrics.html#BinBasedSDE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.metrics.BinBasedSDE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.metrics.AbstractBinMetric</span></code></p>
+<p>Standard Deviation of Efficiency, computed using bins.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uniform_features</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – features, in which we compute non-uniformity.</p></li>
+<li><p><strong>uniform_label</strong> – label of class, in which uniformity is measured (0 for bck, 1 for signal)</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em>) – number of bins used along each axis.</p></li>
+<li><p><strong>target_rcp</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – global right-classified-parts.
+Thresholds are selected so this part of class was correctly classified.
+Default values are [0.5, 0.6, 0.7, 0.8, 0.9]</p></li>
+<li><p><strong>power</strong> (<em>float</em>) – power used in SDE formula (default is 2.)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hep_ml.metrics.BinBasedTheil">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hep_ml.metrics.</span></span><span class="sig-name descname"><span class="pre">BinBasedTheil</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uniform_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniform_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_rcp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/metrics.html#BinBasedTheil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.metrics.BinBasedTheil" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.metrics.AbstractBinMetric</span></code></p>
+<p>Theil index of Efficiency, computed using bins.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uniform_features</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – features, in which we compute non-uniformity.</p></li>
+<li><p><strong>uniform_label</strong> – label of class, in which uniformity is measured (0 for bck, 1 for signal)</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em>) – number of bins used along each axis.</p></li>
+<li><p><strong>target_rcp</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – global right-classified-parts.
+Thresholds are selected so this part of class was correctly classified.
+Default values are [0.5, 0.6, 0.7, 0.8, 0.9]</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hep_ml.metrics.KnnBasedCvM">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hep_ml.metrics.</span></span><span class="sig-name descname"><span class="pre">KnnBasedCvM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uniform_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniform_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_neighbours</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">power</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/metrics.html#KnnBasedCvM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.metrics.KnnBasedCvM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.metrics.AbstractKnnMetric</span></code></p>
+<p>Nonuniformity metric based on Cramer-von Mises distance between distributions, computed on nearest neighbours.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uniform_features</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – features, in which we compute non-uniformity.</p></li>
+<li><p><strong>uniform_label</strong> – label of class, in which uniformity is measured (0 for bck, 1 for signal)</p></li>
+<li><p><strong>n_neighbours</strong> (<em>int</em>) – number of neighs</p></li>
+<li><p><strong>power</strong> (<em>float</em>) – power used in CvM formula (default is 2.)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hep_ml.metrics.KnnBasedSDE">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hep_ml.metrics.</span></span><span class="sig-name descname"><span class="pre">KnnBasedSDE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uniform_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniform_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_neighbours</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_rcp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">power</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/metrics.html#KnnBasedSDE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.metrics.KnnBasedSDE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.metrics.AbstractKnnMetric</span></code></p>
+<p>Standard Deviation of Efficiency, computed using k nearest neighbours.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uniform_features</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – features, in which we compute non-uniformity.</p></li>
+<li><p><strong>uniform_label</strong> – label of class, in which uniformity is measured (0 for bck, 1 for signal)</p></li>
+<li><p><strong>n_neighbours</strong> (<em>int</em>) – number of neighs</p></li>
+<li><p><strong>target_rcp</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – global right-classified-parts.
+Thresholds are selected so this part of class was correctly classified.
+Default values are [0.5, 0.6, 0.7, 0.8, 0.9]</p></li>
+<li><p><strong>power</strong> (<em>float</em>) – power used in SDE formula (default is 2.)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hep_ml.metrics.KnnBasedTheil">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hep_ml.metrics.</span></span><span class="sig-name descname"><span class="pre">KnnBasedTheil</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uniform_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniform_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_neighbours</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_rcp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/metrics.html#KnnBasedTheil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.metrics.KnnBasedTheil" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.metrics.AbstractKnnMetric</span></code></p>
+<p>Theil index of Efficiency, computed using k nearest neighbours.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uniform_features</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – features, in which we compute non-uniformity.</p></li>
+<li><p><strong>uniform_label</strong> – label of class, in which uniformity is measured (0 for bck, 1 for signal)</p></li>
+<li><p><strong>n_neighbours</strong> (<em>int</em>) – number of neighs</p></li>
+<li><p><strong>target_rcp</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – global right-classified-parts.
+Thresholds are selected so this part of class was correctly classified.
+Default values are [0.5, 0.6, 0.7, 0.8, 0.9]</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="nnet.html" class="btn btn-neutral float-right" title="Neural networks" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="uboost.html" class="btn btn-neutral float-left" title="uBoost" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2015-2017, Yandex; Alex Rogozhnikov and contributors.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
