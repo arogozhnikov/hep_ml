@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # simple script to upload new versions to PyPI
 
-pip install wheel
-rm dist/*
-python setup.py sdist
-python setup.py bdist_wheel --universal
-twine upload -r pypi dist/* 
+rm -f build/*
+rm -f dist/*
+python3 -m pip install --upgrade build twine
+python3 -m build
+python3 -m twine upload dist/*
