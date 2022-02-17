@@ -118,7 +118,7 @@ class UGradientBoostingBase(BaseEstimator):
         for stage in range(self.n_estimators):
             # tree creation
             tree = SklearnClusteringTree(
-                criterion='mse',
+                criterion='squared_error',
                 splitter=self.splitter,
                 max_depth=self.max_depth,
                 min_samples_split=self.min_samples_split,
