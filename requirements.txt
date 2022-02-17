@@ -4,7 +4,7 @@ matplotlib >= 1.4
 pandas >= 0.14.0
 ipython[all] >= 3.0
 root_numpy >= 3.3.0
-scikit-learn >= 0.19
+scikit-learn >= 1  # criterion is squared_error instead of mse
 theano >= 1.0.2
 six
 sphinx_rtd_theme
