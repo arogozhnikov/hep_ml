@@ -23,8 +23,10 @@ nn_types = [
     nnet.MLPClassifier,
     nnet.SoftmaxNeuralNetwork,
     nnet.RBFNeuralNetwork,
-    nnet.PairwiseNeuralNetwork,
-    nnet.PairwiseSoftplusNeuralNetwork,
+    # these will trigger compilation with functions that are not available in new BLAS.
+    # more specifically, you'll see "undefined symbol: dgemm_"
+    # nnet.PairwiseNeuralNetwork,
+    # nnet.PairwiseSoftplusNeuralNetwork,
 ]
 
 
