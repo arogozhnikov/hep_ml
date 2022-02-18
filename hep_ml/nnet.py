@@ -126,6 +126,14 @@ from __future__ import print_function, division, absolute_import
 from copy import deepcopy
 
 import numpy
+
+try:
+    # handle change in numpy internals. See https://github.com/numpy/numpy/issues/21079
+    import numpy.distutils as du
+    du.__config__.blas_opt_info = du.__config__.blas_ilp64_opt_info
+except Exception:
+    pass
+
 import theano
 import theano.tensor as T
 from theano.ifelse import ifelse
