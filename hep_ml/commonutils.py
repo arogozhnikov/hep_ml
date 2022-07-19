@@ -276,9 +276,9 @@ def check_sample_weight(y_true, sample_weight, normalize=False, normalize_by_cla
         Better to use normalize if normalize_by_class is used.
     :returns: numpy.array with weights of shape [n_samples]"""
     if sample_weight is None:
-        sample_weight = numpy.ones(len(y_true), dtype=numpy.float)
+        sample_weight = numpy.ones(len(y_true), dtype=float)
     else:
-        sample_weight = numpy.array(sample_weight, dtype=numpy.float)
+        sample_weight = numpy.array(sample_weight, dtype=float)
         assert numpy.ndim(sample_weight) == 1, 'weights vector should be 1-dimensional'
         assert len(y_true) == len(sample_weight), \
             "The length of weights is different: not {0}, but {1}".format(len(y_true), len(sample_weight))
@@ -327,7 +327,7 @@ def score_to_proba(score):
     :param score: numpy.array of shape [n_samples]
     :return: probabilities, numpy.array of shape [n_samples, 2]
     """
-    proba = numpy.zeros((score.shape[0], 2), dtype=numpy.float)
+    proba = numpy.zeros((score.shape[0], 2), dtype=float)
     proba[:, 1] = expit(score)
     proba[:, 0] = 1.0 - proba[:, 1]
     return proba
@@ -354,3 +354,4 @@ def to_pandas_dataframe(X):
         return X
     else:
         return pandas.DataFrame(X, columns=['Feature{}'.format(i) for i in range(X.shape[1])])
+float
