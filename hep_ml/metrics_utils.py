@@ -67,7 +67,7 @@ def compute_bin_indices(X_part, bin_limits=None, n_bins=20):
             variable_data = X_part[:, variable_index]
             bin_limits.append(numpy.linspace(numpy.min(variable_data), numpy.max(variable_data), n_bins + 1)[1: -1])
 
-    bin_indices = numpy.zeros(len(X_part), dtype=numpy.int)
+    bin_indices = numpy.zeros(len(X_part), dtype=int)
     for axis, bin_limits_axis in enumerate(bin_limits):
         bin_indices *= (len(bin_limits_axis) + 1)
         bin_indices += numpy.searchsorted(bin_limits_axis, X_part[:, axis])

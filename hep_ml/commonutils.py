@@ -222,7 +222,7 @@ def compute_knn_indices_of_same_class(X, y, n_neighbours=50):
     :rtype numpy.array, shape [len(dataframe), knn], each row contains indices of closest signal events
     """
     assert len(X) == len(y), "different size"
-    result = numpy.zeros([len(X), n_neighbours], dtype=numpy.int)
+    result = numpy.zeros([len(X), n_neighbours], dtype=int)
     for label in set(y):
         is_signal = y == label
         label_knn = compute_knn_indices_of_signal(X, is_signal, n_neighbours)
