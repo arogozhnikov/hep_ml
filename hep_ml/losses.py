@@ -727,7 +727,7 @@ class AbstractFlatnessLossFunction(AbstractLossFunction):
 
     def _compute_fl_derivatives(self, y_pred):
         y_pred = numpy.ravel(y_pred)
-        neg_gradient = numpy.zeros(len(self.y), dtype=numpy.float)
+        neg_gradient = numpy.zeros(len(self.y), dtype=float)
 
         for label in self.uniform_label:
             label_mask = self.label_masks[label]
