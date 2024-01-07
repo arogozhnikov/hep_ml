@@ -46,7 +46,6 @@ setup(
         'scipy >= 0.15.0',
         'pandas >= 0.14.0',
         'scikit-learn >= 0.19',
-        'theano >= 1.0.2',
         'six',
     ],
 )
