@@ -16,6 +16,12 @@ Aim of reweighters is to get identical multidimensional distributions.
 Algorithms are implemented as estimators, fitting and reweighting stages are split.
 Fitted reweighter can be applied many times to different data, pickled and so on.
 
+Remark: The normalization constant in the reweighters is not fixed. This is to ensure that the
+output of `reweighter.predict_weights` is deterministic; for example, if you predict weights for
+a large sample all at once or predict weights separately for each event and then concantenate the
+predictions, the result will be the same---the results would be different were the weights automatically
+normalized to the number of events. If normalization plays a significant role in your application,
+you should normalize the weights yourself.
 
 Folding over reweighter is also availabel. This provides an easy way to run k-Folding cross-validation.
 Also it is a nice way to combine weights predictions of trained reweighters.
