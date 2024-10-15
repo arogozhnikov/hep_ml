@@ -360,12 +360,12 @@ class uBoostBDT(BaseEstimator, ClassifierMixin):
         for score in self.staged_decision_function(X):
             yield commonutils.score_to_proba(score)
 
-    def _uboost_predict_score(self, X):
+    def _uboost_predict_proba(self, X):
         """Method added specially for uBoostClassifier"""
         return sigmoid_function(self.decision_function(X) - self.score_cut,
                                 self.smoothing)
 
-    def _uboost_staged_predict_score(self, X):
+    def _uboost_staged_predict_proba(self, X):
         """Method added specially for uBoostClassifier"""
         for cut, score in zip(self.score_cuts_, self.staged_decision_function(X)):
             yield sigmoid_function(score - cut, self.smoothing)
@@ -536,8 +536,9 @@ class uBoostClassifier(BaseEstimator, ClassifierMixin):
         :return: array of shape [n_samples, n_classes] with probabilities.
         """
         X = self._get_train_features(X)
-        score = sum(clf._uboost_predict_score(X) for clf in self.classifiers)
-        return commonutils.score_to_proba(score / self.efficiency_steps)
+        p = (sum(clf._uboost_predict_proba(X) for clf in self.classifiers)
+             / self.efficiency_steps)
+        return np.array((1 - p, p)).T
 
     def staged_predict_proba(self, X):
         """Predicted probabilities for each sample after each stage of boosting.
@@ -546,8 +547,9 @@ class uBoostClassifier(BaseEstimator, ClassifierMixin):
         :return: sequence of numpy.arrays of shape [n_samples, n_classes]
         """
         X = self._get_train_features(X)
-        for scores in zip(*[clf._uboost_staged_predict_score(X) for clf in self.classifiers]):
-            yield commonutils.score_to_proba(sum(scores) / self.efficiency_steps)
+        for scores in zip(*[clf._uboost_staged_predict_proba(X) for clf in self.classifiers]):
+            p = sum(scores) / self.efficiency_steps
+            yield np.array((1 - p, p)).T
 
 
 def _generate_subsample_mask(n_samples, subsample, random_generator):
