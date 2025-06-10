@@ -6,4 +6,3 @@ Reweighting algorithms
     :members:
     :show-inheritance:
     :undoc-members:
-

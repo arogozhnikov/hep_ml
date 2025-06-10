@@ -6,4 +6,3 @@ Gradient boosting
     :members:
     :show-inheritance:
     :undoc-members:
-

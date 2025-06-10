@@ -6,4 +6,3 @@ Metric functions
     :members:
     :show-inheritance:
     :undoc-members:
-

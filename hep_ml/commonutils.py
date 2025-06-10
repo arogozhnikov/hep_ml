@@ -329,7 +329,7 @@ def take_last(sequence):
     Returns the last element in sequence or raises an error
     """
     empty = True
-    for element in sequence:
+    for element in sequence:  # noqa: B007
         empty = False
     if empty:
         raise IndexError("The sequence is empty.")

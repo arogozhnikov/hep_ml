@@ -183,8 +183,9 @@ class UGradientBoostingBase(BaseEstimator):
         """
         import warnings
 
-        warnings.warn("feature_importances_ of gb returns importances corresponding to used columns ",
-                      UserWarning, stacklevel=2)
+        warnings.warn(
+            "feature_importances_ of gb returns importances corresponding to used columns ", UserWarning, stacklevel=2
+        )
         total_sum = sum(tree.feature_importances_ for tree, values in self.estimators)
         return total_sum / len(self.estimators)
 
