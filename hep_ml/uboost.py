@@ -40,7 +40,6 @@ To get uniform prediction in Dalitz variables for signal
 # Alex Rogozhnikov <axelr@yandex-team.ru>
 # Nikita Kazeev <kazeevn@yandex-team.ru>
 
-from six.moves import zip
 
 import numpy as np
 from sklearn.base import BaseEstimator, ClassifierMixin, clone

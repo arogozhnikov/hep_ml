@@ -10,6 +10,8 @@ jobs:
         steps:
             - name: Checkout sources
               uses: actions/checkout@v2
+            - name: Install uv
+              uses: astral-sh/setup-uv@v5
 
             - name: Set up Python
               uses: actions/setup-python@v2
@@ -18,7 +20,7 @@ jobs:
 
             - name: Install dependencies
               run: |
-                  pip install .
+                  uv pip install .[dev]
             - name: Publish hep_ml to PyPi
               env:
                   TWINE_USERNAME: "__token__"
