@@ -24,26 +24,29 @@ from .commonutils import check_xyw, score_to_proba
 from .losses import AbstractLossFunction
 from .tree import SklearnClusteringTree
 
-__author__ = 'Alex Rogozhnikov'
-__all__ = ['UGradientBoostingClassifier', 'UGradientBoostingRegressor']
+__author__ = "Alex Rogozhnikov"
+__all__ = ["UGradientBoostingClassifier", "UGradientBoostingRegressor"]
 
 
 class UGradientBoostingBase(BaseEstimator):
-    """ Base class for gradient boosting estimators """
+    """Base class for gradient boosting estimators"""
 
-    def __init__(self, loss=None,
-                 n_estimators=100,
-                 learning_rate=0.1,
-                 subsample=1.,
-                 min_samples_split=2,
-                 min_samples_leaf=1,
-                 max_features=None,
-                 max_leaf_nodes=None,
-                 max_depth=3,
-                 splitter='best',
-                 update_tree=True,
-                 train_features=None,
-                 random_state=None):
+    def __init__(
+        self,
+        loss=None,
+        n_estimators=100,
+        learning_rate=0.1,
+        subsample=1.0,
+        min_samples_split=2,
+        min_samples_leaf=1,
+        max_features=None,
+        max_leaf_nodes=None,
+        max_depth=3,
+        splitter="best",
+        update_tree=True,
+        train_features=None,
+        random_state=None,
+    ):
         """
         `max_depth`, `max_leaf_nodes`, `min_samples_leaf`, `min_samples_split`, `max_features` are parameters
         of regression tree, which is used as base estimator.
@@ -75,10 +78,9 @@ class UGradientBoostingBase(BaseEstimator):
 
     def _check_params(self):
         """Checking parameters of classifier set in __init__"""
-        assert isinstance(self.loss, AbstractLossFunction), \
-            'LossFunction should be derived from AbstractLossFunction'
-        assert self.n_estimators > 0, 'n_estimators should be positive'
-        assert 0 < self.subsample <= 1., 'subsample should be in (0, 1]'
+        assert isinstance(self.loss, AbstractLossFunction), "LossFunction should be derived from AbstractLossFunction"
+        assert self.n_estimators > 0, "n_estimators should be positive"
+        assert 0 < self.subsample <= 1.0, "subsample should be in (0, 1]"
         self.random_state = check_random_state(self.random_state)
 
     def _estimate_tree(self, tree, leaf_values, X):
@@ -98,7 +100,7 @@ class UGradientBoostingBase(BaseEstimator):
         # preparing for loss function
         X, y, sample_weight = check_xyw(X, y, sample_weight=sample_weight)
 
-        assert isinstance(self.loss, AbstractLossFunction), 'loss function should be derived from AbstractLossFunction'
+        assert isinstance(self.loss, AbstractLossFunction), "loss function should be derived from AbstractLossFunction"
         self.loss = copy.deepcopy(self.loss)
         self.loss.fit(X, y, sample_weight=sample_weight)
 
@@ -114,27 +116,28 @@ class UGradientBoostingBase(BaseEstimator):
         for stage in range(self.n_estimators):
             # tree creation
             tree = SklearnClusteringTree(
-                criterion='squared_error',
+                criterion="squared_error",
                 splitter=self.splitter,
                 max_depth=self.max_depth,
                 min_samples_split=self.min_samples_split,
                 min_samples_leaf=self.min_samples_leaf,
                 max_features=self.max_features,
                 random_state=self.random_state,
-                max_leaf_nodes=self.max_leaf_nodes)
+                max_leaf_nodes=self.max_leaf_nodes,
+            )
 
             # tree learning
             residual, weights = self.loss.prepare_tree_params(y_pred)
             train_indices = self.random_state.choice(n_samples, size=n_inbag, replace=False)
 
-            tree.fit(X[train_indices], residual[train_indices],
-                     sample_weight=weights[train_indices], check_input=False)
+            tree.fit(X[train_indices], residual[train_indices], sample_weight=weights[train_indices], check_input=False)
             # update tree leaves
             leaf_values = tree.get_leaf_values()
             if self.update_tree:
                 terminal_regions = tree.transform(X)
-                leaf_values = self.loss.prepare_new_leaves_values(terminal_regions, leaf_values=leaf_values,
-                                                                  y_pred=y_pred)
+                leaf_values = self.loss.prepare_new_leaves_values(
+                    terminal_regions, leaf_values=leaf_values, y_pred=y_pred
+                )
 
             y_pred += self.learning_rate * self._estimate_tree(tree, leaf_values=leaf_values, X=X)
             self.estimators.append([tree, leaf_values])
@@ -180,7 +183,7 @@ class UGradientBoostingBase(BaseEstimator):
         """
         import warnings
 
-        warnings.warn('feature_importances_ of gb returns importances corresponding to used columns ')
+        warnings.warn("feature_importances_ of gb returns importances corresponding to used columns ")
         total_sum = sum(tree.feature_importances_ for tree, values in self.estimators)
         return total_sum / len(self.estimators)
 

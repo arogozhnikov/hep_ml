@@ -1,18 +1,17 @@
-
 import numpy
 
 from hep_ml import losses
 from hep_ml.commonutils import generate_sample
 
-__author__ = 'Alex Rogozhnikov'
+__author__ = "Alex Rogozhnikov"
 
 
 def test_orders(size=40):
     effs1 = losses._compute_positions(numpy.arange(size), numpy.ones(size))
     p = numpy.random.permutation(size)
     effs2 = losses._compute_positions(numpy.arange(size)[p], numpy.ones(size))
-    assert numpy.all(effs1[p] == effs2), 'Efficiencies are wrong'
-    assert numpy.all(effs1 == numpy.sort(effs1)), 'sortings are wrong'
+    assert numpy.all(effs1[p] == effs2), "Efficiencies are wrong"
+    assert numpy.all(effs1 == numpy.sort(effs1)), "sortings are wrong"
 
 
 def test_loss_functions(size=50, epsilon=1e-3):
@@ -34,7 +33,7 @@ def test_loss_functions(size=50, epsilon=1e-3):
     ]
     pred = numpy.random.normal(size=size)
     # y = pred is a special point in i.e. MAELossFunction
-    pred[numpy.abs(y - pred) < epsilon] = - 0.1
+    pred[numpy.abs(y - pred) < epsilon] = -0.1
     print(sum(numpy.abs(y - pred) < epsilon))
 
     for loss in tested_losses:
@@ -54,15 +53,15 @@ def test_loss_functions(size=50, epsilon=1e-3):
             pred_minus[i] -= epsilon
             val_minus = loss(pred_minus)
 
-            numer_gradient[i] = - (val_plus - val_minus) / 2. / epsilon
-            numer_hessian[i] = (val_plus + val_minus - 2 * val) / epsilon ** 2
+            numer_gradient[i] = -(val_plus - val_minus) / 2.0 / epsilon
+            numer_hessian[i] = (val_plus + val_minus - 2 * val) / epsilon**2
 
-        assert numpy.allclose(gradient, numer_gradient), f'wrong computation of gradient for {loss}'
+        assert numpy.allclose(gradient, numer_gradient), f"wrong computation of gradient for {loss}"
         if not isinstance(loss, losses.MSELossFunction) and not isinstance(loss, losses.MAELossFunction):
-            assert (gradient * (2 * y - 1) >= 0).all(), 'wrong signs of gradients'
+            assert (gradient * (2 * y - 1) >= 0).all(), "wrong signs of gradients"
         if isinstance(loss, losses.HessianLossFunction):
             hessian = loss.hessian(pred)
-            assert numpy.allclose(hessian, numer_hessian, atol=1e-5), f'wrong computation of hessian for {loss}'
+            assert numpy.allclose(hessian, numer_hessian, atol=1e-5), f"wrong computation of hessian for {loss}"
 
 
 def test_step_optimality(n_samples=100):
@@ -91,24 +90,26 @@ def test_step_optimality(n_samples=100):
 
         # Test simple way to get optimal step
         leaf_value = numpy.random.normal()
-        step = 0.
+        step = 0.0
         for _ in range(4):
-            ministep, = loss.prepare_new_leaves_values(terminal_regions=numpy.zeros(n_samples, dtype=int),
-                                                       leaf_values=[leaf_value], y_pred=pred + step)
+            (ministep,) = loss.prepare_new_leaves_values(
+                terminal_regions=numpy.zeros(n_samples, dtype=int), leaf_values=[leaf_value], y_pred=pred + step
+            )
             step += ministep
 
         if isinstance(loss, losses.MAELossFunction):
             # checking that MAE is minimized with long process
             for iteration in range(1, 30):
-                ministep, = loss.prepare_new_leaves_values(terminal_regions=numpy.zeros(n_samples, dtype=int),
-                                                           leaf_values=[leaf_value], y_pred=pred + step)
-                step += ministep * 1. / iteration
+                (ministep,) = loss.prepare_new_leaves_values(
+                    terminal_regions=numpy.zeros(n_samples, dtype=int), leaf_values=[leaf_value], y_pred=pred + step
+                )
+                step += ministep * 1.0 / iteration
 
         loss_values = []
         coeffs = [0.9, 1.0, 1.1]
         for coeff in coeffs:
             loss_values.append(loss(pred + coeff * step))
-        print(loss, step, 'losses: ', loss_values)
+        print(loss, step, "losses: ", loss_values)
         assert loss_values[1] <= loss_values[0] + 1e-7
         assert loss_values[1] <= loss_values[2] + 1e-7
 
@@ -117,6 +118,6 @@ def test_step_optimality(n_samples=100):
         loss_values2 = []
         for coeff in coeffs:
             loss_values2.append(loss(pred + coeff * opt_value))
-        print(loss, step, 'losses: ', loss_values)
+        print(loss, step, "losses: ", loss_values)
         assert loss_values2[1] <= loss_values2[0] + 1e-7
         assert loss_values2[1] <= loss_values2[2] + 1e-7

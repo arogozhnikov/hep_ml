@@ -3,7 +3,7 @@ import numpy
 from hep_ml.commonutils import generate_sample
 from hep_ml.preprocessing import BinTransformer, IronTransformer
 
-__author__ = 'Alex Rogozhnikov'
+__author__ = "Alex Rogozhnikov"
 
 
 def assure_monotonic(original, transformed):
@@ -43,7 +43,7 @@ def test_bin_transform(n_features=10, n_samples=10000):
     # checking dtype is integer
     numpy_result = numpy.array(result)
     print(numpy_result.dtype)
-    assert numpy_result.dtype == 'uint8'
+    assert numpy_result.dtype == "uint8"
 
 
 def test_iron_transformer(n_features=10, n_samples=5000):
@@ -51,9 +51,12 @@ def test_iron_transformer(n_features=10, n_samples=5000):
     Testing IronTransformer
     """
     import pandas
+
     data1 = numpy.random.normal(size=[n_samples, n_features])
-    data2 = pandas.DataFrame(data=numpy.random.normal(size=[n_samples, n_features]),
-                             index=numpy.random.choice(n_samples * 2, size=n_samples, replace=False))
+    data2 = pandas.DataFrame(
+        data=numpy.random.normal(size=[n_samples, n_features]),
+        index=numpy.random.choice(n_samples * 2, size=n_samples, replace=False),
+    )
     data3 = numpy.clip(data1, -0.2, 0.2)
 
     for symmetrize in [True, False]:
@@ -64,14 +67,14 @@ def test_iron_transformer(n_features=10, n_samples=5000):
                 transformer = IronTransformer(max_points=max_points, symmetrize=symmetrize).fit(data)
                 result = transformer.transform(data)
 
-                assert numpy.all(data == data_copy), 'data was augmented!'
+                assert numpy.all(data == data_copy), "data was augmented!"
 
                 assert numpy.all(numpy.isfinite(result))  # , numpy.isfinite(result).all()
-                assert numpy.all(result <= 1.)
+                assert numpy.all(result <= 1.0)
                 if symmetrize:
                     assert numpy.all(result >= -1)
                 else:
-                    assert numpy.all(result >= 0.)
+                    assert numpy.all(result >= 0.0)
                 assure_monotonic(data, result)
 
                 # check reproducibility
@@ -99,5 +102,5 @@ def test_bin_transformer_extend_to(n_features=10, n_bins=123):
     X, y = generate_sample(n_samples=20, n_features=n_features)
     X1 = BinTransformer(max_bins=n_bins).fit(X).transform(X)
     X2 = BinTransformer(max_bins=n_bins).fit(X).transform(X, extend_to=extended_length)
-    assert len(X2) % extended_length == 0, 'wrong shape!'
-    assert numpy.allclose(X2[:len(X1)], X1), 'extending does not work as expected!'
+    assert len(X2) % extended_length == 0, "wrong shape!"
+    assert numpy.allclose(X2[: len(X1)], X1), "extending does not work as expected!"

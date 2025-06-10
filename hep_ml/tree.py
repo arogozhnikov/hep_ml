@@ -11,40 +11,41 @@ from numpy import float32 as skldtype  # TODO: still needed?
 from sklearn.base import TransformerMixin
 from sklearn.tree import DecisionTreeRegressor
 
-__author__ = 'Alex Rogozhnikov'
+__author__ = "Alex Rogozhnikov"
 
 
 class ClusteringTree(TransformerMixin):
     """
     Trivial wrapper over different decision trees
     """
+
     def transform(self, X):
         """
         Return indices of leaves, to which each event belongs.
         :param X: numpy.array of shape [n_samples, n_features]
         :return: [n_samples] with indices
         """
-        raise NotImplementedError('should be overriden in descendant')
+        raise NotImplementedError("should be overriden in descendant")
 
     def predict(self, X):
         """
         Predict values, separately for each leaf.
         """
-        raise NotImplementedError('should be overriden in descendant')
+        raise NotImplementedError("should be overriden in descendant")
 
     def get_leaf_values(self):
         """
         Return values tree predicts for each of leaves.
         :return: numpy.array of shape [n_samples]
         """
-        raise NotImplementedError('should be overriden in descendant')
+        raise NotImplementedError("should be overriden in descendant")
 
     @staticmethod
     def prepare_data(X):
         """Convert dataset to the way when no additional work is needed inside fitting or predicting.
         This method is called once to transform dataset.
         """
-        raise NotImplementedError('should be overriden in descendant')
+        raise NotImplementedError("should be overriden in descendant")
 
 
 class SklearnClusteringTree(DecisionTreeRegressor, ClusteringTree):
@@ -62,5 +63,3 @@ class SklearnClusteringTree(DecisionTreeRegressor, ClusteringTree):
     def prepare_data(X):
         """Converting to the type needed during fitting sklearn trees."""
         return numpy.array(X, dtype=skldtype)
-
-

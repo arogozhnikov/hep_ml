@@ -40,7 +40,6 @@ To get uniform prediction in Dalitz variables for signal
 # Alex Rogozhnikov <axelr@yandex-team.ru>
 # Nikita Kazeev <kazeevn@yandex-team.ru>
 
-
 import numpy as np
 from sklearn.base import BaseEstimator, ClassifierMixin, clone
 from sklearn.tree import DecisionTreeClassifier
@@ -62,20 +61,22 @@ __all__ = ["uBoostBDT", "uBoostClassifier"]
 
 
 class uBoostBDT(BaseEstimator, ClassifierMixin):
-    def __init__(self,
-                 uniform_features,
-                 uniform_label,
-                 target_efficiency=0.5,
-                 n_neighbors=50,
-                 subsample=1.0,
-                 base_estimator=None,
-                 n_estimators=50,
-                 learning_rate=1.,
-                 uniforming_rate=1.,
-                 train_features=None,
-                 smoothing=0.0,
-                 random_state=None,
-                 algorithm="SAMME"):
+    def __init__(
+        self,
+        uniform_features,
+        uniform_label,
+        target_efficiency=0.5,
+        n_neighbors=50,
+        subsample=1.0,
+        base_estimator=None,
+        n_estimators=50,
+        learning_rate=1.0,
+        uniforming_rate=1.0,
+        train_features=None,
+        smoothing=0.0,
+        random_state=None,
+        algorithm="SAMME",
+    ):
         """
         uBoostBDT is AdaBoostClassifier, which is modified to have flat
         efficiency of signal (class=1) along some variables.
@@ -171,31 +172,28 @@ class uBoostBDT(BaseEstimator, ClassifierMixin):
         if self.base_estimator is None:
             self.base_estimator = DecisionTreeClassifier(max_depth=2)
         # Check that algorithm is supported
-        if self.algorithm not in ('SAMME', 'SAMME.R'):
+        if self.algorithm not in ("SAMME", "SAMME.R"):
             raise ValueError("algorithm %s is not supported" % self.algorithm)
-        if self.algorithm == 'SAMME.R':
-            if not hasattr(self.base_estimator, 'predict_proba'):
+        if self.algorithm == "SAMME.R":
+            if not hasattr(self.base_estimator, "predict_proba"):
                 raise TypeError(
                     "uBoostBDT with algorithm='SAMME.R' requires "
                     "that the weak learner have a predict_proba method.\n"
-                    "Please change the base estimator or set algorithm='SAMME' instead.")
+                    "Please change the base estimator or set algorithm='SAMME' instead."
+                )
 
-        assert np.isin(y, [0, 1]).all(), \
-            "only two-class classification is implemented, with labels 0 and 1"
+        assert np.isin(y, [0, 1]).all(), "only two-class classification is implemented, with labels 0 and 1"
         self.signed_uniform_label = 2 * self.uniform_label - 1
 
         if neighbours_matrix is not None:
-            assert np.shape(neighbours_matrix) == (len(X), self.n_neighbors), \
-                "Wrong shape of neighbours_matrix"
+            assert np.shape(neighbours_matrix) == (len(X), self.n_neighbors), "Wrong shape of neighbours_matrix"
             self.knn_indices = neighbours_matrix
         else:
-            assert self.uniform_features is not None, \
-                "uniform_variables should be set"
-            self.knn_indices = compute_knn_indices_of_same_class(
-                X.loc[:, self.uniform_features], y, self.n_neighbors)
+            assert self.uniform_features is not None, "uniform_variables should be set"
+            self.knn_indices = compute_knn_indices_of_same_class(X.loc[:, self.uniform_features], y, self.n_neighbors)
 
         sample_weight = commonutils.check_sample_weight(y, sample_weight=sample_weight, normalize=True)
-        assert np.all(sample_weight >= 0.), 'the weights should be non-negative'
+        assert np.all(sample_weight >= 0.0), "the weights should be non-negative"
 
         # Clear any previous fit results
         self.estimators_ = []
@@ -212,9 +210,11 @@ class uBoostBDT(BaseEstimator, ClassifierMixin):
         self._boost(x_train_features, y, sample_weight)
 
         self.score_cut = self.signed_uniform_label * compute_cut_for_efficiency(
-            self.target_efficiency, y == self.uniform_label, self.decision_function(X) * self.signed_uniform_label)
-        assert np.allclose(self.score_cut, self.score_cuts_[-1], rtol=1e-10, atol=1e-10), \
+            self.target_efficiency, y == self.uniform_label, self.decision_function(X) * self.signed_uniform_label
+        )
+        assert np.allclose(self.score_cut, self.score_cuts_[-1], rtol=1e-10, atol=1e-10), (
             "score cut doesn't appear to coincide with the staged one"
+        )
         assert len(self.estimators_) == len(self.estimator_weights_) == len(self.score_cuts_)
         return self
 
@@ -229,7 +229,7 @@ class uBoostBDT(BaseEstimator, ClassifierMixin):
 
     def _estimator_score(self, estimator, X):
         if self.algorithm == "SAMME":
-            return 2 * estimator.predict(X) - 1.
+            return 2 * estimator.predict(X) - 1.0
         else:
             p = estimator.predict_proba(X)
             p[p <= 1e-5] = 1e-5
@@ -247,22 +247,23 @@ class uBoostBDT(BaseEstimator, ClassifierMixin):
         signed_score_cut = compute_cut_for_efficiency(self.target_efficiency, y == self.uniform_label, signed_score)
         global_score_cut = signed_score_cut * self.signed_uniform_label
 
-        local_efficiencies = compute_group_efficiencies_by_indices(signed_score, self.knn_indices, cut=signed_score_cut,
-                                                                   smoothing=self.smoothing)
+        local_efficiencies = compute_group_efficiencies_by_indices(
+            signed_score, self.knn_indices, cut=signed_score_cut, smoothing=self.smoothing
+        )
 
         # pay attention - sample_weight should be used only here
-        e_prime = np.average(np.abs(local_efficiencies - self.target_efficiency),
-                             weights=sample_weight)
+        e_prime = np.average(np.abs(local_efficiencies - self.target_efficiency), weights=sample_weight)
 
-        is_uniform_class = (y == self.uniform_label)
+        is_uniform_class = y == self.uniform_label
 
         # beta = np.log((1.0 - e_prime) / e_prime)
         # changed to log(1. / e_prime), otherwise this can lead to the situation
         # where beta is negative (which is a disaster).
         # Mike (uboost author) said he didn't take that into account.
-        beta = np.log(1. / e_prime)
-        boost_weights = np.exp((self.target_efficiency - local_efficiencies) * is_uniform_class *
-                               (beta * self.uniforming_rate))
+        beta = np.log(1.0 / e_prime)
+        boost_weights = np.exp(
+            (self.target_efficiency - local_efficiencies) * is_uniform_class * (beta * self.uniforming_rate)
+        )
 
         return boost_weights, global_score_cut
 
@@ -277,15 +278,14 @@ class uBoostBDT(BaseEstimator, ClassifierMixin):
             estimator.fit(X[mask], y[mask], sample_weight=sample_weight[mask])
 
             # computing estimator weight
-            if self.algorithm == 'SAMME':
+            if self.algorithm == "SAMME":
                 y_pred = estimator.predict(X)
 
                 # Error fraction
                 estimator_error = np.average(y_pred != y, weights=sample_weight)
-                estimator_error = np.clip(estimator_error, 1e-6, 1. - 1e-6)
+                estimator_error = np.clip(estimator_error, 1e-6, 1.0 - 1e-6)
 
-                estimator_weight = self.learning_rate * 0.5 * (
-                    np.log((1. - estimator_error) / estimator_error))
+                estimator_weight = self.learning_rate * 0.5 * (np.log((1.0 - estimator_error) / estimator_error))
 
                 score = estimator_weight * (2 * y_pred - 1)
             else:
@@ -293,12 +293,11 @@ class uBoostBDT(BaseEstimator, ClassifierMixin):
                 score = estimator_weight * self._estimator_score(estimator, X)
 
             # correcting the weights and score according to predictions
-            sample_weight *= np.exp(- y_signed * score)
+            sample_weight *= np.exp(-y_signed * score)
             sample_weight = self._normalize_weight(y, sample_weight)
             cumulative_score += score
 
-            uboost_multipliers, global_score_cut = \
-                self._compute_uboost_multipliers(sample_weight, cumulative_score, y)
+            uboost_multipliers, global_score_cut = self._compute_uboost_multipliers(sample_weight, cumulative_score, y)
             sample_weight *= uboost_multipliers
             sample_weight = self._normalize_weight(y, sample_weight)
 
@@ -311,7 +310,7 @@ class uBoostBDT(BaseEstimator, ClassifierMixin):
 
     def _get_train_features(self, X):
         """Gets the DataFrame and returns only columns
-           that should be used in fitting / predictions"""
+        that should be used in fitting / predictions"""
         if self.train_features is None:
             return X
         else:
@@ -365,8 +364,7 @@ class uBoostBDT(BaseEstimator, ClassifierMixin):
 
     def _uboost_predict_proba(self, X):
         """Method added specially for uBoostClassifier"""
-        return sigmoid_function(self.decision_function(X) - self.score_cut,
-                                self.smoothing)
+        return sigmoid_function(self.decision_function(X) - self.score_cut, self.smoothing)
 
     def _uboost_staged_predict_proba(self, X):
         """Method added specially for uBoostClassifier"""
@@ -380,33 +378,34 @@ class uBoostBDT(BaseEstimator, ClassifierMixin):
         :return: array of shape [n_features], the order is the same as in `train_features`
         """
         if self.estimators_ is None or len(self.estimators_) == 0:
-            raise ValueError("Estimator not fitted,"
-                             " call `fit` before `feature_importances_`.")
+            raise ValueError("Estimator not fitted, call `fit` before `feature_importances_`.")
 
-        return sum(tree.feature_importances_ * weight for tree, weight
-                   in zip(self.estimators_, self.estimator_weights_))
+        return sum(
+            tree.feature_importances_ * weight for tree, weight in zip(self.estimators_, self.estimator_weights_)
+        )
 
 
 def _train_classifier(classifier, X_train_vars, y, sample_weight, neighbours_matrix):
     # supplementary function to train separate parts of uBoost on cluster
-    return classifier.fit(X_train_vars, y,
-                          sample_weight=sample_weight,
-                          neighbours_matrix=neighbours_matrix)
+    return classifier.fit(X_train_vars, y, sample_weight=sample_weight, neighbours_matrix=neighbours_matrix)
 
 
 class uBoostClassifier(BaseEstimator, ClassifierMixin):
-    def __init__(self, uniform_features,
-                 uniform_label,
-                 train_features=None,
-                 n_neighbors=50,
-                 efficiency_steps=20,
-                 n_estimators=40,
-                 base_estimator=None,
-                 subsample=1.0,
-                 algorithm="SAMME",
-                 smoothing=None,
-                 n_threads=1,
-                 random_state=None):
+    def __init__(
+        self,
+        uniform_features,
+        uniform_label,
+        train_features=None,
+        n_neighbors=50,
+        efficiency_steps=20,
+        n_estimators=40,
+        base_estimator=None,
+        subsample=1.0,
+        algorithm="SAMME",
+        smoothing=None,
+        n_threads=1,
+        random_state=None,
+    ):
         """uBoost classifier, an algorithm of boosting targeted to obtain
         flat efficiency in signal along some variables (e.g. mass).
 
@@ -487,18 +486,18 @@ class uBoostClassifier(BaseEstimator, ClassifierMixin):
             raise ValueError("Please set uniform variables")
         if len(self.uniform_features) == 0:
             raise ValueError("The set of uniform variables cannot be empty")
-        assert np.isin(y, [0, 1]).all(), \
-            "only two-class classification is implemented"
+        assert np.isin(y, [0, 1]).all(), "only two-class classification is implemented"
         if self.base_estimator is None:
             self.base_estimator = DecisionTreeClassifier(max_depth=2)
         X, y, sample_weight = check_xyw(X, y, sample_weight=sample_weight, classification=True)
         data_train_features = self._get_train_features(X)
 
         if self.smoothing is None:
-            self.smoothing = 10. / self.efficiency_steps
+            self.smoothing = 10.0 / self.efficiency_steps
 
         neighbours_matrix = compute_knn_indices_of_same_class(
-            X[self.uniform_features], y, n_neighbours=self.n_neighbors)
+            X[self.uniform_features], y, n_neighbours=self.n_neighbors
+        )
         self.target_efficiencies = np.linspace(0, 1, self.efficiency_steps + 2)[1:-1]
         self.classifiers = []
 
@@ -507,20 +506,26 @@ class uBoostClassifier(BaseEstimator, ClassifierMixin):
                 uniform_features=self.uniform_features,
                 uniform_label=self.uniform_label,
                 train_features=None,
-                target_efficiency=efficiency, n_neighbors=self.n_neighbors,
+                target_efficiency=efficiency,
+                n_neighbors=self.n_neighbors,
                 n_estimators=self.n_estimators,
                 base_estimator=self.base_estimator,
-                random_state=self.random_state, subsample=self.subsample,
-                smoothing=self.smoothing, algorithm=self.algorithm)
+                random_state=self.random_state,
+                subsample=self.subsample,
+                smoothing=self.smoothing,
+                algorithm=self.algorithm,
+            )
             self.classifiers.append(classifier)
 
-        self.classifiers = map_on_cluster(f'threads-{self.n_threads}',
-                                          _train_classifier,
-                                          self.classifiers,
-                                          self.efficiency_steps * [data_train_features],
-                                          self.efficiency_steps * [y],
-                                          self.efficiency_steps * [sample_weight],
-                                          self.efficiency_steps * [neighbours_matrix])
+        self.classifiers = map_on_cluster(
+            f"threads-{self.n_threads}",
+            _train_classifier,
+            self.classifiers,
+            self.efficiency_steps * [data_train_features],
+            self.efficiency_steps * [y],
+            self.efficiency_steps * [sample_weight],
+            self.efficiency_steps * [neighbours_matrix],
+        )
 
         return self
 
@@ -539,8 +544,7 @@ class uBoostClassifier(BaseEstimator, ClassifierMixin):
         :return: array of shape [n_samples, n_classes] with probabilities.
         """
         X = self._get_train_features(X)
-        p = (sum(clf._uboost_predict_proba(X) for clf in self.classifiers)
-             / self.efficiency_steps)
+        p = sum(clf._uboost_predict_proba(X) for clf in self.classifiers) / self.efficiency_steps
         return np.array((1 - p, p)).T
 
     def staged_predict_proba(self, X):
@@ -560,7 +564,7 @@ def _generate_subsample_mask(n_samples, subsample, random_generator):
     :param float subsample: part of samples to be left
     :param random_generator: numpy.random.RandomState instance
     """
-    assert 0 < subsample <= 1., 'subsample should be in range (0, 1]'
+    assert 0 < subsample <= 1.0, "subsample should be in range (0, 1]"
     if subsample == 1.0:
         mask = slice(None, None, None)
     else:

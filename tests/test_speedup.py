@@ -14,7 +14,7 @@ from sklearn.metrics import roc_auc_score
 from hep_ml.commonutils import generate_sample
 from hep_ml.speedup import LookupClassifier
 
-__author__ = 'Alex Rogozhnikov'
+__author__ = "Alex Rogozhnikov"
 
 
 def test_lookup(n_samples=10000, n_features=7, n_bins=8):
@@ -23,17 +23,17 @@ def test_lookup(n_samples=10000, n_features=7, n_bins=8):
     base_estimator = GradientBoostingClassifier()
     clf = LookupClassifier(base_estimator=base_estimator, n_bins=n_bins, keep_trained_estimator=True).fit(X, y)
     p = clf.predict_proba(X)
-    assert roc_auc_score(y, p[:, 1]) > 0.8, 'quality of classification is too low'
+    assert roc_auc_score(y, p[:, 1]) > 0.8, "quality of classification is too low"
     assert p.shape == (n_samples, 2)
-    assert numpy.allclose(p.sum(axis=1), 1), 'probabilities are not summed up to 1'
+    assert numpy.allclose(p.sum(axis=1), 1), "probabilities are not summed up to 1"
 
     # checking conversions
-    lookup_size = n_bins ** n_features
+    lookup_size = n_bins**n_features
     lookup_indices = numpy.arange(lookup_size, dtype=int)
     bins_indices = clf.convert_lookup_index_to_bins(lookup_indices=lookup_indices)
     lookup_indices2 = clf.convert_bins_to_lookup_index(bins_indices=bins_indices)
-    assert numpy.allclose(lookup_indices, lookup_indices2), 'something wrong with conversions'
-    assert len(clf._lookup_table) == n_bins ** n_features, 'wrong size of lookup table'
+    assert numpy.allclose(lookup_indices, lookup_indices2), "something wrong with conversions"
+    assert len(clf._lookup_table) == n_bins**n_features, "wrong size of lookup table"
 
     # checking speed
     X = pandas.concat([X] * 10)
@@ -43,7 +43,7 @@ def test_lookup(n_samples=10000, n_features=7, n_bins=8):
     start = time.time()
     p2 = clf.predict_proba(X)
     time_new = time.time() - start
-    print(time_old, ' now takes ', time_new)
+    print(time_old, " now takes ", time_new)
     assert numpy.allclose(p1, p2), "pipeline doesn't work as expected"
 
 
@@ -76,10 +76,11 @@ def test_raising_exception():
 def test_classifier_with_dataframe():
     try:
         from rep.estimators import SklearnClassifier
+
         clf = SklearnClassifier(GradientBoostingClassifier(n_estimators=1))
         X, y = generate_sample(n_samples=100, n_features=4)
         for X_ in [X, pandas.DataFrame(X)]:
             lookup = LookupClassifier(clf, n_bins=16).fit(X_, y)
             lookup.predict_proba(X)
     except ImportError:
-        print('expected fail: yandex/rep not installed')
+        print("expected fail: yandex/rep not installed")

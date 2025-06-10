@@ -23,6 +23,7 @@ so you are able to predict millions of events per second using single CPU:
 
 
 """
+
 from collections import OrderedDict
 
 import numpy
@@ -30,7 +31,7 @@ from sklearn.base import BaseEstimator, ClassifierMixin, clone
 
 from .commonutils import check_sample_weight, check_xyw, to_pandas_dataframe, weighted_quantile
 
-__author__ = 'Alex Rogozhnikov'
+__author__ = "Alex Rogozhnikov"
 
 
 class LookupClassifier(BaseEstimator, ClassifierMixin):
@@ -66,8 +67,9 @@ class LookupClassifier(BaseEstimator, ClassifierMixin):
     def check_dimensions(self, bin_edges):
         cumulative_size = numpy.cumprod([len(bin_edge) + 1 for name, bin_edge in bin_edges.items()])
         if numpy.any(cumulative_size > self.max_cells):
-            raise ValueError(f'the total size of lookup table exceeds {self.max_cells}, '
-                             'reduce n_bins or number of features in use')
+            raise ValueError(
+                f"the total size of lookup table exceeds {self.max_cells}, reduce n_bins or number of features in use"
+            )
 
     def fit(self, X, y, sample_weight=None):
         """Train a classifier and collect predictions for all possible combinations.
@@ -91,7 +93,7 @@ class LookupClassifier(BaseEstimator, ClassifierMixin):
         trained_estimator = clone(self.base_estimator)
         fit_params = {}
         if sample_weight is not None:
-            fit_params['sample_weights'] = sample_weight
+            fit_params["sample_weights"] = sample_weight
         trained_estimator.fit(transformed_data, y, **fit_params)
 
         all_lookup_indices = numpy.arange(int(n_parameter_combinations))
@@ -117,7 +119,7 @@ class LookupClassifier(BaseEstimator, ClassifierMixin):
         bin_edges = OrderedDict()
         for column, column_bins in bins_over_axis.items():
             if isinstance(column_bins, int):
-                quantiles = numpy.linspace(0., 1., column_bins + 1)[1:-1]
+                quantiles = numpy.linspace(0.0, 1.0, column_bins + 1)[1:-1]
                 bin_edges[column] = weighted_quantile(X[column], quantiles=quantiles, sample_weight=normed_weights)
             else:
                 bin_edges[column] = numpy.array(list(column_bins))
@@ -143,7 +145,7 @@ class LookupClassifier(BaseEstimator, ClassifierMixin):
         :return: array of shape [n_samples, n_features] with indices of bins.
         """
 
-        result = numpy.zeros([len(lookup_indices), len(self.bin_edges)], dtype='uint8')
+        result = numpy.zeros([len(lookup_indices), len(self.bin_edges)], dtype="uint8")
         for i, (column_name, bin_edges) in list(enumerate(self.bin_edges.items()))[::-1]:
             n_columns = len(bin_edges) + 1
             result[:, i] = lookup_indices % n_columns
@@ -158,8 +160,8 @@ class LookupClassifier(BaseEstimator, ClassifierMixin):
         :return: numpy.array, where each column is replaced with index of bin
         """
         X = to_pandas_dataframe(X)
-        assert list(X.columns) == list(self.bin_edges.keys()), 'passed dataset with wrong columns'
-        result = numpy.zeros(X.shape, dtype='uint8')
+        assert list(X.columns) == list(self.bin_edges.keys()), "passed dataset with wrong columns"
+        result = numpy.zeros(X.shape, dtype="uint8")
         for i, column in enumerate(X.columns):
             edges = self.bin_edges[column]
             result[:, i] = numpy.searchsorted(edges, X[column])
@@ -175,7 +177,7 @@ class LookupClassifier(BaseEstimator, ClassifierMixin):
         return self.classes_[numpy.argmax(self.predict_proba(X), axis=1)]
 
     def predict_proba(self, X):
-        """ Predict probabilities for new observations
+        """Predict probabilities for new observations
 
         :param X: pandas.DataFrame with data
         :return: probabilities, array of shape [n_samples, n_classes]

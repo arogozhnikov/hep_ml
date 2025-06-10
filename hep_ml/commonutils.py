@@ -3,7 +3,6 @@
 which are often used (by other modules)
 """
 
-
 import itertools
 import numbers
 from multiprocessing.pool import ThreadPool
@@ -38,23 +37,24 @@ def map_on_cluster(parallel_profile, *args, **kw_args):
     """
     if parallel_profile is None:
         return map(*args)
-    elif str.startswith(parallel_profile, 'threads-'):
-        n_threads = int(parallel_profile[len('threads-'):])
+    elif str.startswith(parallel_profile, "threads-"):
+        n_threads = int(parallel_profile[len("threads-") :])
         pool = ThreadPool(processes=n_threads)
         func, params = args[0], args[1:]
         return pool.map(_threads_wrapper, zip(itertools.cycle([func]), *params))
     else:
         from IPython.parallel import Client
+
         return Client(profile=parallel_profile).load_balanced_view().map_sync(*args, **kw_args)
 
 
 def sigmoid_function(x, width):
-    """ Sigmoid function is smoothing of Heaviside function,
+    """Sigmoid function is smoothing of Heaviside function,
     the less width, the closer we are to Heaviside function
     :type x: array-like with floats, arbitrary shape
     :type width: float, if width == 0, this is simply Heaviside function
     """
-    assert width >= 0, 'the width should be non-negative'
+    assert width >= 0, "the width should be non-negative"
     if width > 0.0001:
         return expit(x / width)
     else:
@@ -66,11 +66,11 @@ def generate_sample(n_samples, n_features, distance=2.0):
     signal and background distributions are gaussian with same dispersion and different centers,
     all variables are independent (gaussian correlation matrix is identity).
 
-    This function is frequently used in tests. """
+    This function is frequently used in tests."""
     from sklearn.datasets import make_blobs
 
     centers = numpy.zeros((2, n_features))
-    centers[0, :] = - distance / 2
+    centers[0, :] = -distance / 2
     centers[1, :] = distance / 2
 
     X, y = make_blobs(n_samples=n_samples, n_features=n_features, centers=centers)
@@ -114,7 +114,7 @@ def train_test_split(*arrays, **kw_args):
 
 
 def weighted_quantile(array, quantiles, sample_weight=None, array_sorted=False, old_style=False):
-    """ Very close to numpy.percentile, but supports weights.
+    """Very close to numpy.percentile, but supports weights.
     NOTE: quantiles should be in [0, 1]!
     :param array: numpy.array with data
     :param quantiles: array-like with many percentiles
@@ -126,7 +126,7 @@ def weighted_quantile(array, quantiles, sample_weight=None, array_sorted=False, 
     array = numpy.array(array)
     quantiles = numpy.array(quantiles)
     sample_weight = check_sample_weight(array, sample_weight)
-    assert numpy.all(quantiles >= 0) and numpy.all(quantiles <= 1), 'Percentiles should be in [0, 1]'
+    assert numpy.all(quantiles >= 0) and numpy.all(quantiles <= 1), "Percentiles should be in [0, 1]"
 
     if not array_sorted:
         sorter = numpy.argsort(array)
@@ -154,7 +154,7 @@ def build_normalizer(signal, sample_weight=None):
     :param numpy.array sample_weight: shape = [n_samples], non-negative weights associated to events.
     """
     sample_weight = check_sample_weight(signal, sample_weight)
-    assert numpy.all(sample_weight >= 0.), 'sample weight must be non-negative'
+    assert numpy.all(sample_weight >= 0.0), "sample weight must be non-negative"
     sorter = numpy.argsort(signal)
     signal, sample_weight = signal[sorter], sample_weight[sorter]
     predictions = numpy.cumsum(sample_weight) / numpy.sum(sample_weight)
@@ -166,7 +166,7 @@ def build_normalizer(signal, sample_weight=None):
 
 
 def compute_cut_for_efficiency(efficiency, mask, y_pred, sample_weight=None):
-    """ Computes such cut(s), that provide given target global efficiency(ies).
+    """Computes such cut(s), that provide given target global efficiency(ies).
     Example:
     >>> p = classifier.predict_proba(X)
     >>> threshold = compute_cut_for_efficiency(0.5, mask=y == 1, y_pred=p[:, 1])
@@ -178,11 +178,11 @@ def compute_cut_for_efficiency(efficiency, mask, y_pred, sample_weight=None):
     :return: float or numpy.array, shape = [n_effs]
     """
     sample_weight = check_sample_weight(mask, sample_weight)
-    assert len(mask) == len(y_pred), 'lengths are different'
+    assert len(mask) == len(y_pred), "lengths are different"
     efficiency = numpy.array(efficiency)
     is_signal = mask > 0.5
     y_pred, sample_weight = y_pred[is_signal], sample_weight[is_signal]
-    return weighted_quantile(y_pred, 1. - efficiency, sample_weight=sample_weight)
+    return weighted_quantile(y_pred, 1.0 - efficiency, sample_weight=sample_weight)
 
 
 # region Knn-related functions
@@ -198,7 +198,7 @@ def compute_knn_indices_of_signal(X, is_signal, n_neighbours=50):
     assert len(X) == len(is_signal), "Different lengths"
     signal_indices = numpy.where(is_signal)[0]
     X_signal = numpy.array(X)[numpy.array(is_signal)]
-    neighbours = NearestNeighbors(n_neighbors=n_neighbours, algorithm='kd_tree').fit(X_signal)
+    neighbours = NearestNeighbors(n_neighbors=n_neighbours, algorithm="kd_tree").fit(X_signal)
     _, knn_signal_indices = neighbours.kneighbors(X)
     return numpy.take(signal_indices, knn_signal_indices)
 
@@ -221,6 +221,7 @@ def compute_knn_indices_of_same_class(X, y, n_neighbours=50):
 
 # endregion
 
+
 def indices_of_values(array):
     """For each value in array returns indices with this value
     :param array: numpy.array with 1-dimensional initial data
@@ -231,7 +232,7 @@ def indices_of_values(array):
     diff = numpy.nonzero(numpy.ediff1d(sorted_array))[0]
     limits = [0] + list(diff + 1) + [len(array)]
     for i in range(len(limits) - 1):
-        yield sorted_array[limits[i]], indices[limits[i]: limits[i + 1]]
+        yield sorted_array[limits[i]], indices[limits[i] : limits[i + 1]]
 
 
 def take_features(X, features):
@@ -268,9 +269,10 @@ def check_sample_weight(y_true, sample_weight, normalize=False, normalize_by_cla
         sample_weight = numpy.ones(len(y_true), dtype=float)
     else:
         sample_weight = numpy.array(sample_weight, dtype=float)
-        assert numpy.ndim(sample_weight) == 1, 'weights vector should be 1-dimensional'
-        assert len(y_true) == len(sample_weight), \
+        assert numpy.ndim(sample_weight) == 1, "weights vector should be 1-dimensional"
+        assert len(y_true) == len(sample_weight), (
             f"The length of weights is different: not {len(y_true)}, but {len(sample_weight)}"
+        )
 
     if normalize_by_class:
         sample_weight = numpy.copy(sample_weight)
@@ -294,7 +296,7 @@ def check_xyw(X, y, sample_weight=None, classification=False, allow_multiple_out
 
     y = numpy.array(y)
     if not allow_multiple_outputs:
-        assert numpy.ndim(y) == 1, 'y should be one-dimensional'
+        assert numpy.ndim(y) == 1, "y should be one-dimensional"
     sample_weight = check_sample_weight(y, sample_weight=sample_weight)
 
     # only pandas.DataFrame and numpy.array are allowed. No checks on sparsity here.
@@ -303,8 +305,8 @@ def check_xyw(X, y, sample_weight=None, classification=False, allow_multiple_out
     if classification:
         y = numpy.array(y, dtype=int)
 
-    assert len(X) == len(y), f'lengths are different: {len(X)} and {len(y)}'
-    assert numpy.ndim(X) == 2, 'X should have 2 dimensions'
+    assert len(X) == len(y), f"lengths are different: {len(X)} and {len(y)}"
+    assert numpy.ndim(X) == 2, "X should have 2 dimensions"
 
     return X, y, sample_weight
 
@@ -330,7 +332,7 @@ def take_last(sequence):
     for element in sequence:
         empty = False
     if empty:
-        raise IndexError('The sequence is empty.')
+        raise IndexError("The sequence is empty.")
     else:
         return element
 
@@ -342,5 +344,7 @@ def to_pandas_dataframe(X):
     if isinstance(X, pandas.DataFrame):
         return X
     else:
-        return pandas.DataFrame(X, columns=[f'Feature{i}' for i in range(X.shape[1])])
+        return pandas.DataFrame(X, columns=[f"Feature{i}" for i in range(X.shape[1])])
+
+
 float

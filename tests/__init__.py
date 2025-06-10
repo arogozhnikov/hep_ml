@@ -1,3 +1,1 @@
-
-
-__author__ = 'Alex Rogozhnikov'
+__author__ = "Alex Rogozhnikov"
