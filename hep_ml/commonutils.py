@@ -345,6 +345,3 @@ def to_pandas_dataframe(X):
         return X
     else:
         return pandas.DataFrame(X, columns=[f"Feature{i}" for i in range(X.shape[1])])
-
-
-float

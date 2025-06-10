@@ -183,7 +183,8 @@ class UGradientBoostingBase(BaseEstimator):
         """
         import warnings
 
-        warnings.warn("feature_importances_ of gb returns importances corresponding to used columns ")
+        warnings.warn("feature_importances_ of gb returns importances corresponding to used columns ",
+                      UserWarning, stacklevel=2)
         total_sum = sum(tree.feature_importances_ for tree, values in self.estimators)
         return total_sum / len(self.estimators)
 
@@ -249,8 +250,7 @@ class UGradientBoostingRegressor(UGradientBoostingBase, RegressorMixin):
         :param X: data
         :return: sequence of numpy.array of shape [n_samples]
         """
-        for score in self.staged_decision_function(X):
-            yield score
+        yield from self.staged_decision_function(X)
 
     def predict(self, X):
         """Predict values for new samples

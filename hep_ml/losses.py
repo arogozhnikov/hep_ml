@@ -722,7 +722,7 @@ class AbstractFlatnessLossFunction(AbstractLossFunction):
 
         out_of_bins = (occurences == 0) & numpy.isin(y, self.uniform_label)
         if numpy.mean(out_of_bins) > 0.01:
-            warnings.warn("%i events out of all bins " % numpy.sum(out_of_bins), UserWarning)
+            warnings.warn("%i events out of all bins " % numpy.sum(out_of_bins), UserWarning, stacklevel=2)
 
         self.y = y
         self.y_signed = 2 * y - 1
