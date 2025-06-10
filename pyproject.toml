@@ -1,0 +1,64 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "hep_ml"
+version = "0.7.3"
+description = "Machine Learning for High Energy Physics"
+readme = "README.md"
+authors = [
+    { name = "Alex Rogozhnikov" },
+]
+license = { text = "Apache 2.0" }
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+requires-python = ">3.9"
+keywords = [
+    "machine learning",
+    "supervised learning",
+    "uncorrelated methods of machine learning",
+    "high energy physics",
+    "particle physics",
+]
+dependencies = [
+    "numpy >= 1.9",
+    "scipy >= 0.15.0",
+    "pandas >= 0.14.0",
+    "scikit-learn >= 1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/arogozhnikov/hep_ml"
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "matplotlib >= 1.4",
+    "ipython[all] >= 3.0",
+]
+doc = [
+    "sphinx",
+    "sphinx_rtd_theme",
+]
+dev = [
+    "hep_ml[test,doc]",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["hep_ml"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/hep_ml",
+    "/README.md",
+    "/LICENSE",
+    "/requirements.txt",
+]

@@ -2,7 +2,6 @@ from __future__ import print_function, division, absolute_import
 from collections import OrderedDict
 
 import numpy as np
-from six.moves import zip
 from sklearn.metrics import roc_auc_score, accuracy_score
 from sklearn.naive_bayes import GaussianNB
 from sklearn.tree import DecisionTreeClassifier
