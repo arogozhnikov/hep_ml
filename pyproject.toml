@@ -42,6 +42,7 @@ Homepage = "https://github.com/arogozhnikov/hep_ml"
 test = [
     "pytest",
     "pytest-cov",
+    "nbval",
     "matplotlib >= 1.4",
     "ipython[all] >= 3.0",
 ]
