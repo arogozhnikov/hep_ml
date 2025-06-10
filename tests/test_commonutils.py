@@ -24,9 +24,9 @@ def test_splitting(n_rows=10, n_columns=8):
 
     trainX, testX, trainY, testY = commonutils.train_test_split(common_X, common_y)
 
-    for (index, row), label in zip(trainX.iterrows(), trainY):
+    for (_index, row), label in zip(trainX.iterrows(), trainY):
         assert numpy.all(row == label), "wrong data partition"
-    for (index, row), label in zip(testX.iterrows(), testY):
+    for (_index, row), label in zip(testX.iterrows(), testY):
         assert numpy.all(row == label), "wrong data partition"
 
     assert (trainX.columns == column_names).all(), "new column names!"

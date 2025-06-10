@@ -99,7 +99,7 @@ def test_quality(n_samples=3000):
             predict_proba = classifier.predict_proba(testX)
             predict = classifier.predict(testX)
             assert roc_auc_score(testY, predict_proba[:, 1]) > 0.7, "quality is awful"
-            print("Accuracy = %.3f" % accuracy_score(testY, predict))
+            print(f"Accuracy = {accuracy_score(testY, predict):.3f}")
 
 
 def check_classifiers(n_samples=10000):

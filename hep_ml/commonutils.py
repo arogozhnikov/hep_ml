@@ -246,8 +246,8 @@ def take_features(X, features):
     """
     from numbers import Number
 
-    are_strings = all([isinstance(feature, str) for feature in features])
-    are_numbers = all([isinstance(feature, Number) for feature in features])
+    are_strings = all(isinstance(feature, str) for feature in features)
+    are_numbers = all(isinstance(feature, Number) for feature in features)
     if are_strings and isinstance(X, pandas.DataFrame):
         return X.loc[:, features]
     elif are_numbers:

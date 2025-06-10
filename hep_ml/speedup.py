@@ -134,7 +134,7 @@ class LookupClassifier(BaseEstimator, ClassifierMixin):
         lookup_indices = numpy.zeros(len(bins_indices), dtype=int)
         bins_indices = numpy.array(bins_indices)
         assert bins_indices.shape[1] == len(self.bin_edges)
-        for i, (column_name, bin_edges) in enumerate(self.bin_edges.items()):
+        for i, (_column_name, bin_edges) in enumerate(self.bin_edges.items()):
             lookup_indices *= len(bin_edges) + 1
             lookup_indices += bins_indices[:, i]
         return lookup_indices
@@ -146,7 +146,7 @@ class LookupClassifier(BaseEstimator, ClassifierMixin):
         """
 
         result = numpy.zeros([len(lookup_indices), len(self.bin_edges)], dtype="uint8")
-        for i, (column_name, bin_edges) in list(enumerate(self.bin_edges.items()))[::-1]:
+        for i, (_column_name, bin_edges) in list(enumerate(self.bin_edges.items()))[::-1]:
             n_columns = len(bin_edges) + 1
             result[:, i] = lookup_indices % n_columns
             lookup_indices = lookup_indices // n_columns

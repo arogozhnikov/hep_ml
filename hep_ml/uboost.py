@@ -173,7 +173,7 @@ class uBoostBDT(BaseEstimator, ClassifierMixin):
             self.base_estimator = DecisionTreeClassifier(max_depth=2)
         # Check that algorithm is supported
         if self.algorithm not in ("SAMME", "SAMME.R"):
-            raise ValueError("algorithm %s is not supported" % self.algorithm)
+            raise ValueError(f"algorithm {self.algorithm} is not supported")
         if self.algorithm == "SAMME.R":
             if not hasattr(self.base_estimator, "predict_proba"):
                 raise TypeError(
@@ -272,7 +272,7 @@ class uBoostBDT(BaseEstimator, ClassifierMixin):
         which is modified in uBoost way"""
         cumulative_score = np.zeros(len(X))
         y_signed = 2 * y - 1
-        for iteration in range(self.n_estimators):
+        for _iteration in range(self.n_estimators):
             estimator = self._make_estimator()
             mask = _generate_subsample_mask(len(X), self.subsample, self.random_state_)
             estimator.fit(X[mask], y[mask], sample_weight=sample_weight[mask])

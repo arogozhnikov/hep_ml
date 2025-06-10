@@ -113,7 +113,7 @@ class UGradientBoostingBase(BaseEstimator):
         self.initial_step = self.loss.compute_optimal_step(y_pred=y_pred)
         y_pred += self.initial_step
 
-        for stage in range(self.n_estimators):
+        for _stage in range(self.n_estimators):
             # tree creation
             tree = SklearnClusteringTree(
                 criterion="squared_error",

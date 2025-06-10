@@ -83,7 +83,7 @@ def test_iron_transformer(n_features=10, n_samples=5000):
                 # checking dtype is integer
                 numpy_result = numpy.array(result)
                 assert numpy_result.dtype == float
-                for name, (feature_values, feature_percentiles) in transformer.feature_maps.items():
+                for _name, (feature_values, _feature_percentiles) in transformer.feature_maps.items():
                     assert len(feature_values) <= max_points
 
 

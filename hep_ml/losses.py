@@ -706,10 +706,10 @@ class AbstractFlatnessLossFunction(AbstractLossFunction):
         X = pandas.DataFrame(X)
 
         self.regularization_ = numpy.mean(sample_weight) * 5.0
-        self.group_indices = dict()
-        self.group_matrices = dict()
-        self.group_weights = dict()
-        self.label_masks = dict()
+        self.group_indices = {}
+        self.group_matrices = {}
+        self.group_weights = {}
+        self.label_masks = {}
 
         occurences = numpy.zeros(len(X))
         for label in self.uniform_label:
@@ -824,7 +824,7 @@ class BinFlatnessLossFunction(AbstractFlatnessLossFunction):
         for var in self.uniform_features:
             f_min, f_max = numpy.min(X[var][label_mask]), numpy.max(X[var][label_mask])
             extended_bin_limits.append(numpy.linspace(f_min, f_max, 2 * self.n_bins + 1))
-        groups_indices = list()
+        groups_indices = []
         for shift in [0, 1]:
             bin_limits = []
             for axis_limits in extended_bin_limits:

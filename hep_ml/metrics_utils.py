@@ -80,7 +80,7 @@ def bin_to_group_indices(bin_indices, mask):
     """
     assert len(bin_indices) == len(mask), "Different length"
     bins_id = numpy.unique(bin_indices)
-    result = list()
+    result = []
     for bin_id in bins_id:
         result.append(numpy.where(mask & (bin_indices == bin_id))[0])
     return result
