@@ -619,7 +619,7 @@ class ReweightLossFunction(AbstractLossFunction):
         self.regularization = regularization
 
     def fit(self, X, y, sample_weight):
-        assert numpy.all(numpy.in1d(y, [0, 1]))
+        assert numpy.all(numpy.isin(y, [0, 1]))
         if sample_weight is None:
             self.sample_weight = numpy.ones(len(X), dtype=float)
         else:
@@ -706,7 +706,7 @@ class AbstractFlatnessLossFunction(AbstractLossFunction):
             for group in self.group_indices[label]:
                 occurences[group] += 1
 
-        out_of_bins = (occurences == 0) & numpy.in1d(y, self.uniform_label)
+        out_of_bins = (occurences == 0) & numpy.isin(y, self.uniform_label)
         if numpy.mean(out_of_bins) > 0.01:
             warnings.warn("%i events out of all bins " % numpy.sum(out_of_bins), UserWarning)
 
@@ -745,7 +745,7 @@ class AbstractFlatnessLossFunction(AbstractLossFunction):
 
         neg_gradient *= self.divided_weight
         # check that events outside uniform uniform classes are not touched
-        assert numpy.all(neg_gradient[~numpy.in1d(self.y, self.uniform_label)] == 0)
+        assert numpy.all(neg_gradient[~numpy.isin(self.y, self.uniform_label)] == 0)
         return neg_gradient
 
     def negative_gradient(self, y_pred):

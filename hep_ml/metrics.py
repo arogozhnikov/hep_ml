@@ -49,12 +49,7 @@ from __future__ import division, print_function
 
 import numpy
 from sklearn.base import BaseEstimator
-# sklearn 0.22 deprecated sklearn.neighbors.unsupervised
-# remain backwards compatible
-try:
-    from sklearn.neighbors import NearestNeighbors
-except ImportError as e:
-    from sklearn.neighbors.unsupervised import NearestNeighbors
+from sklearn.neighbors import NearestNeighbors
 
 from .commonutils import take_features, check_xyw, weighted_quantile
 from . import metrics_utils as ut
