@@ -50,6 +50,8 @@ doc = [
     "sphinx_rtd_theme",
 ]
 dev = [
+    "ruff",
+    "pre-commit",
     "hep_ml[test,doc]",
 ]
 
@@ -63,3 +65,29 @@ include = [
     "/LICENSE",
     "/requirements.txt",
 ]
+
+[tool.ruff]
+line-length = 120
+target-version = "py39"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+]
+ignore = [
+    "E501",  # line too long (handled by line-length)
+    "B008",  # do not perform function calls in argument defaults
+    "B006",  # do not use mutable data structures for argument defaults
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["B011"]  # assert false is fine in tests
+
+[tool.ruff.lint.isort]
+known-first-party = ["hep_ml"]
