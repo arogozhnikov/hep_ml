@@ -23,12 +23,12 @@ so you are able to predict millions of events per second using single CPU:
 
 
 """
-from __future__ import division, print_function, absolute_import
-import numpy
-import pandas
 from collections import OrderedDict
-from sklearn.base import ClassifierMixin, BaseEstimator, clone
-from .commonutils import to_pandas_dataframe, check_xyw, check_sample_weight, weighted_quantile
+
+import numpy
+from sklearn.base import BaseEstimator, ClassifierMixin, clone
+
+from .commonutils import check_sample_weight, check_xyw, to_pandas_dataframe, weighted_quantile
 
 __author__ = 'Alex Rogozhnikov'
 
@@ -66,8 +66,8 @@ class LookupClassifier(BaseEstimator, ClassifierMixin):
     def check_dimensions(self, bin_edges):
         cumulative_size = numpy.cumprod([len(bin_edge) + 1 for name, bin_edge in bin_edges.items()])
         if numpy.any(cumulative_size > self.max_cells):
-            raise ValueError('the total size of lookup table exceeds {}, '
-                             'reduce n_bins or number of features in use'.format(self.max_cells))
+            raise ValueError(f'the total size of lookup table exceeds {self.max_cells}, '
+                             'reduce n_bins or number of features in use')
 
     def fit(self, X, y, sample_weight=None):
         """Train a classifier and collect predictions for all possible combinations.

@@ -1,14 +1,20 @@
-from __future__ import division, print_function, absolute_import
 
 import numpy
 import pandas
 from sklearn.utils import column_or_1d
 
 from hep_ml.commonutils import check_sample_weight, compute_cut_for_efficiency, compute_knn_indices_of_signal
-from hep_ml.metrics_utils import compute_bin_weights, compute_bin_efficiencies, weighted_deviation, \
-    compute_group_efficiencies_by_indices, theil, prepare_distribution, _ks_2samp_fast, compute_cdf, \
-    _cvm_2samp_fast
-
+from hep_ml.metrics_utils import (
+    _cvm_2samp_fast,
+    _ks_2samp_fast,
+    compute_bin_efficiencies,
+    compute_bin_weights,
+    compute_cdf,
+    compute_group_efficiencies_by_indices,
+    prepare_distribution,
+    theil,
+    weighted_deviation,
+)
 
 __author__ = 'Alex Rogozhnikov'
 
@@ -123,7 +129,7 @@ def groups_based_ks(y_pred, mask, sample_weight, groups_indices):
 
 
 def cvm_2samp(data1, data2, weights1=None, weights2=None, power=2.):
-    """Computes Cramer-von Mises similarity on 2 samples,
+    r"""Computes Cramer-von Mises similarity on 2 samples,
     CvM = \int |F_2 - F_1|^p dF_1
     This implementation sorts the arrays each time,
     so inside loops it will be slow"""

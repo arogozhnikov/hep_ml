@@ -46,11 +46,15 @@ from sklearn.base import BaseEstimator, ClassifierMixin, clone
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.utils.random import check_random_state
 
-from .commonutils import sigmoid_function, map_on_cluster, \
-    compute_knn_indices_of_same_class, compute_cut_for_efficiency, check_xyw
 from . import commonutils
+from .commonutils import (
+    check_xyw,
+    compute_cut_for_efficiency,
+    compute_knn_indices_of_same_class,
+    map_on_cluster,
+    sigmoid_function,
+)
 from .metrics_utils import compute_group_efficiencies_by_indices
-
 
 __author__ = "Alex Rogozhnikov, Nikita Kazeev"
 
@@ -510,7 +514,7 @@ class uBoostClassifier(BaseEstimator, ClassifierMixin):
                 smoothing=self.smoothing, algorithm=self.algorithm)
             self.classifiers.append(classifier)
 
-        self.classifiers = map_on_cluster('threads-{}'.format(self.n_threads),
+        self.classifiers = map_on_cluster(f'threads-{self.n_threads}',
                                           _train_classifier,
                                           self.classifiers,
                                           self.efficiency_steps * [data_train_features],

@@ -1,17 +1,18 @@
 """
 tests for hep_ml.speedup module
 """
-from __future__ import division, print_function, absolute_import
+
+import time
+from collections import OrderedDict
 
 import numpy
 import pandas
-import time
-from hep_ml.speedup import LookupClassifier
-from hep_ml.commonutils import generate_sample
+import pytest
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import roc_auc_score
-from collections import OrderedDict
-import pytest
+
+from hep_ml.commonutils import generate_sample
+from hep_ml.speedup import LookupClassifier
 
 __author__ = 'Alex Rogozhnikov'
 

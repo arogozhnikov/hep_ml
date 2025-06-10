@@ -19,9 +19,9 @@ For more examples and explanations, see notebooks/Splot in repository.
 
 """
 
-from __future__ import division, print_function, absolute_import
-import pandas
 import numpy
+import pandas
+
 from .commonutils import check_sample_weight
 
 __author__ = 'Alex Rogozhnikov'

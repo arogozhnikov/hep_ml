@@ -1,10 +1,8 @@
-from __future__ import division, print_function, absolute_import
 
 import numpy
 from sklearn.utils.validation import column_or_1d
 
 from .commonutils import check_sample_weight, sigmoid_function
-
 
 __author__ = 'Alex Rogozhnikov'
 
@@ -53,7 +51,7 @@ are typically computed only for events of some particular class.
 
 
 def compute_bin_indices(X_part, bin_limits=None, n_bins=20):
-    """For arbitrary number of variables computes the indices of data,
+    r"""For arbitrary number of variables computes the indices of data,
     the indices are unique numbers of bin from zero to \prod_j (len(bin_limits[j])+1)
 
     :param X_part: columns along which binning is done

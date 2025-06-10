@@ -56,18 +56,16 @@ weights predictions will be unbiased: each reweighter predicts only those part o
 
 >>> MC_weights = reweighter.predict_weights(MC_data)
 """
-from __future__ import division, print_function, absolute_import
 
+import numpy
+from scipy.ndimage import gaussian_filter
+from sklearn import clone
 from sklearn.base import BaseEstimator
 from sklearn.utils import check_random_state
-from sklearn import clone
 
-from scipy.ndimage import gaussian_filter
-import numpy
-
-from .commonutils import check_sample_weight, weighted_quantile
 from . import gradientboosting as gb
 from . import losses
+from .commonutils import check_sample_weight, weighted_quantile
 
 __author__ = 'Alex Rogozhnikov, Tatiana Likhomanenko'
 __all__ = ['BinsReweighter', 'GBReweighter', 'FoldingReweighter']
@@ -81,17 +79,17 @@ def _bincount_nd(x, weights, shape):
     :param shape: shape of result, should be greater, then maximal value
     :return: weighted number of event in each bin, of shape=shape
     """
-    assert len(weights) == len(x), 'length of weight is different: {} {}'.format(len(x), len(weights))
-    assert x.shape[1] == len(shape), 'wrong length of shape: {} {}'.format(x.shape[1], len(shape))
+    assert len(weights) == len(x), f'length of weight is different: {len(x)} {len(weights)}'
+    assert x.shape[1] == len(shape), f'wrong length of shape: {x.shape[1]} {len(shape)}'
     maximals = numpy.max(x, axis=0)
-    assert numpy.all(maximals < shape), 'small shape passed: {} {}'.format(maximals, shape)
+    assert numpy.all(maximals < shape), f'small shape passed: {maximals} {shape}'
 
     result = numpy.zeros(shape, dtype=float)
     numpy.add.at(result, tuple(x.T), weights)
     return result
 
 
-class ReweighterMixin(object):
+class ReweighterMixin:
     """Supplementary class which shows the interface of reweighter.
      Reweighters should be derived from this class."""
     n_features_ = None
@@ -111,7 +109,7 @@ class ReweighterMixin(object):
         if self.n_features_ is None:
             self.n_features_ = data.shape[1]
         assert self.n_features_ == data.shape[1], \
-            'number of features is wrong: {} {}'.format(self.n_features_, data.shape[1])
+            f'number of features is wrong: {self.n_features_} {data.shape[1]}'
         return data, weights
 
     def fit(self, original, target, original_weight, target_weight):

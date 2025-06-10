@@ -1,12 +1,13 @@
-from __future__ import division, print_function, absolute_import
 import copy
+
 import numpy
-from sklearn.metrics import mean_squared_error, roc_auc_score
 from sklearn.base import clone
-from hep_ml.commonutils import generate_sample
-from hep_ml.losses import LogLossFunction, MSELossFunction, AdaLossFunction
+from sklearn.metrics import mean_squared_error, roc_auc_score
+
 from hep_ml import losses
+from hep_ml.commonutils import generate_sample
 from hep_ml.gradientboosting import UGradientBoostingClassifier, UGradientBoostingRegressor
+from hep_ml.losses import AdaLossFunction, LogLossFunction, MSELossFunction
 
 
 def test_gb_with_ada_and_log(n_samples=1000, n_features=10, distance=0.6):
@@ -58,7 +59,7 @@ def test_gradient_boosting(n_samples=1000, distance = 0.6):
                                           subsample=0.7, n_estimators=25, train_features=None)
         clf.fit(trainX[:n_samples], trainY[:n_samples])
         result = clf.score(testX, testY)
-        assert result >= 0.7, "The quality is too poor: {} with loss: {}".format(result, loss)
+        assert result >= 0.7, f"The quality is too poor: {result} with loss: {loss}"
 
     trainX['fake_request'] = numpy.random.randint(0, 4, size=len(trainX))
     testX['fake_request'] = numpy.random.randint(0, 4, size=len(testX))
@@ -70,7 +71,7 @@ def test_gradient_boosting(n_samples=1000, distance = 0.6):
                                          train_features=list(trainX.columns[1:]))
         clf.fit(trainX, trainY)
         roc_auc = roc_auc_score(testY, clf.predict(testX))
-        assert roc_auc >= 0.7, "The quality is too poor: {} with loss: {}".format(roc_auc, loss)
+        assert roc_auc >= 0.7, f"The quality is too poor: {roc_auc} with loss: {loss}"
 
 
 def test_gb_regression(n_samples=1000):
@@ -104,7 +105,7 @@ def test_gb_ranking(n_samples=1000):
                                          subsample=0.7, n_estimators=25, train_features=None) \
             .fit(trainX[:n_samples], trainY[:n_samples])
         result = roc_auc_score(testY, clf.predict(testX))
-        assert result >= 0.8, "The quality is too poor: {} with loss: {}".format(result, loss)
+        assert result >= 0.8, f"The quality is too poor: {result} with loss: {loss}"
 
 
 def test_constant_fitting(n_samples=1000, n_features=5):

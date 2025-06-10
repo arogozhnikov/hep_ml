@@ -1,19 +1,34 @@
-from __future__ import division, print_function, absolute_import
 
 import numpy
 import pandas
+from numpy.random.mtrand import RandomState
 from scipy.stats import ks_2samp
 
-from numpy.random.mtrand import RandomState
 from hep_ml.commonutils import generate_sample
-from hep_ml.metrics_utils import prepare_distribution, _ks_2samp_fast, ks_2samp_weighted, _cvm_2samp_fast, \
-    group_indices_to_groups_matrix
-from hep_ml.metrics import KnnBasedSDE, KnnBasedTheil, KnnBasedCvM, \
-    BinBasedSDE, BinBasedTheil, BinBasedCvM
-from hep_ml.metrics_utils import bin_to_group_indices, compute_bin_indices
-from tests._metrics_oldimplementation import compute_sde_on_bins, compute_sde_on_groups, compute_theil_on_bins, \
-    compute_theil_on_groups, bin_based_ks, groups_based_ks, cvm_2samp, bin_based_cvm, group_based_cvm, sde, \
-    cvm_flatness, theil_flatness
+from hep_ml.metrics import BinBasedCvM, BinBasedSDE, BinBasedTheil, KnnBasedCvM, KnnBasedSDE, KnnBasedTheil
+from hep_ml.metrics_utils import (
+    _cvm_2samp_fast,
+    _ks_2samp_fast,
+    bin_to_group_indices,
+    compute_bin_indices,
+    group_indices_to_groups_matrix,
+    ks_2samp_weighted,
+    prepare_distribution,
+)
+from tests._metrics_oldimplementation import (
+    bin_based_cvm,
+    bin_based_ks,
+    compute_sde_on_bins,
+    compute_sde_on_groups,
+    compute_theil_on_bins,
+    compute_theil_on_groups,
+    cvm_2samp,
+    cvm_flatness,
+    group_based_cvm,
+    groups_based_ks,
+    sde,
+    theil_flatness,
+)
 
 __author__ = 'Alex Rogozhnikov'
 

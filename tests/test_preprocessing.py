@@ -1,7 +1,7 @@
-from __future__ import division, print_function, absolute_import
 import numpy
-from hep_ml.preprocessing import IronTransformer, BinTransformer
+
 from hep_ml.commonutils import generate_sample
+from hep_ml.preprocessing import BinTransformer, IronTransformer
 
 __author__ = 'Alex Rogozhnikov'
 

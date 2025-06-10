@@ -39,7 +39,6 @@ To get uniform predictions in both signal and background:
 
 
 """
-from __future__ import division, print_function, absolute_import
 import numbers
 import warnings
 
@@ -47,12 +46,16 @@ import numpy
 import pandas
 from scipy import sparse
 from scipy.special import expit
-from sklearn.utils.validation import check_random_state
 from sklearn.base import BaseEstimator
+from sklearn.utils.validation import check_random_state
 
-from .commonutils import compute_knn_indices_of_signal, check_sample_weight, check_uniform_label, weighted_quantile
-from .metrics_utils import bin_to_group_indices, compute_bin_indices, compute_group_weights, \
-    group_indices_to_groups_matrix
+from .commonutils import check_sample_weight, check_uniform_label, compute_knn_indices_of_signal, weighted_quantile
+from .metrics_utils import (
+    bin_to_group_indices,
+    compute_bin_indices,
+    compute_group_weights,
+    group_indices_to_groups_matrix,
+)
 
 __author__ = 'Alex Rogozhnikov'
 

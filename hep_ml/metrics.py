@@ -45,15 +45,13 @@ Don't forget to scale features is those are of different nature.
 
 """
 
-from __future__ import division, print_function
 
 import numpy
 from sklearn.base import BaseEstimator
 from sklearn.neighbors import NearestNeighbors
 
-from .commonutils import take_features, check_xyw, weighted_quantile
 from . import metrics_utils as ut
-
+from .commonutils import check_xyw, take_features, weighted_quantile
 
 __author__ = 'Alex Rogozhnikov'
 

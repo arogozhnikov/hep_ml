@@ -1,6 +1,6 @@
-from __future__ import division, print_function, absolute_import
 
 import numpy
+
 from hep_ml import losses
 from hep_ml.commonutils import generate_sample
 
@@ -57,12 +57,12 @@ def test_loss_functions(size=50, epsilon=1e-3):
             numer_gradient[i] = - (val_plus - val_minus) / 2. / epsilon
             numer_hessian[i] = (val_plus + val_minus - 2 * val) / epsilon ** 2
 
-        assert numpy.allclose(gradient, numer_gradient), 'wrong computation of gradient for {}'.format(loss)
+        assert numpy.allclose(gradient, numer_gradient), f'wrong computation of gradient for {loss}'
         if not isinstance(loss, losses.MSELossFunction) and not isinstance(loss, losses.MAELossFunction):
             assert (gradient * (2 * y - 1) >= 0).all(), 'wrong signs of gradients'
         if isinstance(loss, losses.HessianLossFunction):
             hessian = loss.hessian(pred)
-            assert numpy.allclose(hessian, numer_hessian, atol=1e-5), 'wrong computation of hessian for {}'.format(loss)
+            assert numpy.allclose(hessian, numer_hessian, atol=1e-5), f'wrong computation of hessian for {loss}'
 
 
 def test_step_optimality(n_samples=100):

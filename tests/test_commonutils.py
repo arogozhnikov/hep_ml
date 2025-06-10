@@ -1,13 +1,18 @@
-from __future__ import division, print_function, absolute_import
 
 import numpy
 import pandas
 from numpy.random.mtrand import RandomState
 from sklearn.metrics.pairwise import pairwise_distances
+
 from hep_ml import commonutils
-from hep_ml.commonutils import weighted_quantile, build_normalizer, \
-    compute_cut_for_efficiency, generate_sample, compute_knn_indices_of_signal, \
-    compute_knn_indices_of_same_class
+from hep_ml.commonutils import (
+    build_normalizer,
+    compute_cut_for_efficiency,
+    compute_knn_indices_of_same_class,
+    compute_knn_indices_of_signal,
+    generate_sample,
+    weighted_quantile,
+)
 
 
 def test_splitting(n_rows=10, n_columns=8):
@@ -103,7 +108,7 @@ def test_compute_knn_indices(n_events=100):
     distances = pairwise_distances(X[uniform_columns])
     for i, neighbours in enumerate(knn_indices):
         assert numpy.all(is_signal[neighbours]), "returned indices are not signal"
-        not_neighbours = [x for x in signal_indices if not x in neighbours]
+        not_neighbours = [x for x in signal_indices if x not in neighbours]
         min_dist = numpy.min(distances[i, not_neighbours])
         max_dist = numpy.max(distances[i, neighbours])
         assert min_dist >= max_dist, "distances are set wrongly!"

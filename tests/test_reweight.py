@@ -1,9 +1,8 @@
-from __future__ import division, print_function, absolute_import
 
 import numpy
 
-from hep_ml.reweight import BinsReweighter, GBReweighter, FoldingReweighter
 from hep_ml.metrics_utils import ks_2samp_weighted
+from hep_ml.reweight import BinsReweighter, FoldingReweighter, GBReweighter
 
 __author__ = 'Alex Rogozhnikov'
 
@@ -57,7 +56,7 @@ def check_reweighter(n_dimensions, n_samples, reweighter, folding=False):
             diff1 = ks_2samp_weighted(original[:, dim], target[:, dim], original_weight, target_weight)
             diff2 = ks_2samp_weighted(original[:, dim], target[:, dim], new_weights, target_weight)
             print('KS', diff1, diff2)
-            assert diff2 < diff1, 'Differences {} {}'.format(diff1, diff2)
+            assert diff2 < diff1, f'Differences {diff1} {diff2}'
 
 
 def test_reweighter_1d():

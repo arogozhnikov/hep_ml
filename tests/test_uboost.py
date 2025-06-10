@@ -1,19 +1,19 @@
-from __future__ import print_function, division, absolute_import
 from collections import OrderedDict
 
 import numpy as np
-from sklearn.metrics import roc_auc_score, accuracy_score
+from sklearn.metrics import accuracy_score, roc_auc_score
 from sklearn.naive_bayes import GaussianNB
 from sklearn.tree import DecisionTreeClassifier
+
 # sklearn 0.22 deprecated sklearn.ensemble.weight_boosting
 # remain backwards compatible
 try:
     from sklearn.ensemble import AdaBoostClassifier
-except ImportError as e:
+except ImportError:
     from sklearn.ensemble.weight_boosting import AdaBoostClassifier
 
 from hep_ml.commonutils import generate_sample
-from hep_ml.metrics import BinBasedCvM, KnnBasedCvM
+from hep_ml.metrics import KnnBasedCvM
 from hep_ml.uboost import uBoostBDT, uBoostClassifier
 
 

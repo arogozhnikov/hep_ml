@@ -3,17 +3,15 @@
 which are often used (by other modules)
 """
 
-from __future__ import print_function, division, absolute_import
 
-from multiprocessing.pool import ThreadPool
-import numbers
 import itertools
+import numbers
+from multiprocessing.pool import ThreadPool
 
 import numpy
 import pandas
-from scipy.special import expit
-
 import sklearn.model_selection as sklearn_cross_validation
+from scipy.special import expit
 from sklearn.neighbors import NearestNeighbors
 
 __author__ = "Alex Rogozhnikov"
@@ -254,7 +252,7 @@ def take_features(X, features):
     elif are_numbers:
         return numpy.array(X)[:, features]
     else:
-        raise NotImplementedError("Can't take features {} from object of type {}".format(features, type(X)))
+        raise NotImplementedError(f"Can't take features {features} from object of type {type(X)}")
 
 
 def check_sample_weight(y_true, sample_weight, normalize=False, normalize_by_class=False):
@@ -272,7 +270,7 @@ def check_sample_weight(y_true, sample_weight, normalize=False, normalize_by_cla
         sample_weight = numpy.array(sample_weight, dtype=float)
         assert numpy.ndim(sample_weight) == 1, 'weights vector should be 1-dimensional'
         assert len(y_true) == len(sample_weight), \
-            "The length of weights is different: not {0}, but {1}".format(len(y_true), len(sample_weight))
+            f"The length of weights is different: not {len(y_true)}, but {len(sample_weight)}"
 
     if normalize_by_class:
         sample_weight = numpy.copy(sample_weight)
@@ -305,7 +303,7 @@ def check_xyw(X, y, sample_weight=None, classification=False, allow_multiple_out
     if classification:
         y = numpy.array(y, dtype=int)
 
-    assert len(X) == len(y), 'lengths are different: {} and {}'.format(len(X), len(y))
+    assert len(X) == len(y), f'lengths are different: {len(X)} and {len(y)}'
     assert numpy.ndim(X) == 2, 'X should have 2 dimensions'
 
     return X, y, sample_weight
@@ -344,5 +342,5 @@ def to_pandas_dataframe(X):
     if isinstance(X, pandas.DataFrame):
         return X
     else:
-        return pandas.DataFrame(X, columns=['Feature{}'.format(i) for i in range(X.shape[1])])
+        return pandas.DataFrame(X, columns=[f'Feature{i}' for i in range(X.shape[1])])
 float

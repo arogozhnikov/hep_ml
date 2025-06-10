@@ -30,12 +30,12 @@ Also, neural networks support special argument 'scaler'. You can pass any transf
 
 """
 
-from __future__ import division, print_function, absolute_import
 from collections import OrderedDict
 
 import numpy
 import pandas
 from sklearn.base import BaseEstimator, TransformerMixin
+
 from .commonutils import check_sample_weight, to_pandas_dataframe, weighted_quantile
 
 __author__ = 'Alex Rogozhnikov'
@@ -150,7 +150,7 @@ class IronTransformer(BaseEstimator, TransformerMixin):
         """
         X = to_pandas_dataframe(X)
         assert list(X.columns) == list(self.feature_maps.keys()), \
-            'Columns passed {} are different from expected {}'.format(X.columns, list(self.feature_maps.keys()))
+            f'Columns passed {X.columns} are different from expected {list(self.feature_maps.keys())}'
 
         result = pandas.DataFrame(numpy.zeros(X.shape, dtype=float), columns=X.columns)
         for column, (feature_values, feature_percentiles) in self.feature_maps.items():

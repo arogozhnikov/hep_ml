@@ -6,13 +6,10 @@ GBDT uses (attention!) **transform** method, which returns not
 predictions, but indices of leaves for all samples.
 """
 
-from __future__ import division, print_function, absolute_import
 import numpy
-from sklearn.base import BaseEstimator, TransformerMixin, RegressorMixin
-from sklearn.tree import DecisionTreeRegressor
-
 from numpy import float32 as skldtype  # TODO: still needed?
-
+from sklearn.base import TransformerMixin
+from sklearn.tree import DecisionTreeRegressor
 
 __author__ = 'Alex Rogozhnikov'
 

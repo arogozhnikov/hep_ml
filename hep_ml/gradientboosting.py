@@ -13,20 +13,16 @@ See also libraries: XGBoost, sklearn.ensemble.GradientBoostingClassifier
 
 .. [GB] J.H. Friedman 'Greedy function approximation: A gradient boosting machine.', 2001.
 """
-from __future__ import print_function, division, absolute_import
 
 import copy
-import numpy
 
+import numpy
 from sklearn.base import BaseEstimator, ClassifierMixin, RegressorMixin
 from sklearn.utils.random import check_random_state
 
-from .commonutils import score_to_proba, check_xyw
+from .commonutils import check_xyw, score_to_proba
+from .losses import AbstractLossFunction
 from .tree import SklearnClusteringTree
-from .losses import AbstractLossFunction, AdaLossFunction, \
-    KnnFlatnessLossFunction, BinFlatnessLossFunction, \
-    KnnAdaLossFunction, LogLossFunction, RankBoostLossFunction
-
 
 __author__ = 'Alex Rogozhnikov'
 __all__ = ['UGradientBoostingClassifier', 'UGradientBoostingRegressor']
