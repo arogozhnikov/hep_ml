@@ -11,7 +11,7 @@ from hep_ml.commonutils import generate_sample
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import roc_auc_score
 from collections import OrderedDict
-from nose.tools import raises
+import pytest
 
 __author__ = 'Alex Rogozhnikov'
 
@@ -66,10 +66,10 @@ def test_sizes(n_samples=10000, n_features=4, n_bins=8):
     assert numpy.allclose(numpy.min(bin_indices, axis=0), 0)
 
 
-@raises(ValueError)
 def test_raising_exception():
     X, y = generate_sample(n_samples=100, n_features=10)
-    LookupClassifier(GradientBoostingClassifier(), n_bins=16).fit(X, y)
+    with pytest.raises(ValueError):
+        LookupClassifier(GradientBoostingClassifier(), n_bins=16).fit(X, y)
 
 
 def test_classifier_with_dataframe():
