@@ -42,16 +42,6 @@ repos:
       - id: rst-backticks
       - id: rst-directive-colons
 
-  # Notebook formatting
-  - repo: https://github.com/nbQA-dev/nbQA
-    rev: 1.9.1
-    hooks:
-      - id: nbqa-isort
-        additional_dependencies: [ isort ]
-
-      - id: nbqa-pyupgrade
-        additional_dependencies: [ pyupgrade ]
-        args: [ --py39-plus ]
   # clean up notebooks
   - repo: https://github.com/kynan/nbstripout
     rev: 0.8.1
