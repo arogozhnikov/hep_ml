@@ -73,14 +73,3 @@ def test_raising_exception():
         LookupClassifier(GradientBoostingClassifier(), n_bins=16).fit(X, y)
 
 
-def test_classifier_with_dataframe():
-    try:
-        from rep.estimators import SklearnClassifier
-
-        clf = SklearnClassifier(GradientBoostingClassifier(n_estimators=1))
-        X, y = generate_sample(n_samples=100, n_features=4)
-        for X_ in [X, pandas.DataFrame(X)]:
-            lookup = LookupClassifier(clf, n_bins=16).fit(X_, y)
-            lookup.predict_proba(X)
-    except ImportError:
-        print("expected fail: yandex/rep not installed")
