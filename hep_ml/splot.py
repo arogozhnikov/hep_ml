@@ -19,12 +19,12 @@ For more examples and explanations, see notebooks/Splot in repository.
 
 """
 
-from __future__ import division, print_function, absolute_import
-import pandas
 import numpy
+import pandas
+
 from .commonutils import check_sample_weight
 
-__author__ = 'Alex Rogozhnikov'
+__author__ = "Alex Rogozhnikov"
 
 
 def compute_sweights(probabilities, sample_weight=None):
@@ -41,11 +41,11 @@ def compute_sweights(probabilities, sample_weight=None):
     # checking sample_weight
     sample_weight = check_sample_weight(probabilities, sample_weight=sample_weight)
     # checking that all weights are positive
-    assert numpy.all(sample_weight >= 0), 'sample weight are expected to be non-negative'
+    assert numpy.all(sample_weight >= 0), "sample weight are expected to be non-negative"
 
     p = numpy.array(probabilities)
     # checking that probabilities sum up to 1.
-    assert numpy.allclose(p.sum(axis=1), 1, atol=1e-3), 'sum of probabilities is not equal to 1.'
+    assert numpy.allclose(p.sum(axis=1), 1, atol=1e-3), "sum of probabilities is not equal to 1."
 
     # computations
     initial_stats = (p * sample_weight[:, numpy.newaxis]).sum(axis=0)

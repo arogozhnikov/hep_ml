@@ -14,11 +14,6 @@ license = { text = "Apache 2.0" }
 classifiers = [
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: Apache Software License",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
 ]
 requires-python = ">3.9"
 keywords = [
@@ -42,6 +37,8 @@ Homepage = "https://github.com/arogozhnikov/hep_ml"
 test = [
     "pytest",
     "pytest-cov",
+    "pytest-xdist",
+    "nbval",
     "matplotlib >= 1.4",
     "ipython[all] >= 3.0",
 ]
@@ -50,6 +47,8 @@ doc = [
     "sphinx_rtd_theme",
 ]
 dev = [
+    "ruff",
+    "pre-commit",
     "hep_ml[test,doc]",
 ]
 
@@ -63,3 +62,52 @@ include = [
     "/LICENSE",
     "/requirements.txt",
 ]
+
+[tool.ruff]
+line-length = 120
+target-version = "py39"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+
+    "RUF",    # ruff rules
+    "Q",      # quotes
+    "TID252", # force abs imports of parents
+    "PIE",    # flake8-pie
+    "ISC",    # implicit string concatenation
+    "PTH",    # pathlib
+    "N818",   # error class name ends with error
+    "UP",     # pyupgrade
+    "C4",     # comprehensions
+    "N804",   # cls
+    "N805",   # self
+    "COM818", # bare comma
+    "PL",     # all pylint rules (error, conventions, warnigns)
+    "FLY",    # static joins -> f-string
+    "NPY201", # numpy 2 deprecations
+    "RET501",
+    "RET502",
+    "RET503",
+    # "NPY",    # numpy ruleset. Can help with migration to generators
+]
+ignore = [
+    "E501",   # line too long (handled by line-length)
+    "B008",   # do not perform function calls in argument defaults
+    "B006",   # do not use mutable data structures for argument defaults
+    "RUF010", # str(x) -> x:!s
+    "PLR",    # pylint - opinionated recommendations
+    "PIE790", # Unnecessary `pass` statement - used in notebooks
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["B011"]  # assert false is fine in tests
+
+[tool.ruff.lint.isort]
+known-first-party = ["hep_ml"]

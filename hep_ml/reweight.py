@@ -56,21 +56,19 @@ weights predictions will be unbiased: each reweighter predicts only those part o
 
 >>> MC_weights = reweighter.predict_weights(MC_data)
 """
-from __future__ import division, print_function, absolute_import
 
+import numpy
+from scipy.ndimage import gaussian_filter
+from sklearn import clone
 from sklearn.base import BaseEstimator
 from sklearn.utils import check_random_state
-from sklearn import clone
 
-from scipy.ndimage import gaussian_filter
-import numpy
-
-from .commonutils import check_sample_weight, weighted_quantile
 from . import gradientboosting as gb
 from . import losses
+from .commonutils import check_sample_weight, weighted_quantile
 
-__author__ = 'Alex Rogozhnikov, Tatiana Likhomanenko'
-__all__ = ['BinsReweighter', 'GBReweighter', 'FoldingReweighter']
+__author__ = "Alex Rogozhnikov, Tatiana Likhomanenko"
+__all__ = ["BinsReweighter", "FoldingReweighter", "GBReweighter"]
 
 
 def _bincount_nd(x, weights, shape):
@@ -81,23 +79,24 @@ def _bincount_nd(x, weights, shape):
     :param shape: shape of result, should be greater, then maximal value
     :return: weighted number of event in each bin, of shape=shape
     """
-    assert len(weights) == len(x), 'length of weight is different: {} {}'.format(len(x), len(weights))
-    assert x.shape[1] == len(shape), 'wrong length of shape: {} {}'.format(x.shape[1], len(shape))
+    assert len(weights) == len(x), f"length of weight is different: {len(x)} {len(weights)}"
+    assert x.shape[1] == len(shape), f"wrong length of shape: {x.shape[1]} {len(shape)}"
     maximals = numpy.max(x, axis=0)
-    assert numpy.all(maximals < shape), 'small shape passed: {} {}'.format(maximals, shape)
+    assert numpy.all(maximals < shape), f"small shape passed: {maximals} {shape}"
 
     result = numpy.zeros(shape, dtype=float)
     numpy.add.at(result, tuple(x.T), weights)
     return result
 
 
-class ReweighterMixin(object):
+class ReweighterMixin:
     """Supplementary class which shows the interface of reweighter.
-     Reweighters should be derived from this class."""
+    Reweighters should be derived from this class."""
+
     n_features_ = None
 
     def _normalize_input(self, data, weights, normalize=True):
-        """ Normalize input of reweighter
+        """Normalize input of reweighter
         :param data: array like of shape [n_samples] or [n_samples, n_features]
         :param weights: array-like of shape [n_samples] or None
         :return: tuple with
@@ -110,19 +109,18 @@ class ReweighterMixin(object):
             data = data[:, numpy.newaxis]
         if self.n_features_ is None:
             self.n_features_ = data.shape[1]
-        assert self.n_features_ == data.shape[1], \
-            'number of features is wrong: {} {}'.format(self.n_features_, data.shape[1])
+        assert self.n_features_ == data.shape[1], f"number of features is wrong: {self.n_features_} {data.shape[1]}"
         return data, weights
 
     def fit(self, original, target, original_weight, target_weight):
-        raise NotImplementedError('To be overriden in descendants')
+        raise NotImplementedError("To be overriden in descendants")
 
     def predict_weights(self, original, original_weight=None):
-        raise NotImplementedError('To be overriden in descendants')
+        raise NotImplementedError("To be overriden in descendants")
 
 
 class BinsReweighter(BaseEstimator, ReweighterMixin):
-    def __init__(self, n_bins=200, n_neighs=3.):
+    def __init__(self, n_bins=200, n_neighs=3.0):
         """
         Use bins for reweighting. Bins' edges are computed using quantiles along each axis
         (which is better than bins of even size).
@@ -142,7 +140,7 @@ class BinsReweighter(BaseEstimator, ReweighterMixin):
         self.n_bins = n_bins
         self.n_neighs = n_neighs
         # if number of events in bins is less than this value, number of events is clipped.
-        self.min_in_the_bin = 1.
+        self.min_in_the_bin = 1.0
 
     def compute_bin_indices(self, data):
         """
@@ -200,13 +198,15 @@ class BinsReweighter(BaseEstimator, ReweighterMixin):
 
 
 class GBReweighter(BaseEstimator, ReweighterMixin):
-    def __init__(self,
-                 n_estimators=40,
-                 learning_rate=0.2,
-                 max_depth=3,
-                 min_samples_leaf=200,
-                 loss_regularization=5.,
-                 gb_args=None):
+    def __init__(
+        self,
+        n_estimators=40,
+        learning_rate=0.2,
+        max_depth=3,
+        min_samples_leaf=200,
+        loss_regularization=5.0,
+        gb_args=None,
+    ):
         """
         Gradient Boosted Reweighter - a reweighter algorithm based on ensemble of regression trees.
         Parameters have the same role, as in gradient boosting.
@@ -252,12 +252,14 @@ class GBReweighter(BaseEstimator, ReweighterMixin):
         target, target_weight = self._normalize_input(target, target_weight)
 
         loss = losses.ReweightLossFunction(regularization=self.loss_regularization)
-        self.gb = gb.UGradientBoostingClassifier(loss=loss,
-                                                 n_estimators=self.n_estimators,
-                                                 max_depth=self.max_depth,
-                                                 min_samples_leaf=self.min_samples_leaf,
-                                                 learning_rate=self.learning_rate,
-                                                 **self.gb_args)
+        self.gb = gb.UGradientBoostingClassifier(
+            loss=loss,
+            n_estimators=self.n_estimators,
+            max_depth=self.max_depth,
+            min_samples_leaf=self.min_samples_leaf,
+            learning_rate=self.learning_rate,
+            **self.gb_args,
+        )
         data = numpy.vstack([original, target])
         target = numpy.array([1] * len(original) + [0] * len(target))
         weights = numpy.hstack([original_weight, target_weight])
@@ -341,9 +343,12 @@ class FoldingReweighter(BaseEstimator, ReweighterMixin):
         target = numpy.array(target)
 
         for i in range(self.n_folds):
-            self.reweighters[i].fit(original[folds_original != i, :], target[folds_target != i, :],
-                                    original_weight=original_weight[folds_original != i],
-                                    target_weight=target_weight[folds_target != i])
+            self.reweighters[i].fit(
+                original[folds_original != i, :],
+                target[folds_target != i, :],
+                original_weight=original_weight[folds_original != i],
+                target_weight=target_weight[folds_target != i],
+            )
         self.train_length = len(original)
         return self
 
@@ -361,7 +366,7 @@ class FoldingReweighter(BaseEstimator, ReweighterMixin):
         original, original_weight = self._normalize_input(original, original_weight, normalize=False)
         if vote_function is not None:
             if self.verbose:
-                print('KFold prediction with voting function')
+                print("KFold prediction with voting function")
             results = []
             for reweighter in self.reweighters:
                 results.append(reweighter.predict_weights(original, original_weight=original_weight))
@@ -371,14 +376,16 @@ class FoldingReweighter(BaseEstimator, ReweighterMixin):
         else:
             if self.verbose:
                 if len(original) != self.train_length:
-                    print('KFold prediction using random reweighter '
-                          '(length of data passed not equal to length of train)')
+                    print(
+                        "KFold prediction using random reweighter (length of data passed not equal to length of train)"
+                    )
                 else:
-                    print('KFold prediction using folds column')
+                    print("KFold prediction using folds column")
             folds_original = self._get_folds_column(len(original))
             new_original_weight = numpy.zeros(len(original))
             original = numpy.asarray(original)
             for i in range(self.n_folds):
                 new_original_weight[folds_original == i] = self.reweighters[i].predict_weights(
-                        original[folds_original == i, :], original_weight=original_weight[folds_original == i])
+                    original[folds_original == i, :], original_weight=original_weight[folds_original == i]
+                )
             return new_original_weight

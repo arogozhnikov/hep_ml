@@ -1,0 +1,72 @@
+ci:
+  autoupdate_commit_msg: "chore: update pre-commit hooks"
+  autofix_commit_msg: "style: pre-commit fixes"
+  autoupdate_schedule: quarterly
+#  skip:
+#    - oxipng
+
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+        args: [ '--maxkb=1000' ]
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: check-yaml
+      - id: check-toml
+      - id: check-json
+      - id: debug-statements
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+      - id: requirements-txt-fixer
+      - id: trailing-whitespace
+        files: ".*\\.(?:tex|py)$"
+        args: [ --markdown-linebreak-ext=md ]
+        exclude: (^notebooks/|^tests/truth/)
+      - id: detect-private-key
+      - id: fix-byte-order-marker
+      - id: check-ast
+      - id: check-docstring-first
+      - id: debug-statements
+
+
+  - repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.10.0
+    hooks:
+      - id: python-use-type-annotations
+      - id: python-check-mock-methods
+      - id: python-no-eval
+      - id: rst-backticks
+      - id: rst-directive-colons
+
+#  # clean up notebooks. we want to keep plots in notebooks
+#  - repo: https://github.com/kynan/nbstripout
+#    rev: 0.8.1
+#    hooks:
+#      - id: nbstripout
+
+  - repo: https://github.com/MarcoGorelli/auto-walrus
+    rev: 0.3.4
+    hooks:
+      - id: auto-walrus
+
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.33.0
+    hooks:
+      - id: check-github-workflows
+      - id: check-github-actions
+      - id: check-dependabot
+      - id: check-readthedocs
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: "v0.11.13"
+    hooks:
+      - id: ruff
+        types_or: [ python, pyi, jupyter ]
+        args: [ --fix, --show-fixes , --line-length=120 ]
+      # Run the formatter.
+      - id: ruff-format
+        types_or: [ python, pyi, jupyter ]

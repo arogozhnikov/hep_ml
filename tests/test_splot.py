@@ -1,8 +1,8 @@
-from __future__ import division, print_function, absolute_import
 import numpy
+
 from hep_ml import splot
 
-__author__ = 'Alex Rogozhnikov'
+__author__ = "Alex Rogozhnikov"
 
 
 def test_splot(n_samples=100):
@@ -24,9 +24,12 @@ def test_splot(n_samples=100):
 
             # How much inside each bin
             prob_collection = numpy.dot(sWeights.T, p)
-            assert numpy.allclose(prob_collection, numpy.diag(initial_stats)), \
-                'wrong reconstruction after reweighting (biased)'
-            assert numpy.allclose(sWeights.sum(axis=0), initial_stats), \
-                'sum of sWeights should be equal to weighted amount of expected samples'
-            assert numpy.allclose(sWeights.sum(axis=1), real_weights), \
-                'sum of sWeights should be equal to initial weight of sample'
+            assert numpy.allclose(prob_collection, numpy.diag(initial_stats)), (
+                "wrong reconstruction after reweighting (biased)"
+            )
+            assert numpy.allclose(sWeights.sum(axis=0), initial_stats), (
+                "sum of sWeights should be equal to weighted amount of expected samples"
+            )
+            assert numpy.allclose(sWeights.sum(axis=1), real_weights), (
+                "sum of sWeights should be equal to initial weight of sample"
+            )

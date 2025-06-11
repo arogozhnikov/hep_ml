@@ -39,7 +39,7 @@ To get uniform predictions in both signal and background:
 
 
 """
-from __future__ import division, print_function, absolute_import
+
 import numbers
 import warnings
 
@@ -47,27 +47,31 @@ import numpy
 import pandas
 from scipy import sparse
 from scipy.special import expit
-from sklearn.utils.validation import check_random_state
 from sklearn.base import BaseEstimator
+from sklearn.utils.validation import check_random_state
 
-from .commonutils import compute_knn_indices_of_signal, check_sample_weight, check_uniform_label, weighted_quantile
-from .metrics_utils import bin_to_group_indices, compute_bin_indices, compute_group_weights, \
-    group_indices_to_groups_matrix
+from .commonutils import check_sample_weight, check_uniform_label, compute_knn_indices_of_signal, weighted_quantile
+from .metrics_utils import (
+    bin_to_group_indices,
+    compute_bin_indices,
+    compute_group_weights,
+    group_indices_to_groups_matrix,
+)
 
-__author__ = 'Alex Rogozhnikov'
+__author__ = "Alex Rogozhnikov"
 
 __all__ = [
-    'AbstractLossFunction',
-    'MSELossFunction',
-    'MAELossFunction',
-    'LogLossFunction',
-    'AdaLossFunction',
-    'CompositeLossFunction',
-    'BinFlatnessLossFunction',
-    'KnnFlatnessLossFunction',
-    'KnnAdaLossFunction',
-    'RankBoostLossFunction',
-    'ReweightLossFunction'
+    "AbstractLossFunction",
+    "AdaLossFunction",
+    "BinFlatnessLossFunction",
+    "CompositeLossFunction",
+    "KnnAdaLossFunction",
+    "KnnFlatnessLossFunction",
+    "LogLossFunction",
+    "MAELossFunction",
+    "MSELossFunction",
+    "RankBoostLossFunction",
+    "ReweightLossFunction",
 ]
 
 
@@ -81,7 +85,7 @@ def _compute_positions(y_pred, sample_weight):
     order = numpy.argsort(y_pred)
     ordered_weights = sample_weight[order]
     ordered_weights /= float(numpy.sum(ordered_weights))
-    efficiencies = (numpy.cumsum(ordered_weights) - 0.5 * ordered_weights)
+    efficiencies = numpy.cumsum(ordered_weights) - 0.5 * ordered_weights
     return efficiencies[numpy.argsort(order)]
 
 
@@ -97,7 +101,7 @@ class AbstractLossFunction(BaseEstimator):
     """
 
     def fit(self, X, y, sample_weight):
-        """ This method is optional, it is called before all the others.
+        """This method is optional, it is called before all the others.
         Heavy preprocessing should be done here."""
         return self
 
@@ -135,14 +139,14 @@ class AbstractLossFunction(BaseEstimator):
         :param y_pred: initial predictions, numpy.array of shape [n_samples]
         :return: float
         """
-        return 0.
+        return 0.0
 
 
 class HessianLossFunction(AbstractLossFunction):
     """Loss function with diagonal hessian (or hessian, which can be approximated by diagonal),
-    uses Newton-Raphson step to update trees. """
+    uses Newton-Raphson step to update trees."""
 
-    def __init__(self, regularization=5.):
+    def __init__(self, regularization=5.0):
         """
         :param regularization: float, penalty for leaves with few events,
          corresponds roughly to the number of added events of both classes to each leaf.
@@ -154,11 +158,11 @@ class HessianLossFunction(AbstractLossFunction):
         return self
 
     def hessian(self, y_pred):
-        """ Returns diagonal of hessian matrix.
+        """Returns diagonal of hessian matrix.
         :param y_pred: numpy.array of shape [n_samples] with events passed in the same order as in `fit`.
         :return: numpy.array of shape [n_sampels] with second derivatives with respect to each prediction.
         """
-        raise NotImplementedError('Override this method in loss function.')
+        raise NotImplementedError("Override this method in loss function.")
 
     def prepare_tree_params(self, y_pred):
         grad = self.negative_gradient(y_pred)
@@ -166,12 +170,15 @@ class HessianLossFunction(AbstractLossFunction):
         return grad / hess, hess
 
     def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred):
-        """ This expression comes from optimization of second-order approximation of loss function."""
+        """This expression comes from optimization of second-order approximation of loss function."""
         gradients = self.negative_gradient(y_pred)
         hessians = self.hessian(y_pred)
         return HessianLossFunction._prepare_hessian_leaves_values(
-            terminal_regions=terminal_regions, leaf_values=leaf_values,
-            gradients=gradients, hessians=hessians, regularization_=self.regularization_
+            terminal_regions=terminal_regions,
+            leaf_values=leaf_values,
+            gradients=gradients,
+            hessians=hessians,
+            regularization_=self.regularization_,
         )
 
     @staticmethod
@@ -187,9 +194,9 @@ class HessianLossFunction(AbstractLossFunction):
         :param y_pred: predictions (usually, zeros)
         :return: float
         """
-        terminal_regions = numpy.zeros(len(y_pred), dtype='int')
+        terminal_regions = numpy.zeros(len(y_pred), dtype="int")
         leaf_values = numpy.zeros(shape=1)
-        step = 0.
+        step = 0.0
         for _ in range(10):
             step_ = self.prepare_new_leaves_values(terminal_regions, leaf_values=leaf_values, y_pred=y_pred + step)[0]
             step += 0.5 * step_
@@ -198,24 +205,26 @@ class HessianLossFunction(AbstractLossFunction):
 
 # region Classification losses
 
+
 class AdaLossFunction(HessianLossFunction):
-    """ AdaLossFunction is the same as Exponential Loss Function (aka exploss) """
+    """AdaLossFunction is the same as Exponential Loss Function (aka exploss)"""
 
     def fit(self, X, y, sample_weight):
-        self.sample_weight = check_sample_weight(y, sample_weight=sample_weight,
-                                                 normalize=True, normalize_by_class=True)
-        self.y_signed = numpy.array(2 * y - 1, dtype='float32')
+        self.sample_weight = check_sample_weight(
+            y, sample_weight=sample_weight, normalize=True, normalize_by_class=True
+        )
+        self.y_signed = numpy.array(2 * y - 1, dtype="float32")
         HessianLossFunction.fit(self, X, y, sample_weight=self.sample_weight)
         return self
 
     def __call__(self, y_pred):
-        return numpy.sum(self.sample_weight * numpy.exp(- self.y_signed * y_pred))
+        return numpy.sum(self.sample_weight * numpy.exp(-self.y_signed * y_pred))
 
     def negative_gradient(self, y_pred):
-        return self.y_signed * self.sample_weight * numpy.exp(- self.y_signed * y_pred)
+        return self.y_signed * self.sample_weight * numpy.exp(-self.y_signed * y_pred)
 
     def hessian(self, y_pred):
-        return self.sample_weight * numpy.exp(- self.y_signed * y_pred)
+        return self.sample_weight * numpy.exp(-self.y_signed * y_pred)
 
     def prepare_tree_params(self, y_pred):
         return self.y_signed, self.hessian(y_pred)
@@ -227,10 +236,11 @@ class LogLossFunction(HessianLossFunction):
     """
 
     def fit(self, X, y, sample_weight):
-        self.sample_weight = check_sample_weight(y, sample_weight=sample_weight,
-                                                 normalize=True, normalize_by_class=True)
+        self.sample_weight = check_sample_weight(
+            y, sample_weight=sample_weight, normalize=True, normalize_by_class=True
+        )
         self.y_signed = 2 * y - 1
-        self.minus_y_signed = - self.y_signed
+        self.minus_y_signed = -self.y_signed
         self.y_signed_times_weights = self.y_signed * self.sample_weight
         HessianLossFunction.fit(self, X, y, sample_weight=self.sample_weight)
         return self
@@ -258,8 +268,9 @@ class CompositeLossFunction(HessianLossFunction):
 
     def fit(self, X, y, sample_weight):
         self.y = y
-        self.sample_weight = check_sample_weight(y, sample_weight=sample_weight,
-                                                 normalize=True, normalize_by_class=True)
+        self.sample_weight = check_sample_weight(
+            y, sample_weight=sample_weight, normalize=True, normalize_by_class=True
+        )
         self.y_signed = 2 * y - 1
         self.sig_w = (y == 1) * self.sample_weight
         self.bck_w = (y == 0) * self.sample_weight
@@ -272,7 +283,7 @@ class CompositeLossFunction(HessianLossFunction):
         return result
 
     def negative_gradient(self, y_pred):
-        result = self.sig_w * expit(- y_pred)
+        result = self.sig_w * expit(-y_pred)
         result -= 0.5 * self.bck_w * numpy.exp(0.5 * y_pred)
         return result
 
@@ -285,8 +296,9 @@ class CompositeLossFunction(HessianLossFunction):
 
 # region Regression Losses
 
+
 class MSELossFunction(HessianLossFunction):
-    r""" Mean squared error loss function, used for regression.
+    r"""Mean squared error loss function, used for regression.
     :math:`\text{loss} = \sum_i (y_i - \hat{y}_i)^2`
     """
 
@@ -313,7 +325,7 @@ class MSELossFunction(HessianLossFunction):
 
 
 class MAELossFunction(AbstractLossFunction):
-    r""" Mean absolute error loss function, used for regression.
+    r"""Mean absolute error loss function, used for regression.
     :math:`\text{loss} = \sum_i |y_i - \hat{y}_i|`
     """
 
@@ -335,8 +347,9 @@ class MAELossFunction(AbstractLossFunction):
     def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred):
         # computing weighted median is slow in python
         # and cannot be done in numpy without sorting
-        nominators = numpy.bincount(terminal_regions, weights=self.negative_gradient(y_pred=y_pred),
-                                    minlength=len(leaf_values))
+        nominators = numpy.bincount(
+            terminal_regions, weights=self.negative_gradient(y_pred=y_pred), minlength=len(leaf_values)
+        )
         denominators = numpy.bincount(terminal_regions, weights=self.sample_weight, minlength=len(leaf_values))
         return 0.5 * nominators / (denominators + self._regularization)
 
@@ -348,7 +361,7 @@ class MAELossFunction(AbstractLossFunction):
 
 
 class RankBoostLossFunction(HessianLossFunction):
-    def __init__(self, request_column, penalty_power=1., update_iterations=1):
+    def __init__(self, request_column, penalty_power=1.0, update_iterations=1):
         r"""RankBoostLossFunction is target of optimization in RankBoost [RB]_ algorithm,
         which was developed for ranking and introduces penalties for wrong order of predictions.
 
@@ -392,14 +405,15 @@ class RankBoostLossFunction(HessianLossFunction):
         n_queries = numpy.bincount(normed_queries)
         assert len(n_queries) == len(self.possible_queries)
         self.penalty_matrices.append(
-            sparse.block_diag([self.rank_penalties * 1. / numpy.sqrt(1 + nq) for nq in n_queries]))
+            sparse.block_diag([self.rank_penalties * 1.0 / numpy.sqrt(1 + nq) for nq in n_queries])
+        )
         HessianLossFunction.fit(self, X, y, sample_weight=sample_weight)
 
     def __call__(self, y_pred):
         y_pred -= y_pred.mean()
         pos_exponent = numpy.exp(y_pred)
         neg_exponent = numpy.exp(-y_pred)
-        result = 0.
+        result = 0.0
         for lookup, length, penalty_matrix in zip(self.lookups, self.minlengths, self.penalty_matrices):
             pos_stats = numpy.bincount(lookup, weights=pos_exponent, minlength=length)
             neg_stats = numpy.bincount(lookup, weights=neg_exponent, minlength=length)
@@ -416,7 +430,7 @@ class RankBoostLossFunction(HessianLossFunction):
             neg_stats = numpy.bincount(lookup, weights=neg_exponent, minlength=length)
             gradient += pos_exponent * penalty_matrix.dot(neg_stats)[lookup]
             gradient -= neg_exponent * penalty_matrix.T.dot(pos_stats)[lookup]
-        return - gradient
+        return -gradient
 
     def hessian(self, y_pred):
         y_pred -= y_pred.mean()
@@ -465,7 +479,7 @@ class RankBoostLossFunction(HessianLossFunction):
 
 
 class AbstractMatrixLossFunction(HessianLossFunction):
-    def __init__(self, uniform_features, regularization=5.):
+    def __init__(self, uniform_features, regularization=5.0):
         r"""AbstractMatrixLossFunction is a base class to be inherited by other loss functions,
         which choose the particular A matrix and w vector. The formula of loss is:
         \text{loss} = \sum_i w_i * exp(- \sum_j a_ij y_j score_j)
@@ -494,19 +508,19 @@ class AbstractMatrixLossFunction(HessianLossFunction):
     def __call__(self, y_pred):
         """Computing the loss itself"""
         assert len(y_pred) == self.A.shape[1], "something is wrong with sizes"
-        exponents = numpy.exp(- self.A.dot(self.y_signed * y_pred))
+        exponents = numpy.exp(-self.A.dot(self.y_signed * y_pred))
         return numpy.sum(self.w * exponents)
 
     def negative_gradient(self, y_pred):
         """Computing negative gradient"""
         assert len(y_pred) == self.A.shape[1], "something is wrong with sizes"
-        exponents = numpy.exp(- self.A.dot(self.y_signed * y_pred))
+        exponents = numpy.exp(-self.A.dot(self.y_signed * y_pred))
         result = self.A_t.dot(self.w * exponents) * self.y_signed
         return result
 
     def hessian(self, y_pred):
-        assert len(y_pred) == self.A.shape[1], 'something wrong with sizes'
-        exponents = numpy.exp(- self.A.dot(self.y_signed * y_pred))
+        assert len(y_pred) == self.A.shape[1], "something wrong with sizes"
+        exponents = numpy.exp(-self.A.dot(self.y_signed * y_pred))
         result = self.A_t_sq.dot(self.w * exponents)
         return result
 
@@ -515,10 +529,12 @@ class AbstractMatrixLossFunction(HessianLossFunction):
         raise NotImplementedError()
 
     def prepare_new_leaves_values(self, terminal_regions, leaf_values, y_pred):
-        exponents = numpy.exp(- self.A.dot(self.y_signed * y_pred))
+        exponents = numpy.exp(-self.A.dot(self.y_signed * y_pred))
         # current approach uses Newton-Raphson step
-        regions_matrix = sparse.csc_matrix((self.y_signed, [numpy.arange(len(self.y_signed)), terminal_regions]),
-                                           shape=[len(self.y_signed), len(leaf_values)])
+        regions_matrix = sparse.csc_matrix(
+            (self.y_signed, [numpy.arange(len(self.y_signed)), terminal_regions]),
+            shape=[len(self.y_signed), len(leaf_values)],
+        )
         # Z is matrix of shape [n_exponents, n_terminal_regions]
         # with contributions of each terminal region to each exponent
         Z = self.A.dot(regions_matrix)
@@ -529,7 +545,7 @@ class AbstractMatrixLossFunction(HessianLossFunction):
 
 
 class KnnAdaLossFunction(AbstractMatrixLossFunction):
-    def __init__(self, uniform_features, uniform_label, knn=10, row_norm=1.):
+    def __init__(self, uniform_features, uniform_label, knn=10, row_norm=1.0):
         r"""Modification of AdaLoss to achieve uniformity of predictions
 
         :math:`\text{loss} = \sum_i w_i * exp(- \sum_j a_{ij} y_j score_j)`
@@ -579,7 +595,7 @@ class KnnAdaLossFunction(AbstractMatrixLossFunction):
             A_parts.append(A_part)
             w_parts.append(w_part)
 
-        A = sparse.vstack(A_parts, format='csr', dtype=float)
+        A = sparse.vstack(A_parts, format="csr", dtype=float)
         w = numpy.concatenate(w_parts)
         assert A.shape == (len(trainX), len(trainX))
         return A, w
@@ -597,8 +613,9 @@ class KnnAdaLossFunction(AbstractMatrixLossFunction):
 # 2. optimize chi2- changing only sign, weights are the same
 # 3. computing optimal values for leaves: simply log (negatives are in the same distribution with sign -)
 
+
 class ReweightLossFunction(AbstractLossFunction):
-    def __init__(self, regularization=5.):
+    def __init__(self, regularization=5.0):
         """
         Loss function used to reweight distributions. Works inside :class:`hep_ml.reweight.GBReweighter`
         See [Rew]_ for details.
@@ -638,11 +655,11 @@ class ReweightLossFunction(AbstractLossFunction):
         return check_sample_weight(self.y, weights, normalize=True, normalize_by_class=True)
 
     def __call__(self, *args, **kwargs):
-        """ Loss function doesn't have precise expression """
+        """Loss function doesn't have precise expression"""
         return 0
 
     def negative_gradient(self, y_pred):
-        return 0.
+        return 0.0
 
     def prepare_tree_params(self, y_pred):
         return self.signs, numpy.abs(self._compute_weights(y_pred))
@@ -666,16 +683,14 @@ class ReweightLossFunction(AbstractLossFunction):
 
 
 def _exp_margin(margin):
-    """ margin = - y_signed * y_pred """
+    """margin = - y_signed * y_pred"""
     return numpy.exp(numpy.clip(margin, -1e5, 2))
 
 
 class AbstractFlatnessLossFunction(AbstractLossFunction):
     """Base class for FlatnessLosses"""
 
-    def __init__(self, uniform_features, uniform_label, power=2., fl_coefficient=3.,
-                 allow_wrong_signs=True):
-
+    def __init__(self, uniform_features, uniform_label, power=2.0, fl_coefficient=3.0, allow_wrong_signs=True):
         self.uniform_features = uniform_features
         if isinstance(uniform_label, numbers.Number):
             self.uniform_label = numpy.array([uniform_label])
@@ -686,16 +701,15 @@ class AbstractFlatnessLossFunction(AbstractLossFunction):
         self.allow_wrong_signs = allow_wrong_signs
 
     def fit(self, X, y, sample_weight=None):
-        sample_weight = check_sample_weight(y, sample_weight=sample_weight,
-                                            normalize=True, normalize_by_class=True)
-        assert len(X) == len(y), 'lengths are different'
+        sample_weight = check_sample_weight(y, sample_weight=sample_weight, normalize=True, normalize_by_class=True)
+        assert len(X) == len(y), "lengths are different"
         X = pandas.DataFrame(X)
 
-        self.regularization_ = numpy.mean(sample_weight) * 5.
-        self.group_indices = dict()
-        self.group_matrices = dict()
-        self.group_weights = dict()
-        self.label_masks = dict()
+        self.regularization_ = numpy.mean(sample_weight) * 5.0
+        self.group_indices = {}
+        self.group_matrices = {}
+        self.group_weights = {}
+        self.label_masks = {}
 
         occurences = numpy.zeros(len(X))
         for label in self.uniform_label:
@@ -708,7 +722,7 @@ class AbstractFlatnessLossFunction(AbstractLossFunction):
 
         out_of_bins = (occurences == 0) & numpy.isin(y, self.uniform_label)
         if numpy.mean(out_of_bins) > 0.01:
-            warnings.warn("%i events out of all bins " % numpy.sum(out_of_bins), UserWarning)
+            warnings.warn(f"{numpy.sum(out_of_bins):d} events out of all bins ", UserWarning, stacklevel=2)
 
         self.y = y
         self.y_signed = 2 * y - 1
@@ -718,7 +732,7 @@ class AbstractFlatnessLossFunction(AbstractLossFunction):
         return self
 
     def _compute_groups_indices(self, X, y, label):
-        raise NotImplementedError('To be overriden in descendants.')
+        raise NotImplementedError("To be overriden in descendants.")
 
     def __call__(self, pred):
         # the actual value does not play any role in boosting
@@ -732,15 +746,18 @@ class AbstractFlatnessLossFunction(AbstractLossFunction):
         for label in self.uniform_label:
             label_mask = self.label_masks[label]
             global_positions = numpy.zeros(len(y_pred), dtype=float)
-            global_positions[label_mask] = \
-                _compute_positions(y_pred[label_mask], sample_weight=self.sample_weight[label_mask])
+            global_positions[label_mask] = _compute_positions(
+                y_pred[label_mask], sample_weight=self.sample_weight[label_mask]
+            )
 
             for indices_in_bin in self.group_indices[label]:
-                local_pos = _compute_positions(y_pred[indices_in_bin],
-                                               sample_weight=self.sample_weight[indices_in_bin])
+                local_pos = _compute_positions(y_pred[indices_in_bin], sample_weight=self.sample_weight[indices_in_bin])
                 global_pos = global_positions[indices_in_bin]
-                bin_gradient = self.power * numpy.sign(local_pos - global_pos) * \
-                               numpy.abs(local_pos - global_pos) ** (self.power - 1)
+                bin_gradient = (
+                    self.power
+                    * numpy.sign(local_pos - global_pos)
+                    * numpy.abs(local_pos - global_pos) ** (self.power - 1)
+                )
                 neg_gradient[indices_in_bin] += bin_gradient
 
         neg_gradient *= self.divided_weight
@@ -768,8 +785,9 @@ class AbstractFlatnessLossFunction(AbstractLossFunction):
 
 
 class BinFlatnessLossFunction(AbstractFlatnessLossFunction):
-    def __init__(self, uniform_features, uniform_label, n_bins=10, power=2., fl_coefficient=3.,
-                 allow_wrong_signs=True):
+    def __init__(
+        self, uniform_features, uniform_label, n_bins=10, power=2.0, fl_coefficient=3.0, allow_wrong_signs=True
+    ):
         r"""
         This loss function contains separately penalty for non-flatness and for bad prediction quality.
         See [FL]_ for details.
@@ -790,10 +808,14 @@ class BinFlatnessLossFunction(AbstractFlatnessLossFunction):
             http://arxiv.org/abs/1410.4140
         """
         self.n_bins = n_bins
-        AbstractFlatnessLossFunction.__init__(self, uniform_features,
-                                              uniform_label=uniform_label, power=power,
-                                              fl_coefficient=fl_coefficient,
-                                              allow_wrong_signs=allow_wrong_signs)
+        AbstractFlatnessLossFunction.__init__(
+            self,
+            uniform_features,
+            uniform_label=uniform_label,
+            power=power,
+            fl_coefficient=fl_coefficient,
+            allow_wrong_signs=allow_wrong_signs,
+        )
 
     def _compute_groups_indices(self, X, y, label):
         """Returns a list, each element is events' indices in some group."""
@@ -802,19 +824,28 @@ class BinFlatnessLossFunction(AbstractFlatnessLossFunction):
         for var in self.uniform_features:
             f_min, f_max = numpy.min(X[var][label_mask]), numpy.max(X[var][label_mask])
             extended_bin_limits.append(numpy.linspace(f_min, f_max, 2 * self.n_bins + 1))
-        groups_indices = list()
+        groups_indices = []
         for shift in [0, 1]:
             bin_limits = []
             for axis_limits in extended_bin_limits:
-                bin_limits.append(axis_limits[1 + shift:-1:2])
+                bin_limits.append(axis_limits[1 + shift : -1 : 2])
             bin_indices = compute_bin_indices(X.loc[:, self.uniform_features].values, bin_limits=bin_limits)
             groups_indices += list(bin_to_group_indices(bin_indices, mask=label_mask))
         return groups_indices
 
 
 class KnnFlatnessLossFunction(AbstractFlatnessLossFunction):
-    def __init__(self, uniform_features, uniform_label, n_neighbours=100, power=2., fl_coefficient=3.,
-                 max_groups=5000, allow_wrong_signs=True, random_state=42):
+    def __init__(
+        self,
+        uniform_features,
+        uniform_label,
+        n_neighbours=100,
+        power=2.0,
+        fl_coefficient=3.0,
+        max_groups=5000,
+        allow_wrong_signs=True,
+        random_state=42,
+    ):
         r"""
         This loss function contains separately penalty for non-flatness and for bad prediction quality.
         See [FL]_ for details.
@@ -840,20 +871,26 @@ class KnnFlatnessLossFunction(AbstractFlatnessLossFunction):
         self.n_neighbours = n_neighbours
         self.max_groups = max_groups
         self.random_state = random_state
-        AbstractFlatnessLossFunction.__init__(self, uniform_features,
-                                              uniform_label=uniform_label, power=power,
-                                              fl_coefficient=fl_coefficient,
-                                              allow_wrong_signs=allow_wrong_signs)
+        AbstractFlatnessLossFunction.__init__(
+            self,
+            uniform_features,
+            uniform_label=uniform_label,
+            power=power,
+            fl_coefficient=fl_coefficient,
+            allow_wrong_signs=allow_wrong_signs,
+        )
 
     def _compute_groups_indices(self, X, y, label):
         mask = y == label
         self.random_state = check_random_state(self.random_state)
-        knn_indices = compute_knn_indices_of_signal(X[self.uniform_features], mask,
-                                                    n_neighbours=self.n_neighbours)[mask, :]
+        knn_indices = compute_knn_indices_of_signal(X[self.uniform_features], mask, n_neighbours=self.n_neighbours)[
+            mask, :
+        ]
         if len(knn_indices) > self.max_groups:
             selected_group = self.random_state.choice(len(knn_indices), size=self.max_groups, replace=False)
             return knn_indices[selected_group, :]
         else:
             return knn_indices
+
 
 # endregion

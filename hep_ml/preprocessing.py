@@ -30,16 +30,16 @@ Also, neural networks support special argument 'scaler'. You can pass any transf
 
 """
 
-from __future__ import division, print_function, absolute_import
 from collections import OrderedDict
 
 import numpy
 import pandas
 from sklearn.base import BaseEstimator, TransformerMixin
+
 from .commonutils import check_sample_weight, to_pandas_dataframe, weighted_quantile
 
-__author__ = 'Alex Rogozhnikov'
-__all__ = ['BinTransformer', 'IronTransformer']
+__author__ = "Alex Rogozhnikov"
+__all__ = ["BinTransformer", "IronTransformer"]
 
 
 class BinTransformer(BaseEstimator, TransformerMixin):
@@ -62,7 +62,7 @@ class BinTransformer(BaseEstimator, TransformerMixin):
         :param sample_weight: weights, ignored
         :return: self
         """
-        assert self.max_bins < 255, 'Too high number of bins!'
+        assert self.max_bins < 255, "Too high number of bins!"
         X = to_pandas_dataframe(X)
         self.percentiles = OrderedDict()
         for column in X.columns:
@@ -82,10 +82,10 @@ class BinTransformer(BaseEstimator, TransformerMixin):
             dtype is 'int8' for space efficiency.
         """
         X = to_pandas_dataframe(X)
-        assert list(X.columns) == list(self.percentiles.keys()), 'Wrong names of columns'
+        assert list(X.columns) == list(self.percentiles.keys()), "Wrong names of columns"
         n_samples = len(X)
         extended_length = ((n_samples + extend_to - 1) // extend_to) * extend_to
-        bin_indices = numpy.zeros([extended_length, X.shape[1]], dtype='uint8', order='F')
+        bin_indices = numpy.zeros([extended_length, X.shape[1]], dtype="uint8", order="F")
         for i, column in enumerate(X.columns):
             bin_indices[:n_samples, i] = numpy.searchsorted(self.percentiles[column], numpy.array(X[column]))
         return bin_indices
@@ -149,8 +149,9 @@ class IronTransformer(BaseEstimator, TransformerMixin):
         :return: pandas.DataFrame with transformed features
         """
         X = to_pandas_dataframe(X)
-        assert list(X.columns) == list(self.feature_maps.keys()), \
-            'Columns passed {} are different from expected {}'.format(X.columns, list(self.feature_maps.keys()))
+        assert list(X.columns) == list(self.feature_maps.keys()), (
+            f"Columns passed {X.columns} are different from expected {list(self.feature_maps.keys())}"
+        )
 
         result = pandas.DataFrame(numpy.zeros(X.shape, dtype=float), columns=X.columns)
         for column, (feature_values, feature_percentiles) in self.feature_maps.items():

@@ -87,4 +87,3 @@ Libraries you'll require to make your life easier.
    physics
 -  `root\_numpy <http://rootpy.github.io/root_numpy/>`__ — python
    library to deal with ROOT files (without pain)
-
