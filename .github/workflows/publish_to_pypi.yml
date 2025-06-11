@@ -10,6 +10,7 @@ jobs:
         steps:
             - name: Checkout sources
               uses: actions/checkout@v4
+
             - name: Install uv
               uses: astral-sh/setup-uv@v6
 
