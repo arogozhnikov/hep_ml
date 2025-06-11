@@ -124,7 +124,7 @@ def weighted_quantile(array, quantiles, sample_weight=None, array_sorted=False, 
     array = numpy.array(array)
     quantiles = numpy.array(quantiles)
     sample_weight = check_sample_weight(array, sample_weight)
-    assert numpy.all(quantiles >= 0) and numpy.all(quantiles <= 1), "Percentiles should be in [0, 1]"
+    assert numpy.all(quantiles >= 0) and numpy.all(quantiles <= 1), "Quantiles should be in [0, 1]"
 
     if not array_sorted:
         sorter = numpy.argsort(array)
@@ -132,7 +132,7 @@ def weighted_quantile(array, quantiles, sample_weight=None, array_sorted=False, 
 
     weighted_quantiles = numpy.cumsum(sample_weight) - 0.5 * sample_weight
     if old_style:
-        # To be convenient with numpy.percentile
+        # align with numpy.percentile
         weighted_quantiles -= weighted_quantiles[0]
         weighted_quantiles /= weighted_quantiles[-1]
     else:
@@ -143,10 +143,10 @@ def weighted_quantile(array, quantiles, sample_weight=None, array_sorted=False, 
 def build_normalizer(signal, sample_weight=None):
     """Prepares normalization function for some set of values
     transforms it to uniform distribution from [0, 1]. Example of usage:
-    >>>normalizer = build_normalizer(signal)
-    >>>pylab.hist(normalizer(background))
-    >>># this one should be uniform in [0,1]
-    >>>pylab.hist(normalizer(signal))
+    >>> normalizer = build_normalizer(signal)
+    >>> plt.hist(normalizer(background))
+    >>> # this one should be uniform in [0,1]
+    >>> plt.hist(normalizer(signal))
 
     :param numpy.array signal: shape = [n_samples] with floats
     :param numpy.array sample_weight: shape = [n_samples], non-negative weights associated to events.
