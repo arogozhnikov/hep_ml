@@ -42,13 +42,6 @@ repos:
       - id: rst-backticks
       - id: rst-directive-colons
 
-  - repo: https://github.com/asottile/pyupgrade
-    rev: v3.20.0
-    hooks:
-      - id: pyupgrade
-        args: [ --py39-plus ]  # TODO: change fro 3.8? type annotations fail...
-
-
   # Notebook formatting
   - repo: https://github.com/nbQA-dev/nbQA
     rev: 1.9.1
