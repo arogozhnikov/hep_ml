@@ -58,12 +58,6 @@ repos:
     hooks:
       - id: nbstripout
 
-  - repo: https://github.com/sondrelg/pep585-upgrade
-    rev: 'v1.0'
-    hooks:
-      - id: upgrade-type-hints
-        args: [ '--futures=true' ]
-
   - repo: https://github.com/MarcoGorelli/auto-walrus
     rev: 0.3.4
     hooks:
