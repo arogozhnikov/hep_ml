@@ -42,11 +42,11 @@ repos:
       - id: rst-backticks
       - id: rst-directive-colons
 
-  # clean up notebooks
-  - repo: https://github.com/kynan/nbstripout
-    rev: 0.8.1
-    hooks:
-      - id: nbstripout
+#  # clean up notebooks. we want to keep plots in notebooks
+#  - repo: https://github.com/kynan/nbstripout
+#    rev: 0.8.1
+#    hooks:
+#      - id: nbstripout
 
   - repo: https://github.com/MarcoGorelli/auto-walrus
     rev: 0.3.4
