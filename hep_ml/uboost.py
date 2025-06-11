@@ -37,8 +37,8 @@ To get uniform prediction in Dalitz variables for signal
 """
 
 # Authors:
-# Alex Rogozhnikov <axelr@yandex-team.ru>
-# Nikita Kazeev <kazeevn@yandex-team.ru>
+# Alex Rogozhnikov
+# Nikita Kazeev
 
 import numpy as np
 from sklearn.base import BaseEstimator, ClassifierMixin, clone
