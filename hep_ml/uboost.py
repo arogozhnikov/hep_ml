@@ -176,7 +176,7 @@ class uBoostBDT(BaseEstimator, ClassifierMixin):
                     "that the weak learner have a predict_proba method.\n"
                     "Please change the base estimator or set algorithm='SAMME' instead.")
 
-        assert np.in1d(y, [0, 1]).all(), \
+        assert np.isin(y, [0, 1]).all(), \
             "only two-class classification is implemented, with labels 0 and 1"
         self.signed_uniform_label = 2 * self.uniform_label - 1
 
@@ -483,7 +483,7 @@ class uBoostClassifier(BaseEstimator, ClassifierMixin):
             raise ValueError("Please set uniform variables")
         if len(self.uniform_features) == 0:
             raise ValueError("The set of uniform variables cannot be empty")
-        assert np.in1d(y, [0, 1]).all(), \
+        assert np.isin(y, [0, 1]).all(), \
             "only two-class classification is implemented"
         if self.base_estimator is None:
             self.base_estimator = DecisionTreeClassifier(max_depth=2)

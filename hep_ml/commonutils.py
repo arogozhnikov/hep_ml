@@ -12,18 +12,9 @@ import itertools
 import numpy
 import pandas
 from scipy.special import expit
-try:
-    import sklearn.model_selection as sklearn_cross_validation
-except ImportError:
-    # The cross_validation module is deprecated as of sklearn 0.18, in favour
-    # of the model_selection module
-    import sklearn.cross_validation as sklearn_cross_validation
-# sklearn 0.22 deprecated sklearn.neighbors.unsupervised
-# remain backwards compatible
-try:
-    from sklearn.neighbors import NearestNeighbors
-except ImportError as e:
-    from sklearn.neighbors.unsupervised import NearestNeighbors
+
+import sklearn.model_selection as sklearn_cross_validation
+from sklearn.neighbors import NearestNeighbors
 
 __author__ = "Alex Rogozhnikov"
 

@@ -1,16 +1,3 @@
-from __future__ import division, print_function, absolute_import
-import numpy
-from sklearn.base import BaseEstimator, TransformerMixin, RegressorMixin
-from sklearn.tree import DecisionTreeRegressor
-# sklearn.tree.tree is deprecated as of 0.22
-# remain backwards compatible (DTYPE is float32 underneath)
-try:
-    from sklearn import __version__ as sklver
-    if sklver < '0.22':
-        raise ImportError('Scikit-learn is older than version 0.22. Falling back to old interface.')
-    from numpy import float32 as skldtype
-except ImportError as e:
-    from sklearn.tree.tree import DTYPE as skldtype
 """
 A wrapper over regression trees is presented here.
 This one isn't actually needed by itself, but is an important part of gradient boosting.
@@ -18,6 +5,14 @@ This one isn't actually needed by itself, but is an important part of gradient b
 GBDT uses (attention!) **transform** method, which returns not
 predictions, but indices of leaves for all samples.
 """
+
+from __future__ import division, print_function, absolute_import
+import numpy
+from sklearn.base import BaseEstimator, TransformerMixin, RegressorMixin
+from sklearn.tree import DecisionTreeRegressor
+
+from numpy import float32 as skldtype  # TODO: still needed?
+
 
 __author__ = 'Alex Rogozhnikov'
 
