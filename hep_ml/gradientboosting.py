@@ -22,6 +22,7 @@ from sklearn.utils.random import check_random_state
 
 from .commonutils import check_xyw, score_to_proba
 from .losses import (
+    AbstractLossFunction,
     AdaLossFunction,
     BinFlatnessLossFunction,
     KnnAdaLossFunction,
@@ -33,15 +34,15 @@ from .tree import SklearnClusteringTree
 
 __author__ = "Alex Rogozhnikov"
 __all__ = [
-    "UGradientBoostingClassifier",
-    "UGradientBoostingRegressor",
-    # and expose loss functions for it
     "AdaLossFunction",
-    "KnnFlatnessLossFunction",
     "BinFlatnessLossFunction",
     "KnnAdaLossFunction",
+    "KnnFlatnessLossFunction",
     "LogLossFunction",
     "RankBoostLossFunction",
+    #
+    "UGradientBoostingClassifier",
+    "UGradientBoostingRegressor",
 ]
 
 

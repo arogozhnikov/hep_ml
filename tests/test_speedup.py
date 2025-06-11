@@ -71,5 +71,3 @@ def test_raising_exception():
     X, y = generate_sample(n_samples=100, n_features=10)
     with pytest.raises(ValueError):
         LookupClassifier(GradientBoostingClassifier(), n_bins=16).fit(X, y)
-
-

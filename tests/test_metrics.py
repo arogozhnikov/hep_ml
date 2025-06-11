@@ -331,7 +331,7 @@ def test_workability(n_samples=2000, knn=50, uniform_label=0, n_bins=10):
             uniform_label=uniform_label,
         )
         metric.fit(X, y, sample_weight=sample_weight)
-        flatness_val_ = metric(y, predictions, sample_weight)
+        _flatness_val = metric(y, predictions, sample_weight)
 
     for class_ in [BinBasedSDE, BinBasedTheil, BinBasedCvM]:
         metric = class_(
@@ -340,4 +340,4 @@ def test_workability(n_samples=2000, knn=50, uniform_label=0, n_bins=10):
             uniform_label=uniform_label,
         )
         metric.fit(X, y, sample_weight=sample_weight)
-        flatness_val_ = metric(y, predictions, sample_weight)
+        _flatness_val = metric(y, predictions, sample_weight)

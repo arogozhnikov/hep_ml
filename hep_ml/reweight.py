@@ -68,7 +68,7 @@ from . import losses
 from .commonutils import check_sample_weight, weighted_quantile
 
 __author__ = "Alex Rogozhnikov, Tatiana Likhomanenko"
-__all__ = ["BinsReweighter", "GBReweighter", "FoldingReweighter"]
+__all__ = ["BinsReweighter", "FoldingReweighter", "GBReweighter"]
 
 
 def _bincount_nd(x, weights, shape):

@@ -54,7 +54,7 @@ from .commonutils import check_xyw, take_features, weighted_quantile
 
 __author__ = "Alex Rogozhnikov"
 
-__all__ = ["BinBasedSDE", "BinBasedCvM", "BinBasedTheil", "KnnBasedSDE", "KnnBasedCvM", "KnnBasedTheil"]
+__all__ = ["BinBasedCvM", "BinBasedSDE", "BinBasedTheil", "KnnBasedCvM", "KnnBasedSDE", "KnnBasedTheil"]
 
 
 class AbstractMetric(BaseEstimator):

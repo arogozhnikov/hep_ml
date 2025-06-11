@@ -228,7 +228,7 @@ def indices_of_values(array):
     indices = numpy.argsort(array)
     sorted_array = array[indices]
     diff = numpy.nonzero(numpy.ediff1d(sorted_array))[0]
-    limits = [0] + list(diff + 1) + [len(array)]
+    limits = [0] + list(diff + 1) + [len(array)] # noqa: RUF005
     for i in range(len(limits) - 1):
         yield sorted_array[limits[i]], indices[limits[i] : limits[i + 1]]
 

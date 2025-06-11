@@ -62,14 +62,14 @@ __author__ = "Alex Rogozhnikov"
 
 __all__ = [
     "AbstractLossFunction",
-    "MSELossFunction",
-    "MAELossFunction",
-    "LogLossFunction",
     "AdaLossFunction",
-    "CompositeLossFunction",
     "BinFlatnessLossFunction",
-    "KnnFlatnessLossFunction",
+    "CompositeLossFunction",
     "KnnAdaLossFunction",
+    "KnnFlatnessLossFunction",
+    "LogLossFunction",
+    "MAELossFunction",
+    "MSELossFunction",
     "RankBoostLossFunction",
     "ReweightLossFunction",
 ]
