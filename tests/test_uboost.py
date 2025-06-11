@@ -111,7 +111,6 @@ def check_classifiers(n_samples=10000):
     uniform_features = ["column0"]
 
     ada = AdaBoostClassifier(n_estimators=50)
-    ideal_bayes = GaussianNB()
 
     uBoost_SAMME = uBoostClassifier(
         uniform_features=uniform_features,
