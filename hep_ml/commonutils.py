@@ -31,8 +31,6 @@ def map_on_cluster(parallel_profile, *args, **kw_args):
     :param list args: function, arguments
     :param dict kw_args: kwargs for LoadBalacedView.map_sync
 
-    (function copied from REP)
-
     :return: the result of mapping
     """
     if parallel_profile is None:
