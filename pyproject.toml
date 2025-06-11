@@ -75,11 +75,34 @@ select = [
     "B",   # flake8-bugbear
     "C4",  # flake8-comprehensions
     "UP",  # pyupgrade
+
+    "RUF",    # ruff rules
+    "Q",      # quotes
+    "TID252", # force abs imports of parents
+    "PIE",    # flake8-pie
+    "ISC",    # implicit string concatenation
+    "PTH",    # pathlib
+    "N818",   # error class name ends with error
+    "UP",     # pyupgrade
+    "C4",     # comprehensions
+    "N804",   # cls
+    "N805",   # self
+    "COM818", # bare comma
+    "PL",     # all pylint rules (error, conventions, warnigns)
+    "FLY",    # static joins -> f-string
+    "NPY201", # numpy 2 deprecations
+    "RET501",
+    "RET502",
+    "RET503",
+    # "NPY",    # numpy ruleset. Can help with migration to generators
 ]
 ignore = [
-    "E501",  # line too long (handled by line-length)
-    "B008",  # do not perform function calls in argument defaults
-    "B006",  # do not use mutable data structures for argument defaults
+    "E501",   # line too long (handled by line-length)
+    "B008",   # do not perform function calls in argument defaults
+    "B006",   # do not use mutable data structures for argument defaults
+    "RUF010", # str(x) -> x:!s
+    "PLR",    # pylint - opinionated recommendations
+    "PIE790", # Unnecessary `pass` statement - used in notebooks
 ]
 
 [tool.ruff.lint.per-file-ignores]
