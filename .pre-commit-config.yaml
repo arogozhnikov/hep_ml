@@ -2,8 +2,6 @@ ci:
   autoupdate_commit_msg: "chore: update pre-commit hooks"
   autofix_commit_msg: "style: pre-commit fixes"
   autoupdate_schedule: quarterly
-#  skip:
-#    - oxipng
 
 
 repos:
@@ -31,7 +29,6 @@ repos:
       - id: check-ast
       - id: check-docstring-first
       - id: debug-statements
-
 
   - repo: https://github.com/pre-commit/pygrep-hooks
     rev: v1.10.0
