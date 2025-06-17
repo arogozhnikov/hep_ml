@@ -1,10 +1,10 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
 name = "hep_ml"
-version = "0.7.3"
+dynamic = ["version"]
 description = "Machine Learning for High Energy Physics"
 readme = "README.md"
 authors = [
@@ -35,7 +35,7 @@ Homepage = "https://github.com/arogozhnikov/hep_ml"
 
 [project.optional-dependencies]
 test = [
-    "pytest",
+    "pytest>8",  # clashes with notebook upgrades and nbval
     "pytest-cov",
     "pytest-xdist",
     "nbval",
@@ -45,6 +45,7 @@ test = [
 doc = [
     "sphinx",
     "sphinx_rtd_theme",
+    "uproot", # for tutorials
 ]
 dev = [
     "ruff",
@@ -111,3 +112,9 @@ ignore = [
 
 [tool.ruff.lint.isort]
 known-first-party = ["hep_ml"]
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "hep_ml/_version.py"

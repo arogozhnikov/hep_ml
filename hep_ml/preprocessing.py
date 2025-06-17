@@ -19,15 +19,6 @@ Transformers may be used as any other transformer, manually training and applyin
 
 Apart from this, transformers may be plugged as part of sklearn.Pipeline:
 
->>> from sklearn.pipeline import Pipeline
->>> from hep_ml.nnet import SimpleNeuralNetwork
->>> clf = Pipeline(['pre', IronTransformer(),
->>>                 'nnet', SimpleNeuralNetwork()])
-
-Also, neural networks support special argument 'scaler'. You can pass any transformer there:
-
->>> clf = SimpleNeuralNetwork(layers=[10, 8], scaler=IronTransformer())
-
 """
 
 from collections import OrderedDict
