@@ -13,7 +13,7 @@
 
 ### Notes
 
-Jul 2025: hep_ml v0.8.0: code and examples modernized (courtesy of Jonas Eschle), now `hep_ml` works with python 3.9-3.13. 
+Jul 2025: 🎉 hep_ml v0.8.0: code and examples modernized (courtesy of Jonas Eschle), now `hep_ml` works with python 3.9-3.13. 
 
 
 ### Main features
