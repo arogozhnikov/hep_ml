@@ -57,6 +57,7 @@ docsrc/tmp*
 
 # OS X garbage
 .DS_Store
+/hep_ml/_version.py
 
 # version file
 /hep_ml/_version.py
