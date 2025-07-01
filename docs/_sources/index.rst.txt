@@ -1,7 +1,5 @@
 .. hep_ml documentation master file, created by
    sphinx-quickstart on Wed Jul 22 20:45:24 2015.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
 hep_ml documentation
 ====================
@@ -50,7 +48,6 @@ _________
    losses
    uboost
    metrics
-   nnet
    preprocessing
    reweight
    speedup
@@ -87,4 +84,3 @@ Libraries you'll require to make your life easier.
    physics
 -  `root\_numpy <http://rootpy.github.io/root_numpy/>`__ — python
    library to deal with ROOT files (without pain)
-

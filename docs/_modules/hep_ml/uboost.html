@@ -1,101 +1,48 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>hep_ml.uboost &mdash; hep_ml 0.7.0 documentation</title>
-  
+  <title>hep_ml.uboost &mdash; hep_ml 0.7.4.dev5+gba709f3.d20250617 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+      <script src="../../_static/documentation_options.js?v=a931b840"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
 
           
-            <a href="../../index.html" class="icon icon-home"> hep_ml
           
-
-          
+          <a href="../../index.html" class="icon icon-home">
+            hep_ml
           </a>
-
-          
-            
-            
-              <div class="version">
-                0.7.0
-              </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">hep_ml documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../gb.html">Gradient boosting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../losses.html">Losses for Gradient Boosting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../uboost.html">uBoost</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../metrics.html">Metric functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../nnet.html">Neural networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../preprocessing.html">Preprocessing data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../reweight.html">Reweighting algorithms</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../speedup.html">Fast predictions</a></li>
@@ -103,69 +50,30 @@
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Code Examples</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">hep_ml</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
-          <li><a href="../index.html">Module code</a> &raquo;</li>
-        
-      <li>hep_ml.uboost</li>
-    
-    
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">hep_ml.uboost</li>
       <li class="wy-breadcrumbs-aside">
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <h1>Source code for hep_ml.uboost</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">The module contains an implementation of uBoost algorithm.</span>
@@ -206,43 +114,49 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="c1"># Authors:</span>
-<span class="c1"># Alex Rogozhnikov &lt;axelr@yandex-team.ru&gt;</span>
-<span class="c1"># Nikita Kazeev &lt;kazeevn@yandex-team.ru&gt;</span>
+<span class="c1"># Alex Rogozhnikov</span>
+<span class="c1"># Nikita Kazeev</span>
 
-<span class="kn">from</span> <span class="nn">six.moves</span> <span class="kn">import</span> <span class="nb">zip</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span><span class="p">,</span> <span class="n">clone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.tree</span><span class="w"> </span><span class="kn">import</span> <span class="n">DecisionTreeClassifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.utils.random</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_random_state</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span><span class="p">,</span> <span class="n">clone</span>
-<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span>
-<span class="kn">from</span> <span class="nn">sklearn.utils.random</span> <span class="kn">import</span> <span class="n">check_random_state</span>
-
-<span class="kn">from</span> <span class="nn">.commonutils</span> <span class="kn">import</span> <span class="n">sigmoid_function</span><span class="p">,</span> <span class="n">map_on_cluster</span><span class="p">,</span> \
-    <span class="n">compute_knn_indices_of_same_class</span><span class="p">,</span> <span class="n">compute_cut_for_efficiency</span><span class="p">,</span> <span class="n">check_xyw</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">commonutils</span>
-<span class="kn">from</span> <span class="nn">.metrics_utils</span> <span class="kn">import</span> <span class="n">compute_group_efficiencies_by_indices</span>
-
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">commonutils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.commonutils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">check_xyw</span><span class="p">,</span>
+    <span class="n">compute_cut_for_efficiency</span><span class="p">,</span>
+    <span class="n">compute_knn_indices_of_same_class</span><span class="p">,</span>
+    <span class="n">map_on_cluster</span><span class="p">,</span>
+    <span class="n">sigmoid_function</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.metrics_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_group_efficiencies_by_indices</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Alex Rogozhnikov, Nikita Kazeev&quot;</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;uBoostBDT&quot;</span><span class="p">,</span> <span class="s2">&quot;uBoostClassifier&quot;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="uBoostBDT"><a class="viewcode-back" href="../../uboost.html#hep_ml.uboost.uBoostBDT">[docs]</a><span class="k">class</span> <span class="nc">uBoostBDT</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">uniform_features</span><span class="p">,</span>
-                 <span class="n">uniform_label</span><span class="p">,</span>
-                 <span class="n">target_efficiency</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-                 <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
-                 <span class="n">subsample</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-                 <span class="n">base_estimator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">n_estimators</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
-                 <span class="n">learning_rate</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
-                 <span class="n">uniforming_rate</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
-                 <span class="n">train_features</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">smoothing</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-                 <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">algorithm</span><span class="o">=</span><span class="s2">&quot;SAMME&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="uBoostBDT">
+<a class="viewcode-back" href="../../uboost.html#hep_ml.uboost.uBoostBDT">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">uBoostBDT</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">uniform_features</span><span class="p">,</span>
+        <span class="n">uniform_label</span><span class="p">,</span>
+        <span class="n">target_efficiency</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+        <span class="n">subsample</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">base_estimator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">n_estimators</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+        <span class="n">learning_rate</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">uniforming_rate</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">train_features</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">smoothing</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">algorithm</span><span class="o">=</span><span class="s2">&quot;SAMME&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        uBoostBDT is AdaBoostClassifier, which is modified to have flat</span>
 <span class="sd">        efficiency of signal (class=1) along some variables.</span>
 <span class="sd">        Efficiency is only guaranteed at the cut,</span>
@@ -312,8 +226,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span> <span class="o">=</span> <span class="n">algorithm</span>
 
-<div class="viewcode-block" id="uBoostBDT.fit"><a class="viewcode-back" href="../../uboost.html#hep_ml.uboost.uBoostBDT.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">neighbours_matrix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Build a boosted classifier from the training set (X, y).</span>
+<div class="viewcode-block" id="uBoostBDT.fit">
+<a class="viewcode-back" href="../../uboost.html#hep_ml.uboost.uBoostBDT.fit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">neighbours_matrix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Build a boosted classifier from the training set (X, y).</span>
 
 <span class="sd">        :param X: array-like of shape [n_samples, n_features]</span>
 <span class="sd">        :param y: labels, array of shape [n_samples] with 0 and 1.</span>
@@ -337,31 +253,28 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
         <span class="c1"># Check that algorithm is supported</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;SAMME&#39;</span><span class="p">,</span> <span class="s1">&#39;SAMME.R&#39;</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;algorithm </span><span class="si">%s</span><span class="s2"> is not supported&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span> <span class="o">==</span> <span class="s1">&#39;SAMME.R&#39;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="p">,</span> <span class="s1">&#39;predict_proba&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;SAMME&quot;</span><span class="p">,</span> <span class="s2">&quot;SAMME.R&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;algorithm </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span><span class="si">}</span><span class="s2"> is not supported&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span> <span class="o">==</span> <span class="s2">&quot;SAMME.R&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="p">,</span> <span class="s2">&quot;predict_proba&quot;</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
                     <span class="s2">&quot;uBoostBDT with algorithm=&#39;SAMME.R&#39; requires &quot;</span>
                     <span class="s2">&quot;that the weak learner have a predict_proba method.</span><span class="se">\n</span><span class="s2">&quot;</span>
-                    <span class="s2">&quot;Please change the base estimator or set algorithm=&#39;SAMME&#39; instead.&quot;</span><span class="p">)</span>
+                    <span class="s2">&quot;Please change the base estimator or set algorithm=&#39;SAMME&#39; instead.&quot;</span>
+                <span class="p">)</span>
 
-        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> \
-            <span class="s2">&quot;only two-class classification is implemented, with labels 0 and 1&quot;</span>
+        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="s2">&quot;only two-class classification is implemented, with labels 0 and 1&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">signed_uniform_label</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span> <span class="o">-</span> <span class="mi">1</span>
 
         <span class="k">if</span> <span class="n">neighbours_matrix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">neighbours_matrix</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_neighbors</span><span class="p">),</span> \
-                <span class="s2">&quot;Wrong shape of neighbours_matrix&quot;</span>
+            <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">neighbours_matrix</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_neighbors</span><span class="p">),</span> <span class="s2">&quot;Wrong shape of neighbours_matrix&quot;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices</span> <span class="o">=</span> <span class="n">neighbours_matrix</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_features</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> \
-                <span class="s2">&quot;uniform_variables should be set&quot;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices</span> <span class="o">=</span> <span class="n">compute_knn_indices_of_same_class</span><span class="p">(</span>
-                <span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_features</span><span class="p">],</span> <span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_neighbors</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_features</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;uniform_variables should be set&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices</span> <span class="o">=</span> <span class="n">compute_knn_indices_of_same_class</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_features</span><span class="p">],</span> <span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_neighbors</span><span class="p">)</span>
 
         <span class="n">sample_weight</span> <span class="o">=</span> <span class="n">commonutils</span><span class="o">.</span><span class="n">check_sample_weight</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">sample_weight</span> <span class="o">&gt;=</span> <span class="mf">0.</span><span class="p">),</span> <span class="s1">&#39;the weights should be non-negative&#39;</span>
+        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">sample_weight</span> <span class="o">&gt;=</span> <span class="mf">0.0</span><span class="p">),</span> <span class="s2">&quot;the weights should be non-negative&quot;</span>
 
         <span class="c1"># Clear any previous fit results</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span> <span class="o">=</span> <span class="p">[]</span>
@@ -378,13 +291,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_boost</span><span class="p">(</span><span class="n">x_train_features</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">score_cut</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">signed_uniform_label</span> <span class="o">*</span> <span class="n">compute_cut_for_efficiency</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">target_efficiency</span><span class="p">,</span> <span class="n">y</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">decision_function</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">signed_uniform_label</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">score_cut</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">score_cuts_</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">),</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">target_efficiency</span><span class="p">,</span> <span class="n">y</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">decision_function</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">signed_uniform_label</span>
+        <span class="p">)</span>
+        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">score_cut</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">score_cuts_</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">),</span> <span class="p">(</span>
             <span class="s2">&quot;score cut doesn&#39;t appear to coincide with the staged one&quot;</span>
+        <span class="p">)</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimator_weights_</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">score_cuts_</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-    <span class="k">def</span> <span class="nf">_make_estimator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_make_estimator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">estimator</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="p">)</span>
         <span class="c1"># self.estimators_.append(estimator)</span>
         <span class="k">try</span><span class="p">:</span>
@@ -393,65 +309,65 @@
             <span class="k">pass</span>
         <span class="k">return</span> <span class="n">estimator</span>
 
-    <span class="k">def</span> <span class="nf">_estimator_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimator_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span> <span class="o">==</span> <span class="s2">&quot;SAMME&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">estimator</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.</span>
+            <span class="k">return</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">estimator</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">p</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
             <span class="n">p</span><span class="p">[</span><span class="n">p</span> <span class="o">&lt;=</span> <span class="mf">1e-5</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-5</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">p</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_normalize_weight</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">weight</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_normalize_weight</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">weight</span><span class="p">):</span>
         <span class="c1"># frequently algorithm assigns very big weight to signal events</span>
         <span class="c1"># compared to background ones (or visa versa, if want to be uniform in bck)</span>
         <span class="k">return</span> <span class="n">commonutils</span><span class="o">.</span><span class="n">check_sample_weight</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">weight</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">normalize_by_class</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_compute_uboost_multipliers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">,</span> <span class="n">score</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns uBoost multipliers to sample_weight and computed global cut&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_uboost_multipliers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">,</span> <span class="n">score</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns uBoost multipliers to sample_weight and computed global cut&quot;&quot;&quot;</span>
         <span class="n">signed_score</span> <span class="o">=</span> <span class="n">score</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">signed_uniform_label</span>
         <span class="n">signed_score_cut</span> <span class="o">=</span> <span class="n">compute_cut_for_efficiency</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_efficiency</span><span class="p">,</span> <span class="n">y</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span><span class="p">,</span> <span class="n">signed_score</span><span class="p">)</span>
         <span class="n">global_score_cut</span> <span class="o">=</span> <span class="n">signed_score_cut</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">signed_uniform_label</span>
 
-        <span class="n">local_efficiencies</span> <span class="o">=</span> <span class="n">compute_group_efficiencies_by_indices</span><span class="p">(</span><span class="n">signed_score</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices</span><span class="p">,</span> <span class="n">cut</span><span class="o">=</span><span class="n">signed_score_cut</span><span class="p">,</span>
-                                                                   <span class="n">smoothing</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">smoothing</span><span class="p">)</span>
+        <span class="n">local_efficiencies</span> <span class="o">=</span> <span class="n">compute_group_efficiencies_by_indices</span><span class="p">(</span>
+            <span class="n">signed_score</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices</span><span class="p">,</span> <span class="n">cut</span><span class="o">=</span><span class="n">signed_score_cut</span><span class="p">,</span> <span class="n">smoothing</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">smoothing</span>
+        <span class="p">)</span>
 
         <span class="c1"># pay attention - sample_weight should be used only here</span>
-        <span class="n">e_prime</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">local_efficiencies</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_efficiency</span><span class="p">),</span>
-                             <span class="n">weights</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
+        <span class="n">e_prime</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">local_efficiencies</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_efficiency</span><span class="p">),</span> <span class="n">weights</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
 
-        <span class="n">is_uniform_class</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span><span class="p">)</span>
+        <span class="n">is_uniform_class</span> <span class="o">=</span> <span class="n">y</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span>
 
         <span class="c1"># beta = np.log((1.0 - e_prime) / e_prime)</span>
         <span class="c1"># changed to log(1. / e_prime), otherwise this can lead to the situation</span>
         <span class="c1"># where beta is negative (which is a disaster).</span>
         <span class="c1"># Mike (uboost author) said he didn&#39;t take that into account.</span>
-        <span class="n">beta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">e_prime</span><span class="p">)</span>
-        <span class="n">boost_weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">target_efficiency</span> <span class="o">-</span> <span class="n">local_efficiencies</span><span class="p">)</span> <span class="o">*</span> <span class="n">is_uniform_class</span> <span class="o">*</span>
-                               <span class="p">(</span><span class="n">beta</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniforming_rate</span><span class="p">))</span>
+        <span class="n">beta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">e_prime</span><span class="p">)</span>
+        <span class="n">boost_weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_efficiency</span> <span class="o">-</span> <span class="n">local_efficiencies</span><span class="p">)</span> <span class="o">*</span> <span class="n">is_uniform_class</span> <span class="o">*</span> <span class="p">(</span><span class="n">beta</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniforming_rate</span><span class="p">)</span>
+        <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">boost_weights</span><span class="p">,</span> <span class="n">global_score_cut</span>
 
-    <span class="k">def</span> <span class="nf">_boost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implement a single boost using the SAMME or SAMME.R algorithm,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_boost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implement a single boost using the SAMME or SAMME.R algorithm,</span>
 <span class="sd">        which is modified in uBoost way&quot;&quot;&quot;</span>
         <span class="n">cumulative_score</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
         <span class="n">y_signed</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">1</span>
-        <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_estimators</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">_iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_estimators</span><span class="p">):</span>
             <span class="n">estimator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_estimator</span><span class="p">()</span>
             <span class="n">mask</span> <span class="o">=</span> <span class="n">_generate_subsample_mask</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">subsample</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_state_</span><span class="p">)</span>
             <span class="n">estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span>
 
             <span class="c1"># computing estimator weight</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span> <span class="o">==</span> <span class="s1">&#39;SAMME&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span> <span class="o">==</span> <span class="s2">&quot;SAMME&quot;</span><span class="p">:</span>
                 <span class="n">y_pred</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
                 <span class="c1"># Error fraction</span>
                 <span class="n">estimator_error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">y_pred</span> <span class="o">!=</span> <span class="n">y</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
-                <span class="n">estimator_error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">estimator_error</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="mf">1.</span> <span class="o">-</span> <span class="mf">1e-6</span><span class="p">)</span>
+                <span class="n">estimator_error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">estimator_error</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="mf">1e-6</span><span class="p">)</span>
 
-                <span class="n">estimator_weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span>
-                    <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="mf">1.</span> <span class="o">-</span> <span class="n">estimator_error</span><span class="p">)</span> <span class="o">/</span> <span class="n">estimator_error</span><span class="p">))</span>
+                <span class="n">estimator_weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">estimator_error</span><span class="p">)</span> <span class="o">/</span> <span class="n">estimator_error</span><span class="p">))</span>
 
                 <span class="n">score</span> <span class="o">=</span> <span class="n">estimator_weight</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">y_pred</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -459,12 +375,11 @@
                 <span class="n">score</span> <span class="o">=</span> <span class="n">estimator_weight</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimator_score</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
 
             <span class="c1"># correcting the weights and score according to predictions</span>
-            <span class="n">sample_weight</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span> <span class="n">y_signed</span> <span class="o">*</span> <span class="n">score</span><span class="p">)</span>
+            <span class="n">sample_weight</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">y_signed</span> <span class="o">*</span> <span class="n">score</span><span class="p">)</span>
             <span class="n">sample_weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_weight</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">)</span>
             <span class="n">cumulative_score</span> <span class="o">+=</span> <span class="n">score</span>
 
-            <span class="n">uboost_multipliers</span><span class="p">,</span> <span class="n">global_score_cut</span> <span class="o">=</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">_compute_uboost_multipliers</span><span class="p">(</span><span class="n">sample_weight</span><span class="p">,</span> <span class="n">cumulative_score</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+            <span class="n">uboost_multipliers</span><span class="p">,</span> <span class="n">global_score_cut</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_uboost_multipliers</span><span class="p">(</span><span class="n">sample_weight</span><span class="p">,</span> <span class="n">cumulative_score</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
             <span class="n">sample_weight</span> <span class="o">*=</span> <span class="n">uboost_multipliers</span>
             <span class="n">sample_weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_weight</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">)</span>
 
@@ -475,16 +390,18 @@
         <span class="c1"># erasing from memory</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">_get_train_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Gets the DataFrame and returns only columns</span>
-<span class="sd">           that should be used in fitting / predictions&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_train_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the DataFrame and returns only columns</span>
+<span class="sd">        that should be used in fitting / predictions&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_features</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">X</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">X</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">train_features</span><span class="p">]</span>
 
-<div class="viewcode-block" id="uBoostBDT.staged_decision_function"><a class="viewcode-back" href="../../uboost.html#hep_ml.uboost.uBoostBDT.staged_decision_function">[docs]</a>    <span class="k">def</span> <span class="nf">staged_decision_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Decision function after each stage of boosting.</span>
+<div class="viewcode-block" id="uBoostBDT.staged_decision_function">
+<a class="viewcode-back" href="../../uboost.html#hep_ml.uboost.uBoostBDT.staged_decision_function">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">staged_decision_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Decision function after each stage of boosting.</span>
 <span class="sd">        Float for each sample, the greater --- the more signal like event is.</span>
 
 <span class="sd">        :param X: data, pandas.DataFrame of shape [n_samples, n_features]</span>
@@ -496,32 +413,44 @@
             <span class="n">score</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimator_score</span><span class="p">(</span><span class="n">classifier</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span> <span class="o">*</span> <span class="n">weight</span>
             <span class="k">yield</span> <span class="n">score</span></div>
 
-<div class="viewcode-block" id="uBoostBDT.decision_function"><a class="viewcode-back" href="../../uboost.html#hep_ml.uboost.uBoostBDT.decision_function">[docs]</a>    <span class="k">def</span> <span class="nf">decision_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Decision function. Float for each sample, the greater --- the more signal like event is.</span>
+
+<div class="viewcode-block" id="uBoostBDT.decision_function">
+<a class="viewcode-back" href="../../uboost.html#hep_ml.uboost.uBoostBDT.decision_function">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">decision_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Decision function. Float for each sample, the greater --- the more signal like event is.</span>
 
 <span class="sd">        :param X: data, pandas.DataFrame of shape [n_samples, n_features]</span>
 <span class="sd">        :return: array of shape [n_samples] with floats</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">commonutils</span><span class="o">.</span><span class="n">take_last</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">staged_decision_function</span><span class="p">(</span><span class="n">X</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="uBoostBDT.predict"><a class="viewcode-back" href="../../uboost.html#hep_ml.uboost.uBoostBDT.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Predict classes for each sample</span>
+
+<div class="viewcode-block" id="uBoostBDT.predict">
+<a class="viewcode-back" href="../../uboost.html#hep_ml.uboost.uBoostBDT.predict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Predict classes for each sample</span>
 
 <span class="sd">        :param X: data, pandas.DataFrame of shape [n_samples, n_features]</span>
 <span class="sd">        :return: array of shape [n_samples] with predicted classes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">decision_function</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">score_cut</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="uBoostBDT.predict_proba"><a class="viewcode-back" href="../../uboost.html#hep_ml.uboost.uBoostBDT.predict_proba">[docs]</a>    <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Predict probabilities</span>
+
+<div class="viewcode-block" id="uBoostBDT.predict_proba">
+<a class="viewcode-back" href="../../uboost.html#hep_ml.uboost.uBoostBDT.predict_proba">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Predict probabilities</span>
 
 <span class="sd">        :param X: data, pandas.DataFrame of shape [n_samples, n_features]</span>
 <span class="sd">        :return: array of shape [n_samples, n_classes] with probabilities.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">commonutils</span><span class="o">.</span><span class="n">score_to_proba</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">decision_function</span><span class="p">(</span><span class="n">X</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="uBoostBDT.staged_predict_proba"><a class="viewcode-back" href="../../uboost.html#hep_ml.uboost.uBoostBDT.staged_predict_proba">[docs]</a>    <span class="k">def</span> <span class="nf">staged_predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Predicted probabilities for each sample after each stage of boosting.</span>
+
+<div class="viewcode-block" id="uBoostBDT.staged_predict_proba">
+<a class="viewcode-back" href="../../uboost.html#hep_ml.uboost.uBoostBDT.staged_predict_proba">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">staged_predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Predicted probabilities for each sample after each stage of boosting.</span>
 
 <span class="sd">        :param X: data, pandas.DataFrame of shape [n_samples, n_features]</span>
 <span class="sd">        :return: sequence of numpy.arrays of shape [n_samples, n_classes]</span>
@@ -529,51 +458,55 @@
         <span class="k">for</span> <span class="n">score</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">staged_decision_function</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
             <span class="k">yield</span> <span class="n">commonutils</span><span class="o">.</span><span class="n">score_to_proba</span><span class="p">(</span><span class="n">score</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_uboost_predict_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Method added specially for uBoostClassifier&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">sigmoid_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">decision_function</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">score_cut</span><span class="p">,</span>
-                                <span class="bp">self</span><span class="o">.</span><span class="n">smoothing</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_uboost_staged_predict_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Method added specially for uBoostClassifier&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_uboost_predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method added specially for uBoostClassifier&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">sigmoid_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">decision_function</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">score_cut</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">smoothing</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_uboost_staged_predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method added specially for uBoostClassifier&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">cut</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">score_cuts_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">staged_decision_function</span><span class="p">(</span><span class="n">X</span><span class="p">)):</span>
             <span class="k">yield</span> <span class="n">sigmoid_function</span><span class="p">(</span><span class="n">score</span> <span class="o">-</span> <span class="n">cut</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">smoothing</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">feature_importances_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return the feature importances for `train_features`.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">feature_importances_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the feature importances for `train_features`.</span>
 
 <span class="sd">        :return: array of shape [n_features], the order is the same as in `train_features`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Estimator not fitted,&quot;</span>
-                             <span class="s2">&quot; call `fit` before `feature_importances_`.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Estimator not fitted, call `fit` before `feature_importances_`.&quot;</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">feature_importances_</span> <span class="o">*</span> <span class="n">weight</span> <span class="k">for</span> <span class="n">tree</span><span class="p">,</span> <span class="n">weight</span>
-                   <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator_weights_</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span>
+            <span class="n">tree</span><span class="o">.</span><span class="n">feature_importances_</span> <span class="o">*</span> <span class="n">weight</span> <span class="k">for</span> <span class="n">tree</span><span class="p">,</span> <span class="n">weight</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator_weights_</span><span class="p">)</span>
+        <span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">_train_classifier</span><span class="p">(</span><span class="n">classifier</span><span class="p">,</span> <span class="n">X_train_vars</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">,</span> <span class="n">neighbours_matrix</span><span class="p">):</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_train_classifier</span><span class="p">(</span><span class="n">classifier</span><span class="p">,</span> <span class="n">X_train_vars</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">,</span> <span class="n">neighbours_matrix</span><span class="p">):</span>
     <span class="c1"># supplementary function to train separate parts of uBoost on cluster</span>
-    <span class="k">return</span> <span class="n">classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_vars</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
-                          <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">,</span>
-                          <span class="n">neighbours_matrix</span><span class="o">=</span><span class="n">neighbours_matrix</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_vars</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">,</span> <span class="n">neighbours_matrix</span><span class="o">=</span><span class="n">neighbours_matrix</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="uBoostClassifier"><a class="viewcode-back" href="../../uboost.html#hep_ml.uboost.uBoostClassifier">[docs]</a><span class="k">class</span> <span class="nc">uBoostClassifier</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span>
-                 <span class="n">uniform_label</span><span class="p">,</span>
-                 <span class="n">train_features</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
-                 <span class="n">efficiency_steps</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
-                 <span class="n">n_estimators</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
-                 <span class="n">base_estimator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">subsample</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-                 <span class="n">algorithm</span><span class="o">=</span><span class="s2">&quot;SAMME&quot;</span><span class="p">,</span>
-                 <span class="n">smoothing</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">n_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                 <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;uBoost classifier, an algorithm of boosting targeted to obtain</span>
+<div class="viewcode-block" id="uBoostClassifier">
+<a class="viewcode-back" href="../../uboost.html#hep_ml.uboost.uBoostClassifier">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">uBoostClassifier</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">uniform_features</span><span class="p">,</span>
+        <span class="n">uniform_label</span><span class="p">,</span>
+        <span class="n">train_features</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+        <span class="n">efficiency_steps</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+        <span class="n">n_estimators</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
+        <span class="n">base_estimator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">subsample</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">algorithm</span><span class="o">=</span><span class="s2">&quot;SAMME&quot;</span><span class="p">,</span>
+        <span class="n">smoothing</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">n_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;uBoost classifier, an algorithm of boosting targeted to obtain</span>
 <span class="sd">        flat efficiency in signal along some variables (e.g. mass).</span>
 
 <span class="sd">        In principle, uBoost is ensemble of uBoostBDTs. See [1] for details.</span>
@@ -634,14 +567,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">n_threads</span> <span class="o">=</span> <span class="n">n_threads</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span> <span class="o">=</span> <span class="n">algorithm</span>
 
-    <span class="k">def</span> <span class="nf">_get_train_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_train_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_features</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">X</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">train_features</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">X</span>
 
-<div class="viewcode-block" id="uBoostClassifier.fit"><a class="viewcode-back" href="../../uboost.html#hep_ml.uboost.uBoostClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Build a boosted classifier from the training set.</span>
+<div class="viewcode-block" id="uBoostClassifier.fit">
+<a class="viewcode-back" href="../../uboost.html#hep_ml.uboost.uBoostClassifier.fit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Build a boosted classifier from the training set.</span>
 
 <span class="sd">        :param X: data, pandas.DatFrame of shape [n_samples, n_features]</span>
 <span class="sd">        :param y: labels, array of shape [n_samples] with 0 and 1.</span>
@@ -653,18 +588,18 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Please set uniform variables&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uniform_features</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The set of uniform variables cannot be empty&quot;</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> \
-            <span class="s2">&quot;only two-class classification is implemented&quot;</span>
+        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="s2">&quot;only two-class classification is implemented&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
         <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span> <span class="o">=</span> <span class="n">check_xyw</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">,</span> <span class="n">classification</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">data_train_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_train_features</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">smoothing</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">smoothing</span> <span class="o">=</span> <span class="mf">10.</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">efficiency_steps</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">smoothing</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">efficiency_steps</span>
 
         <span class="n">neighbours_matrix</span> <span class="o">=</span> <span class="n">compute_knn_indices_of_same_class</span><span class="p">(</span>
-            <span class="n">X</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">uniform_features</span><span class="p">],</span> <span class="n">y</span><span class="p">,</span> <span class="n">n_neighbours</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_neighbors</span><span class="p">)</span>
+            <span class="n">X</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">uniform_features</span><span class="p">],</span> <span class="n">y</span><span class="p">,</span> <span class="n">n_neighbours</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_neighbors</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">target_efficiencies</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">efficiency_steps</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">classifiers</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -673,58 +608,76 @@
                 <span class="n">uniform_features</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uniform_features</span><span class="p">,</span>
                 <span class="n">uniform_label</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span><span class="p">,</span>
                 <span class="n">train_features</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">target_efficiency</span><span class="o">=</span><span class="n">efficiency</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_neighbors</span><span class="p">,</span>
+                <span class="n">target_efficiency</span><span class="o">=</span><span class="n">efficiency</span><span class="p">,</span>
+                <span class="n">n_neighbors</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_neighbors</span><span class="p">,</span>
                 <span class="n">n_estimators</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_estimators</span><span class="p">,</span>
                 <span class="n">base_estimator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="p">,</span>
-                <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">,</span> <span class="n">subsample</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">subsample</span><span class="p">,</span>
-                <span class="n">smoothing</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">smoothing</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span><span class="p">)</span>
+                <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">,</span>
+                <span class="n">subsample</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">subsample</span><span class="p">,</span>
+                <span class="n">smoothing</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">smoothing</span><span class="p">,</span>
+                <span class="n">algorithm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span><span class="p">,</span>
+            <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">classifiers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">classifier</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">classifiers</span> <span class="o">=</span> <span class="n">map_on_cluster</span><span class="p">(</span><span class="s1">&#39;threads-</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_threads</span><span class="p">),</span>
-                                          <span class="n">_train_classifier</span><span class="p">,</span>
-                                          <span class="bp">self</span><span class="o">.</span><span class="n">classifiers</span><span class="p">,</span>
-                                          <span class="bp">self</span><span class="o">.</span><span class="n">efficiency_steps</span> <span class="o">*</span> <span class="p">[</span><span class="n">data_train_features</span><span class="p">],</span>
-                                          <span class="bp">self</span><span class="o">.</span><span class="n">efficiency_steps</span> <span class="o">*</span> <span class="p">[</span><span class="n">y</span><span class="p">],</span>
-                                          <span class="bp">self</span><span class="o">.</span><span class="n">efficiency_steps</span> <span class="o">*</span> <span class="p">[</span><span class="n">sample_weight</span><span class="p">],</span>
-                                          <span class="bp">self</span><span class="o">.</span><span class="n">efficiency_steps</span> <span class="o">*</span> <span class="p">[</span><span class="n">neighbours_matrix</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classifiers</span> <span class="o">=</span> <span class="n">map_on_cluster</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;threads-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_threads</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">_train_classifier</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">classifiers</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">efficiency_steps</span> <span class="o">*</span> <span class="p">[</span><span class="n">data_train_features</span><span class="p">],</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">efficiency_steps</span> <span class="o">*</span> <span class="p">[</span><span class="n">y</span><span class="p">],</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">efficiency_steps</span> <span class="o">*</span> <span class="p">[</span><span class="n">sample_weight</span><span class="p">],</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">efficiency_steps</span> <span class="o">*</span> <span class="p">[</span><span class="n">neighbours_matrix</span><span class="p">],</span>
+        <span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="uBoostClassifier.predict"><a class="viewcode-back" href="../../uboost.html#hep_ml.uboost.uBoostClassifier.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Predict labels</span>
+
+<div class="viewcode-block" id="uBoostClassifier.predict">
+<a class="viewcode-back" href="../../uboost.html#hep_ml.uboost.uBoostClassifier.predict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Predict labels</span>
 
 <span class="sd">        :param X: data, pandas.DataFrame of shape [n_samples, n_features]</span>
 <span class="sd">        :return: numpy.array of shape [n_samples]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="uBoostClassifier.predict_proba"><a class="viewcode-back" href="../../uboost.html#hep_ml.uboost.uBoostClassifier.predict_proba">[docs]</a>    <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Predict probabilities</span>
+
+<div class="viewcode-block" id="uBoostClassifier.predict_proba">
+<a class="viewcode-back" href="../../uboost.html#hep_ml.uboost.uBoostClassifier.predict_proba">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Predict probabilities</span>
 
 <span class="sd">        :param X: data, pandas.DataFrame of shape [n_samples, n_features]</span>
 <span class="sd">        :return: array of shape [n_samples, n_classes] with probabilities.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_train_features</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-        <span class="n">score</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">clf</span><span class="o">.</span><span class="n">_uboost_predict_score</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="k">for</span> <span class="n">clf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifiers</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">commonutils</span><span class="o">.</span><span class="n">score_to_proba</span><span class="p">(</span><span class="n">score</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">efficiency_steps</span><span class="p">)</span></div>
+        <span class="n">p</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">clf</span><span class="o">.</span><span class="n">_uboost_predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="k">for</span> <span class="n">clf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifiers</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">efficiency_steps</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span><span class="o">.</span><span class="n">T</span></div>
 
-<div class="viewcode-block" id="uBoostClassifier.staged_predict_proba"><a class="viewcode-back" href="../../uboost.html#hep_ml.uboost.uBoostClassifier.staged_predict_proba">[docs]</a>    <span class="k">def</span> <span class="nf">staged_predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Predicted probabilities for each sample after each stage of boosting.</span>
+
+<div class="viewcode-block" id="uBoostClassifier.staged_predict_proba">
+<a class="viewcode-back" href="../../uboost.html#hep_ml.uboost.uBoostClassifier.staged_predict_proba">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">staged_predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Predicted probabilities for each sample after each stage of boosting.</span>
 
 <span class="sd">        :param X: data, pandas.DataFrame of shape [n_samples, n_features]</span>
 <span class="sd">        :return: sequence of numpy.arrays of shape [n_samples, n_classes]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_train_features</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">scores</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">clf</span><span class="o">.</span><span class="n">_uboost_staged_predict_score</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="k">for</span> <span class="n">clf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifiers</span><span class="p">]):</span>
-            <span class="k">yield</span> <span class="n">commonutils</span><span class="o">.</span><span class="n">score_to_proba</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">efficiency_steps</span><span class="p">)</span></div></div>
+        <span class="k">for</span> <span class="n">scores</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">clf</span><span class="o">.</span><span class="n">_uboost_staged_predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="k">for</span> <span class="n">clf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifiers</span><span class="p">]):</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">efficiency_steps</span>
+            <span class="k">yield</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span><span class="o">.</span><span class="n">T</span></div>
+</div>
 
 
-<span class="k">def</span> <span class="nf">_generate_subsample_mask</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">subsample</span><span class="p">,</span> <span class="n">random_generator</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_generate_subsample_mask</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">subsample</span><span class="p">,</span> <span class="n">random_generator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    :param float subsample: part of samples to be left</span>
 <span class="sd">    :param random_generator: numpy.random.RandomState instance</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">subsample</span> <span class="o">&lt;=</span> <span class="mf">1.</span><span class="p">,</span> <span class="s1">&#39;subsample should be in range (0, 1]&#39;</span>
+    <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">subsample</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">&quot;subsample should be in range (0, 1]&quot;</span>
     <span class="k">if</span> <span class="n">subsample</span> <span class="o">==</span> <span class="mf">1.0</span><span class="p">:</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -733,46 +686,30 @@
 </pre></div>
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2015-2017, Yandex; Alex Rogozhnikov and contributors.
-
-    </p>
+    <p>&#169; Copyright 2015-2017, Yandex; Alex Rogozhnikov and contributors.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

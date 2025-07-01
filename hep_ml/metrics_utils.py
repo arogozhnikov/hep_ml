@@ -1,3 +1,26 @@
+"""
+There are two basic approaches to handle are bins and knn.
+Here they are represented as bins and (!) groups.
+
+The difference between bins and groups: each event belongs to one and only one bin,
+in the case of groups each event may belong to several groups.
+Knn is one particular case of groups, bins can be reduced to groups either
+
+Bin_indices is an array, where for each event it's bin is written:
+bin_indices = [0, 0, 1, 2, 2, 4]
+
+Group_indices is list, each item is indices of events in some group
+group_indices = [[0,1], [2], [3,4], [5]]
+
+Group matrix is another way to write group_indices,
+this is sparse matrix of shape [n_groups, n_samples],
+group_matrix[group_id, sample_id] = 1, if event belong to cell, 0 otherwise
+
+
+While bin indices are computed for all the events together, group indices
+are typically computed only for events of some particular class.
+"""
+
 import numpy
 from sklearn.utils.validation import column_or_1d
 
@@ -24,29 +47,6 @@ def prepare_distribution(data, weights):
 
 
 # region Helpful functions to work with bins and groups
-
-"""
-There are two basic approaches to handle are bins and knn.
-Here they are represented as bins and (!) groups.
-
-The difference between bins and groups: each event belongs to one and only one bin,
-in the case of groups each event may belong to several groups.
-Knn is one particular case of groups, bins can be reduced to groups either
-
-Bin_indices is an array, where for each event it's bin is written:
-bin_indices = [0, 0, 1, 2, 2, 4]
-
-Group_indices is list, each item is indices of events in some group
-group_indices = [[0,1], [2], [3,4], [5]]
-
-Group matrix is another way to write group_indices,
-this is sparse matrix of shape [n_groups, n_samples],
-group_matrix[group_id, sample_id] = 1, if event belong to cell, 0 otherwise
-
-
-While bin indices are computed for all the events together, group indices
-are typically computed only for events of some particular class.
-"""
 
 
 def compute_bin_indices(X_part, bin_limits=None, n_bins=20):

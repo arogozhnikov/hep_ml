@@ -57,3 +57,10 @@ docsrc/tmp*
 
 # OS X garbage
 .DS_Store
+
+# version file
+/hep_ml/_version.py
+
+# data files
+/data/*.root
+/data/MiniBooNE_PID.txt

@@ -1,101 +1,48 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>hep_ml.losses &mdash; hep_ml 0.7.0 documentation</title>
-  
+  <title>hep_ml.losses &mdash; hep_ml 0.7.4.dev5+gba709f3.d20250617 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+      <script src="../../_static/documentation_options.js?v=a931b840"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
 
           
-            <a href="../../index.html" class="icon icon-home"> hep_ml
           
-
-          
+          <a href="../../index.html" class="icon icon-home">
+            hep_ml
           </a>
-
-          
-            
-            
-              <div class="version">
-                0.7.0
-              </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">hep_ml documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../gb.html">Gradient boosting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../losses.html">Losses for Gradient Boosting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../uboost.html">uBoost</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../metrics.html">Metric functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../nnet.html">Neural networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../preprocessing.html">Preprocessing data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../reweight.html">Reweighting algorithms</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../speedup.html">Fast predictions</a></li>
@@ -103,69 +50,30 @@
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Code Examples</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">hep_ml</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
-          <li><a href="../index.html">Module code</a> &raquo;</li>
-        
-      <li>hep_ml.losses</li>
-    
-    
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">hep_ml.losses</li>
       <li class="wy-breadcrumbs-aside">
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <h1>Source code for hep_ml.losses</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">**hep_ml.losses** contains different loss functions to use in gradient boosting.</span>
@@ -208,40 +116,44 @@
 
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span>
-<span class="kn">import</span> <span class="nn">numbers</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">pandas</span>
-<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">sparse</span>
-<span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">expit</span>
-<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_random_state</span>
-<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numbers</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
-<span class="kn">from</span> <span class="nn">.commonutils</span> <span class="kn">import</span> <span class="n">compute_knn_indices_of_signal</span><span class="p">,</span> <span class="n">check_sample_weight</span><span class="p">,</span> <span class="n">check_uniform_label</span><span class="p">,</span> <span class="n">weighted_quantile</span>
-<span class="kn">from</span> <span class="nn">.metrics_utils</span> <span class="kn">import</span> <span class="n">bin_to_group_indices</span><span class="p">,</span> <span class="n">compute_bin_indices</span><span class="p">,</span> <span class="n">compute_group_weights</span><span class="p">,</span> \
-    <span class="n">group_indices_to_groups_matrix</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">sparse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.special</span><span class="w"> </span><span class="kn">import</span> <span class="n">expit</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseEstimator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.utils.validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_random_state</span>
 
-<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Alex Rogozhnikov&#39;</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.commonutils</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_sample_weight</span><span class="p">,</span> <span class="n">check_uniform_label</span><span class="p">,</span> <span class="n">compute_knn_indices_of_signal</span><span class="p">,</span> <span class="n">weighted_quantile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.metrics_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">bin_to_group_indices</span><span class="p">,</span>
+    <span class="n">compute_bin_indices</span><span class="p">,</span>
+    <span class="n">compute_group_weights</span><span class="p">,</span>
+    <span class="n">group_indices_to_groups_matrix</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Alex Rogozhnikov&quot;</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s1">&#39;AbstractLossFunction&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;MSELossFunction&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;MAELossFunction&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;LogLossFunction&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;AdaLossFunction&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;CompositeLossFunction&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;BinFlatnessLossFunction&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;KnnFlatnessLossFunction&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;KnnAdaLossFunction&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;RankBoostLossFunction&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;ReweightLossFunction&#39;</span>
+    <span class="s2">&quot;AbstractLossFunction&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;AdaLossFunction&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BinFlatnessLossFunction&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CompositeLossFunction&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KnnAdaLossFunction&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KnnFlatnessLossFunction&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;LogLossFunction&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;MAELossFunction&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;MSELossFunction&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;RankBoostLossFunction&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ReweightLossFunction&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 
 
-<span class="k">def</span> <span class="nf">_compute_positions</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compute_positions</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    For each event computes it position among other events by prediction.</span>
 <span class="sd">    position = (weighted) part of elements with lower predictions =&gt; position belongs to [0, 1]</span>
 
@@ -250,12 +162,14 @@
     <span class="n">order</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
     <span class="n">ordered_weights</span> <span class="o">=</span> <span class="n">sample_weight</span><span class="p">[</span><span class="n">order</span><span class="p">]</span>
     <span class="n">ordered_weights</span> <span class="o">/=</span> <span class="nb">float</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">ordered_weights</span><span class="p">))</span>
-    <span class="n">efficiencies</span> <span class="o">=</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">ordered_weights</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">ordered_weights</span><span class="p">)</span>
+    <span class="n">efficiencies</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">ordered_weights</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">ordered_weights</span>
     <span class="k">return</span> <span class="n">efficiencies</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">order</span><span class="p">)]</span>
 
 
-<div class="viewcode-block" id="AbstractLossFunction"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.AbstractLossFunction">[docs]</a><span class="k">class</span> <span class="nc">AbstractLossFunction</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="AbstractLossFunction">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.AbstractLossFunction">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AbstractLossFunction</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This is base class for loss functions used in `hep_ml`.</span>
 <span class="sd">    Main differences compared to `scikit-learn` loss functions:</span>
 
@@ -265,20 +179,25 @@
 <span class="sd">    4. only two-class case is supported, and different classes may have different role and meaning.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="AbstractLossFunction.fit"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.AbstractLossFunction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; This method is optional, it is called before all the others.</span>
+<div class="viewcode-block" id="AbstractLossFunction.fit">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.AbstractLossFunction.fit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This method is optional, it is called before all the others.</span>
 <span class="sd">        Heavy preprocessing should be done here.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Compute loss function</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute loss function</span>
 
 <span class="sd">        :param y_pred: contains predictions for all the events passed to `fit` method,</span>
 <span class="sd">         moreover, the order should be the same&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
-<div class="viewcode-block" id="AbstractLossFunction.prepare_tree_params"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.AbstractLossFunction.prepare_tree_params">[docs]</a>    <span class="k">def</span> <span class="nf">prepare_tree_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Prepares parameters for regression tree that minimizes MSE</span>
+<div class="viewcode-block" id="AbstractLossFunction.prepare_tree_params">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.AbstractLossFunction.prepare_tree_params">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_tree_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Prepares parameters for regression tree that minimizes MSE</span>
 
 <span class="sd">        :param y_pred: contains predictions for all the events passed to `fit` method,</span>
 <span class="sd">         moreover, the order should be the same</span>
@@ -286,8 +205,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">negative_gradient</span><span class="p">(</span><span class="n">y_pred</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y_pred</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="AbstractLossFunction.prepare_new_leaves_values"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.AbstractLossFunction.prepare_new_leaves_values">[docs]</a>    <span class="k">def</span> <span class="nf">prepare_new_leaves_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">terminal_regions</span><span class="p">,</span> <span class="n">leaf_values</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Loss function can prepare better values for leaves by overriding this function</span>
+
+<div class="viewcode-block" id="AbstractLossFunction.prepare_new_leaves_values">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.AbstractLossFunction.prepare_new_leaves_values">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_new_leaves_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">terminal_regions</span><span class="p">,</span> <span class="n">leaf_values</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Loss function can prepare better values for leaves by overriding this function</span>
 
 <span class="sd">        :param terminal_regions: indices of terminal regions of each event.</span>
 <span class="sd">        :param leaf_values: numpy.array, current mapping of leaf indices to prediction values.</span>
@@ -296,69 +218,77 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">leaf_values</span></div>
 
-<div class="viewcode-block" id="AbstractLossFunction.compute_optimal_step"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.AbstractLossFunction.compute_optimal_step">[docs]</a>    <span class="k">def</span> <span class="nf">compute_optimal_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="AbstractLossFunction.compute_optimal_step">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.AbstractLossFunction.compute_optimal_step">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_optimal_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute optimal global step. This method is typically used to make optimal step</span>
 <span class="sd">        before fitting trees to reduce variance.</span>
 
 <span class="sd">        :param y_pred: initial predictions, numpy.array of shape [n_samples]</span>
 <span class="sd">        :return: float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="mf">0.</span></div></div>
+        <span class="k">return</span> <span class="mf">0.0</span></div>
+</div>
 
 
-<span class="k">class</span> <span class="nc">HessianLossFunction</span><span class="p">(</span><span class="n">AbstractLossFunction</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Loss function with diagonal hessian (or hessian, which can be approximated by diagonal),</span>
-<span class="sd">    uses Newton-Raphson step to update trees. &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regularization</span><span class="o">=</span><span class="mf">5.</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">HessianLossFunction</span><span class="p">(</span><span class="n">AbstractLossFunction</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Loss function with diagonal hessian (or hessian, which can be approximated by diagonal),</span>
+<span class="sd">    uses Newton-Raphson step to update trees.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regularization</span><span class="o">=</span><span class="mf">5.0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param regularization: float, penalty for leaves with few events,</span>
 <span class="sd">         corresponds roughly to the number of added events of both classes to each leaf.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">regularization</span> <span class="o">=</span> <span class="n">regularization</span>
 
-    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">regularization_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regularization</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sample_weight</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span>
 
-    <span class="k">def</span> <span class="nf">hessian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Returns diagonal of hessian matrix.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">hessian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns diagonal of hessian matrix.</span>
 <span class="sd">        :param y_pred: numpy.array of shape [n_samples] with events passed in the same order as in `fit`.</span>
 <span class="sd">        :return: numpy.array of shape [n_sampels] with second derivatives with respect to each prediction.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Override this method in loss function.&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Override this method in loss function.&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">prepare_tree_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_tree_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="n">grad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">negative_gradient</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
         <span class="n">hess</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hessian</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.01</span>
         <span class="k">return</span> <span class="n">grad</span> <span class="o">/</span> <span class="n">hess</span><span class="p">,</span> <span class="n">hess</span>
 
-    <span class="k">def</span> <span class="nf">prepare_new_leaves_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">terminal_regions</span><span class="p">,</span> <span class="n">leaf_values</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; This expression comes from optimization of second-order approximation of loss function.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_new_leaves_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">terminal_regions</span><span class="p">,</span> <span class="n">leaf_values</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This expression comes from optimization of second-order approximation of loss function.&quot;&quot;&quot;</span>
         <span class="n">gradients</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">negative_gradient</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
         <span class="n">hessians</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hessian</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">HessianLossFunction</span><span class="o">.</span><span class="n">_prepare_hessian_leaves_values</span><span class="p">(</span>
-            <span class="n">terminal_regions</span><span class="o">=</span><span class="n">terminal_regions</span><span class="p">,</span> <span class="n">leaf_values</span><span class="o">=</span><span class="n">leaf_values</span><span class="p">,</span>
-            <span class="n">gradients</span><span class="o">=</span><span class="n">gradients</span><span class="p">,</span> <span class="n">hessians</span><span class="o">=</span><span class="n">hessians</span><span class="p">,</span> <span class="n">regularization_</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">regularization_</span>
+            <span class="n">terminal_regions</span><span class="o">=</span><span class="n">terminal_regions</span><span class="p">,</span>
+            <span class="n">leaf_values</span><span class="o">=</span><span class="n">leaf_values</span><span class="p">,</span>
+            <span class="n">gradients</span><span class="o">=</span><span class="n">gradients</span><span class="p">,</span>
+            <span class="n">hessians</span><span class="o">=</span><span class="n">hessians</span><span class="p">,</span>
+            <span class="n">regularization_</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">regularization_</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_prepare_hessian_leaves_values</span><span class="p">(</span><span class="n">terminal_regions</span><span class="p">,</span> <span class="n">leaf_values</span><span class="p">,</span> <span class="n">gradients</span><span class="p">,</span> <span class="n">hessians</span><span class="p">,</span> <span class="n">regularization_</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_prepare_hessian_leaves_values</span><span class="p">(</span><span class="n">terminal_regions</span><span class="p">,</span> <span class="n">leaf_values</span><span class="p">,</span> <span class="n">gradients</span><span class="p">,</span> <span class="n">hessians</span><span class="p">,</span> <span class="n">regularization_</span><span class="p">):</span>
         <span class="n">min_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">leaf_values</span><span class="p">)</span>
         <span class="n">nominators</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">terminal_regions</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">gradients</span><span class="p">,</span> <span class="n">minlength</span><span class="o">=</span><span class="n">min_length</span><span class="p">)</span>
         <span class="n">denominators</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">terminal_regions</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">hessians</span><span class="p">,</span> <span class="n">minlength</span><span class="o">=</span><span class="n">min_length</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">nominators</span> <span class="o">/</span> <span class="p">(</span><span class="n">denominators</span> <span class="o">+</span> <span class="n">regularization_</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">compute_optimal_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_optimal_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Optimal step is computed using Newton-Raphson algorithm (10 iterations).</span>
 <span class="sd">        :param y_pred: predictions (usually, zeros)</span>
 <span class="sd">        :return: float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">terminal_regions</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y_pred</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int&#39;</span><span class="p">)</span>
+        <span class="n">terminal_regions</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y_pred</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">)</span>
         <span class="n">leaf_values</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">step</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
             <span class="n">step_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prepare_new_leaves_values</span><span class="p">(</span><span class="n">terminal_regions</span><span class="p">,</span> <span class="n">leaf_values</span><span class="o">=</span><span class="n">leaf_values</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred</span> <span class="o">+</span> <span class="n">step</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">step</span> <span class="o">+=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">step_</span>
@@ -367,158 +297,244 @@
 
 <span class="c1"># region Classification losses</span>
 
-<div class="viewcode-block" id="AdaLossFunction"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.AdaLossFunction">[docs]</a><span class="k">class</span> <span class="nc">AdaLossFunction</span><span class="p">(</span><span class="n">HessianLossFunction</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; AdaLossFunction is the same as Exponential Loss Function (aka exploss) &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="AdaLossFunction.fit"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.AdaLossFunction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">=</span> <span class="n">check_sample_weight</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">,</span>
-                                                 <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">normalize_by_class</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="AdaLossFunction">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.AdaLossFunction">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AdaLossFunction</span><span class="p">(</span><span class="n">HessianLossFunction</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;AdaLossFunction is the same as Exponential Loss Function (aka exploss)&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="AdaLossFunction.fit">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.AdaLossFunction.fit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">=</span> <span class="n">check_sample_weight</span><span class="p">(</span>
+            <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">normalize_by_class</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float32&quot;</span><span class="p">)</span>
         <span class="n">HessianLossFunction</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">))</span>
 
-<div class="viewcode-block" id="AdaLossFunction.negative_gradient"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.AdaLossFunction.negative_gradient">[docs]</a>    <span class="k">def</span> <span class="nf">negative_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">)</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">))</span>
 
-<div class="viewcode-block" id="AdaLossFunction.hessian"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.AdaLossFunction.hessian">[docs]</a>    <span class="k">def</span> <span class="nf">hessian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="AdaLossFunction.prepare_tree_params"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.AdaLossFunction.prepare_tree_params">[docs]</a>    <span class="k">def</span> <span class="nf">prepare_tree_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hessian</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span></div></div>
+<div class="viewcode-block" id="AdaLossFunction.negative_gradient">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.AdaLossFunction.negative_gradient">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">negative_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="LogLossFunction"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.LogLossFunction">[docs]</a><span class="k">class</span> <span class="nc">LogLossFunction</span><span class="p">(</span><span class="n">HessianLossFunction</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Logistic loss function (logloss), aka binomial deviance, aka cross-entropy,</span>
+<div class="viewcode-block" id="AdaLossFunction.hessian">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.AdaLossFunction.hessian">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">hessian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AdaLossFunction.prepare_tree_params">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.AdaLossFunction.prepare_tree_params">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_tree_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hessian</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="LogLossFunction">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.LogLossFunction">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LogLossFunction</span><span class="p">(</span><span class="n">HessianLossFunction</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Logistic loss function (logloss), aka binomial deviance, aka cross-entropy,</span>
 <span class="sd">    aka log-likelihood loss.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="LogLossFunction.fit"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.LogLossFunction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">=</span> <span class="n">check_sample_weight</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">,</span>
-                                                 <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">normalize_by_class</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="LogLossFunction.fit">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.LogLossFunction.fit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">=</span> <span class="n">check_sample_weight</span><span class="p">(</span>
+            <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">normalize_by_class</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">1</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">minus_y_signed</span> <span class="o">=</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">minus_y_signed</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y_signed_times_weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span>
         <span class="n">HessianLossFunction</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logaddexp</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">minus_y_signed</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">))</span>
 
-<div class="viewcode-block" id="LogLossFunction.negative_gradient"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.LogLossFunction.negative_gradient">[docs]</a>    <span class="k">def</span> <span class="nf">negative_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+<div class="viewcode-block" id="LogLossFunction.negative_gradient">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.LogLossFunction.negative_gradient">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">negative_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_signed_times_weights</span> <span class="o">*</span> <span class="n">expit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">minus_y_signed</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="LogLossFunction.hessian"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.LogLossFunction.hessian">[docs]</a>    <span class="k">def</span> <span class="nf">hessian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+
+<div class="viewcode-block" id="LogLossFunction.hessian">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.LogLossFunction.hessian">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">hessian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="n">expits</span> <span class="o">=</span> <span class="n">expit</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">*</span> <span class="n">expits</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">expits</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="LogLossFunction.prepare_tree_params"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.LogLossFunction.prepare_tree_params">[docs]</a>    <span class="k">def</span> <span class="nf">prepare_tree_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span> <span class="o">*</span> <span class="n">expit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">minus_y_signed</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span></div></div>
+
+<div class="viewcode-block" id="LogLossFunction.prepare_tree_params">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.LogLossFunction.prepare_tree_params">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_tree_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span> <span class="o">*</span> <span class="n">expit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">minus_y_signed</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span></div>
+</div>
 
 
-<div class="viewcode-block" id="CompositeLossFunction"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.CompositeLossFunction">[docs]</a><span class="k">class</span> <span class="nc">CompositeLossFunction</span><span class="p">(</span><span class="n">HessianLossFunction</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="CompositeLossFunction">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.CompositeLossFunction">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CompositeLossFunction</span><span class="p">(</span><span class="n">HessianLossFunction</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Composite loss function is defined as exploss for backgorund events and logloss for signal with proper constants.</span>
 
 <span class="sd">    Such kind of loss functions is very useful to optimize AMS or in situations where very clean signal is expected.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="CompositeLossFunction.fit"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.CompositeLossFunction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
+<div class="viewcode-block" id="CompositeLossFunction.fit">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.CompositeLossFunction.fit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">=</span> <span class="n">check_sample_weight</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">,</span>
-                                                 <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">normalize_by_class</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">=</span> <span class="n">check_sample_weight</span><span class="p">(</span>
+            <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">normalize_by_class</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sig_w</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bck_w</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span>
         <span class="n">HessianLossFunction</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sig_w</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logaddexp</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">y_pred</span><span class="p">))</span>
         <span class="n">result</span> <span class="o">+=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bck_w</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">result</span>
 
-<div class="viewcode-block" id="CompositeLossFunction.negative_gradient"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.CompositeLossFunction.negative_gradient">[docs]</a>    <span class="k">def</span> <span class="nf">negative_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig_w</span> <span class="o">*</span> <span class="n">expit</span><span class="p">(</span><span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span>
+<div class="viewcode-block" id="CompositeLossFunction.negative_gradient">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.CompositeLossFunction.negative_gradient">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">negative_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig_w</span> <span class="o">*</span> <span class="n">expit</span><span class="p">(</span><span class="o">-</span><span class="n">y_pred</span><span class="p">)</span>
         <span class="n">result</span> <span class="o">-=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">bck_w</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span></div>
 
-<div class="viewcode-block" id="CompositeLossFunction.hessian"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.CompositeLossFunction.hessian">[docs]</a>    <span class="k">def</span> <span class="nf">hessian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CompositeLossFunction.hessian">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.CompositeLossFunction.hessian">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">hessian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="n">expits</span> <span class="o">=</span> <span class="n">expit</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig_w</span> <span class="o">*</span> <span class="n">expits</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">expits</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">bck_w</span> <span class="o">*</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig_w</span> <span class="o">*</span> <span class="n">expits</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">expits</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">bck_w</span> <span class="o">*</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">)</span></div>
+</div>
+
 
 
 <span class="c1"># endregion</span>
 
 <span class="c1"># region Regression Losses</span>
 
-<div class="viewcode-block" id="MSELossFunction"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.MSELossFunction">[docs]</a><span class="k">class</span> <span class="nc">MSELossFunction</span><span class="p">(</span><span class="n">HessianLossFunction</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Mean squared error loss function, used for regression.</span>
+
+<div class="viewcode-block" id="MSELossFunction">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.MSELossFunction">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MSELossFunction</span><span class="p">(</span><span class="n">HessianLossFunction</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Mean squared error loss function, used for regression.</span>
 <span class="sd">    :math:`\text{loss} = \sum_i (y_i - \hat{y}_i)^2`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="MSELossFunction.fit"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.MSELossFunction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
+<div class="viewcode-block" id="MSELossFunction.fit">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.MSELossFunction.fit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">=</span> <span class="n">check_sample_weight</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">HessianLossFunction</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
 
-<div class="viewcode-block" id="MSELossFunction.negative_gradient"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.MSELossFunction.negative_gradient">[docs]</a>    <span class="k">def</span> <span class="nf">negative_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+<div class="viewcode-block" id="MSELossFunction.negative_gradient">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.MSELossFunction.negative_gradient">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">negative_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="MSELossFunction.hessian"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.MSELossFunction.hessian">[docs]</a>    <span class="k">def</span> <span class="nf">hessian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+
+<div class="viewcode-block" id="MSELossFunction.hessian">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.MSELossFunction.hessian">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">hessian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span></div>
 
-<div class="viewcode-block" id="MSELossFunction.prepare_tree_params"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.MSELossFunction.prepare_tree_params">[docs]</a>    <span class="k">def</span> <span class="nf">prepare_tree_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+
+<div class="viewcode-block" id="MSELossFunction.prepare_tree_params">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.MSELossFunction.prepare_tree_params">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_tree_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span></div>
 
-<div class="viewcode-block" id="MSELossFunction.compute_optimal_step"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.MSELossFunction.compute_optimal_step">[docs]</a>    <span class="k">def</span> <span class="nf">compute_optimal_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="MSELossFunction.compute_optimal_step">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.MSELossFunction.compute_optimal_step">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_optimal_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span><span class="p">)</span></div>
+</div>
 
 
-<div class="viewcode-block" id="MAELossFunction"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.MAELossFunction">[docs]</a><span class="k">class</span> <span class="nc">MAELossFunction</span><span class="p">(</span><span class="n">AbstractLossFunction</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Mean absolute error loss function, used for regression.</span>
+
+<div class="viewcode-block" id="MAELossFunction">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.MAELossFunction">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MAELossFunction</span><span class="p">(</span><span class="n">AbstractLossFunction</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Mean absolute error loss function, used for regression.</span>
 <span class="sd">    :math:`\text{loss} = \sum_i |y_i - \hat{y}_i|`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="MAELossFunction.fit"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.MAELossFunction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
+<div class="viewcode-block" id="MAELossFunction.fit">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.MAELossFunction.fit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">=</span> <span class="n">check_sample_weight</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_regularization</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">))</span>
 
-<div class="viewcode-block" id="MAELossFunction.negative_gradient"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.MAELossFunction.negative_gradient">[docs]</a>    <span class="k">def</span> <span class="nf">negative_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+<div class="viewcode-block" id="MAELossFunction.negative_gradient">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.MAELossFunction.negative_gradient">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">negative_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="MAELossFunction.prepare_tree_params"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.MAELossFunction.prepare_tree_params">[docs]</a>    <span class="k">def</span> <span class="nf">prepare_tree_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+
+<div class="viewcode-block" id="MAELossFunction.prepare_tree_params">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.MAELossFunction.prepare_tree_params">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_tree_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span></div>
 
-<div class="viewcode-block" id="MAELossFunction.prepare_new_leaves_values"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.MAELossFunction.prepare_new_leaves_values">[docs]</a>    <span class="k">def</span> <span class="nf">prepare_new_leaves_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">terminal_regions</span><span class="p">,</span> <span class="n">leaf_values</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+
+<div class="viewcode-block" id="MAELossFunction.prepare_new_leaves_values">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.MAELossFunction.prepare_new_leaves_values">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_new_leaves_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">terminal_regions</span><span class="p">,</span> <span class="n">leaf_values</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="c1"># computing weighted median is slow in python</span>
         <span class="c1"># and cannot be done in numpy without sorting</span>
-        <span class="n">nominators</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">terminal_regions</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">negative_gradient</span><span class="p">(</span><span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred</span><span class="p">),</span>
-                                    <span class="n">minlength</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">leaf_values</span><span class="p">))</span>
+        <span class="n">nominators</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span>
+            <span class="n">terminal_regions</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">negative_gradient</span><span class="p">(</span><span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred</span><span class="p">),</span> <span class="n">minlength</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">leaf_values</span><span class="p">)</span>
+        <span class="p">)</span>
         <span class="n">denominators</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">terminal_regions</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span><span class="p">,</span> <span class="n">minlength</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">leaf_values</span><span class="p">))</span>
         <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">nominators</span> <span class="o">/</span> <span class="p">(</span><span class="n">denominators</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_regularization</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="MAELossFunction.compute_optimal_step"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.MAELossFunction.compute_optimal_step">[docs]</a>    <span class="k">def</span> <span class="nf">compute_optimal_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">weighted_quantile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">quantiles</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">],</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div></div>
+
+<div class="viewcode-block" id="MAELossFunction.compute_optimal_step">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.MAELossFunction.compute_optimal_step">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_optimal_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">weighted_quantile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">quantiles</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">],</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+</div>
+
 
 
 <span class="c1"># endregion RegressionLosses</span>
 
 
-<div class="viewcode-block" id="RankBoostLossFunction"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.RankBoostLossFunction">[docs]</a><span class="k">class</span> <span class="nc">RankBoostLossFunction</span><span class="p">(</span><span class="n">HessianLossFunction</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_column</span><span class="p">,</span> <span class="n">penalty_power</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">update_iterations</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;RankBoostLossFunction is target of optimization in RankBoost [RB]_ algorithm,</span>
+<div class="viewcode-block" id="RankBoostLossFunction">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.RankBoostLossFunction">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RankBoostLossFunction</span><span class="p">(</span><span class="n">HessianLossFunction</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_column</span><span class="p">,</span> <span class="n">penalty_power</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">update_iterations</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;RankBoostLossFunction is target of optimization in RankBoost [RB]_ algorithm,</span>
 <span class="sd">        which was developed for ranking and introduces penalties for wrong order of predictions.</span>
 
 <span class="sd">        However, this implementation goes further and there is selection of optimal leaf values based</span>
@@ -542,7 +558,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">request_column</span> <span class="o">=</span> <span class="n">request_column</span>
         <span class="n">HessianLossFunction</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regularization</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 
-<div class="viewcode-block" id="RankBoostLossFunction.fit"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.RankBoostLossFunction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
+<div class="viewcode-block" id="RankBoostLossFunction.fit">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.RankBoostLossFunction.fit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">queries</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">request_column</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">possible_queries</span><span class="p">,</span> <span class="n">normed_queries</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queries</span><span class="p">,</span> <span class="n">return_inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -561,21 +579,25 @@
         <span class="n">n_queries</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">normed_queries</span><span class="p">)</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">n_queries</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">possible_queries</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">penalty_matrices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="n">sparse</span><span class="o">.</span><span class="n">block_diag</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">rank_penalties</span> <span class="o">*</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">nq</span><span class="p">)</span> <span class="k">for</span> <span class="n">nq</span> <span class="ow">in</span> <span class="n">n_queries</span><span class="p">]))</span>
+            <span class="n">sparse</span><span class="o">.</span><span class="n">block_diag</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">rank_penalties</span> <span class="o">*</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">nq</span><span class="p">)</span> <span class="k">for</span> <span class="n">nq</span> <span class="ow">in</span> <span class="n">n_queries</span><span class="p">])</span>
+        <span class="p">)</span>
         <span class="n">HessianLossFunction</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="n">y_pred</span> <span class="o">-=</span> <span class="n">y_pred</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
         <span class="n">pos_exponent</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
         <span class="n">neg_exponent</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">y_pred</span><span class="p">)</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="k">for</span> <span class="n">lookup</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">penalty_matrix</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lookups</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">minlengths</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">penalty_matrices</span><span class="p">):</span>
             <span class="n">pos_stats</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">lookup</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">pos_exponent</span><span class="p">,</span> <span class="n">minlength</span><span class="o">=</span><span class="n">length</span><span class="p">)</span>
             <span class="n">neg_stats</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">lookup</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">neg_exponent</span><span class="p">,</span> <span class="n">minlength</span><span class="o">=</span><span class="n">length</span><span class="p">)</span>
             <span class="n">result</span> <span class="o">+=</span> <span class="n">pos_stats</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">penalty_matrix</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">neg_stats</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">result</span>
 
-<div class="viewcode-block" id="RankBoostLossFunction.negative_gradient"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.RankBoostLossFunction.negative_gradient">[docs]</a>    <span class="k">def</span> <span class="nf">negative_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+<div class="viewcode-block" id="RankBoostLossFunction.negative_gradient">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.RankBoostLossFunction.negative_gradient">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">negative_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="n">y_pred</span> <span class="o">-=</span> <span class="n">y_pred</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
         <span class="n">pos_exponent</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
         <span class="n">neg_exponent</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">y_pred</span><span class="p">)</span>
@@ -585,9 +607,12 @@
             <span class="n">neg_stats</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">lookup</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">neg_exponent</span><span class="p">,</span> <span class="n">minlength</span><span class="o">=</span><span class="n">length</span><span class="p">)</span>
             <span class="n">gradient</span> <span class="o">+=</span> <span class="n">pos_exponent</span> <span class="o">*</span> <span class="n">penalty_matrix</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">neg_stats</span><span class="p">)[</span><span class="n">lookup</span><span class="p">]</span>
             <span class="n">gradient</span> <span class="o">-=</span> <span class="n">neg_exponent</span> <span class="o">*</span> <span class="n">penalty_matrix</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">pos_stats</span><span class="p">)[</span><span class="n">lookup</span><span class="p">]</span>
-        <span class="k">return</span> <span class="o">-</span> <span class="n">gradient</span></div>
+        <span class="k">return</span> <span class="o">-</span><span class="n">gradient</span></div>
 
-<div class="viewcode-block" id="RankBoostLossFunction.hessian"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.RankBoostLossFunction.hessian">[docs]</a>    <span class="k">def</span> <span class="nf">hessian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+
+<div class="viewcode-block" id="RankBoostLossFunction.hessian">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.RankBoostLossFunction.hessian">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">hessian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="n">y_pred</span> <span class="o">-=</span> <span class="n">y_pred</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
         <span class="n">pos_exponent</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
         <span class="n">neg_exponent</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">y_pred</span><span class="p">)</span>
@@ -599,7 +624,10 @@
             <span class="n">result</span> <span class="o">+=</span> <span class="n">neg_exponent</span> <span class="o">*</span> <span class="n">penalty_matrix</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">pos_stats</span><span class="p">)[</span><span class="n">lookup</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">result</span></div>
 
-<div class="viewcode-block" id="RankBoostLossFunction.prepare_new_leaves_values"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.RankBoostLossFunction.prepare_new_leaves_values">[docs]</a>    <span class="k">def</span> <span class="nf">prepare_new_leaves_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">terminal_regions</span><span class="p">,</span> <span class="n">leaf_values</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+
+<div class="viewcode-block" id="RankBoostLossFunction.prepare_new_leaves_values">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.RankBoostLossFunction.prepare_new_leaves_values">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_new_leaves_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">terminal_regions</span><span class="p">,</span> <span class="n">leaf_values</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="n">leaves_values</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">leaf_values</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update_iterations</span><span class="p">):</span>
             <span class="n">y_test</span> <span class="o">=</span> <span class="n">y_pred</span> <span class="o">+</span> <span class="n">leaves_values</span><span class="p">[</span><span class="n">terminal_regions</span><span class="p">]</span>
@@ -607,8 +635,9 @@
             <span class="n">leaves_values</span> <span class="o">+=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">new_leaves_values</span>
         <span class="k">return</span> <span class="n">leaves_values</span></div>
 
-    <span class="k">def</span> <span class="nf">_prepare_new_leaves_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">terminal_regions</span><span class="p">,</span> <span class="n">leaf_values</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_prepare_new_leaves_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">terminal_regions</span><span class="p">,</span> <span class="n">leaf_values</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        For each event we shall represent loss as w_plus * e^{pred} + w_minus * e^{-pred},</span>
 <span class="sd">        then we are able to construct optimal step.</span>
 <span class="sd">        Pay attention: this is not an optimal, since we are ignoring,</span>
@@ -630,12 +659,13 @@
         <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="n">w_minus_leaf</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">regularization</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">w_plus_leaf</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">regularization</span><span class="p">))</span></div>
 
 
+
 <span class="c1"># region MatrixLossFunction</span>
 
 
-<span class="k">class</span> <span class="nc">AbstractMatrixLossFunction</span><span class="p">(</span><span class="n">HessianLossFunction</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">regularization</span><span class="o">=</span><span class="mf">5.</span><span class="p">):</span>
-        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;AbstractMatrixLossFunction is a base class to be inherited by other loss functions,</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AbstractMatrixLossFunction</span><span class="p">(</span><span class="n">HessianLossFunction</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">regularization</span><span class="o">=</span><span class="mf">5.0</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;AbstractMatrixLossFunction is a base class to be inherited by other loss functions,</span>
 <span class="sd">        which choose the particular A matrix and w vector. The formula of loss is:</span>
 <span class="sd">        \text{loss} = \sum_i w_i * exp(- \sum_j a_ij y_j score_j)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -646,8 +676,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">HessianLossFunction</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regularization</span><span class="o">=</span><span class="n">regularization</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;This method is used to compute A matrix and w based on train dataset&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This method is used to compute A matrix and w based on train dataset&quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="s2">&quot;different size of arrays&quot;</span>
         <span class="n">A</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_parameters</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">A</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
@@ -660,34 +690,36 @@
         <span class="n">HessianLossFunction</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Computing the loss itself&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Computing the loss itself&quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;something is wrong with sizes&quot;</span>
-        <span class="n">exponents</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">))</span>
+        <span class="n">exponents</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">*</span> <span class="n">exponents</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">negative_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Computing negative gradient&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">negative_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Computing negative gradient&quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;something is wrong with sizes&quot;</span>
-        <span class="n">exponents</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">))</span>
+        <span class="n">exponents</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">))</span>
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">A_t</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">*</span> <span class="n">exponents</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span>
         <span class="k">return</span> <span class="n">result</span>
 
-    <span class="k">def</span> <span class="nf">hessian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;something wrong with sizes&#39;</span>
-        <span class="n">exponents</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">))</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">hessian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;something wrong with sizes&quot;</span>
+        <span class="n">exponents</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">))</span>
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">A_t_sq</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">*</span> <span class="n">exponents</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span>
 
-    <span class="k">def</span> <span class="nf">compute_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trainX</span><span class="p">,</span> <span class="n">trainY</span><span class="p">,</span> <span class="n">trainW</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;This method should be overloaded in descendant, and should return A, w (matrix and vector)&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trainX</span><span class="p">,</span> <span class="n">trainY</span><span class="p">,</span> <span class="n">trainW</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This method should be overloaded in descendant, and should return A, w (matrix and vector)&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">prepare_new_leaves_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">terminal_regions</span><span class="p">,</span> <span class="n">leaf_values</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-        <span class="n">exponents</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">))</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_new_leaves_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">terminal_regions</span><span class="p">,</span> <span class="n">leaf_values</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+        <span class="n">exponents</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">))</span>
         <span class="c1"># current approach uses Newton-Raphson step</span>
-        <span class="n">regions_matrix</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">csc_matrix</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span><span class="p">,</span> <span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span><span class="p">)),</span> <span class="n">terminal_regions</span><span class="p">]),</span>
-                                           <span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">leaf_values</span><span class="p">)])</span>
+        <span class="n">regions_matrix</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">csc_matrix</span><span class="p">(</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span><span class="p">,</span> <span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span><span class="p">)),</span> <span class="n">terminal_regions</span><span class="p">]),</span>
+            <span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">leaf_values</span><span class="p">)],</span>
+        <span class="p">)</span>
         <span class="c1"># Z is matrix of shape [n_exponents, n_terminal_regions]</span>
         <span class="c1"># with contributions of each terminal region to each exponent</span>
         <span class="n">Z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">regions_matrix</span><span class="p">)</span>
@@ -697,9 +729,11 @@
         <span class="k">return</span> <span class="n">nominator</span> <span class="o">/</span> <span class="p">(</span><span class="n">denominator</span> <span class="o">+</span> <span class="mf">1e-5</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="KnnAdaLossFunction"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.KnnAdaLossFunction">[docs]</a><span class="k">class</span> <span class="nc">KnnAdaLossFunction</span><span class="p">(</span><span class="n">AbstractMatrixLossFunction</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">uniform_label</span><span class="p">,</span> <span class="n">knn</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">row_norm</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
-        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Modification of AdaLoss to achieve uniformity of predictions</span>
+<div class="viewcode-block" id="KnnAdaLossFunction">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.KnnAdaLossFunction">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">KnnAdaLossFunction</span><span class="p">(</span><span class="n">AbstractMatrixLossFunction</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">uniform_label</span><span class="p">,</span> <span class="n">knn</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">row_norm</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Modification of AdaLoss to achieve uniformity of predictions</span>
 
 <span class="sd">        :math:`\text{loss} = \sum_i w_i * exp(- \sum_j a_{ij} y_j score_j)`</span>
 
@@ -720,7 +754,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span> <span class="o">=</span> <span class="n">check_uniform_label</span><span class="p">(</span><span class="n">uniform_label</span><span class="p">)</span>
         <span class="n">AbstractMatrixLossFunction</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">)</span>
 
-<div class="viewcode-block" id="KnnAdaLossFunction.compute_parameters"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.KnnAdaLossFunction.compute_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">compute_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trainX</span><span class="p">,</span> <span class="n">trainY</span><span class="p">,</span> <span class="n">trainW</span><span class="p">):</span>
+<div class="viewcode-block" id="KnnAdaLossFunction.compute_parameters">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.KnnAdaLossFunction.compute_parameters">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trainX</span><span class="p">,</span> <span class="n">trainY</span><span class="p">,</span> <span class="n">trainW</span><span class="p">):</span>
         <span class="n">A_parts</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">w_parts</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span><span class="p">:</span>
@@ -748,10 +784,12 @@
             <span class="n">A_parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">A_part</span><span class="p">)</span>
             <span class="n">w_parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w_part</span><span class="p">)</span>
 
-        <span class="n">A</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">A_parts</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;csr&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">A_parts</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;csr&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
         <span class="n">w</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">w_parts</span><span class="p">)</span>
         <span class="k">assert</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">trainX</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">trainX</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">A</span><span class="p">,</span> <span class="n">w</span></div></div>
+        <span class="k">return</span> <span class="n">A</span><span class="p">,</span> <span class="n">w</span></div>
+</div>
+
 
 
 <span class="c1"># endregion</span>
@@ -766,9 +804,12 @@
 <span class="c1"># 2. optimize chi2- changing only sign, weights are the same</span>
 <span class="c1"># 3. computing optimal values for leaves: simply log (negatives are in the same distribution with sign -)</span>
 
-<div class="viewcode-block" id="ReweightLossFunction"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.ReweightLossFunction">[docs]</a><span class="k">class</span> <span class="nc">ReweightLossFunction</span><span class="p">(</span><span class="n">AbstractLossFunction</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regularization</span><span class="o">=</span><span class="mf">5.</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ReweightLossFunction">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.ReweightLossFunction">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ReweightLossFunction</span><span class="p">(</span><span class="n">AbstractLossFunction</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regularization</span><span class="o">=</span><span class="mf">5.0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Loss function used to reweight distributions. Works inside :class:`hep_ml.reweight.GBReweighter`</span>
 <span class="sd">        See [Rew]_ for details.</span>
 
@@ -787,8 +828,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">regularization</span> <span class="o">=</span> <span class="n">regularization</span>
 
-<div class="viewcode-block" id="ReweightLossFunction.fit"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.ReweightLossFunction.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
-        <span class="k">assert</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+<div class="viewcode-block" id="ReweightLossFunction.fit">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.ReweightLossFunction.fit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
         <span class="k">if</span> <span class="n">sample_weight</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -801,22 +844,31 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">mask_target</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-    <span class="k">def</span> <span class="nf">_compute_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;We need renormalization at eac step&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;We need renormalization at eac step&quot;&quot;&quot;</span>
         <span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">y_pred</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">check_sample_weight</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">normalize_by_class</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Loss function doesn&#39;t have precise expression &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Loss function doesn&#39;t have precise expression&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="mi">0</span>
 
-<div class="viewcode-block" id="ReweightLossFunction.negative_gradient"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.ReweightLossFunction.negative_gradient">[docs]</a>    <span class="k">def</span> <span class="nf">negative_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-        <span class="k">return</span> <span class="mf">0.</span></div>
+<div class="viewcode-block" id="ReweightLossFunction.negative_gradient">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.ReweightLossFunction.negative_gradient">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">negative_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mf">0.0</span></div>
 
-<div class="viewcode-block" id="ReweightLossFunction.prepare_tree_params"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.ReweightLossFunction.prepare_tree_params">[docs]</a>    <span class="k">def</span> <span class="nf">prepare_tree_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ReweightLossFunction.prepare_tree_params">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.ReweightLossFunction.prepare_tree_params">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_tree_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">signs</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_compute_weights</span><span class="p">(</span><span class="n">y_pred</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="ReweightLossFunction.prepare_new_leaves_values"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.ReweightLossFunction.prepare_new_leaves_values">[docs]</a>    <span class="k">def</span> <span class="nf">prepare_new_leaves_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">terminal_regions</span><span class="p">,</span> <span class="n">leaf_values</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ReweightLossFunction.prepare_new_leaves_values">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.ReweightLossFunction.prepare_new_leaves_values">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_new_leaves_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">terminal_regions</span><span class="p">,</span> <span class="n">leaf_values</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_weights</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
         <span class="n">w_target</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">terminal_regions</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mask_target</span> <span class="o">*</span> <span class="n">weights</span><span class="p">)</span>
         <span class="n">w_original</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">terminal_regions</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mask_original</span> <span class="o">*</span> <span class="n">weights</span><span class="p">)</span>
@@ -825,7 +877,9 @@
         <span class="n">w_target</span> <span class="o">=</span> <span class="n">w_target</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">w_original</span> <span class="o">=</span> <span class="n">w_original</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">w_target</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">regularization</span><span class="p">)</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">w_original</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">regularization</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">w_target</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">regularization</span><span class="p">)</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">w_original</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">regularization</span><span class="p">)</span></div>
+</div>
+
 
 
 <span class="c1"># endregion</span>
@@ -834,17 +888,15 @@
 <span class="c1"># region FlatnessLossFunction</span>
 
 
-<span class="k">def</span> <span class="nf">_exp_margin</span><span class="p">(</span><span class="n">margin</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; margin = - y_signed * y_pred &quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_exp_margin</span><span class="p">(</span><span class="n">margin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;margin = - y_signed * y_pred&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">margin</span><span class="p">,</span> <span class="o">-</span><span class="mf">1e5</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
 
 
-<span class="k">class</span> <span class="nc">AbstractFlatnessLossFunction</span><span class="p">(</span><span class="n">AbstractLossFunction</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Base class for FlatnessLosses&quot;&quot;&quot;</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AbstractFlatnessLossFunction</span><span class="p">(</span><span class="n">AbstractLossFunction</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for FlatnessLosses&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">uniform_label</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span> <span class="n">fl_coefficient</span><span class="o">=</span><span class="mf">3.</span><span class="p">,</span>
-                 <span class="n">allow_wrong_signs</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">uniform_label</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">fl_coefficient</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">allow_wrong_signs</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">uniform_features</span> <span class="o">=</span> <span class="n">uniform_features</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">uniform_label</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">uniform_label</span><span class="p">])</span>
@@ -854,17 +906,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">fl_coefficient</span> <span class="o">=</span> <span class="n">fl_coefficient</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">allow_wrong_signs</span> <span class="o">=</span> <span class="n">allow_wrong_signs</span>
 
-    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">sample_weight</span> <span class="o">=</span> <span class="n">check_sample_weight</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">,</span>
-                                            <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">normalize_by_class</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="s1">&#39;lengths are different&#39;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">sample_weight</span> <span class="o">=</span> <span class="n">check_sample_weight</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">normalize_by_class</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="s2">&quot;lengths are different&quot;</span>
         <span class="n">X</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">regularization_</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sample_weight</span><span class="p">)</span> <span class="o">*</span> <span class="mf">5.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">group_indices</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">group_matrices</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">group_weights</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">label_masks</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regularization_</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sample_weight</span><span class="p">)</span> <span class="o">*</span> <span class="mf">5.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group_indices</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group_matrices</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group_weights</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label_masks</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="n">occurences</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span><span class="p">:</span>
@@ -875,9 +926,9 @@
             <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_indices</span><span class="p">[</span><span class="n">label</span><span class="p">]:</span>
                 <span class="n">occurences</span><span class="p">[</span><span class="n">group</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 
-        <span class="n">out_of_bins</span> <span class="o">=</span> <span class="p">(</span><span class="n">occurences</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span><span class="p">)</span>
+        <span class="n">out_of_bins</span> <span class="o">=</span> <span class="p">(</span><span class="n">occurences</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">out_of_bins</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.01</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%i</span><span class="s2"> events out of all bins &quot;</span> <span class="o">%</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">out_of_bins</span><span class="p">),</span> <span class="ne">UserWarning</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">out_of_bins</span><span class="p">)</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2"> events out of all bins &quot;</span><span class="p">,</span> <span class="ne">UserWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">1</span>
@@ -886,38 +937,41 @@
 
         <span class="k">return</span> <span class="bp">self</span>
 
-    <span class="k">def</span> <span class="nf">_compute_groups_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;To be overriden in descendants.&#39;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_groups_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;To be overriden in descendants.&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pred</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pred</span><span class="p">):</span>
         <span class="c1"># the actual value does not play any role in boosting</span>
         <span class="c1"># computations are very costly</span>
         <span class="k">return</span> <span class="mi">0</span>
 
-    <span class="k">def</span> <span class="nf">_compute_fl_derivatives</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_fl_derivatives</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="n">y_pred</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
-        <span class="n">neg_gradient</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+        <span class="n">neg_gradient</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span><span class="p">:</span>
             <span class="n">label_mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_masks</span><span class="p">[</span><span class="n">label</span><span class="p">]</span>
             <span class="n">global_positions</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y_pred</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-            <span class="n">global_positions</span><span class="p">[</span><span class="n">label_mask</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="n">_compute_positions</span><span class="p">(</span><span class="n">y_pred</span><span class="p">[</span><span class="n">label_mask</span><span class="p">],</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span><span class="p">[</span><span class="n">label_mask</span><span class="p">])</span>
+            <span class="n">global_positions</span><span class="p">[</span><span class="n">label_mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">_compute_positions</span><span class="p">(</span>
+                <span class="n">y_pred</span><span class="p">[</span><span class="n">label_mask</span><span class="p">],</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span><span class="p">[</span><span class="n">label_mask</span><span class="p">]</span>
+            <span class="p">)</span>
 
             <span class="k">for</span> <span class="n">indices_in_bin</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_indices</span><span class="p">[</span><span class="n">label</span><span class="p">]:</span>
-                <span class="n">local_pos</span> <span class="o">=</span> <span class="n">_compute_positions</span><span class="p">(</span><span class="n">y_pred</span><span class="p">[</span><span class="n">indices_in_bin</span><span class="p">],</span>
-                                               <span class="n">sample_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span><span class="p">[</span><span class="n">indices_in_bin</span><span class="p">])</span>
+                <span class="n">local_pos</span> <span class="o">=</span> <span class="n">_compute_positions</span><span class="p">(</span><span class="n">y_pred</span><span class="p">[</span><span class="n">indices_in_bin</span><span class="p">],</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_weight</span><span class="p">[</span><span class="n">indices_in_bin</span><span class="p">])</span>
                 <span class="n">global_pos</span> <span class="o">=</span> <span class="n">global_positions</span><span class="p">[</span><span class="n">indices_in_bin</span><span class="p">]</span>
-                <span class="n">bin_gradient</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">local_pos</span> <span class="o">-</span> <span class="n">global_pos</span><span class="p">)</span> <span class="o">*</span> \
-                               <span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">local_pos</span> <span class="o">-</span> <span class="n">global_pos</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">bin_gradient</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">power</span>
+                    <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">local_pos</span> <span class="o">-</span> <span class="n">global_pos</span><span class="p">)</span>
+                    <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">local_pos</span> <span class="o">-</span> <span class="n">global_pos</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="p">)</span>
                 <span class="n">neg_gradient</span><span class="p">[</span><span class="n">indices_in_bin</span><span class="p">]</span> <span class="o">+=</span> <span class="n">bin_gradient</span>
 
         <span class="n">neg_gradient</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">divided_weight</span>
         <span class="c1"># check that events outside uniform uniform classes are not touched</span>
-        <span class="k">assert</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">neg_gradient</span><span class="p">[</span><span class="o">~</span><span class="n">numpy</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span><span class="p">)]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">neg_gradient</span><span class="p">[</span><span class="o">~</span><span class="n">numpy</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_label</span><span class="p">)]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">neg_gradient</span>
 
-    <span class="k">def</span> <span class="nf">negative_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">negative_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="n">y_signed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_signed</span>
         <span class="n">neg_gradient</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_fl_derivatives</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">fl_coefficient</span>
         <span class="c1"># adding ExpLoss</span>
@@ -928,7 +982,7 @@
 
         <span class="k">return</span> <span class="n">neg_gradient</span>
 
-    <span class="k">def</span> <span class="nf">prepare_new_leaves_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">terminal_regions</span><span class="p">,</span> <span class="n">leaf_values</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_new_leaves_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">terminal_regions</span><span class="p">,</span> <span class="n">leaf_values</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="n">grad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">negative_gradient</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
 
         <span class="n">nom</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">terminal_regions</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">grad</span><span class="p">,</span> <span class="n">minlength</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">leaf_values</span><span class="p">))</span>
@@ -936,10 +990,13 @@
         <span class="k">return</span> <span class="n">nom</span> <span class="o">/</span> <span class="n">denom</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="mf">1e-10</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="BinFlatnessLossFunction"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.BinFlatnessLossFunction">[docs]</a><span class="k">class</span> <span class="nc">BinFlatnessLossFunction</span><span class="p">(</span><span class="n">AbstractFlatnessLossFunction</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">uniform_label</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span> <span class="n">fl_coefficient</span><span class="o">=</span><span class="mf">3.</span><span class="p">,</span>
-                 <span class="n">allow_wrong_signs</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="BinFlatnessLossFunction">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.BinFlatnessLossFunction">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BinFlatnessLossFunction</span><span class="p">(</span><span class="n">AbstractFlatnessLossFunction</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">uniform_label</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">fl_coefficient</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">allow_wrong_signs</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This loss function contains separately penalty for non-flatness and for bad prediction quality.</span>
 <span class="sd">        See [FL]_ for details.</span>
 
@@ -959,32 +1016,48 @@
 <span class="sd">            http://arxiv.org/abs/1410.4140</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span> <span class="o">=</span> <span class="n">n_bins</span>
-        <span class="n">AbstractFlatnessLossFunction</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span>
-                                              <span class="n">uniform_label</span><span class="o">=</span><span class="n">uniform_label</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="n">power</span><span class="p">,</span>
-                                              <span class="n">fl_coefficient</span><span class="o">=</span><span class="n">fl_coefficient</span><span class="p">,</span>
-                                              <span class="n">allow_wrong_signs</span><span class="o">=</span><span class="n">allow_wrong_signs</span><span class="p">)</span>
+        <span class="n">AbstractFlatnessLossFunction</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">uniform_features</span><span class="p">,</span>
+            <span class="n">uniform_label</span><span class="o">=</span><span class="n">uniform_label</span><span class="p">,</span>
+            <span class="n">power</span><span class="o">=</span><span class="n">power</span><span class="p">,</span>
+            <span class="n">fl_coefficient</span><span class="o">=</span><span class="n">fl_coefficient</span><span class="p">,</span>
+            <span class="n">allow_wrong_signs</span><span class="o">=</span><span class="n">allow_wrong_signs</span><span class="p">,</span>
+        <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_compute_groups_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns a list, each element is events&#39; indices in some group.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_groups_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a list, each element is events&#39; indices in some group.&quot;&quot;&quot;</span>
         <span class="n">label_mask</span> <span class="o">=</span> <span class="n">y</span> <span class="o">==</span> <span class="n">label</span>
         <span class="n">extended_bin_limits</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_features</span><span class="p">:</span>
             <span class="n">f_min</span><span class="p">,</span> <span class="n">f_max</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">var</span><span class="p">][</span><span class="n">label_mask</span><span class="p">]),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">var</span><span class="p">][</span><span class="n">label_mask</span><span class="p">])</span>
             <span class="n">extended_bin_limits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">f_min</span><span class="p">,</span> <span class="n">f_max</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
-        <span class="n">groups_indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">groups_indices</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">shift</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
             <span class="n">bin_limits</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">axis_limits</span> <span class="ow">in</span> <span class="n">extended_bin_limits</span><span class="p">:</span>
-                <span class="n">bin_limits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">axis_limits</span><span class="p">[</span><span class="mi">1</span> <span class="o">+</span> <span class="n">shift</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
+                <span class="n">bin_limits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">axis_limits</span><span class="p">[</span><span class="mi">1</span> <span class="o">+</span> <span class="n">shift</span> <span class="p">:</span> <span class="o">-</span><span class="mi">1</span> <span class="p">:</span> <span class="mi">2</span><span class="p">])</span>
             <span class="n">bin_indices</span> <span class="o">=</span> <span class="n">compute_bin_indices</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_features</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">bin_limits</span><span class="o">=</span><span class="n">bin_limits</span><span class="p">)</span>
             <span class="n">groups_indices</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="n">bin_to_group_indices</span><span class="p">(</span><span class="n">bin_indices</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">label_mask</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">groups_indices</span></div>
 
 
-<div class="viewcode-block" id="KnnFlatnessLossFunction"><a class="viewcode-back" href="../../losses.html#hep_ml.losses.KnnFlatnessLossFunction">[docs]</a><span class="k">class</span> <span class="nc">KnnFlatnessLossFunction</span><span class="p">(</span><span class="n">AbstractFlatnessLossFunction</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span> <span class="n">uniform_label</span><span class="p">,</span> <span class="n">n_neighbours</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span> <span class="n">fl_coefficient</span><span class="o">=</span><span class="mf">3.</span><span class="p">,</span>
-                 <span class="n">max_groups</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">allow_wrong_signs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">):</span>
-        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="KnnFlatnessLossFunction">
+<a class="viewcode-back" href="../../losses.html#hep_ml.gradientboosting.KnnFlatnessLossFunction">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">KnnFlatnessLossFunction</span><span class="p">(</span><span class="n">AbstractFlatnessLossFunction</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">uniform_features</span><span class="p">,</span>
+        <span class="n">uniform_label</span><span class="p">,</span>
+        <span class="n">n_neighbours</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">power</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span>
+        <span class="n">fl_coefficient</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span>
+        <span class="n">max_groups</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
+        <span class="n">allow_wrong_signs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This loss function contains separately penalty for non-flatness and for bad prediction quality.</span>
 <span class="sd">        See [FL]_ for details.</span>
 
@@ -1009,66 +1082,57 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">n_neighbours</span> <span class="o">=</span> <span class="n">n_neighbours</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_groups</span> <span class="o">=</span> <span class="n">max_groups</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
-        <span class="n">AbstractFlatnessLossFunction</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniform_features</span><span class="p">,</span>
-                                              <span class="n">uniform_label</span><span class="o">=</span><span class="n">uniform_label</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="n">power</span><span class="p">,</span>
-                                              <span class="n">fl_coefficient</span><span class="o">=</span><span class="n">fl_coefficient</span><span class="p">,</span>
-                                              <span class="n">allow_wrong_signs</span><span class="o">=</span><span class="n">allow_wrong_signs</span><span class="p">)</span>
+        <span class="n">AbstractFlatnessLossFunction</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">uniform_features</span><span class="p">,</span>
+            <span class="n">uniform_label</span><span class="o">=</span><span class="n">uniform_label</span><span class="p">,</span>
+            <span class="n">power</span><span class="o">=</span><span class="n">power</span><span class="p">,</span>
+            <span class="n">fl_coefficient</span><span class="o">=</span><span class="n">fl_coefficient</span><span class="p">,</span>
+            <span class="n">allow_wrong_signs</span><span class="o">=</span><span class="n">allow_wrong_signs</span><span class="p">,</span>
+        <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_compute_groups_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_groups_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="n">y</span> <span class="o">==</span> <span class="n">label</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>
-        <span class="n">knn_indices</span> <span class="o">=</span> <span class="n">compute_knn_indices_of_signal</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">uniform_features</span><span class="p">],</span> <span class="n">mask</span><span class="p">,</span>
-                                                    <span class="n">n_neighbours</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_neighbours</span><span class="p">)[</span><span class="n">mask</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">knn_indices</span> <span class="o">=</span> <span class="n">compute_knn_indices_of_signal</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">uniform_features</span><span class="p">],</span> <span class="n">mask</span><span class="p">,</span> <span class="n">n_neighbours</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_neighbours</span><span class="p">)[</span>
+            <span class="n">mask</span><span class="p">,</span> <span class="p">:</span>
+        <span class="p">]</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">knn_indices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_groups</span><span class="p">:</span>
             <span class="n">selected_group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">knn_indices</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_groups</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">knn_indices</span><span class="p">[</span><span class="n">selected_group</span><span class="p">,</span> <span class="p">:]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">knn_indices</span></div>
 
+
+
 <span class="c1"># endregion</span>
 </pre></div>
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2015-2017, Yandex; Alex Rogozhnikov and contributors.
-
-    </p>
+    <p>&#169; Copyright 2015-2017, Yandex; Alex Rogozhnikov and contributors.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

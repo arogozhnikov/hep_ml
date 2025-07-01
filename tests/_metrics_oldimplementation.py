@@ -189,25 +189,21 @@ def group_based_cvm(y_pred, mask, sample_weight, groups_indices):
 
 # region Uniformity metrics (old version, reference code for comparison)
 
-
-"""
-Comments on the old interface:
-
-Mask is needed to show the events of needed class,
-for instance, if we want to compute the uniformity on signal predictions,
-mask should be True on signal events and False on the others.
-
-y_score in usually predicted probabilities of event being a needed class.
-
-So, if I want to compute efficiency on signal, I put:
-  mask = y == 1
-  y_pred = clf.predict_proba[:, 1]
-
-If want to do it for bck:
-  mask = y == 0
-  y_pred = clf.predict_proba[:, 0]
-
-"""
+# Comments on the old interface:
+#
+# Mask is needed to show the events of needed class,
+# for instance, if we want to compute the uniformity on signal predictions,
+# mask should be True on signal events and False on the others.
+#
+# y_score in usually predicted probabilities of event being a needed class.
+#
+# So, if I want to compute efficiency on signal, I put:
+#   mask = y == 1
+#   y_pred = clf.predict_proba[:, 1]
+#
+# If want to do it for bck:
+#   mask = y == 0
+#   y_pred = clf.predict_proba[:, 0]
 
 
 def sde(y, proba, X, uniform_features, sample_weight=None, label=1, knn=30):

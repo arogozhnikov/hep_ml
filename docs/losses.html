@@ -1,107 +1,133 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Losses for Gradient Boosting &mdash; hep_ml 0.7.0 documentation</title>
-  
+  <title>Losses for Gradient Boosting &mdash; hep_ml 0.7.4.dev5+gba709f3.d20250617 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
-    
+      <script src="_static/documentation_options.js?v=a931b840"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="uBoost" href="uboost.html" />
     <link rel="prev" title="Gradient boosting" href="gb.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
 
           
-            <a href="index.html" class="icon icon-home"> hep_ml
           
-
-          
+          <a href="index.html" class="icon icon-home">
+            hep_ml
           </a>
-
-          
-            
-            
-              <div class="version">
-                0.7.0
-              </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="index.html">hep_ml documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gb.html">Gradient boosting</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Losses for Gradient Boosting</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hep_ml.losses.AbstractLossFunction"><code class="docutils literal notranslate"><span class="pre">AbstractLossFunction</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.AbstractLossFunction.compute_optimal_step"><code class="docutils literal notranslate"><span class="pre">AbstractLossFunction.compute_optimal_step()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.AbstractLossFunction.fit"><code class="docutils literal notranslate"><span class="pre">AbstractLossFunction.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.AbstractLossFunction.prepare_new_leaves_values"><code class="docutils literal notranslate"><span class="pre">AbstractLossFunction.prepare_new_leaves_values()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.AbstractLossFunction.prepare_tree_params"><code class="docutils literal notranslate"><span class="pre">AbstractLossFunction.prepare_tree_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.AbstractLossFunction.set_fit_request"><code class="docutils literal notranslate"><span class="pre">AbstractLossFunction.set_fit_request()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#hep_ml.losses.AdaLossFunction"><code class="docutils literal notranslate"><span class="pre">AdaLossFunction</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.AdaLossFunction.fit"><code class="docutils literal notranslate"><span class="pre">AdaLossFunction.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.AdaLossFunction.hessian"><code class="docutils literal notranslate"><span class="pre">AdaLossFunction.hessian()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.AdaLossFunction.negative_gradient"><code class="docutils literal notranslate"><span class="pre">AdaLossFunction.negative_gradient()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.AdaLossFunction.prepare_tree_params"><code class="docutils literal notranslate"><span class="pre">AdaLossFunction.prepare_tree_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.AdaLossFunction.set_fit_request"><code class="docutils literal notranslate"><span class="pre">AdaLossFunction.set_fit_request()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#hep_ml.losses.BinFlatnessLossFunction"><code class="docutils literal notranslate"><span class="pre">BinFlatnessLossFunction</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.BinFlatnessLossFunction.set_fit_request"><code class="docutils literal notranslate"><span class="pre">BinFlatnessLossFunction.set_fit_request()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#hep_ml.losses.CompositeLossFunction"><code class="docutils literal notranslate"><span class="pre">CompositeLossFunction</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.CompositeLossFunction.fit"><code class="docutils literal notranslate"><span class="pre">CompositeLossFunction.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.CompositeLossFunction.hessian"><code class="docutils literal notranslate"><span class="pre">CompositeLossFunction.hessian()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.CompositeLossFunction.negative_gradient"><code class="docutils literal notranslate"><span class="pre">CompositeLossFunction.negative_gradient()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.CompositeLossFunction.set_fit_request"><code class="docutils literal notranslate"><span class="pre">CompositeLossFunction.set_fit_request()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#hep_ml.losses.KnnAdaLossFunction"><code class="docutils literal notranslate"><span class="pre">KnnAdaLossFunction</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.KnnAdaLossFunction.compute_parameters"><code class="docutils literal notranslate"><span class="pre">KnnAdaLossFunction.compute_parameters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.KnnAdaLossFunction.set_fit_request"><code class="docutils literal notranslate"><span class="pre">KnnAdaLossFunction.set_fit_request()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#hep_ml.losses.KnnFlatnessLossFunction"><code class="docutils literal notranslate"><span class="pre">KnnFlatnessLossFunction</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.KnnFlatnessLossFunction.set_fit_request"><code class="docutils literal notranslate"><span class="pre">KnnFlatnessLossFunction.set_fit_request()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#hep_ml.losses.LogLossFunction"><code class="docutils literal notranslate"><span class="pre">LogLossFunction</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.LogLossFunction.fit"><code class="docutils literal notranslate"><span class="pre">LogLossFunction.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.LogLossFunction.hessian"><code class="docutils literal notranslate"><span class="pre">LogLossFunction.hessian()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.LogLossFunction.negative_gradient"><code class="docutils literal notranslate"><span class="pre">LogLossFunction.negative_gradient()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.LogLossFunction.prepare_tree_params"><code class="docutils literal notranslate"><span class="pre">LogLossFunction.prepare_tree_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.LogLossFunction.set_fit_request"><code class="docutils literal notranslate"><span class="pre">LogLossFunction.set_fit_request()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#hep_ml.losses.MAELossFunction"><code class="docutils literal notranslate"><span class="pre">MAELossFunction</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.MAELossFunction.compute_optimal_step"><code class="docutils literal notranslate"><span class="pre">MAELossFunction.compute_optimal_step()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.MAELossFunction.fit"><code class="docutils literal notranslate"><span class="pre">MAELossFunction.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.MAELossFunction.negative_gradient"><code class="docutils literal notranslate"><span class="pre">MAELossFunction.negative_gradient()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.MAELossFunction.prepare_new_leaves_values"><code class="docutils literal notranslate"><span class="pre">MAELossFunction.prepare_new_leaves_values()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.MAELossFunction.prepare_tree_params"><code class="docutils literal notranslate"><span class="pre">MAELossFunction.prepare_tree_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.MAELossFunction.set_fit_request"><code class="docutils literal notranslate"><span class="pre">MAELossFunction.set_fit_request()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#hep_ml.losses.MSELossFunction"><code class="docutils literal notranslate"><span class="pre">MSELossFunction</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.MSELossFunction.compute_optimal_step"><code class="docutils literal notranslate"><span class="pre">MSELossFunction.compute_optimal_step()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.MSELossFunction.fit"><code class="docutils literal notranslate"><span class="pre">MSELossFunction.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.MSELossFunction.hessian"><code class="docutils literal notranslate"><span class="pre">MSELossFunction.hessian()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.MSELossFunction.negative_gradient"><code class="docutils literal notranslate"><span class="pre">MSELossFunction.negative_gradient()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.MSELossFunction.prepare_tree_params"><code class="docutils literal notranslate"><span class="pre">MSELossFunction.prepare_tree_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.MSELossFunction.set_fit_request"><code class="docutils literal notranslate"><span class="pre">MSELossFunction.set_fit_request()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#hep_ml.losses.RankBoostLossFunction"><code class="docutils literal notranslate"><span class="pre">RankBoostLossFunction</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.RankBoostLossFunction.fit"><code class="docutils literal notranslate"><span class="pre">RankBoostLossFunction.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.RankBoostLossFunction.hessian"><code class="docutils literal notranslate"><span class="pre">RankBoostLossFunction.hessian()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.RankBoostLossFunction.negative_gradient"><code class="docutils literal notranslate"><span class="pre">RankBoostLossFunction.negative_gradient()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.RankBoostLossFunction.prepare_new_leaves_values"><code class="docutils literal notranslate"><span class="pre">RankBoostLossFunction.prepare_new_leaves_values()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.RankBoostLossFunction.set_fit_request"><code class="docutils literal notranslate"><span class="pre">RankBoostLossFunction.set_fit_request()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#hep_ml.losses.ReweightLossFunction"><code class="docutils literal notranslate"><span class="pre">ReweightLossFunction</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.ReweightLossFunction.fit"><code class="docutils literal notranslate"><span class="pre">ReweightLossFunction.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.ReweightLossFunction.negative_gradient"><code class="docutils literal notranslate"><span class="pre">ReweightLossFunction.negative_gradient()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.ReweightLossFunction.prepare_new_leaves_values"><code class="docutils literal notranslate"><span class="pre">ReweightLossFunction.prepare_new_leaves_values()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.ReweightLossFunction.prepare_tree_params"><code class="docutils literal notranslate"><span class="pre">ReweightLossFunction.prepare_tree_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.losses.ReweightLossFunction.set_fit_request"><code class="docutils literal notranslate"><span class="pre">ReweightLossFunction.set_fit_request()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="uboost.html">uBoost</a></li>
 <li class="toctree-l1"><a class="reference internal" href="metrics.html">Metric functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nnet.html">Neural networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reweight.html">Reweighting algorithms</a></li>
 <li class="toctree-l1"><a class="reference internal" href="speedup.html">Fast predictions</a></li>
@@ -109,73 +135,32 @@
 <li class="toctree-l1"><a class="reference internal" href="notebooks.html">Code Examples</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">hep_ml</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-        
-      <li>Losses for Gradient Boosting</li>
-    
-    
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Losses for Gradient Boosting</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="_sources/losses.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="module-hep_ml.losses">
-<span id="losses-for-gradient-boosting"></span><h1>Losses for Gradient Boosting<a class="headerlink" href="#module-hep_ml.losses" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="module-hep_ml.losses">
+<span id="losses-for-gradient-boosting"></span><h1>Losses for Gradient Boosting<a class="headerlink" href="#module-hep_ml.losses" title="Link to this heading">¶</a></h1>
 <p><strong>hep_ml.losses</strong> contains different loss functions to use in gradient boosting.</p>
 <p>Apart from standard classification losses, <strong>hep_ml</strong> contains losses for uniform classification
 (see <a class="reference internal" href="#hep_ml.losses.BinFlatnessLossFunction" title="hep_ml.losses.BinFlatnessLossFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">BinFlatnessLossFunction</span></code></a>, <a class="reference internal" href="#hep_ml.losses.KnnFlatnessLossFunction" title="hep_ml.losses.KnnFlatnessLossFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">KnnFlatnessLossFunction</span></code></a>, <a class="reference internal" href="#hep_ml.losses.KnnAdaLossFunction" title="hep_ml.losses.KnnAdaLossFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">KnnAdaLossFunction</span></code></a>)
@@ -184,10 +169,10 @@ and for ranking (see <a class="reference internal" href="#hep_ml.losses.RankBoos
 <p>Loss functions inside <strong>hep_ml</strong> are stateful estimators and require initial fitting,
 which is done automatically inside gradient boosting.</p>
 <p>All loss function should be derived from AbstractLossFunction and implement this interface.</p>
-<div class="section" id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h2>
 <p>Training gradient boosting, optimizing LogLoss and using all features</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hep_ml.gradientboosting</span> <span class="kn">import</span> <span class="n">UGradientBoostingClassifier</span><span class="p">,</span> <span class="n">LogLossFunction</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">hep_ml.gradientboosting</span><span class="w"> </span><span class="kn">import</span> <span class="n">UGradientBoostingClassifier</span><span class="p">,</span> <span class="n">LogLossFunction</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span> <span class="o">=</span> <span class="n">UGradientBoostingClassifier</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">LogLossFunction</span><span class="p">(),</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
 </pre></div>
@@ -207,10 +192,11 @@ which is done automatically inside gradient boosting.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">classifier</span> <span class="o">=</span> <span class="n">UGradientBoostingClassifier</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
 <dl class="py class">
 <dt class="sig sig-object py" id="hep_ml.losses.AbstractLossFunction">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hep_ml.losses.</span></span><span class="sig-name descname"><span class="pre">AbstractLossFunction</span></span><a class="reference internal" href="_modules/hep_ml/losses.html#AbstractLossFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.AbstractLossFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.base.BaseEstimator</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hep_ml.losses.</span></span><span class="sig-name descname"><span class="pre">AbstractLossFunction</span></span><a class="reference internal" href="_modules/hep_ml/losses.html#AbstractLossFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.AbstractLossFunction" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code></p>
 <p>This is base class for loss functions used in <cite>hep_ml</cite>.
 Main differences compared to <cite>scikit-learn</cite> loss functions:</p>
 <ol class="arabic simple">
@@ -221,14 +207,14 @@ Main differences compared to <cite>scikit-learn</cite> loss functions:</p>
 </ol>
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.AbstractLossFunction.compute_optimal_step">
-<span class="sig-name descname"><span class="pre">compute_optimal_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#AbstractLossFunction.compute_optimal_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.AbstractLossFunction.compute_optimal_step" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">compute_optimal_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#AbstractLossFunction.compute_optimal_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.AbstractLossFunction.compute_optimal_step" title="Link to this definition">¶</a></dt>
 <dd><p>Compute optimal global step. This method is typically used to make optimal step
 before fitting trees to reduce variance.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>y_pred</strong> – initial predictions, numpy.array of shape [n_samples]</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>
 </dd>
 </dl>
@@ -236,24 +222,24 @@ before fitting trees to reduce variance.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.AbstractLossFunction.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#AbstractLossFunction.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.AbstractLossFunction.fit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#AbstractLossFunction.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.AbstractLossFunction.fit" title="Link to this definition">¶</a></dt>
 <dd><p>This method is optional, it is called before all the others.
 Heavy preprocessing should be done here.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.AbstractLossFunction.prepare_new_leaves_values">
-<span class="sig-name descname"><span class="pre">prepare_new_leaves_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">terminal_regions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leaf_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#AbstractLossFunction.prepare_new_leaves_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.AbstractLossFunction.prepare_new_leaves_values" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">prepare_new_leaves_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">terminal_regions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leaf_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#AbstractLossFunction.prepare_new_leaves_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.AbstractLossFunction.prepare_new_leaves_values" title="Link to this definition">¶</a></dt>
 <dd><p>Loss function can prepare better values for leaves by overriding this function</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>terminal_regions</strong> – indices of terminal regions of each event.</p></li>
 <li><p><strong>leaf_values</strong> – numpy.array, current mapping of leaf indices to prediction values.</p></li>
 <li><p><strong>y_pred</strong> – predictions before adding new tree.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>numpy.array with new prediction values for all leaves.</p>
 </dd>
 </dl>
@@ -261,42 +247,85 @@ Heavy preprocessing should be done here.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.AbstractLossFunction.prepare_tree_params">
-<span class="sig-name descname"><span class="pre">prepare_tree_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#AbstractLossFunction.prepare_tree_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.AbstractLossFunction.prepare_tree_params" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">prepare_tree_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#AbstractLossFunction.prepare_tree_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.AbstractLossFunction.prepare_tree_params" title="Link to this definition">¶</a></dt>
 <dd><p>Prepares parameters for regression tree that minimizes MSE</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>y_pred</strong> – contains predictions for all the events passed to <cite>fit</cite> method,
 moreover, the order should be the same</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>tuple (tree_target, tree_weight) with target and weight to be used in decision tree</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hep_ml.losses.AbstractLossFunction.set_fit_request">
+<span class="sig-name descname"><span class="pre">set_fit_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#hep_ml.losses.AbstractLossFunction" title="hep_ml.losses.AbstractLossFunction"><span class="pre">AbstractLossFunction</span></a></span></span><a class="headerlink" href="#hep_ml.losses.AbstractLossFunction.set_fit_request" title="Link to this definition">¶</a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">fit</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>sample_weight<span class="classifier">str, True, False, or None,                     default=sklearn.utils.metadata_routing.UNCHANGED</span></dt><dd><p>Metadata routing for <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>self<span class="classifier">object</span></dt><dd><p>The updated object.</p>
+</dd>
+</dl>
+</section>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="hep_ml.losses.AdaLossFunction">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hep_ml.losses.</span></span><span class="sig-name descname"><span class="pre">AdaLossFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regularization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#AdaLossFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.AdaLossFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.losses.HessianLossFunction</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hep_ml.losses.</span></span><span class="sig-name descname"><span class="pre">AdaLossFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regularization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#AdaLossFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.AdaLossFunction" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">HessianLossFunction</span></code></p>
 <p>AdaLossFunction is the same as Exponential Loss Function (aka exploss)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>regularization</strong> – float, penalty for leaves with few events,
 corresponds roughly to the number of added events of both classes to each leaf.</p>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.AdaLossFunction.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#AdaLossFunction.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.AdaLossFunction.fit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#AdaLossFunction.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.AdaLossFunction.fit" title="Link to this definition">¶</a></dt>
 <dd><p>This method is optional, it is called before all the others.
 Heavy preprocessing should be done here.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.AdaLossFunction.hessian">
-<span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#AdaLossFunction.hessian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.AdaLossFunction.hessian" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#AdaLossFunction.hessian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.AdaLossFunction.hessian" title="Link to this definition">¶</a></dt>
 <dd><p>Returns diagonal of hessian matrix.
 :param y_pred: numpy.array of shape [n_samples] with events passed in the same order as in <cite>fit</cite>.
 :return: numpy.array of shape [n_sampels] with second derivatives with respect to each prediction.</p>
@@ -304,39 +333,82 @@ Heavy preprocessing should be done here.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.AdaLossFunction.negative_gradient">
-<span class="sig-name descname"><span class="pre">negative_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#AdaLossFunction.negative_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.AdaLossFunction.negative_gradient" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">negative_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#AdaLossFunction.negative_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.AdaLossFunction.negative_gradient" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.AdaLossFunction.prepare_tree_params">
-<span class="sig-name descname"><span class="pre">prepare_tree_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#AdaLossFunction.prepare_tree_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.AdaLossFunction.prepare_tree_params" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">prepare_tree_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#AdaLossFunction.prepare_tree_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.AdaLossFunction.prepare_tree_params" title="Link to this definition">¶</a></dt>
 <dd><p>Prepares parameters for regression tree that minimizes MSE</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>y_pred</strong> – contains predictions for all the events passed to <cite>fit</cite> method,
 moreover, the order should be the same</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>tuple (tree_target, tree_weight) with target and weight to be used in decision tree</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hep_ml.losses.AdaLossFunction.set_fit_request">
+<span class="sig-name descname"><span class="pre">set_fit_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#hep_ml.losses.AdaLossFunction" title="hep_ml.losses.AdaLossFunction"><span class="pre">AdaLossFunction</span></a></span></span><a class="headerlink" href="#hep_ml.losses.AdaLossFunction.set_fit_request" title="Link to this definition">¶</a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">fit</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<section id="id1">
+<h2>Parameters<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>sample_weight<span class="classifier">str, True, False, or None,                     default=sklearn.utils.metadata_routing.UNCHANGED</span></dt><dd><p>Metadata routing for <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p>
+</dd>
+</dl>
+</section>
+<section id="id2">
+<h2>Returns<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>self<span class="classifier">object</span></dt><dd><p>The updated object.</p>
+</dd>
+</dl>
+</section>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="hep_ml.losses.BinFlatnessLossFunction">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hep_ml.losses.</span></span><span class="sig-name descname"><span class="pre">BinFlatnessLossFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uniform_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniform_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">power</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fl_coefficient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_wrong_signs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#BinFlatnessLossFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.BinFlatnessLossFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.losses.AbstractFlatnessLossFunction</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hep_ml.losses.</span></span><span class="sig-name descname"><span class="pre">BinFlatnessLossFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uniform_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniform_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">power</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fl_coefficient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_wrong_signs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#BinFlatnessLossFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.BinFlatnessLossFunction" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractFlatnessLossFunction</span></code></p>
 <p>This loss function contains separately penalty for non-flatness and for bad prediction quality.
-See <a class="reference internal" href="#id4" id="id1"><span>[FL]</span></a> for details.</p>
+See <a class="reference internal" href="#id12" id="id3"><span>[FL]</span></a> for details.</p>
 <p><span class="math notranslate nohighlight">\(\text{loss} =\text{ExpLoss} + c \times \text{FlatnessLoss}\)</span></p>
 <p>FlatnessLoss computed using binning of uniform variables</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>uniform_features</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – names of features, along which we want to obtain uniformity of predictions</p></li>
-<li><p><strong>uniform_label</strong> (<em>int|list</em><em>[</em><em>int</em><em>]</em>) – the label(s) of classes for which uniformity is desired</p></li>
+<li><p><strong>uniform_label</strong> (<em>int</em><em>|</em><em>list</em><em>[</em><em>int</em><em>]</em>) – the label(s) of classes for which uniformity is desired</p></li>
 <li><p><strong>n_bins</strong> (<em>int</em>) – number of bins along each variable</p></li>
 <li><p><strong>power</strong> (<em>float</em>) – the loss contains the difference <span class="math notranslate nohighlight">\(| F - F_bin |^p\)</span>, where p is power</p></li>
 <li><p><strong>fl_coefficient</strong> (<em>float</em>) – multiplier for flatness_loss. Controls the tradeoff of quality vs uniformity.</p></li>
@@ -345,36 +417,80 @@ See <a class="reference internal" href="#id4" id="id1"><span>[FL]</span></a> for
 </ul>
 </dd>
 </dl>
-<dl class="citation">
-<dt class="label" id="fl"><span class="brackets">FL</span></dt>
-<dd><p>A. Rogozhnikov et al, New approaches for boosting to uniformity
+<div role="list" class="citation-list">
+<div class="citation" id="fl" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>FL<span class="fn-bracket">]</span></span>
+<p>A. Rogozhnikov et al, New approaches for boosting to uniformity
 <a class="reference external" href="http://arxiv.org/abs/1410.4140">http://arxiv.org/abs/1410.4140</a></p>
+</div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="hep_ml.losses.BinFlatnessLossFunction.set_fit_request">
+<span class="sig-name descname"><span class="pre">set_fit_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#hep_ml.losses.BinFlatnessLossFunction" title="hep_ml.losses.BinFlatnessLossFunction"><span class="pre">BinFlatnessLossFunction</span></a></span></span><a class="headerlink" href="#hep_ml.losses.BinFlatnessLossFunction.set_fit_request" title="Link to this definition">¶</a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">fit</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<section id="id4">
+<h2>Parameters<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>sample_weight<span class="classifier">str, True, False, or None,                     default=sklearn.utils.metadata_routing.UNCHANGED</span></dt><dd><p>Metadata routing for <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p>
 </dd>
 </dl>
+</section>
+<section id="id5">
+<h2>Returns<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>self<span class="classifier">object</span></dt><dd><p>The updated object.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="hep_ml.losses.CompositeLossFunction">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hep_ml.losses.</span></span><span class="sig-name descname"><span class="pre">CompositeLossFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regularization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#CompositeLossFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.CompositeLossFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.losses.HessianLossFunction</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hep_ml.losses.</span></span><span class="sig-name descname"><span class="pre">CompositeLossFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regularization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#CompositeLossFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.CompositeLossFunction" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">HessianLossFunction</span></code></p>
 <p>Composite loss function is defined as exploss for backgorund events and logloss for signal with proper constants.</p>
 <p>Such kind of loss functions is very useful to optimize AMS or in situations where very clean signal is expected.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>regularization</strong> – float, penalty for leaves with few events,
 corresponds roughly to the number of added events of both classes to each leaf.</p>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.CompositeLossFunction.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#CompositeLossFunction.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.CompositeLossFunction.fit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#CompositeLossFunction.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.CompositeLossFunction.fit" title="Link to this definition">¶</a></dt>
 <dd><p>This method is optional, it is called before all the others.
 Heavy preprocessing should be done here.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.CompositeLossFunction.hessian">
-<span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#CompositeLossFunction.hessian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.CompositeLossFunction.hessian" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#CompositeLossFunction.hessian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.CompositeLossFunction.hessian" title="Link to this definition">¶</a></dt>
 <dd><p>Returns diagonal of hessian matrix.
 :param y_pred: numpy.array of shape [n_samples] with events passed in the same order as in <cite>fit</cite>.
 :return: numpy.array of shape [n_sampels] with second derivatives with respect to each prediction.</p>
@@ -382,56 +498,143 @@ Heavy preprocessing should be done here.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.CompositeLossFunction.negative_gradient">
-<span class="sig-name descname"><span class="pre">negative_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#CompositeLossFunction.negative_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.CompositeLossFunction.negative_gradient" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">negative_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#CompositeLossFunction.negative_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.CompositeLossFunction.negative_gradient" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hep_ml.losses.CompositeLossFunction.set_fit_request">
+<span class="sig-name descname"><span class="pre">set_fit_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#hep_ml.losses.CompositeLossFunction" title="hep_ml.losses.CompositeLossFunction"><span class="pre">CompositeLossFunction</span></a></span></span><a class="headerlink" href="#hep_ml.losses.CompositeLossFunction.set_fit_request" title="Link to this definition">¶</a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">fit</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<section id="id6">
+<h2>Parameters<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>sample_weight<span class="classifier">str, True, False, or None,                     default=sklearn.utils.metadata_routing.UNCHANGED</span></dt><dd><p>Metadata routing for <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p>
+</dd>
+</dl>
+</section>
+<section id="id7">
+<h2>Returns<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>self<span class="classifier">object</span></dt><dd><p>The updated object.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="hep_ml.losses.KnnAdaLossFunction">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hep_ml.losses.</span></span><span class="sig-name descname"><span class="pre">KnnAdaLossFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uniform_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniform_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">knn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#KnnAdaLossFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.KnnAdaLossFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.losses.AbstractMatrixLossFunction</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hep_ml.losses.</span></span><span class="sig-name descname"><span class="pre">KnnAdaLossFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uniform_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniform_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">knn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#KnnAdaLossFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.KnnAdaLossFunction" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractMatrixLossFunction</span></code></p>
 <p>Modification of AdaLoss to achieve uniformity of predictions</p>
 <p><span class="math notranslate nohighlight">\(\text{loss} = \sum_i w_i * exp(- \sum_j a_{ij} y_j score_j)\)</span></p>
 <p><cite>A</cite> matrix is square, each row corresponds to a single event in train dataset, in each row we put ones
 to the closest neighbours if this event from uniform class.
-See <a class="reference internal" href="#bu" id="id2"><span>[BU]</span></a> for details.</p>
+See <a class="reference internal" href="#bu" id="id8"><span>[BU]</span></a> for details.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>uniform_features</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – the features, along which uniformity is desired</p></li>
-<li><p><strong>uniform_label</strong> (<em>int|list</em><em>[</em><em>int</em><em>]</em>) – the label (labels) of ‘uniform classes’</p></li>
+<li><p><strong>uniform_label</strong> (<em>int</em><em>|</em><em>list</em><em>[</em><em>int</em><em>]</em>) – the label (labels) of ‘uniform classes’</p></li>
 <li><p><strong>knn</strong> (<em>int</em>) – the number of nonzero elements in the row, corresponding to event in ‘uniform class’</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="citation">
-<dt class="label" id="bu"><span class="brackets"><a class="fn-backref" href="#id2">BU</a></span></dt>
-<dd><p>A. Rogozhnikov et al, New approaches for boosting to uniformity
+<div role="list" class="citation-list">
+<div class="citation" id="bu" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">BU</a><span class="fn-bracket">]</span></span>
+<p>A. Rogozhnikov et al, New approaches for boosting to uniformity
 <a class="reference external" href="http://arxiv.org/abs/1410.4140">http://arxiv.org/abs/1410.4140</a></p>
-</dd>
-</dl>
+</div>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.KnnAdaLossFunction.compute_parameters">
-<span class="sig-name descname"><span class="pre">compute_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainX</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trainY</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trainW</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#KnnAdaLossFunction.compute_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.KnnAdaLossFunction.compute_parameters" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">compute_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainX</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trainY</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trainW</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#KnnAdaLossFunction.compute_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.KnnAdaLossFunction.compute_parameters" title="Link to this definition">¶</a></dt>
 <dd><p>This method should be overloaded in descendant, and should return A, w (matrix and vector)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hep_ml.losses.KnnAdaLossFunction.set_fit_request">
+<span class="sig-name descname"><span class="pre">set_fit_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#hep_ml.losses.KnnAdaLossFunction" title="hep_ml.losses.KnnAdaLossFunction"><span class="pre">KnnAdaLossFunction</span></a></span></span><a class="headerlink" href="#hep_ml.losses.KnnAdaLossFunction.set_fit_request" title="Link to this definition">¶</a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">fit</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<section id="id9">
+<h2>Parameters<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>sample_weight<span class="classifier">str, True, False, or None,                     default=sklearn.utils.metadata_routing.UNCHANGED</span></dt><dd><p>Metadata routing for <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p>
+</dd>
+</dl>
+</section>
+<section id="id10">
+<h2>Returns<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>self<span class="classifier">object</span></dt><dd><p>The updated object.</p>
+</dd>
+</dl>
+</section>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="hep_ml.losses.KnnFlatnessLossFunction">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hep_ml.losses.</span></span><span class="sig-name descname"><span class="pre">KnnFlatnessLossFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uniform_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniform_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_neighbours</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">power</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fl_coefficient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_wrong_signs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#KnnFlatnessLossFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.KnnFlatnessLossFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.losses.AbstractFlatnessLossFunction</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hep_ml.losses.</span></span><span class="sig-name descname"><span class="pre">KnnFlatnessLossFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uniform_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniform_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_neighbours</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">power</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fl_coefficient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_wrong_signs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#KnnFlatnessLossFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.KnnFlatnessLossFunction" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractFlatnessLossFunction</span></code></p>
 <p>This loss function contains separately penalty for non-flatness and for bad prediction quality.
-See <a class="reference internal" href="#id4" id="id3"><span>[FL]</span></a> for details.</p>
+See <a class="reference internal" href="#id12" id="id11"><span>[FL]</span></a> for details.</p>
 <p><span class="math notranslate nohighlight">\(\text{loss} = \text{ExpLoss} + c \times \text{FlatnessLoss}\)</span></p>
 <p>FlatnessLoss computed using nearest neighbors in space of uniform features</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>uniform_features</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – names of features, along which we want to obtain uniformity of predictions</p></li>
-<li><p><strong>uniform_label</strong> (<em>int|list</em><em>[</em><em>int</em><em>]</em>) – the label(s) of classes for which uniformity is desired</p></li>
+<li><p><strong>uniform_label</strong> (<em>int</em><em>|</em><em>list</em><em>[</em><em>int</em><em>]</em>) – the label(s) of classes for which uniformity is desired</p></li>
 <li><p><strong>n_neighbours</strong> (<em>int</em>) – number of neighbors used in flatness loss</p></li>
 <li><p><strong>power</strong> (<em>float</em>) – the loss contains the difference <span class="math notranslate nohighlight">\(| F - F_bin |^p\)</span>, where p is power</p></li>
 <li><p><strong>fl_coefficient</strong> (<em>float</em>) – multiplier for flatness_loss. Controls the tradeoff of quality vs uniformity.</p></li>
@@ -442,36 +645,80 @@ we randomly pick this number of points with their members.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="citation">
-<dt class="label" id="id4"><span class="brackets">FL</span></dt>
-<dd><p>A. Rogozhnikov et al, New approaches for boosting to uniformity
+<div role="list" class="citation-list">
+<div class="citation" id="id12" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>FL<span class="fn-bracket">]</span></span>
+<p>A. Rogozhnikov et al, New approaches for boosting to uniformity
 <a class="reference external" href="http://arxiv.org/abs/1410.4140">http://arxiv.org/abs/1410.4140</a></p>
+</div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="hep_ml.losses.KnnFlatnessLossFunction.set_fit_request">
+<span class="sig-name descname"><span class="pre">set_fit_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#hep_ml.losses.KnnFlatnessLossFunction" title="hep_ml.losses.KnnFlatnessLossFunction"><span class="pre">KnnFlatnessLossFunction</span></a></span></span><a class="headerlink" href="#hep_ml.losses.KnnFlatnessLossFunction.set_fit_request" title="Link to this definition">¶</a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">fit</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<section id="id13">
+<h2>Parameters<a class="headerlink" href="#id13" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>sample_weight<span class="classifier">str, True, False, or None,                     default=sklearn.utils.metadata_routing.UNCHANGED</span></dt><dd><p>Metadata routing for <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p>
 </dd>
 </dl>
+</section>
+<section id="id14">
+<h2>Returns<a class="headerlink" href="#id14" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>self<span class="classifier">object</span></dt><dd><p>The updated object.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="hep_ml.losses.LogLossFunction">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hep_ml.losses.</span></span><span class="sig-name descname"><span class="pre">LogLossFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regularization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#LogLossFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.LogLossFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.losses.HessianLossFunction</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hep_ml.losses.</span></span><span class="sig-name descname"><span class="pre">LogLossFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regularization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#LogLossFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.LogLossFunction" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">HessianLossFunction</span></code></p>
 <p>Logistic loss function (logloss), aka binomial deviance, aka cross-entropy,
 aka log-likelihood loss.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>regularization</strong> – float, penalty for leaves with few events,
 corresponds roughly to the number of added events of both classes to each leaf.</p>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.LogLossFunction.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#LogLossFunction.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.LogLossFunction.fit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#LogLossFunction.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.LogLossFunction.fit" title="Link to this definition">¶</a></dt>
 <dd><p>This method is optional, it is called before all the others.
 Heavy preprocessing should be done here.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.LogLossFunction.hessian">
-<span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#LogLossFunction.hessian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.LogLossFunction.hessian" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#LogLossFunction.hessian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.LogLossFunction.hessian" title="Link to this definition">¶</a></dt>
 <dd><p>Returns diagonal of hessian matrix.
 :param y_pred: numpy.array of shape [n_samples] with events passed in the same order as in <cite>fit</cite>.
 :return: numpy.array of shape [n_sampels] with second derivatives with respect to each prediction.</p>
@@ -479,42 +726,85 @@ Heavy preprocessing should be done here.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.LogLossFunction.negative_gradient">
-<span class="sig-name descname"><span class="pre">negative_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#LogLossFunction.negative_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.LogLossFunction.negative_gradient" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">negative_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#LogLossFunction.negative_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.LogLossFunction.negative_gradient" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.LogLossFunction.prepare_tree_params">
-<span class="sig-name descname"><span class="pre">prepare_tree_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#LogLossFunction.prepare_tree_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.LogLossFunction.prepare_tree_params" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">prepare_tree_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#LogLossFunction.prepare_tree_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.LogLossFunction.prepare_tree_params" title="Link to this definition">¶</a></dt>
 <dd><p>Prepares parameters for regression tree that minimizes MSE</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>y_pred</strong> – contains predictions for all the events passed to <cite>fit</cite> method,
 moreover, the order should be the same</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>tuple (tree_target, tree_weight) with target and weight to be used in decision tree</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hep_ml.losses.LogLossFunction.set_fit_request">
+<span class="sig-name descname"><span class="pre">set_fit_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#hep_ml.losses.LogLossFunction" title="hep_ml.losses.LogLossFunction"><span class="pre">LogLossFunction</span></a></span></span><a class="headerlink" href="#hep_ml.losses.LogLossFunction.set_fit_request" title="Link to this definition">¶</a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">fit</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<section id="id15">
+<h2>Parameters<a class="headerlink" href="#id15" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>sample_weight<span class="classifier">str, True, False, or None,                     default=sklearn.utils.metadata_routing.UNCHANGED</span></dt><dd><p>Metadata routing for <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p>
+</dd>
+</dl>
+</section>
+<section id="id16">
+<h2>Returns<a class="headerlink" href="#id16" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>self<span class="classifier">object</span></dt><dd><p>The updated object.</p>
+</dd>
+</dl>
+</section>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="hep_ml.losses.MAELossFunction">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hep_ml.losses.</span></span><span class="sig-name descname"><span class="pre">MAELossFunction</span></span><a class="reference internal" href="_modules/hep_ml/losses.html#MAELossFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.MAELossFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#hep_ml.losses.AbstractLossFunction" title="hep_ml.losses.AbstractLossFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.losses.AbstractLossFunction</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hep_ml.losses.</span></span><span class="sig-name descname"><span class="pre">MAELossFunction</span></span><a class="reference internal" href="_modules/hep_ml/losses.html#MAELossFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.MAELossFunction" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hep_ml.losses.AbstractLossFunction" title="hep_ml.losses.AbstractLossFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractLossFunction</span></code></a></p>
 <p>Mean absolute error loss function, used for regression.
 <span class="math notranslate nohighlight">\(\text{loss} = \sum_i |y_i - \hat{y}_i|\)</span></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.MAELossFunction.compute_optimal_step">
-<span class="sig-name descname"><span class="pre">compute_optimal_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MAELossFunction.compute_optimal_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.MAELossFunction.compute_optimal_step" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">compute_optimal_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MAELossFunction.compute_optimal_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.MAELossFunction.compute_optimal_step" title="Link to this definition">¶</a></dt>
 <dd><p>Compute optimal global step. This method is typically used to make optimal step
 before fitting trees to reduce variance.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>y_pred</strong> – initial predictions, numpy.array of shape [n_samples]</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>
 </dd>
 </dl>
@@ -522,29 +812,29 @@ before fitting trees to reduce variance.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.MAELossFunction.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MAELossFunction.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.MAELossFunction.fit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MAELossFunction.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.MAELossFunction.fit" title="Link to this definition">¶</a></dt>
 <dd><p>This method is optional, it is called before all the others.
 Heavy preprocessing should be done here.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.MAELossFunction.negative_gradient">
-<span class="sig-name descname"><span class="pre">negative_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MAELossFunction.negative_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.MAELossFunction.negative_gradient" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">negative_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MAELossFunction.negative_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.MAELossFunction.negative_gradient" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.MAELossFunction.prepare_new_leaves_values">
-<span class="sig-name descname"><span class="pre">prepare_new_leaves_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">terminal_regions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leaf_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MAELossFunction.prepare_new_leaves_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.MAELossFunction.prepare_new_leaves_values" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">prepare_new_leaves_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">terminal_regions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leaf_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MAELossFunction.prepare_new_leaves_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.MAELossFunction.prepare_new_leaves_values" title="Link to this definition">¶</a></dt>
 <dd><p>Loss function can prepare better values for leaves by overriding this function</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>terminal_regions</strong> – indices of terminal regions of each event.</p></li>
 <li><p><strong>leaf_values</strong> – numpy.array, current mapping of leaf indices to prediction values.</p></li>
 <li><p><strong>y_pred</strong> – predictions before adding new tree.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>numpy.array with new prediction values for all leaves.</p>
 </dd>
 </dl>
@@ -552,36 +842,79 @@ Heavy preprocessing should be done here.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.MAELossFunction.prepare_tree_params">
-<span class="sig-name descname"><span class="pre">prepare_tree_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MAELossFunction.prepare_tree_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.MAELossFunction.prepare_tree_params" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">prepare_tree_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MAELossFunction.prepare_tree_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.MAELossFunction.prepare_tree_params" title="Link to this definition">¶</a></dt>
 <dd><p>Prepares parameters for regression tree that minimizes MSE</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>y_pred</strong> – contains predictions for all the events passed to <cite>fit</cite> method,
 moreover, the order should be the same</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>tuple (tree_target, tree_weight) with target and weight to be used in decision tree</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hep_ml.losses.MAELossFunction.set_fit_request">
+<span class="sig-name descname"><span class="pre">set_fit_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#hep_ml.losses.MAELossFunction" title="hep_ml.losses.MAELossFunction"><span class="pre">MAELossFunction</span></a></span></span><a class="headerlink" href="#hep_ml.losses.MAELossFunction.set_fit_request" title="Link to this definition">¶</a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">fit</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<section id="id17">
+<h2>Parameters<a class="headerlink" href="#id17" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>sample_weight<span class="classifier">str, True, False, or None,                     default=sklearn.utils.metadata_routing.UNCHANGED</span></dt><dd><p>Metadata routing for <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p>
+</dd>
+</dl>
+</section>
+<section id="id18">
+<h2>Returns<a class="headerlink" href="#id18" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>self<span class="classifier">object</span></dt><dd><p>The updated object.</p>
+</dd>
+</dl>
+</section>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="hep_ml.losses.MSELossFunction">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hep_ml.losses.</span></span><span class="sig-name descname"><span class="pre">MSELossFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regularization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MSELossFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.MSELossFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.losses.HessianLossFunction</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hep_ml.losses.</span></span><span class="sig-name descname"><span class="pre">MSELossFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regularization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MSELossFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.MSELossFunction" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">HessianLossFunction</span></code></p>
 <p>Mean squared error loss function, used for regression.
 <span class="math notranslate nohighlight">\(\text{loss} = \sum_i (y_i - \hat{y}_i)^2\)</span></p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>regularization</strong> – float, penalty for leaves with few events,
 corresponds roughly to the number of added events of both classes to each leaf.</p>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.MSELossFunction.compute_optimal_step">
-<span class="sig-name descname"><span class="pre">compute_optimal_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MSELossFunction.compute_optimal_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.MSELossFunction.compute_optimal_step" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">compute_optimal_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MSELossFunction.compute_optimal_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.MSELossFunction.compute_optimal_step" title="Link to this definition">¶</a></dt>
 <dd><p>Optimal step is computed using Newton-Raphson algorithm (10 iterations).
 :param y_pred: predictions (usually, zeros)
 :return: float</p>
@@ -589,14 +922,14 @@ corresponds roughly to the number of added events of both classes to each leaf.<
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.MSELossFunction.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MSELossFunction.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.MSELossFunction.fit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MSELossFunction.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.MSELossFunction.fit" title="Link to this definition">¶</a></dt>
 <dd><p>This method is optional, it is called before all the others.
 Heavy preprocessing should be done here.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.MSELossFunction.hessian">
-<span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MSELossFunction.hessian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.MSELossFunction.hessian" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MSELossFunction.hessian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.MSELossFunction.hessian" title="Link to this definition">¶</a></dt>
 <dd><p>Returns diagonal of hessian matrix.
 :param y_pred: numpy.array of shape [n_samples] with events passed in the same order as in <cite>fit</cite>.
 :return: numpy.array of shape [n_sampels] with second derivatives with respect to each prediction.</p>
@@ -604,31 +937,74 @@ Heavy preprocessing should be done here.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.MSELossFunction.negative_gradient">
-<span class="sig-name descname"><span class="pre">negative_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MSELossFunction.negative_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.MSELossFunction.negative_gradient" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">negative_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MSELossFunction.negative_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.MSELossFunction.negative_gradient" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.MSELossFunction.prepare_tree_params">
-<span class="sig-name descname"><span class="pre">prepare_tree_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MSELossFunction.prepare_tree_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.MSELossFunction.prepare_tree_params" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">prepare_tree_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#MSELossFunction.prepare_tree_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.MSELossFunction.prepare_tree_params" title="Link to this definition">¶</a></dt>
 <dd><p>Prepares parameters for regression tree that minimizes MSE</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>y_pred</strong> – contains predictions for all the events passed to <cite>fit</cite> method,
 moreover, the order should be the same</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>tuple (tree_target, tree_weight) with target and weight to be used in decision tree</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hep_ml.losses.MSELossFunction.set_fit_request">
+<span class="sig-name descname"><span class="pre">set_fit_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#hep_ml.losses.MSELossFunction" title="hep_ml.losses.MSELossFunction"><span class="pre">MSELossFunction</span></a></span></span><a class="headerlink" href="#hep_ml.losses.MSELossFunction.set_fit_request" title="Link to this definition">¶</a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">fit</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<section id="id19">
+<h2>Parameters<a class="headerlink" href="#id19" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>sample_weight<span class="classifier">str, True, False, or None,                     default=sklearn.utils.metadata_routing.UNCHANGED</span></dt><dd><p>Metadata routing for <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p>
+</dd>
+</dl>
+</section>
+<section id="id20">
+<h2>Returns<a class="headerlink" href="#id20" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>self<span class="classifier">object</span></dt><dd><p>The updated object.</p>
+</dd>
+</dl>
+</section>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="hep_ml.losses.RankBoostLossFunction">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hep_ml.losses.</span></span><span class="sig-name descname"><span class="pre">RankBoostLossFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request_column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">penalty_power</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#RankBoostLossFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.RankBoostLossFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.losses.HessianLossFunction</span></code></p>
-<p>RankBoostLossFunction is target of optimization in RankBoost <a class="reference internal" href="#rb" id="id5"><span>[RB]</span></a> algorithm,
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hep_ml.losses.</span></span><span class="sig-name descname"><span class="pre">RankBoostLossFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request_column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">penalty_power</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#RankBoostLossFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.RankBoostLossFunction" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">HessianLossFunction</span></code></p>
+<p>RankBoostLossFunction is target of optimization in RankBoost <a class="reference internal" href="#rb" id="id21"><span>[RB]</span></a> algorithm,
 which was developed for ranking and introduces penalties for wrong order of predictions.</p>
 <p>However, this implementation goes further and there is selection of optimal leaf values based
 on iterative procedure. This implementation also uses matrix decomposition of loss function,
@@ -637,7 +1013,7 @@ which is very effective, when labels are from some very limited set (usually it 
 <p><span class="math notranslate nohighlight">\(w_{ij} = ( \alpha + \beta * [query_i = query_j]) R_{label_i, label_j}\)</span>, where
 <span class="math notranslate nohighlight">\(R_{ij} = 0\)</span> if <span class="math notranslate nohighlight">\(i \leq j\)</span>, else <span class="math notranslate nohighlight">\(R_{ij} = (i - j)^{p}\)</span></p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request_column</strong> (<em>str</em>) – name of column with search query ids. The higher attention is payed
 to samples with same query.</p></li>
@@ -646,23 +1022,24 @@ to samples with same query.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="citation">
-<dt class="label" id="rb"><span class="brackets"><a class="fn-backref" href="#id5">RB</a></span></dt>
-<dd><ol class="upperalpha simple" start="25">
+<div role="list" class="citation-list">
+<div class="citation" id="rb" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id21">RB</a><span class="fn-bracket">]</span></span>
+<ol class="upperalpha simple" start="25">
 <li><p>Freund et al. An Efficient Boosting Algorithm for Combining Preferences</p></li>
 </ol>
-</dd>
-</dl>
+</div>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.RankBoostLossFunction.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#RankBoostLossFunction.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.RankBoostLossFunction.fit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#RankBoostLossFunction.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.RankBoostLossFunction.fit" title="Link to this definition">¶</a></dt>
 <dd><p>This method is optional, it is called before all the others.
 Heavy preprocessing should be done here.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.RankBoostLossFunction.hessian">
-<span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#RankBoostLossFunction.hessian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.RankBoostLossFunction.hessian" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#RankBoostLossFunction.hessian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.RankBoostLossFunction.hessian" title="Link to this definition">¶</a></dt>
 <dd><p>Returns diagonal of hessian matrix.
 :param y_pred: numpy.array of shape [n_samples] with events passed in the same order as in <cite>fit</cite>.
 :return: numpy.array of shape [n_sampels] with second derivatives with respect to each prediction.</p>
@@ -670,23 +1047,66 @@ Heavy preprocessing should be done here.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.RankBoostLossFunction.negative_gradient">
-<span class="sig-name descname"><span class="pre">negative_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#RankBoostLossFunction.negative_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.RankBoostLossFunction.negative_gradient" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">negative_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#RankBoostLossFunction.negative_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.RankBoostLossFunction.negative_gradient" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.RankBoostLossFunction.prepare_new_leaves_values">
-<span class="sig-name descname"><span class="pre">prepare_new_leaves_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">terminal_regions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leaf_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#RankBoostLossFunction.prepare_new_leaves_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.RankBoostLossFunction.prepare_new_leaves_values" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">prepare_new_leaves_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">terminal_regions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leaf_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#RankBoostLossFunction.prepare_new_leaves_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.RankBoostLossFunction.prepare_new_leaves_values" title="Link to this definition">¶</a></dt>
 <dd><p>This expression comes from optimization of second-order approximation of loss function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hep_ml.losses.RankBoostLossFunction.set_fit_request">
+<span class="sig-name descname"><span class="pre">set_fit_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#hep_ml.losses.RankBoostLossFunction" title="hep_ml.losses.RankBoostLossFunction"><span class="pre">RankBoostLossFunction</span></a></span></span><a class="headerlink" href="#hep_ml.losses.RankBoostLossFunction.set_fit_request" title="Link to this definition">¶</a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">fit</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<section id="id22">
+<h2>Parameters<a class="headerlink" href="#id22" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>sample_weight<span class="classifier">str, True, False, or None,                     default=sklearn.utils.metadata_routing.UNCHANGED</span></dt><dd><p>Metadata routing for <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p>
+</dd>
+</dl>
+</section>
+<section id="id23">
+<h2>Returns<a class="headerlink" href="#id23" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>self<span class="classifier">object</span></dt><dd><p>The updated object.</p>
+</dd>
+</dl>
+</section>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="hep_ml.losses.ReweightLossFunction">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hep_ml.losses.</span></span><span class="sig-name descname"><span class="pre">ReweightLossFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regularization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#ReweightLossFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.ReweightLossFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#hep_ml.losses.AbstractLossFunction" title="hep_ml.losses.AbstractLossFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.losses.AbstractLossFunction</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hep_ml.losses.</span></span><span class="sig-name descname"><span class="pre">ReweightLossFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regularization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#ReweightLossFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.ReweightLossFunction" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hep_ml.losses.AbstractLossFunction" title="hep_ml.losses.AbstractLossFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractLossFunction</span></code></a></p>
 <p>Loss function used to reweight distributions. Works inside <a class="reference internal" href="reweight.html#hep_ml.reweight.GBReweighter" title="hep_ml.reweight.GBReweighter"><code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.reweight.GBReweighter</span></code></a>
-See <a class="reference internal" href="#rew" id="id6"><span>[Rew]</span></a> for details.</p>
+See <a class="reference internal" href="#rew" id="id24"><span>[Rew]</span></a> for details.</p>
 <p>Conventions: <span class="math notranslate nohighlight">\(y=0\)</span> - target distribution, <span class="math notranslate nohighlight">\(y=1\)</span> - original distribution.</p>
 <p>Weights after look like:</p>
 <ul class="simple">
@@ -695,40 +1115,41 @@ See <a class="reference internal" href="#rew" id="id6"><span>[Rew]</span></a> fo
 (so predictions for target distribution is ignored)</p></li>
 </ul>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>regularization</strong> (<em>float</em>) – roughly, it’s number of events added in each leaf to prevent overfitting.</p>
 </dd>
 </dl>
-<dl class="citation">
-<dt class="label" id="rew"><span class="brackets"><a class="fn-backref" href="#id6">Rew</a></span></dt>
-<dd><p><a class="reference external" href="http://arogozhnikov.github.io/2015/10/09/gradient-boosted-reweighter.html">http://arogozhnikov.github.io/2015/10/09/gradient-boosted-reweighter.html</a></p>
-</dd>
-</dl>
+<div role="list" class="citation-list">
+<div class="citation" id="rew" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id24">Rew</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="http://arogozhnikov.github.io/2015/10/09/gradient-boosted-reweighter.html">http://arogozhnikov.github.io/2015/10/09/gradient-boosted-reweighter.html</a></p>
+</div>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.ReweightLossFunction.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#ReweightLossFunction.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.ReweightLossFunction.fit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#ReweightLossFunction.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.ReweightLossFunction.fit" title="Link to this definition">¶</a></dt>
 <dd><p>This method is optional, it is called before all the others.
 Heavy preprocessing should be done here.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.ReweightLossFunction.negative_gradient">
-<span class="sig-name descname"><span class="pre">negative_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#ReweightLossFunction.negative_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.ReweightLossFunction.negative_gradient" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">negative_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#ReweightLossFunction.negative_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.ReweightLossFunction.negative_gradient" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.ReweightLossFunction.prepare_new_leaves_values">
-<span class="sig-name descname"><span class="pre">prepare_new_leaves_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">terminal_regions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leaf_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#ReweightLossFunction.prepare_new_leaves_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.ReweightLossFunction.prepare_new_leaves_values" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">prepare_new_leaves_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">terminal_regions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leaf_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#ReweightLossFunction.prepare_new_leaves_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.ReweightLossFunction.prepare_new_leaves_values" title="Link to this definition">¶</a></dt>
 <dd><p>Loss function can prepare better values for leaves by overriding this function</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>terminal_regions</strong> – indices of terminal regions of each event.</p></li>
 <li><p><strong>leaf_values</strong> – numpy.array, current mapping of leaf indices to prediction values.</p></li>
 <li><p><strong>y_pred</strong> – predictions before adding new tree.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>numpy.array with new prediction values for all leaves.</p>
 </dd>
 </dl>
@@ -736,70 +1157,95 @@ Heavy preprocessing should be done here.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.losses.ReweightLossFunction.prepare_tree_params">
-<span class="sig-name descname"><span class="pre">prepare_tree_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#ReweightLossFunction.prepare_tree_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.ReweightLossFunction.prepare_tree_params" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">prepare_tree_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/losses.html#ReweightLossFunction.prepare_tree_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.losses.ReweightLossFunction.prepare_tree_params" title="Link to this definition">¶</a></dt>
 <dd><p>Prepares parameters for regression tree that minimizes MSE</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>y_pred</strong> – contains predictions for all the events passed to <cite>fit</cite> method,
 moreover, the order should be the same</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>tuple (tree_target, tree_weight) with target and weight to be used in decision tree</p>
 </dd>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="hep_ml.losses.ReweightLossFunction.set_fit_request">
+<span class="sig-name descname"><span class="pre">set_fit_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#hep_ml.losses.ReweightLossFunction" title="hep_ml.losses.ReweightLossFunction"><span class="pre">ReweightLossFunction</span></a></span></span><a class="headerlink" href="#hep_ml.losses.ReweightLossFunction.set_fit_request" title="Link to this definition">¶</a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">fit</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<section id="id25">
+<h2>Parameters<a class="headerlink" href="#id25" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>sample_weight<span class="classifier">str, True, False, or None,                     default=sklearn.utils.metadata_routing.UNCHANGED</span></dt><dd><p>Metadata routing for <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p>
+</dd>
+</dl>
+</section>
+<section id="id26">
+<h2>Returns<a class="headerlink" href="#id26" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>self<span class="classifier">object</span></dt><dd><p>The updated object.</p>
+</dd>
+</dl>
+</section>
 </dd></dl>
 
-</div>
-</div>
+</dd></dl>
+
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="uboost.html" class="btn btn-neutral float-right" title="uBoost" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="gb.html" class="btn btn-neutral float-left" title="Gradient boosting" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="uboost.html" class="btn btn-neutral float-right" title="uBoost" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2015-2017, Yandex; Alex Rogozhnikov and contributors.
-
-    </p>
+    <p>&#169; Copyright 2015-2017, Yandex; Alex Rogozhnikov and contributors.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

@@ -19,8 +19,7 @@
   * __uBoost__ optimized implementation inside
   * __UGradientBoosting__ (with different losses, specially __FlatnessLoss__ is of high interest)
 * measures of uniformity (see **hep_ml.metrics**)
-* advanced losses for classification, regression and ranking for __UGradientBoosting__ (see **hep_ml.losses**).  
-* **hep_ml.nnet** - theano-based flexible neural networks 
+* advanced losses for classification, regression and ranking for __UGradientBoosting__ (see **hep_ml.losses**). 
 * **hep_ml.reweight** - reweighting multidimensional distributions <br />
   (_multi_ here means 2, 3, 5 and more dimensions - see GBReweighter!)
 * **hep_ml.splot** - minimalistic sPlot-ting 

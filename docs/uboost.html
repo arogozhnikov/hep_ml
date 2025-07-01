@@ -1,106 +1,75 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>uBoost &mdash; hep_ml 0.7.0 documentation</title>
-  
+  <title>uBoost &mdash; hep_ml 0.7.4.dev5+gba709f3.d20250617 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
-    
+      <script src="_static/documentation_options.js?v=a931b840"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Metric functions" href="metrics.html" />
     <link rel="prev" title="Losses for Gradient Boosting" href="losses.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
 
           
-            <a href="index.html" class="icon icon-home"> hep_ml
           
-
-          
+          <a href="index.html" class="icon icon-home">
+            hep_ml
           </a>
-
-          
-            
-            
-              <div class="version">
-                0.7.0
-              </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="index.html">hep_ml documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gb.html">Gradient boosting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="losses.html">Losses for Gradient Boosting</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">uBoost</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hep_ml.uboost.uBoostBDT"><code class="docutils literal notranslate"><span class="pre">uBoostBDT</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.uboost.uBoostBDT.decision_function"><code class="docutils literal notranslate"><span class="pre">uBoostBDT.decision_function()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.uboost.uBoostBDT.feature_importances_"><code class="docutils literal notranslate"><span class="pre">uBoostBDT.feature_importances_</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.uboost.uBoostBDT.fit"><code class="docutils literal notranslate"><span class="pre">uBoostBDT.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.uboost.uBoostBDT.predict"><code class="docutils literal notranslate"><span class="pre">uBoostBDT.predict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.uboost.uBoostBDT.predict_proba"><code class="docutils literal notranslate"><span class="pre">uBoostBDT.predict_proba()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.uboost.uBoostBDT.set_fit_request"><code class="docutils literal notranslate"><span class="pre">uBoostBDT.set_fit_request()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.uboost.uBoostBDT.set_score_request"><code class="docutils literal notranslate"><span class="pre">uBoostBDT.set_score_request()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.uboost.uBoostBDT.staged_decision_function"><code class="docutils literal notranslate"><span class="pre">uBoostBDT.staged_decision_function()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.uboost.uBoostBDT.staged_predict_proba"><code class="docutils literal notranslate"><span class="pre">uBoostBDT.staged_predict_proba()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#hep_ml.uboost.uBoostClassifier"><code class="docutils literal notranslate"><span class="pre">uBoostClassifier</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.uboost.uBoostClassifier.fit"><code class="docutils literal notranslate"><span class="pre">uBoostClassifier.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.uboost.uBoostClassifier.predict"><code class="docutils literal notranslate"><span class="pre">uBoostClassifier.predict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.uboost.uBoostClassifier.predict_proba"><code class="docutils literal notranslate"><span class="pre">uBoostClassifier.predict_proba()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.uboost.uBoostClassifier.set_fit_request"><code class="docutils literal notranslate"><span class="pre">uBoostClassifier.set_fit_request()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.uboost.uBoostClassifier.set_score_request"><code class="docutils literal notranslate"><span class="pre">uBoostClassifier.set_score_request()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hep_ml.uboost.uBoostClassifier.staged_predict_proba"><code class="docutils literal notranslate"><span class="pre">uBoostClassifier.staged_predict_proba()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="metrics.html">Metric functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nnet.html">Neural networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reweight.html">Reweighting algorithms</a></li>
 <li class="toctree-l1"><a class="reference internal" href="speedup.html">Fast predictions</a></li>
@@ -108,73 +77,32 @@
 <li class="toctree-l1"><a class="reference internal" href="notebooks.html">Code Examples</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">hep_ml</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-        
-      <li>uBoost</li>
-    
-    
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">uBoost</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="_sources/uboost.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="module-hep_ml.uboost">
-<span id="uboost"></span><h1>uBoost<a class="headerlink" href="#module-hep_ml.uboost" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="module-hep_ml.uboost">
+<span id="uboost"></span><h1>uBoost<a class="headerlink" href="#module-hep_ml.uboost" title="Link to this heading">¶</a></h1>
 <p>The module contains an implementation of uBoost algorithm.
 The main goal of <strong>uBoost</strong> is to fight correlation between predictions and some variables (i.e. mass of particle).</p>
 <ul class="simple">
@@ -188,8 +116,8 @@ does automatic weights renormalization and supports SAMME.R modification to use 
 <p>See also: <a class="reference internal" href="losses.html#hep_ml.losses.BinFlatnessLossFunction" title="hep_ml.losses.BinFlatnessLossFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.losses.BinFlatnessLossFunction</span></code></a>, <a class="reference internal" href="losses.html#hep_ml.losses.KnnFlatnessLossFunction" title="hep_ml.losses.KnnFlatnessLossFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.losses.KnnFlatnessLossFunction</span></code></a>,
 <a class="reference internal" href="losses.html#hep_ml.losses.KnnAdaLossFunction" title="hep_ml.losses.KnnAdaLossFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">hep_ml.losses.KnnAdaLossFunction</span></code></a>
 to fight correlation.</p>
-<div class="section" id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h2>
 <p>To get uniform prediction in mass for background:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">base_tree</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span> <span class="o">=</span> <span class="n">uBoostClassifier</span><span class="p">(</span><span class="n">uniform_features</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mass&#39;</span><span class="p">],</span> <span class="n">uniform_label</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="n">base_tree</span><span class="p">,</span>
@@ -205,17 +133,18 @@ to fight correlation.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">proba</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">test_data</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
 <dl class="py class">
 <dt class="sig sig-object py" id="hep_ml.uboost.uBoostBDT">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hep_ml.uboost.</span></span><span class="sig-name descname"><span class="pre">uBoostBDT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uniform_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniform_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_efficiency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_neighbors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_estimator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_estimators</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniforming_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SAMME'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostBDT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.uboost.uBoostBDT" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.base.BaseEstimator</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.base.ClassifierMixin</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hep_ml.uboost.</span></span><span class="sig-name descname"><span class="pre">uBoostBDT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uniform_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniform_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_efficiency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_neighbors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_estimator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_estimators</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniforming_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SAMME'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostBDT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.uboost.uBoostBDT" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClassifierMixin</span></code></p>
 <p>uBoostBDT is AdaBoostClassifier, which is modified to have flat
 efficiency of signal (class=1) along some variables.
 Efficiency is only guaranteed at the cut,
 corresponding to global efficiency == target_efficiency.</p>
 <p>Can be used alone, without uBoostClassifier.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>uniform_features</strong> – list of strings, names of variables, along which
 flatness is desired</p></li>
@@ -250,21 +179,24 @@ efficiencies, 0.0 corresponds to usual uBoost</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="footnote brackets">
-<dt class="label" id="id1"><span class="brackets">1</span></dt>
-<dd><p>J. Stevens, M. Williams ‘uBoost: A boosting method for
+<section id="reference">
+<h2>Reference<a class="headerlink" href="#reference" title="Link to this heading">¶</a></h2>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id1" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p>J. Stevens, M. Williams ‘uBoost: A boosting method for
 producing uniform selection efficiencies from multivariate classifiers’</p>
-</dd>
-</dl>
+</aside>
+</aside>
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.uboost.uBoostBDT.decision_function">
-<span class="sig-name descname"><span class="pre">decision_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostBDT.decision_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.uboost.uBoostBDT.decision_function" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">decision_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostBDT.decision_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.uboost.uBoostBDT.decision_function" title="Link to this definition">¶</a></dt>
 <dd><p>Decision function. Float for each sample, the greater — the more signal like event is.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>X</strong> – data, pandas.DataFrame of shape [n_samples, n_features]</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>array of shape [n_samples] with floats</p>
 </dd>
 </dl>
@@ -272,10 +204,10 @@ producing uniform selection efficiencies from multivariate classifiers’</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="hep_ml.uboost.uBoostBDT.feature_importances_">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">feature_importances_</span></span><a class="headerlink" href="#hep_ml.uboost.uBoostBDT.feature_importances_" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">feature_importances_</span></span><a class="headerlink" href="#hep_ml.uboost.uBoostBDT.feature_importances_" title="Link to this definition">¶</a></dt>
 <dd><p>Return the feature importances for <cite>train_features</cite>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>array of shape [n_features], the order is the same as in <cite>train_features</cite></p>
 </dd>
 </dl>
@@ -283,10 +215,10 @@ producing uniform selection efficiencies from multivariate classifiers’</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.uboost.uBoostBDT.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighbours_matrix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostBDT.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.uboost.uBoostBDT.fit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighbours_matrix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostBDT.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.uboost.uBoostBDT.fit" title="Link to this definition">¶</a></dt>
 <dd><p>Build a boosted classifier from the training set (X, y).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>X</strong> – array-like of shape [n_samples, n_features]</p></li>
 <li><p><strong>y</strong> – labels, array of shape [n_samples] with 0 and 1.</p></li>
@@ -297,7 +229,7 @@ each row contains indices of signal neighbours
 if None, this matrix is computed.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>self</p>
 </dd>
 </dl>
@@ -305,13 +237,13 @@ if None, this matrix is computed.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.uboost.uBoostBDT.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostBDT.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.uboost.uBoostBDT.predict" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostBDT.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.uboost.uBoostBDT.predict" title="Link to this definition">¶</a></dt>
 <dd><p>Predict classes for each sample</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>X</strong> – data, pandas.DataFrame of shape [n_samples, n_features]</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>array of shape [n_samples] with predicted classes.</p>
 </dd>
 </dl>
@@ -319,28 +251,116 @@ if None, this matrix is computed.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.uboost.uBoostBDT.predict_proba">
-<span class="sig-name descname"><span class="pre">predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostBDT.predict_proba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.uboost.uBoostBDT.predict_proba" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostBDT.predict_proba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.uboost.uBoostBDT.predict_proba" title="Link to this definition">¶</a></dt>
 <dd><p>Predict probabilities</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>X</strong> – data, pandas.DataFrame of shape [n_samples, n_features]</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>array of shape [n_samples, n_classes] with probabilities.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="hep_ml.uboost.uBoostBDT.set_fit_request">
+<span class="sig-name descname"><span class="pre">set_fit_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighbours_matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#hep_ml.uboost.uBoostBDT" title="hep_ml.uboost.uBoostBDT"><span class="pre">uBoostBDT</span></a></span></span><a class="headerlink" href="#hep_ml.uboost.uBoostBDT.set_fit_request" title="Link to this definition">¶</a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">fit</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">¶</a></h3>
+<dl class="simple">
+<dt>neighbours_matrix<span class="classifier">str, True, False, or None,                     default=sklearn.utils.metadata_routing.UNCHANGED</span></dt><dd><p>Metadata routing for <code class="docutils literal notranslate"><span class="pre">neighbours_matrix</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p>
+</dd>
+<dt>sample_weight<span class="classifier">str, True, False, or None,                     default=sklearn.utils.metadata_routing.UNCHANGED</span></dt><dd><p>Metadata routing for <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading">¶</a></h3>
+<dl class="simple">
+<dt>self<span class="classifier">object</span></dt><dd><p>The updated object.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hep_ml.uboost.uBoostBDT.set_score_request">
+<span class="sig-name descname"><span class="pre">set_score_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#hep_ml.uboost.uBoostBDT" title="hep_ml.uboost.uBoostBDT"><span class="pre">uBoostBDT</span></a></span></span><a class="headerlink" href="#hep_ml.uboost.uBoostBDT.set_score_request" title="Link to this definition">¶</a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">score</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">score</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">score</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<section id="id2">
+<h3>Parameters<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
+<dl class="simple">
+<dt>sample_weight<span class="classifier">str, True, False, or None,                     default=sklearn.utils.metadata_routing.UNCHANGED</span></dt><dd><p>Metadata routing for <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">score</span></code>.</p>
+</dd>
+</dl>
+</section>
+<section id="id3">
+<h3>Returns<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
+<dl class="simple">
+<dt>self<span class="classifier">object</span></dt><dd><p>The updated object.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.uboost.uBoostBDT.staged_decision_function">
-<span class="sig-name descname"><span class="pre">staged_decision_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostBDT.staged_decision_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.uboost.uBoostBDT.staged_decision_function" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">staged_decision_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostBDT.staged_decision_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.uboost.uBoostBDT.staged_decision_function" title="Link to this definition">¶</a></dt>
 <dd><p>Decision function after each stage of boosting.
 Float for each sample, the greater — the more signal like event is.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>X</strong> – data, pandas.DataFrame of shape [n_samples, n_features]</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>array of shape [n_samples] with floats.</p>
 </dd>
 </dl>
@@ -348,70 +368,95 @@ Float for each sample, the greater — the more signal like event is.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.uboost.uBoostBDT.staged_predict_proba">
-<span class="sig-name descname"><span class="pre">staged_predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostBDT.staged_predict_proba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.uboost.uBoostBDT.staged_predict_proba" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">staged_predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostBDT.staged_predict_proba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.uboost.uBoostBDT.staged_predict_proba" title="Link to this definition">¶</a></dt>
 <dd><p>Predicted probabilities for each sample after each stage of boosting.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>X</strong> – data, pandas.DataFrame of shape [n_samples, n_features]</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>sequence of numpy.arrays of shape [n_samples, n_classes]</p>
 </dd>
 </dl>
 </dd></dl>
 
+</section>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="hep_ml.uboost.uBoostClassifier">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hep_ml.uboost.</span></span><span class="sig-name descname"><span class="pre">uBoostClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uniform_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniform_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_neighbors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">efficiency_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_estimators</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_estimator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SAMME'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostClassifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.uboost.uBoostClassifier" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.base.BaseEstimator</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.base.ClassifierMixin</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hep_ml.uboost.</span></span><span class="sig-name descname"><span class="pre">uBoostClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uniform_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniform_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_neighbors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">efficiency_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_estimators</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_estimator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SAMME'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostClassifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.uboost.uBoostClassifier" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClassifierMixin</span></code></p>
 <p>uBoost classifier, an algorithm of boosting targeted to obtain
 flat efficiency in signal along some variables (e.g. mass).</p>
 <p>In principle, uBoost is ensemble of uBoostBDTs. See [1] for details.</p>
+<section id="id4">
+<h2>Parameters<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>uniform_features</strong> – list of strings, names of variables,
-along which flatness is desired</p></li>
-<li><p><strong>uniform_label</strong> – int,
-tha label of class for which uniformity is desired</p></li>
-<li><p><strong>train_features</strong> – list of strings,
+<dt class="field-odd">param uniform_features<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of strings, names of variables,
+along which flatness is desired</p>
+</dd>
+<dt class="field-even">param uniform_label<span class="colon">:</span></dt>
+<dd class="field-even"><p>int,
+tha label of class for which uniformity is desired</p>
+</dd>
+<dt class="field-odd">param train_features<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of strings,
 names of variables used in fit/predict.
-if None, all the variables are used (including uniform_variables)</p></li>
-<li><p><strong>n_neighbors</strong> – int, (default=50) the number of neighbours,
-which are used to compute local efficiency</p></li>
-<li><p><strong>n_estimators</strong> – integer, optional (default=50)
+if None, all the variables are used (including uniform_variables)</p>
+</dd>
+<dt class="field-even">param n_neighbors<span class="colon">:</span></dt>
+<dd class="field-even"><p>int, (default=50) the number of neighbours,
+which are used to compute local efficiency</p>
+</dd>
+<dt class="field-odd">param n_estimators<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer, optional (default=50)
 The maximum number of estimators at which boosting is terminated.
-In case of perfect fit, the learning procedure is stopped early.</p></li>
-<li><p><strong>efficiency_steps</strong> – integer, optional (default=20),
+In case of perfect fit, the learning procedure is stopped early.</p>
+</dd>
+<dt class="field-even">param efficiency_steps<span class="colon">:</span></dt>
+<dd class="field-even"><p>integer, optional (default=20),
 How many uBoostBDTs should be trained
-(each with its own target_efficiency)</p></li>
-<li><p><strong>base_estimator</strong> – object, optional (default=DecisionTreeClassifier(max_depth=2))
+(each with its own target_efficiency)</p>
+</dd>
+<dt class="field-odd">param base_estimator<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object, optional (default=DecisionTreeClassifier(max_depth=2))
 The base estimator from which the boosted ensemble is built.
 Support for sample weighting is required,
-as well as proper <cite>classes_</cite> and <cite>n_classes_</cite> attributes.</p></li>
-<li><p><strong>subsample</strong> – float (default =1.) part of training dataset used
-to train each base classifier.</p></li>
-<li><p><strong>smoothing</strong> – float, default=None, used to smooth computing of
-local efficiencies, 0.0 corresponds to usual uBoost,</p></li>
-<li><p><strong>random_state</strong> – int, RandomState instance or None, (default=None)</p></li>
-<li><p><strong>n_threads</strong> – int, number of threads used.</p></li>
-</ul>
+as well as proper <cite>classes_</cite> and <cite>n_classes_</cite> attributes.</p>
+</dd>
+<dt class="field-even">param subsample<span class="colon">:</span></dt>
+<dd class="field-even"><p>float (default =1.) part of training dataset used
+to train each base classifier.</p>
+</dd>
+<dt class="field-odd">param smoothing<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float, default=None, used to smooth computing of
+local efficiencies, 0.0 corresponds to usual uBoost,</p>
+</dd>
+<dt class="field-even">param random_state<span class="colon">:</span></dt>
+<dd class="field-even"><p>int, RandomState instance or None, (default=None)</p>
+</dd>
+<dt class="field-odd">param n_threads<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int, number of threads used.</p>
 </dd>
 </dl>
-<dl class="footnote brackets">
-<dt class="label" id="id2"><span class="brackets">1</span></dt>
-<dd><p>J. Stevens, M. Williams ‘uBoost: A boosting method
+</section>
+<section id="id5">
+<h2>Reference<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h2>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id6" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p>J. Stevens, M. Williams ‘uBoost: A boosting method
 for producing uniform selection efficiencies from multivariate classifiers’</p>
-</dd>
-</dl>
+</aside>
+</aside>
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.uboost.uBoostClassifier.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostClassifier.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.uboost.uBoostClassifier.fit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostClassifier.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.uboost.uBoostClassifier.fit" title="Link to this definition">¶</a></dt>
 <dd><p>Build a boosted classifier from the training set.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>X</strong> – data, pandas.DatFrame of shape [n_samples, n_features]</p></li>
 <li><p><strong>y</strong> – labels, array of shape [n_samples] with 0 and 1.
@@ -419,7 +464,7 @@ The target values (integers that correspond to classes).</p></li>
 <li><p><strong>sample_weight</strong> – array-like of shape [n_samples] with weights or None</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>self</p>
 </dd>
 </dl>
@@ -427,13 +472,13 @@ The target values (integers that correspond to classes).</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.uboost.uBoostClassifier.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostClassifier.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.uboost.uBoostClassifier.predict" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostClassifier.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.uboost.uBoostClassifier.predict" title="Link to this definition">¶</a></dt>
 <dd><p>Predict labels</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>X</strong> – data, pandas.DataFrame of shape [n_samples, n_features]</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>numpy.array of shape [n_samples]</p>
 </dd>
 </dl>
@@ -441,83 +486,152 @@ The target values (integers that correspond to classes).</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.uboost.uBoostClassifier.predict_proba">
-<span class="sig-name descname"><span class="pre">predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostClassifier.predict_proba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.uboost.uBoostClassifier.predict_proba" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostClassifier.predict_proba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.uboost.uBoostClassifier.predict_proba" title="Link to this definition">¶</a></dt>
 <dd><p>Predict probabilities</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>X</strong> – data, pandas.DataFrame of shape [n_samples, n_features]</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>array of shape [n_samples, n_classes] with probabilities.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="hep_ml.uboost.uBoostClassifier.set_fit_request">
+<span class="sig-name descname"><span class="pre">set_fit_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#hep_ml.uboost.uBoostClassifier" title="hep_ml.uboost.uBoostClassifier"><span class="pre">uBoostClassifier</span></a></span></span><a class="headerlink" href="#hep_ml.uboost.uBoostClassifier.set_fit_request" title="Link to this definition">¶</a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">fit</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<section id="id7">
+<h3>Parameters<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h3>
+<dl class="simple">
+<dt>sample_weight<span class="classifier">str, True, False, or None,                     default=sklearn.utils.metadata_routing.UNCHANGED</span></dt><dd><p>Metadata routing for <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p>
+</dd>
+</dl>
+</section>
+<section id="id8">
+<h3>Returns<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h3>
+<dl class="simple">
+<dt>self<span class="classifier">object</span></dt><dd><p>The updated object.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hep_ml.uboost.uBoostClassifier.set_score_request">
+<span class="sig-name descname"><span class="pre">set_score_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#hep_ml.uboost.uBoostClassifier" title="hep_ml.uboost.uBoostClassifier"><span class="pre">uBoostClassifier</span></a></span></span><a class="headerlink" href="#hep_ml.uboost.uBoostClassifier.set_score_request" title="Link to this definition">¶</a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">score</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">score</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">score</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<section id="id9">
+<h3>Parameters<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h3>
+<dl class="simple">
+<dt>sample_weight<span class="classifier">str, True, False, or None,                     default=sklearn.utils.metadata_routing.UNCHANGED</span></dt><dd><p>Metadata routing for <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">score</span></code>.</p>
+</dd>
+</dl>
+</section>
+<section id="id10">
+<h3>Returns<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h3>
+<dl class="simple">
+<dt>self<span class="classifier">object</span></dt><dd><p>The updated object.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="hep_ml.uboost.uBoostClassifier.staged_predict_proba">
-<span class="sig-name descname"><span class="pre">staged_predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostClassifier.staged_predict_proba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.uboost.uBoostClassifier.staged_predict_proba" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">staged_predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hep_ml/uboost.html#uBoostClassifier.staged_predict_proba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hep_ml.uboost.uBoostClassifier.staged_predict_proba" title="Link to this definition">¶</a></dt>
 <dd><p>Predicted probabilities for each sample after each stage of boosting.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>X</strong> – data, pandas.DataFrame of shape [n_samples, n_features]</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>sequence of numpy.arrays of shape [n_samples, n_classes]</p>
 </dd>
 </dl>
 </dd></dl>
 
+</section>
 </dd></dl>
 
-</div>
-</div>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="metrics.html" class="btn btn-neutral float-right" title="Metric functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="losses.html" class="btn btn-neutral float-left" title="Losses for Gradient Boosting" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="metrics.html" class="btn btn-neutral float-right" title="Metric functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2015-2017, Yandex; Alex Rogozhnikov and contributors.
-
-    </p>
+    <p>&#169; Copyright 2015-2017, Yandex; Alex Rogozhnikov and contributors.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>
