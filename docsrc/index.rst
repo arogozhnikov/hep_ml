@@ -82,5 +82,5 @@ Libraries you'll require to make your life easier.
    vector analytical math engine in python
 -  `ROOT <https://root.cern.ch/>`__ — main data format in high energy
    physics
--  `root\_numpy <http://rootpy.github.io/root_numpy/>`__ — python
-   library to deal with ROOT files (without pain)
+-  `uproot <https://github.com/scikit-hep/uproot5>`__ — python
+   library to deal with ROOT files

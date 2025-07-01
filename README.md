@@ -2,7 +2,6 @@
 
 **hep_ml** provides specific machine learning tools for purposes of high energy physics.
 
-<!--- [![travis status](https://travis-ci.org/arogozhnikov/hep_ml.svg?branch=master)](https://travis-ci.org/arogozhnikov/hep_ml) --->
 [![Run tests](https://github.com/arogozhnikov/hep_ml/actions/workflows/run_tests.yml/badge.svg)](https://github.com/arogozhnikov/hep_ml/actions/workflows/run_tests.yml)
 [![PyPI version](https://badge.fury.io/py/hep-ml.svg)](https://badge.fury.io/py/hep-ml)
 [![Documentation](https://img.shields.io/badge/documentation-link-blue.svg)](https://arogozhnikov.github.io/hep_ml/)
@@ -11,6 +10,10 @@
 
 
 ![hep_ml, python library for high energy physics](https://github.com/arogozhnikov/hep_ml/blob/data/data_to_download/hep_ml_image.png)
+
+### Notes
+
+Jul 2025: hep_ml v0.8.0: code and examples modernized (courtesy of Jonas Eschle), now `hep_ml` works with python 3.9-3.13. 
 
 
 ### Main features
@@ -40,7 +43,7 @@ If you're new to python and never used `pip`, first install scikit-learn [with t
 
 * [documentation](https://arogozhnikov.github.io/hep_ml/)
 * [notebooks, code examples](https://github.com/arogozhnikov/hep_ml/tree/master/notebooks)
-    - you may need to install `ROOT` and `root_numpy` to run those 
+    - you may need to install `ROOT` and `uproot` to run those 
 * [repository](https://github.com/arogozhnikov/hep_ml)
 * [issue tracker](https://github.com/arogozhnikov/hep_ml/issues)
 
@@ -62,4 +65,5 @@ Apache 2.0, `hep_ml` is an open-source library.
 ### Platforms 
 Linux, Mac OS X and Windows are supported.
 
-**hep_ml** supports both python 2 and python 3.
+**hep_ml** supports all current python versions (python >= 3.9). 
+Old versions (`hep_ml<=0.7`) supported python 2.
