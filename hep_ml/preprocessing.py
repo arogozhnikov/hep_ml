@@ -17,7 +17,7 @@ Transformers may be used as any other transformer, manually training and applyin
 >>> new_trainX = transformer.transform(trainX)
 >>> new_testX = transformer.transform(testX)
 
-Apart from this, transformers may be plugged as part of sklearn.Pipeline:
+Apart from this, transformers may be plugged as part of sklearn.Pipeline.
 
 """
 
