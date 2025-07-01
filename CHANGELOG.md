@@ -3,6 +3,8 @@
 
 ## [Unreleased]
 
+## 0.8.0
+
 ### Major Changes
 - Support for Python 3.9 up to 3.13.
 
