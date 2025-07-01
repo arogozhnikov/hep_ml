@@ -7,6 +7,7 @@
 
 ### Major Changes
 - Support for Python 3.9 up to 3.13.
+- Notebooks were updated to use actively maintained libraries (i.e. `uproot`)
 
 ### Breaking Changes
 - Require at least stable versions (>1.0) for scikit-learn, numpy, scipy
